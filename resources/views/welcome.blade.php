@@ -366,12 +366,12 @@
         /* Main Content */
         .main-content {
             margin-top: 80px;
-            min-height: calc(100vh - 160px);
+            min-height: calc(100vh - 200px);
             background: linear-gradient(135deg, rgba(241, 248, 233, 0.3) 0%, rgba(232, 245, 232, 0.3) 100%);
             display: flex;
             align-items: center;
             position: relative;
-            padding: 60px 0;
+            padding: 20px 0;
         }
 
         .main-content::before {
@@ -413,6 +413,7 @@
             position: relative;
         }
 
+
         .content-right::before {
             content: '';
             position: absolute;
@@ -436,7 +437,7 @@
         .badges {
             display: flex;
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .badge-item {
@@ -488,7 +489,7 @@
         .main-title {
             font-size: 56px;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
             background: linear-gradient(45deg, #46923c, #2d5a27, #46923c);
             background-size: 200% 200%;
@@ -507,7 +508,7 @@
 
         .subtitle {
             font-size: 18px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             opacity: 0.8;
             color: #2d5a27;
         }
@@ -515,7 +516,7 @@
         .tagline {
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #2d5a27;
         }
 
@@ -539,14 +540,14 @@
         .school-logo {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            background: linear-gradient(135deg, #87CEEB, #4682B4);
             backdrop-filter: blur(20px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            border: 3px solid rgba(255,255,255,0.4);
+            border: 3px solid #87CEEB;
             box-shadow: 0 15px 50px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             position: relative;
@@ -576,7 +577,7 @@
 
         .school-logo i {
             font-size: 80px;
-            color: #46923c;
+            color: white;
         }
 
         .school-name {
@@ -675,6 +676,7 @@
             
             <nav class="nav-menu">
                 <a href="#home">BERANDA</a>
+                <a href="#administrasi">ADMINISTRASI</a>
                 <a href="#about">TENTANG</a>
                 <a href="#programs">PROGRAM</a>
                 <a href="#contact">KONTAK</a>
