@@ -630,6 +630,7 @@
             padding: 0 20px;
             text-align: center;
         }
+        
 
         .contact-info {
             margin-bottom: 20px;
@@ -761,7 +762,7 @@
                 <p>📞 0856-2452-5034 | 📱 Chat WA Only: 082263033855</p>
                 <p>📧 internal.nurulaimam@gmail.com</p>
                 <p>📷 Instagram: @mtssnuraiman | 🎵 TikTok: @mts.na.tjsari</p>
-                <p>📍 Jln. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363</p>
+                <p>📍 Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363</p>
             </div>
             <div class="copyright">
                 <p>TEACHING MANAGEMENT SYSTEM NURANI (TMS NURANI) © MTs NURUL AIMAN</p>

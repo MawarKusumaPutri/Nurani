@@ -11,6 +11,35 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
+        
+        /* Footer Styles */
+        .footer {
+            background: #46923c !important;
+            color: white;
+            padding: 30px 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        
+        .contact-info p {
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .copyright p {
+            margin-bottom: 5px;
+            color: white;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -54,20 +83,18 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-r from-green-600 to-green-500 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h3 class="text-lg font-semibold mb-4">Service Desk MTs Nurul Aiman</h3>
-                <div class="space-y-2 text-sm">
-                    <p><i class="fas fa-phone mr-2"></i>0856-2452-5034 | <i class="fab fa-whatsapp mr-2"></i>Chat WA Only: 082263033855</p>
-                    <p><i class="fas fa-envelope mr-2"></i>internal.nurulaimam@gmail.com</p>
-                    <p><i class="fab fa-instagram mr-2"></i>Instagram: @mtssnuraiman | <i class="fab fa-tiktok mr-2"></i>TikTok: @mts.na.tjsari</p>
-                    <p><i class="fas fa-map-marker-alt mr-2"></i>Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363</p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-green-400">
-                    <p class="text-sm">TEACHING MANAGEMENT SYSTEM NURANI (TMS NURANI) © MTs NURUL AIMAN</p>
-                    <p class="text-xs text-green-200">Integrated Learning Management System for Modern Education</p>
-                </div>
+    <footer class="footer" style="background: #46923c !important;">
+        <div class="footer-content">
+            <div class="contact-info">
+                <p><strong>Service Desk MTs Nurul Aiman</strong></p>
+                <p>📞 0856-2452-5034 | 📱 Chat WA Only: 082263033855</p>
+                <p>📧 internal.nurulaimam@gmail.com</p>
+                <p>📷 Instagram: @mtssnuraiman | 🎵 TikTok: @mts.na.tjsari</p>
+                <p>📍 Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363</p>
+            </div>
+            <div class="copyright">
+                <p>TEACHING MANAGEMENT SYSTEM NURANI (TMS NURANI) © MTs NURUL AIMAN</p>
+                <p>Integrated Learning Management System for Modern Education</p>
             </div>
         </div>
     </footer>
