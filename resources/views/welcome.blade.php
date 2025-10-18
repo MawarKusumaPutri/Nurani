@@ -17,11 +17,37 @@
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.6;
+            background: linear-gradient(135deg, #F1F8E9 0%, #E8F5E8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(70, 146, 60, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(70, 146, 60, 0.08) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-10px) translateY(-10px); }
+            50% { transform: translateX(10px) translateY(-5px); }
+            75% { transform: translateX(-5px) translateY(10px); }
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
             color: white;
             padding: 15px 0;
             position: fixed;
@@ -119,7 +145,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 10px 0;
@@ -162,7 +188,7 @@
         }
 
         .login-modal {
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
             border-radius: 20px;
             padding: 40px;
             width: 90%;
@@ -257,7 +283,7 @@
 
         .login-modal .btn-login:hover {
             background: white;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .login-modal .forgot-password {
@@ -286,7 +312,7 @@
         }
 
         .password-toggle-btn:hover {
-            color: #2d5a27;
+            color: #46923c;
         }
 
         /* Modal Logo Styles */
@@ -341,12 +367,30 @@
         .main-content {
             margin-top: 80px;
             min-height: calc(100vh - 160px);
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23f0f8ff" width="1200" height="600"/><rect fill="%23e6f3ff" x="0" y="400" width="1200" height="200"/><circle fill="%23b3d9ff" cx="200" cy="150" r="80"/><circle fill="%23cce6ff" cx="400" cy="200" r="60"/><circle fill="%23d9ecff" cx="600" cy="180" r="70"/><rect fill="%23a3c7e8" x="800" y="100" width="200" height="300" rx="20"/><rect fill="%23b8d4f0" x="850" y="120" width="100" height="80" rx="10"/><rect fill="%23b8d4f0" x="850" y="220" width="100" height="80" rx="10"/><rect fill="%23b8d4f0" x="850" y="320" width="100" height="60" rx="10"/></svg>');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, rgba(241, 248, 233, 0.3) 0%, rgba(232, 245, 232, 0.3) 100%);
             display: flex;
             align-items: center;
             position: relative;
+            padding: 60px 0;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(70, 146, 60, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(70, 146, 60, 0.03) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         .content-overlay {
@@ -360,12 +404,33 @@
 
         .content-left {
             flex: 1;
-            color: white;
+            color: #2d5a27;
         }
 
         .content-right {
             flex: 1;
             text-align: center;
+            position: relative;
+        }
+
+        .content-right::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: -1;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.02); opacity: 1; }
         }
 
         .badges {
@@ -375,12 +440,37 @@
         }
 
         .badge-item {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .badge-item:hover::before {
+            left: 100%;
+        }
+
+        .badge-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.5);
         }
 
         .badge-item img {
@@ -392,31 +482,48 @@
         .badge-text {
             font-size: 12px;
             font-weight: 500;
+            color: #2d5a27;
         }
 
         .main-title {
-            font-size: 48px;
-            font-weight: 700;
+            font-size: 56px;
+            font-weight: 800;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            background: linear-gradient(45deg, #46923c, #2d5a27, #46923c);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .subtitle {
             font-size: 18px;
             margin-bottom: 30px;
-            opacity: 0.9;
+            opacity: 0.8;
+            color: #2d5a27;
         }
 
         .tagline {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 10px;
+            color: #2d5a27;
         }
 
         .description {
             font-size: 16px;
             opacity: 0.8;
             position: relative;
+            color: #2d5a27;
         }
 
         .description::after {
@@ -426,41 +533,68 @@
             left: 0;
             width: 100px;
             height: 3px;
-            background: white;
+            background: #46923c;
         }
 
         .school-logo {
             width: 200px;
             height: 200px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(255,255,255,0.4);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .school-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .school-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .school-logo i {
             font-size: 80px;
-            color: white;
+            color: #46923c;
         }
 
         .school-name {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 10px;
+            color: #2d5a27;
         }
 
         .school-motto {
             font-size: 16px;
-            opacity: 0.9;
+            opacity: 0.8;
+            color: #2d5a27;
         }
 
         /* Footer */
         .footer {
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
             color: white;
             padding: 30px 0;
         }
@@ -564,15 +698,15 @@
             <div class="content-left">
                 <div class="badges">
                     <div class="badge-item">
-                        <i class="fas fa-graduation-cap" style="font-size: 40px; color: white; margin-bottom: 10px;"></i>
+                        <i class="fas fa-graduation-cap" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
                         <div class="badge-text">MTs Nurul Aiman</div>
                     </div>
                     <div class="badge-item">
-                        <i class="fas fa-book-open" style="font-size: 40px; color: white; margin-bottom: 10px;"></i>
+                        <i class="fas fa-book-open" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
                         <div class="badge-text">PENDIDIKAN BERKUALITAS</div>
                     </div>
                     <div class="badge-item">
-                        <i class="fas fa-award" style="font-size: 40px; color: white; margin-bottom: 10px;"></i>
+                        <i class="fas fa-award" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
                         <div class="badge-text">UNGGUL</div>
                     </div>
                 </div>
