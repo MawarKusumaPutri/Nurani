@@ -17,7 +17,11 @@ use App\Http\Controllers\AuthController;
 // Home page
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
+
+Route::get('/tentang', function () {
+    return view('tentang');
+})->name('tentang');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

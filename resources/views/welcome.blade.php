@@ -47,7 +47,7 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
+            background: #46923c;
             color: white;
             padding: 15px 0;
             position: fixed;
@@ -145,7 +145,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
+            background: #46923c;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 10px 0;
@@ -188,7 +188,7 @@
         }
 
         .login-modal {
-            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
+            background: #46923c;
             border-radius: 20px;
             padding: 40px;
             width: 90%;
@@ -404,7 +404,7 @@
 
         .content-left {
             flex: 1;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .content-right {
@@ -483,7 +483,7 @@
         .badge-text {
             font-size: 12px;
             font-weight: 500;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .main-title {
@@ -491,7 +491,7 @@
             font-weight: 800;
             margin-bottom: 15px;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
-            background: linear-gradient(45deg, #46923c, #2d5a27, #46923c);
+            background: linear-gradient(45deg, #46923c, #46923c, #46923c);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -510,21 +510,21 @@
             font-size: 18px;
             margin-bottom: 20px;
             opacity: 0.8;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .tagline {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .description {
             font-size: 16px;
             opacity: 0.8;
             position: relative;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .description::after {
@@ -584,21 +584,45 @@
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 10px;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         .school-motto {
             font-size: 16px;
             opacity: 0.8;
-            color: #2d5a27;
+            color: #46923c;
         }
 
         /* Footer */
         .footer {
-            background: linear-gradient(135deg, #46923c 0%, #5BA84F 100%);
+            background: #46923c !important;
             color: white;
             padding: 30px 0;
         }
+        
+        /* Force all green elements to use #46923c */
+        .bg-green-600, .bg-green-500, .bg-green-700, .bg-green-800, .bg-green-400, .bg-green-300 {
+            background-color: #46923c !important;
+        }
+        
+        .text-green-600, .text-green-500, .text-green-700, .text-green-800, .text-green-400, .text-green-300 {
+            color: #46923c !important;
+        }
+        
+        .border-green-600, .border-green-500, .border-green-700, .border-green-800, .border-green-400, .border-green-300 {
+            border-color: #46923c !important;
+        }
+        
+        /* Override any element with green background */
+        [style*="background"] {
+            background: #46923c !important;
+        }
+        
+        /* Force footer specifically */
+        footer, .footer, [class*="footer"] {
+            background: #46923c !important;
+        }
+        
 
         .footer-content {
             max-width: 1200px;
@@ -677,7 +701,7 @@
             <nav class="nav-menu">
                 <a href="#home">BERANDA</a>
                 <a href="#administrasi">ADMINISTRASI</a>
-                <a href="#about">TENTANG</a>
+                <a href="{{ route('tentang') }}">TENTANG</a>
                 <a href="#programs">PROGRAM</a>
                 <a href="#contact">KONTAK</a>
                 
@@ -730,7 +754,7 @@
             </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" style="background: #46923c !important;">
         <div class="footer-content">
             <div class="contact-info">
                 <p><strong>Service Desk MTs Nurul Aiman</strong></p>
