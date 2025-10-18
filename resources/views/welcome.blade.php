@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTs Nurul Aiman - TMS NURANI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
+            <style>
         * {
             margin: 0;
             padding: 0;
@@ -121,6 +121,135 @@
 
         .dropdown-menu a:hover {
             background: rgba(255,255,255,0.1);
+        }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-overlay.show {
+            display: flex;
+        }
+
+        .login-modal {
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-modal .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-modal .close-btn:hover {
+            opacity: 1;
+        }
+
+        .login-modal h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .login-modal .subtitle {
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-modal .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-modal .form-label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .login-modal .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            transition: background 0.3s ease;
+        }
+
+        .login-modal .form-control:focus {
+            outline: none;
+            background: white;
+        }
+
+        .login-modal .btn-login {
+            width: 100%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .login-modal .btn-login:hover {
+            background: white;
+            color: #2d5a27;
+        }
+
+        .login-modal .forgot-password {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            display: block;
+        }
+
+        .login-modal .forgot-password:hover {
+            color: white;
         }
 
         /* Main Content */
@@ -307,8 +436,8 @@
                 font-size: 60px;
             }
         }
-    </style>
-</head>
+            </style>
+    </head>
 <body>
     <!-- Header -->
     <header class="header">
@@ -331,13 +460,13 @@
                         LOGIN <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="{{ route('login') }}">GURU</a>
-                        <a href="{{ route('login') }}">TENAGA USAHA</a>
+                        <a href="#" onclick="openLoginModal('guru')">GURU</a>
+                        <a href="#" onclick="openLoginModal('tenaga_usaha')">TENAGA USAHA</a>
                     </div>
                 </div>
-            </nav>
+                </nav>
         </div>
-    </header>
+        </header>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -371,17 +500,18 @@
                 <h2 class="school-name">MTs Nurul Aiman</h2>
                 <p class="school-motto">Madrasah Unggulan dengan Teknologi Modern</p>
             </div>
-        </div>
-    </main>
+                </div>
+            </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="contact-info">
                 <p><strong>Service Desk MTs Nurul Aiman</strong></p>
-                <p>📞 0856-2452-5034 | 📱 Chat WA Only: 0856-2452-5034</p>
-                <p>📧 info@mtsnurulaiman.sch.id | 🌐 www.mtsnurulaiman.sch.id</p>
-                <p>📍 Cikondang, GunungManik, Marga Jaya, Kec. Tanjungsari, Kabupaten Sumedang, Jawa Barat 45363</p>
+                <p>📞 0856-2452-5034 | 📱 Chat WA Only: 082263033855</p>
+                <p>📧 internal.nurulaimam@gmail.com</p>
+                <p>📷 Instagram: @mtssnuraiman | 🎵 TikTok: @mts.na.tjsari</p>
+                <p>📍 Jln. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363</p>
             </div>
             <div class="copyright">
                 <p>TEACHING MANAGEMENT SYSTEM NURANI (TMS NURANI) © MTs NURUL AIMAN</p>
@@ -390,10 +520,78 @@
         </div>
     </footer>
 
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-modal">
+            <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+            <h2 id="modalTitle">LOGIN GURU</h2>
+            <p class="subtitle" id="modalSubtitle">Single Account, Single Sign On login</p>
+            
+            @if ($errors->any())
+                <div class="alert alert-danger" style="background: rgba(255,0,0,0.1); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,0,0,0.3);">
+                    <ul class="mb-0" style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
+            <form id="loginForm" method="POST" action="{{ route('login.modal') }}">
+                @csrf
+                <input type="hidden" name="role" id="userRole" value="guru">
+                
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="email" placeholder="Masukkan username/email" value="{{ old('email') }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Masukkan password" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            
+            <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+    </div>
+
     <script>
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             dropdown.classList.toggle('show');
+        }
+
+        function openLoginModal(role) {
+            const overlay = document.getElementById('loginOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const userRole = document.getElementById('userRole');
+            
+            // Close dropdown
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.remove('show');
+            
+            // Set modal content based on role
+            if (role === 'guru') {
+                modalTitle.textContent = 'LOGIN GURU';
+                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                userRole.value = 'guru';
+            } else if (role === 'tenaga_usaha') {
+                modalTitle.textContent = 'LOGIN TENAGA USAHA';
+                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                userRole.value = 'tenaga_usaha';
+            }
+            
+            // Show modal
+            overlay.classList.add('show');
+        }
+
+        function closeLoginModal() {
+            const overlay = document.getElementById('loginOverlay');
+            overlay.classList.remove('show');
         }
 
         // Close dropdown when clicking outside
@@ -404,6 +602,34 @@
             if (!loginBtn.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('loginOverlay');
+            const modal = document.querySelector('.login-modal');
+            
+            if (event.target === overlay) {
+                closeLoginModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLoginModal();
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const role = document.getElementById('userRole').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+            
+            console.log('Login attempt:', { role, email, password });
+            
+            // Form will submit normally, no need to prevent default
         });
 
         // Smooth scrolling for navigation links
@@ -420,5 +646,5 @@
             });
         });
     </script>
-</body>
+    </body>
 </html>

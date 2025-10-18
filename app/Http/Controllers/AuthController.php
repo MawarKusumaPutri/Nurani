@@ -16,23 +16,28 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Debug: Log request data
+        \Log::info('Login attempt:', $request->all());
+        
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'role' => 'required|in:guru,tenaga_usaha'
         ]);
 
         $credentials = $request->only('email', 'password');
+        $role = $request->role;
 
-        // Cari user berdasarkan email dengan role guru atau tenaga usaha
+        // Cari user berdasarkan email dan role yang spesifik
         $user = User::where('email', $credentials['email'])
-                   ->whereIn('role', ['guru', 'tenaga_usaha'])
+                   ->where('role', $role)
                    ->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             Auth::login($user);
             
             // Redirect berdasarkan role
-            if ($user->role === 'tenaga_usaha') {
+            if ($role === 'tenaga_usaha') {
                 return redirect()->route('tu.dashboard');
             } else {
                 return redirect()->route('guru.dashboard');
@@ -40,7 +45,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password tidak valid. Pastikan Anda adalah guru atau tenaga usaha yang terdaftar.',
+            'email' => 'Email atau password tidak valid. Pastikan Anda adalah ' . ($role === 'guru' ? 'guru' : 'tenaga usaha') . ' yang terdaftar.',
         ])->withInput($request->except('password'));
     }
 

@@ -22,6 +22,7 @@ Route::get('/', function () {
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login-modal', [AuthController::class, 'login'])->name('login.modal');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected Routes
