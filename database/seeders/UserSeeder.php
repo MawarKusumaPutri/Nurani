@@ -53,16 +53,29 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Create Admin User
+        // Create Tenaga Usaha User
         User::updateOrCreate(
-            ['email' => 'admin@nurani.com'],
+            ['email' => 'tu@nurani.com'],
             [
-                'name' => 'Admin NURANI',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
-                'nip' => 'ADM001',
+                'name' => 'Ahmad Rizki',
+                'password' => Hash::make('tu123'),
+                'role' => 'tenaga_usaha',
+                'nip' => 'TU001',
                 'phone' => '081234567893',
                 'address' => 'Jl. Pendidikan No. 1, Jakarta'
+            ]
+        );
+
+        // Create another Tenaga Usaha User
+        User::updateOrCreate(
+            ['email' => 'sari@nurani.com'],
+            [
+                'name' => 'Sari Dewi',
+                'password' => Hash::make('tu123'),
+                'role' => 'tenaga_usaha',
+                'nip' => 'TU002',
+                'phone' => '081234567894',
+                'address' => 'Jl. Pendidikan No. 2, Jakarta'
             ]
         );
     }

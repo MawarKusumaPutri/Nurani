@@ -14,9 +14,9 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-// Redirect root to login
+// Home page
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // Authentication Routes
@@ -30,6 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('guru')->name('guru.')->group(function () {
         Route::get('/dashboard', function () {
             return view('guru.dashboard');
+        })->name('dashboard');
+    });
+    
+    // Tenaga Usaha Routes
+    Route::prefix('tu')->name('tu.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('tu.dashboard');
         })->name('dashboard');
     });
 });

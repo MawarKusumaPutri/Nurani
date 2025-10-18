@@ -23,18 +23,24 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // Cari user berdasarkan email dengan role guru
+        // Cari user berdasarkan email dengan role guru atau tenaga usaha
         $user = User::where('email', $credentials['email'])
-                   ->where('role', 'guru')
+                   ->whereIn('role', ['guru', 'tenaga_usaha'])
                    ->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             Auth::login($user);
-            return redirect()->route('guru.dashboard');
+            
+            // Redirect berdasarkan role
+            if ($user->role === 'tenaga_usaha') {
+                return redirect()->route('tu.dashboard');
+            } else {
+                return redirect()->route('guru.dashboard');
+            }
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password tidak valid. Pastikan Anda adalah guru yang terdaftar.',
+            'email' => 'Email atau password tidak valid. Pastikan Anda adalah guru atau tenaga usaha yang terdaftar.',
         ])->withInput($request->except('password'));
     }
 
