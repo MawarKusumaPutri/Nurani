@@ -14,68 +14,101 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Guru User
+        // Create Guru Users
         User::updateOrCreate(
-            ['email' => 'guru@nurani.com'],
+            ['email' => 'guru1@nurani.com'],
             [
                 'name' => 'Budi Santoso',
                 'password' => Hash::make('guru123'),
                 'role' => 'guru',
                 'nip' => 'GRU001',
                 'phone' => '081234567890',
-                'address' => 'Jl. Pendidikan No. 1, Jakarta'
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         );
 
-        // Create another Guru User
         User::updateOrCreate(
-            ['email' => 'siti@nurani.com'],
+            ['email' => 'guru2@nurani.com'],
             [
                 'name' => 'Siti Aminah',
                 'password' => Hash::make('guru123'),
                 'role' => 'guru',
                 'nip' => 'GRU002',
                 'phone' => '081234567891',
-                'address' => 'Jl. Guru Sejahtera No. 2, Jakarta'
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         );
 
-        // Create another Guru User
         User::updateOrCreate(
-            ['email' => 'ahmad@nurani.com'],
+            ['email' => 'guru3@nurani.com'],
             [
                 'name' => 'Ahmad Rizki',
                 'password' => Hash::make('guru123'),
                 'role' => 'guru',
                 'nip' => 'GRU003',
                 'phone' => '081234567892',
-                'address' => 'Jl. Pendidikan Maju No. 3, Jakarta'
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         );
 
-        // Create Tenaga Usaha User
         User::updateOrCreate(
-            ['email' => 'tu@nurani.com'],
+            ['email' => 'guru4@nurani.com'],
             [
-                'name' => 'Ahmad Rizki',
-                'password' => Hash::make('tu123'),
-                'role' => 'tenaga_usaha',
-                'nip' => 'TU001',
+                'name' => 'Dewi Kartika',
+                'password' => Hash::make('guru123'),
+                'role' => 'guru',
+                'nip' => 'GRU004',
                 'phone' => '081234567893',
-                'address' => 'Jl. Pendidikan No. 1, Jakarta'
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         );
 
-        // Create another Tenaga Usaha User
         User::updateOrCreate(
-            ['email' => 'sari@nurani.com'],
+            ['email' => 'guru5@nurani.com'],
+            [
+                'name' => 'Rizki Pratama',
+                'password' => Hash::make('guru123'),
+                'role' => 'guru',
+                'nip' => 'GRU005',
+                'phone' => '081234567894',
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
+            ]
+        );
+
+        // Create Tenaga Usaha Users
+        User::updateOrCreate(
+            ['email' => 'tu1@nurani.com'],
             [
                 'name' => 'Sari Dewi',
                 'password' => Hash::make('tu123'),
                 'role' => 'tenaga_usaha',
+                'nip' => 'TU001',
+                'phone' => '081234567895',
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'tu2@nurani.com'],
+            [
+                'name' => 'Muhammad Yusuf',
+                'password' => Hash::make('tu123'),
+                'role' => 'tenaga_usaha',
                 'nip' => 'TU002',
-                'phone' => '081234567894',
-                'address' => 'Jl. Pendidikan No. 2, Jakarta'
+                'phone' => '081234567896',
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'tu3@nurani.com'],
+            [
+                'name' => 'Fatimah Zahra',
+                'password' => Hash::make('tu123'),
+                'role' => 'tenaga_usaha',
+                'nip' => 'TU003',
+                'phone' => '081234567897',
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         );
     }

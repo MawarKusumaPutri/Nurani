@@ -46,16 +46,36 @@
             align-items: center;
         }
 
-        .logo-section h1 {
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo-circle {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #87CEEB, #4682B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #87CEEB;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-text h1 {
             font-size: 24px;
             font-weight: 700;
             margin: 0;
+            color: white;
         }
 
-        .logo-section p {
+        .header-text p {
             font-size: 14px;
             margin: 0;
             opacity: 0.9;
+            color: #e0e0e0;
         }
 
         .nav-menu {
@@ -252,6 +272,71 @@
             color: white;
         }
 
+        .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle-btn:hover {
+            color: #2d5a27;
+        }
+
+        /* Modal Logo Styles */
+        .modal-logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-logo {
+            margin-bottom: 15px;
+        }
+
+        .logo-circle-mosque {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(135deg, #87CEEB, #4682B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 3px solid #87CEEB;
+        }
+
+        .mosque-logo {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-school-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .modal-motto {
+            font-size: 11px;
+            color: #ffd700;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
         /* Main Content */
         .main-content {
             margin-top: 80px;
@@ -443,9 +528,14 @@
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
-                <div>
-                    <h1>TMS NURANI</h1>
-                    <p>MTs Nurul Aiman</p>
+                <div class="header-logo-container">
+                    <div class="header-logo-circle">
+                        <i class="fas fa-mosque" style="font-size: 30px; color: white;"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1>TMS NURANI</h1>
+                        <p>MTs Nurul Aiman</p>
+                    </div>
                 </div>
             </div>
             
@@ -524,6 +614,20 @@
     <div class="login-overlay" id="loginOverlay">
         <div class="login-modal">
             <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+            
+            <!-- Logo Section -->
+            <div class="modal-logo-section">
+                <div class="modal-logo">
+                    <div class="logo-circle-mosque">
+                        <div class="mosque-logo">
+                            <i class="fas fa-mosque" style="font-size: 40px; color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-school-name">MTS NURUL AIMAN TANJUNGSARI</div>
+                <div class="modal-motto">BERIMAN • BERKARAKTER • BERILMU</div>
+            </div>
+            
             <h2 id="modalTitle">LOGIN GURU</h2>
             <p class="subtitle" id="modalSubtitle">Single Account, Single Sign On login</p>
             
@@ -535,7 +639,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+        @endif
             
             <form id="loginForm" method="POST" action="{{ route('login.modal') }}">
                 @csrf
@@ -548,13 +652,21 @@
                 
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Masukkan password" required>
+                    <div style="position: relative;">
+                        <input type="password" class="form-control" name="password" id="modalPassword" placeholder="Masukkan password" required>
+                        <button type="button" class="password-toggle-btn" onclick="toggleModalPassword()">
+                            <i class="fas fa-eye" id="modalToggleIcon"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-login">Login</button>
             </form>
             
             <a href="#" class="forgot-password">Forgot password?</a>
+            <div style="text-align: center; margin-top: 15px;">
+                <small style="color: rgba(255,255,255,0.7);">Akun sudah tersedia, silakan login dengan kredensial yang diberikan</small>
+            </div>
         </div>
     </div>
 
@@ -592,6 +704,21 @@
         function closeLoginModal() {
             const overlay = document.getElementById('loginOverlay');
             overlay.classList.remove('show');
+        }
+
+        function toggleModalPassword() {
+            const passwordField = document.getElementById('modalPassword');
+            const toggleIcon = document.getElementById('modalToggleIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
         }
 
         // Close dropdown when clicking outside
