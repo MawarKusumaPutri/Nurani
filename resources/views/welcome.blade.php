@@ -3,6 +3,7 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>MTs Nurul Aiman - TMS NURANI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -712,7 +713,8 @@
                     </a>
                     <div class="dropdown-menu" id="dropdownMenu">
                         <a href="#" onclick="openLoginModal('guru')">GURU</a>
-                        <a href="#" onclick="openLoginModal('tenaga_usaha')">TENAGA USAHA</a>
+                        <a href="#" onclick="openLoginModal('tu')">TENAGA USAHA</a>
+                        <a href="#" onclick="openLoginModal('kepala_sekolah')">KEPALA SEKOLAH</a>
                     </div>
                 </div>
                 </nav>
@@ -806,15 +808,20 @@
                 @csrf
                 <input type="hidden" name="role" id="userRole" value="guru">
                 
+                <!-- Debug info -->
+                <div id="debugInfo" style="display: none; color: white; font-size: 12px; margin-bottom: 10px;">
+                    Debug: Role = <span id="debugRole"></span>, Email = <span id="debugEmail"></span>
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">Username</label>
-                    <input type="text" class="form-control" name="email" placeholder="Masukkan username/email" value="{{ old('email') }}" required>
+                    <input type="email" class="form-control" name="email" placeholder="Masukkan email" value="{{ old('email') }}" required autocomplete="email">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Password</label>
                     <div style="position: relative;">
-                        <input type="password" class="form-control" name="password" id="modalPassword" placeholder="Masukkan password" required>
+                        <input type="password" class="form-control" name="password" id="modalPassword" placeholder="Masukkan password" required autocomplete="current-password">
                         <button type="button" class="password-toggle-btn" onclick="toggleModalPassword()">
                             <i class="fas fa-eye" id="modalToggleIcon"></i>
                         </button>
@@ -852,10 +859,14 @@
                 modalTitle.textContent = 'LOGIN GURU';
                 modalSubtitle.textContent = 'Single Account, Single Sign On login';
                 userRole.value = 'guru';
-            } else if (role === 'tenaga_usaha') {
+            } else if (role === 'tu') {
                 modalTitle.textContent = 'LOGIN TENAGA USAHA';
                 modalSubtitle.textContent = 'Single Account, Single Sign On login';
-                userRole.value = 'tenaga_usaha';
+                userRole.value = 'tu';
+            } else if (role === 'kepala_sekolah') {
+                modalTitle.textContent = 'LOGIN KEPALA SEKOLAH';
+                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                userRole.value = 'kepala_sekolah';
             }
             
             // Show modal
@@ -915,10 +926,55 @@
             const email = document.querySelector('input[name="email"]').value;
             const password = document.querySelector('input[name="password"]').value;
             
-            console.log('Login attempt:', { role, email, password });
+            console.log('=== LOGIN DEBUG ===');
+            console.log('Role:', role);
+            console.log('Email:', email);
+            console.log('Password length:', password.length);
+            console.log('Form action:', this.action);
+            console.log('Form method:', this.method);
             
-            // Form will submit normally, no need to prevent default
+            // Update debug info
+            document.getElementById('debugRole').textContent = role;
+            document.getElementById('debugEmail').textContent = email;
+            document.getElementById('debugInfo').style.display = 'block';
+            
+            // Show loading state
+            const submitBtn = document.querySelector('.btn-login');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging in...';
+            submitBtn.disabled = true;
+            
+            // Add a small delay to show loading state
+            setTimeout(() => {
+                console.log('Submitting form...');
+                // Form will submit normally
+            }, 100);
         });
+
+        // Handle logout with JavaScript as fallback
+        function handleLogout() {
+            // Try to logout via JavaScript
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    // Fallback: redirect to home
+                    window.location.href = '/';
+                }
+            })
+            .catch(error => {
+                console.log('Logout error:', error);
+                // Fallback: redirect to home
+                window.location.href = '/';
+            });
+        }
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

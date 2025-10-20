@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard TU - TMS NURANI')
+@section('title', 'Dashboard Kepala Sekolah - TMS NURANI')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -9,13 +9,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Dashboard Tenaga Usaha</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">Dashboard Kepala Sekolah</h1>
                     <p class="text-gray-600">Selamat datang, {{ Auth::user()->name }}</p>
-                    <p class="text-sm text-gray-500">Staff TU - MTs Nurul Aiman</p>
+                    <p class="text-sm text-gray-500">NUPTK: {{ Auth::user()->nip }}</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {{ Auth::user()->role === 'tu' ? 'Tenaga Usaha' : Auth::user()->role }}
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                        Kepala Sekolah
                     </span>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
@@ -47,11 +47,11 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="p-3 rounded-full bg-green-100 text-green-600">
-                        <i class="fas fa-book text-xl"></i>
+                        <i class="fas fa-graduation-cap text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Mata Pelajaran</p>
-                        <p class="text-2xl font-bold text-gray-900">15</p>
+                        <p class="text-sm font-medium text-gray-600">Total Siswa</p>
+                        <p class="text-2xl font-bold text-gray-900">180</p>
                     </div>
                 </div>
             </div>
@@ -59,11 +59,11 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                        <i class="fas fa-calendar-check text-xl"></i>
+                        <i class="fas fa-chart-line text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Kehadiran Hari Ini</p>
-                        <p class="text-2xl font-bold text-gray-900">10/12</p>
+                        <p class="text-sm font-medium text-gray-600">Kehadiran Rata-rata</p>
+                        <p class="text-2xl font-bold text-gray-900">85%</p>
                     </div>
                 </div>
             </div>
@@ -71,52 +71,69 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-                        <i class="fas fa-file-alt text-xl"></i>
+                        <i class="fas fa-trophy text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Dokumen</p>
-                        <p class="text-2xl font-bold text-gray-900">45</p>
+                        <p class="text-sm font-medium text-gray-600">Prestasi Bulan Ini</p>
+                        <p class="text-2xl font-bold text-gray-900">3</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Data Guru -->
-            <div class="bg-white rounded-lg shadow-md">
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Data Guru dan Mata Pelajaran -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-md">
                 <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Data Guru</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Data Guru dan Mata Pelajaran</h3>
                 </div>
                 <div class="p-6">
-                    <div class="space-y-4">
-                        @php
-                            $gurus = \App\Models\Guru::with('user')->take(3)->get();
-                        @endphp
-                        @foreach($gurus as $guru)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $guru->user->name }}</p>
-                                <p class="text-sm text-gray-600">{{ $guru->mata_pelajaran }}</p>
-                            </div>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                                {{ ucfirst($guru->status) }}
-                            </span>
-                        </div>
-                        @endforeach
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Guru</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mata Pelajaran</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @php
+                                    $gurus = \App\Models\Guru::with('user')->take(5)->get();
+                                @endphp
+                                @foreach($gurus as $guru)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $guru->user->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $guru->mata_pelajaran }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($guru->status === 'aktif')
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Aktif</span>
+                                        @elseif($guru->status === 'izin')
+                                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Izin</span>
+                                        @else
+                                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Sakit</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                     <button class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
-                        <i class="fas fa-eye mr-2"></i>Lihat Semua Data Guru
+                        <i class="fas fa-eye mr-2"></i>Lihat Semua Data
                     </button>
                 </div>
             </div>
 
-            <!-- Kehadiran Hari Ini -->
-            <div class="bg-white rounded-lg shadow-md">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Kehadiran Hari Ini</h3>
-                </div>
-                <div class="p-6">
+            <!-- Quick Stats -->
+            <div class="space-y-6">
+                <!-- Kehadiran Hari Ini -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Kehadiran Hari Ini</h3>
+                    </div>
+                    <div class="p-6">
                     @php
                         $totalGuru = \App\Models\Guru::count();
                         $hadir = \App\Models\Guru::where('status', 'aktif')->count();
@@ -142,11 +159,33 @@
                             <span class="font-semibold text-red-600">{{ $sakit }}</span>
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ $persentase }}%"></div>
+                        <div class="mt-4">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: {{ $persentase }}%"></div>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">{{ $persentase }}% Kehadiran</p>
                         </div>
-                        <p class="text-sm text-gray-600 mt-2">{{ $persentase }}% Kehadiran</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Aksi Cepat</h3>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                            <i class="fas fa-chart-bar mr-2"></i>Laporan Kehadiran
+                        </button>
+                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                            <i class="fas fa-users mr-2"></i>Kelola Data Guru
+                        </button>
+                        <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                            <i class="fas fa-file-alt mr-2"></i>Laporan Bulanan
+                        </button>
+                        <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                            <i class="fas fa-cog mr-2"></i>Pengaturan Sistem
+                        </button>
                     </div>
                 </div>
             </div>
@@ -178,6 +217,13 @@
                         <div>
                             <p class="text-sm text-gray-900">Siti Mundari mengajukan izin</p>
                             <p class="text-xs text-gray-500">1 jam yang lalu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <div>
+                            <p class="text-sm text-gray-900">Laporan kehadiran bulan ini telah dibuat</p>
+                            <p class="text-xs text-gray-500">2 jam yang lalu</p>
                         </div>
                     </div>
                 </div>

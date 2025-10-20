@@ -28,6 +28,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login-modal', [AuthController::class, 'login'])->name('login.modal');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
@@ -42,6 +43,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('tu')->name('tu.')->group(function () {
         Route::get('/dashboard', function () {
             return view('tu.dashboard');
+        })->name('dashboard');
+    });
+    
+    // Kepala Sekolah Routes
+    Route::prefix('kepala-sekolah')->name('kepala_sekolah.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('kepala_sekolah.dashboard');
         })->name('dashboard');
     });
 });
