@@ -143,9 +143,56 @@
                         <p class="text-muted mb-0">Kelola materi pembelajaran dan aktivitas mengajar Anda</p>
                     </div>
                     <div class="text-end">
-                        <span class="badge bg-success fs-6">{{ $guru->mata_pelajaran }}</span>
+                        @if($mataPelajaranList->count() > 1)
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-book me-2"></i>{{ $selectedMataPelajaran ?? 'Pilih Mata Pelajaran' }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    @foreach($mataPelajaranList as $mp)
+                                        <li>
+                                            <a class="dropdown-item {{ $selectedMataPelajaran == $mp->mata_pelajaran ? 'active' : '' }}" 
+                                               href="{{ route('guru.dashboard', ['mata_pelajaran' => $mp->mata_pelajaran]) }}">
+                                                <i class="fas fa-book me-2"></i>{{ $mp->mata_pelajaran }}
+                                                @if($selectedMataPelajaran == $mp->mata_pelajaran)
+                                                    <i class="fas fa-check text-success float-end"></i>
+                                                @endif
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <span class="badge bg-success fs-6">{{ $selectedMataPelajaran ?? $guru->mata_pelajaran }}</span>
+                        @endif
                     </div>
                 </div>
+
+                <!-- Mata Pelajaran Switcher -->
+                @if($mataPelajaranList->count() > 1)
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">
+                                <i class="fas fa-exchange-alt me-2 text-primary"></i>
+                                Switch Mata Pelajaran
+                            </h6>
+                            <div class="row">
+                                @foreach($mataPelajaranList as $mp)
+                                    <div class="col-md-4 col-lg-3 mb-2">
+                                        <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $mp->mata_pelajaran]) }}" 
+                                           class="btn w-100 {{ $selectedMataPelajaran == $mp->mata_pelajaran ? 'btn-primary' : 'btn-outline-primary' }}">
+                                            <i class="fas fa-book me-2"></i>{{ $mp->mata_pelajaran }}
+                                            @if($selectedMataPelajaran == $mp->mata_pelajaran)
+                                                <i class="fas fa-check float-end"></i>
+                                            @endif
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- Statistics Cards -->
                 <div class="row mb-4">

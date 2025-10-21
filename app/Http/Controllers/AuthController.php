@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Guru;
+use App\Services\ActivityTracker;
 
 class AuthController extends Controller
 {
@@ -48,6 +50,14 @@ class AuthController extends Controller
             \Log::info('Login successful for user:', ['name' => $user->name, 'email' => $user->email]);
             Auth::login($user);
             
+            // Track guru login activity
+            if ($role === 'guru') {
+                $guru = Guru::where('user_id', $user->id)->first();
+                if ($guru) {
+                    ActivityTracker::trackLogin($guru, $request);
+                }
+            }
+            
             // Redirect berdasarkan role
             switch ($role) {
                 case 'guru':
@@ -81,6 +91,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
+            // Track guru logout activity before logout
+            if (Auth::check() && Auth::user()->role === 'guru') {
+                $guru = Guru::where('user_id', Auth::id())->first();
+                if ($guru) {
+                    ActivityTracker::trackLogout($guru, $request);
+                }
+            }
+            
             // Check if user is authenticated before logout
             if (Auth::check()) {
                 Auth::logout();

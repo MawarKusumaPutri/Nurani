@@ -168,6 +168,18 @@
                                     </div>
                                     
                                     <div class="mb-3">
+                                        <label for="mata_pelajaran" class="form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required>
+                                            <option value="">Pilih Mata Pelajaran</option>
+                                            @foreach($mataPelajaranList as $mp)
+                                                <option value="{{ $mp->mata_pelajaran }}" {{ old('mata_pelajaran') == $mp->mata_pelajaran ? 'selected' : '' }}>
+                                                    {{ $mp->mata_pelajaran }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
                                         <label for="topik" class="form-label">Topik <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="topik" name="topik" 
                                                value="{{ old('topik') }}" required>

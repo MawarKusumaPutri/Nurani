@@ -86,8 +86,17 @@ Route::middleware('auth')->group(function () {
     
     // Kepala Sekolah Routes
     Route::prefix('kepala-sekolah')->name('kepala_sekolah.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('kepala_sekolah.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\KepalaSekolahController::class, 'dashboard'])->name('dashboard');
+        Route::get('/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'notifications'])->name('notifications');
+        Route::post('/notifications/{id}/read', [App\Http\Controllers\KepalaSekolahController::class, 'markNotificationAsRead'])->name('notifications.read');
+        Route::post('/notifications/read-all', [App\Http\Controllers\KepalaSekolahController::class, 'markAllNotificationsAsRead'])->name('notifications.read_all');
+        Route::get('/guru/{guru}/activity', [App\Http\Controllers\KepalaSekolahController::class, 'guruActivity'])->name('guru.activity');
+            Route::get('/api/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'getNotifications'])->name('api.notifications');
+            Route::get('/api/online-status', [App\Http\Controllers\KepalaSekolahController::class, 'getOnlineStatus'])->name('online_status');
+            Route::get('/api/today-stats', [App\Http\Controllers\KepalaSekolahController::class, 'getTodayStats'])->name('api.today_stats');
+            Route::get('/api/weekly-activity', [App\Http\Controllers\KepalaSekolahController::class, 'getWeeklyActivity'])->name('api.weekly_activity');
+            Route::get('/api/weekly-table', [App\Http\Controllers\KepalaSekolahController::class, 'getWeeklyTable'])->name('api.weekly_table');
+            Route::get('/api/activity-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getActivityDistribution'])->name('api.activity_distribution');
+            Route::get('/api/status-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getStatusDistribution'])->name('api.status_distribution');
     });
 });

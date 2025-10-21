@@ -7,10 +7,11 @@ use App\Models\Guru;
 use App\Models\Materi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ActivityTracker;
 
 class MateriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->first();
         
@@ -18,11 +19,22 @@ class MateriController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        $materi = $guru->materi()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        // Get mata pelajaran yang dipilih
+        $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+        
+        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
+            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        }
 
-        return view('guru.materi.index', compact('guru', 'materi'));
+        $query = $guru->materi();
+        if ($selectedMataPelajaran) {
+            $query->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+
+        $materi = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('guru.materi.index', compact('guru', 'materi', 'mataPelajaranList', 'selectedMataPelajaran'));
     }
 
     public function create()
@@ -33,7 +45,9 @@ class MateriController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        return view('guru.materi.create', compact('guru'));
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+
+        return view('guru.materi.create', compact('guru', 'mataPelajaranList'));
     }
 
     public function store(Request $request)
@@ -48,6 +62,7 @@ class MateriController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'kelas' => 'required|string|max:255',
+            'mata_pelajaran' => 'required|string|max:255',
             'topik' => 'required|string|max:255',
             'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,gif,mp4,avi,mov|max:10240',
             'konten' => 'nullable|string',
@@ -59,6 +74,7 @@ class MateriController extends Controller
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'kelas' => $request->kelas,
+            'mata_pelajaran' => $request->mata_pelajaran,
             'topik' => $request->topik,
             'konten' => $request->konten,
             'link_video' => $request->link_video,
@@ -80,7 +96,16 @@ class MateriController extends Controller
             $data['tanggal_publish'] = now();
         }
 
-        Materi::create($data);
+        $materi = Materi::create($data);
+
+        // Track activity
+        ActivityTracker::trackActivity($guru, 'create_materi', 'Membuat materi baru: ' . $materi->judul, [
+            'materi_id' => $materi->id,
+            'judul' => $materi->judul,
+            'kelas' => $materi->kelas,
+            'mata_pelajaran' => $materi->mata_pelajaran,
+            'topik' => $materi->topik
+        ]);
 
         return redirect()->route('guru.materi.index')->with('success', 'Materi berhasil ditambahkan');
     }

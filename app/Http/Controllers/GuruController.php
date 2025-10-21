@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class GuruController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->first();
         
@@ -20,34 +20,59 @@ class GuruController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        // Statistik dashboard
-        $totalMateri = $guru->materi()->count();
-        $materiPublished = $guru->materi()->where('is_published', true)->count();
-        $totalKuis = $guru->kuis()->count();
-        $totalRangkuman = $guru->rangkuman()->count();
+        // Get mata pelajaran yang dipilih (default: pertama)
+        $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
         
-        // Materi terbaru
-        $materiTerbaru = $guru->materi()
+        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
+            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        }
+
+        // Statistik dashboard berdasarkan mata pelajaran yang dipilih
+        $query = $guru->materi();
+        if ($selectedMataPelajaran) {
+            $query->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+        
+        $totalMateri = $query->count();
+        $materiPublished = $query->where('is_published', true)->count();
+        
+        $kuisQuery = $guru->kuis();
+        if ($selectedMataPelajaran) {
+            $kuisQuery->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+        $totalKuis = $kuisQuery->count();
+        
+        $rangkumanQuery = $guru->rangkuman();
+        if ($selectedMataPelajaran) {
+            $rangkumanQuery->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+        $totalRangkuman = $rangkumanQuery->count();
+        
+        // Materi terbaru berdasarkan mata pelajaran
+        $materiTerbaru = $query
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
             
-        // Kuis aktif
-        $kuisAktif = $guru->kuis()
+        // Kuis aktif berdasarkan mata pelajaran
+        $kuisAktif = $kuisQuery
             ->where('is_active', true)
             ->where('tanggal_selesai', '>', now())
             ->orderBy('tanggal_mulai', 'asc')
             ->limit(3)
             ->get();
             
-        // Rangkuman bulan ini
-        $rangkumanBulanIni = $guru->rangkuman()
+        // Rangkuman bulan ini berdasarkan mata pelajaran
+        $rangkumanBulanIni = $rangkumanQuery
             ->whereMonth('tanggal_pertemuan', now()->month)
             ->whereYear('tanggal_pertemuan', now()->year)
             ->count();
 
         return view('guru.dashboard', compact(
             'guru',
+            'mataPelajaranList',
+            'selectedMataPelajaran',
             'totalMateri',
             'materiPublished',
             'totalKuis',

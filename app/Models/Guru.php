@@ -49,4 +49,36 @@ class Guru extends Model
     {
         return $this->hasMany(Rangkuman::class);
     }
+
+    /**
+     * Get the mata pelajaran for the guru.
+     */
+    public function mataPelajaran(): HasMany
+    {
+        return $this->hasMany(GuruMataPelajaran::class);
+    }
+
+    /**
+     * Get active mata pelajaran for the guru.
+     */
+    public function mataPelajaranAktif(): HasMany
+    {
+        return $this->hasMany(GuruMataPelajaran::class)->where('is_active', true)->orderBy('urutan');
+    }
+
+    /**
+     * Get the activities for the guru.
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(GuruActivity::class);
+    }
+
+    /**
+     * Get recent activities for the guru.
+     */
+    public function recentActivities(): HasMany
+    {
+        return $this->hasMany(GuruActivity::class)->orderBy('activity_time', 'desc')->limit(10);
+    }
 }
