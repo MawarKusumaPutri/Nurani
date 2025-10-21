@@ -17,6 +17,18 @@
                     <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                         Kepala Sekolah
                     </span>
+                    
+                    <!-- Notification Bell in Gray Area -->
+                    <div class="relative bg-gray-100 rounded-full p-3 hover:bg-gray-200 transition-colors cursor-pointer">
+                        <div class="relative">
+                            <i class="fas fa-bell text-red-500 text-xl"></i>
+                            <!-- Badge yang selalu ada, tapi angka berubah -->
+                            <span class="notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold shadow-lg" id="notificationCount">
+                                {{ $unreadNotifications }}
+                            </span>
+                        </div>
+                    </div>
+                    
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
@@ -197,38 +209,267 @@
                 <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
             </div>
             <div class="p-6">
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <div>
-                            <p class="text-sm text-gray-900">Nurhadi, S.Pd melakukan presensi masuk</p>
-                            <p class="text-xs text-gray-500">2 menit yang lalu</p>
+                <div class="space-y-4" id="recentActivitiesList">
+                    @forelse($recentActivities as $activity)
+                        <div class="flex items-center space-x-3 activity-item" data-activity-time="{{ $activity->activity_time->toISOString() }}">
+                            <div class="w-2 h-2 rounded-full activity-dot
+                                @if($activity->activity_type == 'login') bg-green-500
+                                @elseif($activity->activity_type == 'logout') bg-red-500
+                                @elseif($activity->activity_type == 'create_materi') bg-blue-500
+                                @elseif($activity->activity_type == 'create_kuis') bg-yellow-500
+                                @elseif($activity->activity_type == 'create_rangkuman') bg-purple-500
+                                @else bg-gray-500
+                                @endif
+                            "></div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-900">
+                                    <span class="font-medium">{{ $activity->guru->user->name }}</span>
+                                    {{ $activity->description }}
+                                </p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <p class="text-xs text-gray-500 activity-relative-time">
+                                        {{ $activity->activity_time->diffForHumans() }}
+                                    </p>
+                                    <span class="text-xs text-gray-400">•</span>
+                                    <p class="text-xs text-gray-500 activity-absolute-time">
+                                        @php
+                                            $timezone = $activity->metadata['timezone'] ?? 'Asia/Jakarta';
+                                            $timezoneAbbr = $activity->metadata['timezone_abbr'] ?? 'WIB';
+                                            $formattedTime = $activity->activity_time->setTimezone($timezone)->format('d M Y, H:i') . ' ' . $timezoneAbbr;
+                                        @endphp
+                                        {{ $formattedTime }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <div>
-                            <p class="text-sm text-gray-900">Keysha mengupload materi Bahasa Inggris</p>
-                            <p class="text-xs text-gray-500">15 menit yang lalu</p>
+                    @empty
+                        <div class="text-center py-8">
+                            <div class="text-gray-400 text-4xl mb-2">📊</div>
+                            <p class="text-gray-500">Tidak ada aktivitas terbaru</p>
+                            <p class="text-sm text-gray-400">Aktivitas guru akan muncul di sini</p>
                         </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                        <div>
-                            <p class="text-sm text-gray-900">Siti Mundari mengajukan izin</p>
-                            <p class="text-xs text-gray-500">1 jam yang lalu</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <div>
-                            <p class="text-sm text-gray-900">Laporan kehadiran bulan ini telah dibuat</p>
-                            <p class="text-xs text-gray-500">2 jam yang lalu</p>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+<style>
+/* Activity Items Styling */
+.activity-item {
+    transition: all 0.3s ease;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.activity-item:hover {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    transform: translateX(4px);
+}
+
+.activity-dot {
+    transition: all 0.3s ease;
+}
+
+.activity-item:hover .activity-dot {
+    transform: scale(1.2);
+}
+
+.activity-relative-time {
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.activity-absolute-time {
+    font-weight: 400;
+    color: #9ca3af;
+}
+
+/* Notification Bell in Gray Area */
+.bg-gray-100 {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.bg-gray-100:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Notification Bell Styling */
+.fa-bell {
+    animation: bellRing 2s infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    transition: all 0.3s ease;
+}
+
+@keyframes bellRing {
+    0%, 50%, 100% {
+        transform: rotate(0deg);
+    }
+    10%, 30% {
+        transform: rotate(-10deg);
+    }
+    20%, 40% {
+        transform: rotate(10deg);
+    }
+}
+
+/* Notification Badge Styling - Always Visible */
+.notification-badge {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    border: 2px solid white;
+    min-width: 24px;
+    min-height: 24px;
+    display: flex !important;
+}
+
+/* Animation only when there are notifications */
+.notification-badge.animate-bounce {
+    animation: bounce 1s infinite;
+}
+
+.notification-badge.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-3px);
+    }
+    60% {
+        transform: translateY(-1px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Hover effect for notification bell */
+.relative:hover .fa-bell {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.relative:hover .notification-badge {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .activity-item {
+        padding: 8px;
+    }
+    
+    .activity-item .flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .notification-badge {
+        height: 20px;
+        width: 20px;
+        font-size: 10px;
+    }
+}
+</style>
+
+<script>
+// Auto-update relative time for activities
+function updateActivityTimes() {
+    const activityItems = document.querySelectorAll('.activity-item');
+    
+    activityItems.forEach(item => {
+        const activityTime = new Date(item.dataset.activityTime);
+        const relativeTimeElement = item.querySelector('.activity-relative-time');
+        
+        if (relativeTimeElement) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - activityTime) / 1000);
+            
+            let relativeTime;
+            if (diffInSeconds < 60) {
+                relativeTime = `${diffInSeconds} detik yang lalu`;
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                relativeTime = `${minutes} menit yang lalu`;
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                relativeTime = `${hours} jam yang lalu`;
+            } else {
+                const days = Math.floor(diffInSeconds / 86400);
+                relativeTime = `${days} hari yang lalu`;
+            }
+            
+            relativeTimeElement.textContent = relativeTime;
+        }
+    });
+}
+
+// Update activity times every 30 seconds
+setInterval(updateActivityTimes, 30000);
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateActivityTimes();
+    updateNotificationBadge();
+    
+    // Add click functionality to notification bell
+    const notificationBell = document.querySelector('.bg-gray-100');
+    if (notificationBell) {
+        notificationBell.addEventListener('click', function() {
+            // Show notification panel or redirect to notifications
+            window.location.href = '/kepala-sekolah/notifications';
+        });
+    }
+});
+
+// Update notification badge
+function updateNotificationBadge() {
+    fetch('/kepala-sekolah/api/notifications')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('notificationCount');
+            const bell = document.querySelector('.fa-bell');
+            
+            if (badge) {
+                // Update badge number
+                badge.textContent = data.length;
+                
+                if (data.length > 0) {
+                    // Add animation when there are notifications
+                    badge.classList.add('animate-bounce');
+                    bell.classList.add('animate-pulse');
+                } else {
+                    // Remove animation when no notifications
+                    badge.classList.remove('animate-bounce');
+                    bell.classList.remove('animate-pulse');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error updating notification badge:', error);
+        });
+}
+
+// Update notification badge every 30 seconds
+setInterval(updateNotificationBadge, 30000);
+</script>
