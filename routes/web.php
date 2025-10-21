@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GuruController;
+use App\Http\Controllers\MateriController;
+use App\Http\Controllers\KuisController;
+use App\Http\Controllers\RangkumanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +38,43 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 Route::middleware('auth')->group(function () {
     // Guru Routes
     Route::prefix('guru')->name('guru.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('guru.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profil', [GuruController::class, 'profil'])->name('profil');
+        Route::put('/profil', [GuruController::class, 'updateProfil'])->name('profil.update');
+        
+        // Materi Routes
+        Route::prefix('materi')->name('materi.')->group(function () {
+            Route::get('/', [MateriController::class, 'index'])->name('index');
+            Route::get('/create', [MateriController::class, 'create'])->name('create');
+            Route::post('/', [MateriController::class, 'store'])->name('store');
+            Route::get('/{materi}', [MateriController::class, 'show'])->name('show');
+            Route::get('/{materi}/edit', [MateriController::class, 'edit'])->name('edit');
+            Route::put('/{materi}', [MateriController::class, 'update'])->name('update');
+            Route::delete('/{materi}', [MateriController::class, 'destroy'])->name('destroy');
+            Route::get('/search', [MateriController::class, 'search'])->name('search');
+        });
+        
+        // Kuis Routes
+        Route::prefix('kuis')->name('kuis.')->group(function () {
+            Route::get('/', [KuisController::class, 'index'])->name('index');
+            Route::get('/create', [KuisController::class, 'create'])->name('create');
+            Route::post('/', [KuisController::class, 'store'])->name('store');
+            Route::get('/{kuis}', [KuisController::class, 'show'])->name('show');
+            Route::get('/{kuis}/edit', [KuisController::class, 'edit'])->name('edit');
+            Route::put('/{kuis}', [KuisController::class, 'update'])->name('update');
+            Route::delete('/{kuis}', [KuisController::class, 'destroy'])->name('destroy');
+        });
+        
+        // Rangkuman Routes
+        Route::prefix('rangkuman')->name('rangkuman.')->group(function () {
+            Route::get('/', [RangkumanController::class, 'index'])->name('index');
+            Route::get('/create', [RangkumanController::class, 'create'])->name('create');
+            Route::post('/', [RangkumanController::class, 'store'])->name('store');
+            Route::get('/{rangkuman}', [RangkumanController::class, 'show'])->name('show');
+            Route::get('/{rangkuman}/edit', [RangkumanController::class, 'edit'])->name('edit');
+            Route::put('/{rangkuman}', [RangkumanController::class, 'update'])->name('update');
+            Route::delete('/{rangkuman}', [RangkumanController::class, 'destroy'])->name('destroy');
+        });
     });
     
     // Tenaga Usaha Routes
