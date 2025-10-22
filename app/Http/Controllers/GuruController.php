@@ -21,8 +21,17 @@ class GuruController extends Controller
         }
 
         // Get mata pelajaran yang dipilih (default: pertama)
-        $selectedMataPelajaran = $request->get('mata_pelajaran');
-        $mataPelajaranList = $guru->mataPelajaranAktif;
+        $selectedMataPelajaran = $request->get('mata_pelajaran');        
+        // Parse mata pelajaran from guru record
+        $mataPelajaranList = collect();
+        if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
+            $subjects = explode(', ', $guru->mata_pelajaran);
+            foreach ($subjects as $subject) {
+                $mataPelajaranList->push((object)[
+                    'mata_pelajaran' => trim($subject)
+                ]);
+            }
+        }
         
         if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
             $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;

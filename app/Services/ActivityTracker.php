@@ -62,7 +62,7 @@ class ActivityTracker
     public static function trackLogout(Guru $guru, Request $request)
     {
         // Get timezone based on IP address
-        $timezone = self::getTimezoneFromIP($request->ip());
+        $timezone = TimezoneHelper::getTimezoneFromIP($request->ip());
         $logoutTime = now()->setTimezone($timezone);
         
         // Track activity

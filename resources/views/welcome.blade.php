@@ -170,107 +170,190 @@
             background: rgba(255,255,255,0.1);
         }
 
-        /* Login Overlay */
-        .login-overlay {
+        /* Login Sidebar */
+        .login-sidebar {
             position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: none;
+        }
+
+        .login-sidebar.show {
+            display: block;
+        }
+
+        .sidebar-backdrop {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .login-overlay.show {
+        .sidebar-content {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100%;
+            background: linear-gradient(135deg, #46923c 0%, #2d5a2d 100%);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.4s ease-out;
             display: flex;
+            flex-direction: column;
         }
 
-        .login-modal {
-            background: #46923c;
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease-out;
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
         }
 
-        @keyframes slideIn {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-50px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
             }
         }
 
-        .login-modal .close-btn {
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .sidebar-close-btn {
             position: absolute;
             top: 15px;
-            right: 20px;
+            right: 15px;
             background: none;
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .login-modal .close-btn:hover {
+        .sidebar-close-btn:hover {
             opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .login-modal h2 {
+        .sidebar-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .sidebar-logo-circle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #87CEEB, #4682B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #87CEEB;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .sidebar-school-info h3 {
             color: white;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 18px;
             font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;
         }
 
-        .login-modal .subtitle {
-            color: rgba(255,255,255,0.8);
+        .sidebar-school-info p {
+            color: #ffd700;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 2px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-school-info small {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .sidebar-body {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .login-form-header {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 14px;
         }
 
-        .login-modal .form-group {
+        .login-form-header h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .login-form-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .sidebar-body .form-group {
             margin-bottom: 20px;
         }
 
-        .login-modal .form-label {
+        .sidebar-body .form-label {
             color: white;
             font-weight: 500;
             margin-bottom: 8px;
             display: block;
+            font-size: 14px;
         }
 
-        .login-modal .form-control {
+        .sidebar-body .form-control {
             width: 100%;
             padding: 12px 15px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.9);
             transition: background 0.3s ease;
         }
 
-        .login-modal .form-control:focus {
+        .sidebar-body .form-control:focus {
             outline: none;
             background: white;
         }
 
-        .login-modal .btn-login {
+        .sidebar-body .btn-login {
             width: 100%;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border: 2px solid white;
             color: white;
             padding: 12px;
@@ -282,20 +365,21 @@
             margin-bottom: 15px;
         }
 
-        .login-modal .btn-login:hover {
+        .sidebar-body .btn-login:hover {
             background: white;
             color: #46923c;
         }
 
-        .login-modal .forgot-password {
-            color: rgba(255,255,255,0.8);
+        .sidebar-body .forgot-password {
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             font-size: 14px;
             text-align: center;
             display: block;
+            transition: color 0.3s ease;
         }
 
-        .login-modal .forgot-password:hover {
+        .sidebar-body .forgot-password:hover {
             color: white;
         }
 
@@ -314,54 +398,6 @@
 
         .password-toggle-btn:hover {
             color: #46923c;
-        }
-
-        /* Modal Logo Styles */
-        .modal-logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .modal-logo {
-            margin-bottom: 15px;
-        }
-
-        .logo-circle-mosque {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-            position: relative;
-            background: linear-gradient(135deg, #87CEEB, #4682B4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 3px solid #87CEEB;
-        }
-
-        .mosque-logo {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-school-name {
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .modal-motto {
-            font-size: 11px;
-            color: #ffd700;
-            font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
         /* Hero Section */
@@ -438,16 +474,16 @@
         }
 
         .hero-text-container {
-            flex: 0 0 45%;
-            max-width: 500px;
-            padding-right: 20px;
+            flex: 0 0 40%;
+            max-width: 450px;
+            padding-right: 30px;
             animation: fadeInUp 1s ease-out 0.5s both;
             position: relative;
             z-index: 4;
         }
 
         .hero-image-container {
-            flex: 0 0 55%;
+            flex: 0 0 60%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -479,11 +515,11 @@
         .hero-badge {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 12px 20px;
+            border-radius: 12px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
             animation: fadeInUp 1s ease-out calc(3.5s + var(--delay, 0s)) both;
@@ -512,7 +548,7 @@
         }
 
         .hero-badge i {
-            font-size: 20px;
+            font-size: 18px;
             color: #46923c;
             transition: all 0.3s ease;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -522,7 +558,7 @@
         .hero-badge span {
             font-weight: 600;
             color: #46923c;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.3s ease;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
@@ -540,7 +576,7 @@
         }
 
         .hero-title {
-            font-size: 56px;
+            font-size: 48px;
             font-weight: 800;
             margin-bottom: 20px;
             text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.9);
@@ -553,7 +589,7 @@
         }
 
         .hero-tagline {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 15px;
             text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
@@ -562,11 +598,11 @@
         }
 
         .hero-description {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 400;
             opacity: 0.9;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
-            max-width: 450px;
+            max-width: 400px;
             margin: 0;
             animation: fadeInUp 1s ease-out 3s both;
         }
@@ -580,6 +616,7 @@
             margin: 20px 0;
             animation: fadeInUp 1s ease-out 3.5s both;
         }
+
 
 
 
@@ -712,45 +749,80 @@
                 font-size: 16px;
                 max-width: 100%;
             }
+
+            .sidebar-content {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .sidebar-body {
+                padding: 20px;
+            }
+
+            .sidebar-logo-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .sidebar-school-info h3 {
+                font-size: 16px;
+            }
+
+            .sidebar-school-info p {
+                font-size: 12px;
+            }
+
+            .sidebar-school-info small {
+                font-size: 10px;
+            }
         }
 
         @media (max-width: 1024px) and (min-width: 769px) {
             .hero-text-container {
-                flex: 0 0 50%;
-                max-width: 500px;
+                flex: 0 0 45%;
+                max-width: 400px;
                 padding-right: 20px;
-                padding: 30px;
+                padding: 25px;
                 margin: 15px;
             }
 
             .hero-image-container {
-                flex: 0 0 50%;
+                flex: 0 0 55%;
             }
 
             .hero-badges {
                 margin-top: 25px;
-                gap: 12px;
+                gap: 10px;
             }
 
             .hero-badge {
-                padding: 10px 15px;
-                font-size: 11px;
+                padding: 8px 12px;
+                font-size: 10px;
             }
 
             .hero-badge i {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .hero-badge span {
-                font-size: 11px;
+                font-size: 10px;
             }
 
             .hero-title {
-                font-size: 48px;
+                font-size: 40px;
             }
 
             .hero-tagline {
-                font-size: 20px;
+                font-size: 18px;
+            }
+
+            .sidebar-content {
+                width: 380px;
+            }
+
+            .sidebar-body {
+                padding: 25px;
             }
         }
 
@@ -765,30 +837,64 @@
                 flex-direction: row;
                 align-items: center;
                 margin-top: 15px;
-                gap: 8px;
+                gap: 6px;
             }
 
             .hero-badge {
                 flex: 1;
                 min-width: 0;
                 justify-content: center;
-                padding: 6px 10px;
+                padding: 5px 8px;
             }
 
             .hero-badge i {
-                font-size: 14px;
+                font-size: 12px;
             }
 
             .hero-badge span {
-                font-size: 9px;
+                font-size: 8px;
             }
 
             .hero-title {
-                font-size: 32px;
+                font-size: 28px;
             }
 
             .hero-tagline {
-                font-size: 18px;
+                font-size: 16px;
+            }
+
+            .sidebar-content {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .sidebar-body {
+                padding: 15px;
+            }
+
+            .sidebar-logo-circle {
+                width: 50px;
+                height: 50px;
+            }
+
+            .sidebar-school-info h3 {
+                font-size: 14px;
+            }
+
+            .sidebar-school-info p {
+                font-size: 11px;
+            }
+
+            .sidebar-school-info small {
+                font-size: 9px;
+            }
+
+            .login-form-header h2 {
+                font-size: 20px;
+            }
+
+            .login-form-header p {
+                font-size: 12px;
             }
         }
             </style>
@@ -876,67 +982,68 @@
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-modal">
-            <button class="close-btn" onclick="closeLoginModal()">&times;</button>
-            
-            <!-- Logo Section -->
-            <div class="modal-logo-section">
-                <div class="modal-logo">
-                    <div class="logo-circle-mosque">
-                        <div class="mosque-logo">
-                            <i class="fas fa-mosque" style="font-size: 40px; color: white;"></i>
-                        </div>
+    <!-- Login Sidebar -->
+    <div class="login-sidebar" id="loginSidebar">
+        <div class="sidebar-backdrop" onclick="closeLoginSidebar()"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <button class="sidebar-close-btn" onclick="closeLoginSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="sidebar-logo-section">
+                    <div class="sidebar-logo-circle">
+                        <i class="fas fa-mosque" style="font-size: 30px; color: white;"></i>
+                    </div>
+                    <div class="sidebar-school-info">
+                        <h3>MTS NURUL AIMAN</h3>
+                        <p>TANJUNGSARI</p>
+                        <small>BERIMAN • BERKARAKTER • BERILMU</small>
                     </div>
                 </div>
-                <div class="modal-school-name">MTS NURUL AIMAN TANJUNGSARI</div>
-                <div class="modal-motto">BERIMAN • BERKARAKTER • BERILMU</div>
             </div>
             
-            <h2 id="modalTitle">LOGIN GURU</h2>
-            <p class="subtitle" id="modalSubtitle">Single Account, Single Sign On login</p>
-            
-            @if ($errors->any())
-                <div class="alert alert-danger" style="background: rgba(255,0,0,0.1); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,0,0,0.3);">
-                    <ul class="mb-0" style="margin: 0; padding-left: 20px;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-        @endif
-            
-            <form id="loginForm" method="POST" action="{{ route('login.modal') }}">
-                @csrf
-                <input type="hidden" name="role" id="userRole" value="guru">
-                
-                <!-- Debug info -->
-                <div id="debugInfo" style="display: none; color: white; font-size: 12px; margin-bottom: 10px;">
-                    Debug: Role = <span id="debugRole"></span>, Email = <span id="debugEmail"></span>
+            <div class="sidebar-body">
+                <div class="login-form-header">
+                    <h2 id="sidebarTitle">LOGIN GURU</h2>
+                    <p id="sidebarSubtitle">Single Account, Single Sign On login</p>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="email" class="form-control" name="email" placeholder="Masukkan email" value="{{ old('email') }}" required autocomplete="email">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <div style="position: relative;">
-                        <input type="password" class="form-control" name="password" id="modalPassword" placeholder="Masukkan password" required autocomplete="current-password">
-                        <button type="button" class="password-toggle-btn" onclick="toggleModalPassword()">
-                            <i class="fas fa-eye" id="modalToggleIcon"></i>
-                        </button>
+                @if ($errors->any())
+                    <div class="alert alert-danger" style="background: rgba(255,0,0,0.1); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,0,0,0.3);">
+                        <ul class="mb-0" style="margin: 0; padding-left: 20px;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
+                @endif
                 
-                <button type="submit" class="btn-login">Login</button>
-            </form>
-            
-            <a href="#" class="forgot-password">Forgot password?</a>
-            <div style="text-align: center; margin-top: 15px;">
-                <small style="color: rgba(255,255,255,0.7);">Akun sudah tersedia, silakan login dengan kredensial yang diberikan</small>
+                <form id="loginForm" method="POST" action="{{ route('login.modal') }}">
+                    @csrf
+                    <input type="hidden" name="role" id="userRole" value="guru">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="email" class="form-control" name="email" placeholder="Masukkan email" value="{{ old('email') }}" required autocomplete="email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div style="position: relative;">
+                            <input type="password" class="form-control" name="password" id="modalPassword" placeholder="Masukkan password" required autocomplete="current-password">
+                            <button type="button" class="password-toggle-btn" onclick="toggleModalPassword()">
+                                <i class="fas fa-eye" id="modalToggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-login">Login</button>
+                </form>
+                
+                <a href="#" class="forgot-password">Forgot password?</a>
+                <div style="text-align: center; margin-top: 15px;">
+                    <small style="color: rgba(255,255,255,0.7);">Akun sudah tersedia, silakan login dengan kredensial yang diberikan</small>
+                </div>
             </div>
         </div>
     </div>
@@ -948,37 +1055,41 @@
         }
 
         function openLoginModal(role) {
-            const overlay = document.getElementById('loginOverlay');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalSubtitle = document.getElementById('modalSubtitle');
+            const sidebar = document.getElementById('loginSidebar');
+            const sidebarTitle = document.getElementById('sidebarTitle');
+            const sidebarSubtitle = document.getElementById('sidebarSubtitle');
             const userRole = document.getElementById('userRole');
             
             // Close dropdown
             const dropdown = document.getElementById('dropdownMenu');
             dropdown.classList.remove('show');
             
-            // Set modal content based on role
+            // Set sidebar content based on role
             if (role === 'guru') {
-                modalTitle.textContent = 'LOGIN GURU';
-                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                sidebarTitle.textContent = 'LOGIN GURU';
+                sidebarSubtitle.textContent = 'Single Account, Single Sign On login';
                 userRole.value = 'guru';
             } else if (role === 'tu') {
-                modalTitle.textContent = 'LOGIN TENAGA USAHA';
-                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                sidebarTitle.textContent = 'LOGIN TENAGA USAHA';
+                sidebarSubtitle.textContent = 'Single Account, Single Sign On login';
                 userRole.value = 'tu';
             } else if (role === 'kepala_sekolah') {
-                modalTitle.textContent = 'LOGIN KEPALA SEKOLAH';
-                modalSubtitle.textContent = 'Single Account, Single Sign On login';
+                sidebarTitle.textContent = 'LOGIN KEPALA SEKOLAH';
+                sidebarSubtitle.textContent = 'Single Account, Single Sign On login';
                 userRole.value = 'kepala_sekolah';
             }
             
-            // Show modal
-            overlay.classList.add('show');
+            // Show sidebar
+            sidebar.classList.add('show');
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeLoginModal() {
-            const overlay = document.getElementById('loginOverlay');
-            overlay.classList.remove('show');
+        function closeLoginSidebar() {
+            const sidebar = document.getElementById('loginSidebar');
+            sidebar.classList.remove('show');
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
         }
 
         function toggleModalPassword() {
@@ -996,6 +1107,7 @@
             }
         }
 
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('dropdownMenu');
@@ -1006,20 +1118,10 @@
             }
         });
 
-        // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
-            const overlay = document.getElementById('loginOverlay');
-            const modal = document.querySelector('.login-modal');
-            
-            if (event.target === overlay) {
-                closeLoginModal();
-            }
-        });
-
-        // Close modal with Escape key
+        // Close sidebar with Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                closeLoginModal();
+                closeLoginSidebar();
             }
         });
 
@@ -1103,4 +1205,5 @@
         });
     </script>
     </body>
+</html>
 </html>

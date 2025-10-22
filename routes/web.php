@@ -6,6 +6,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\RangkumanController;
+use App\Http\Controllers\GuruMataPelajaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,13 @@ Route::middleware('auth')->group(function () {
             Route::put('/{rangkuman}', [RangkumanController::class, 'update'])->name('update');
             Route::delete('/{rangkuman}', [RangkumanController::class, 'destroy'])->name('destroy');
         });
+        
+        // Mata Pelajaran Routes
+        Route::prefix('mata-pelajaran')->name('mata_pelajaran.')->group(function () {
+            Route::get('/available', [GuruMataPelajaranController::class, 'getAvailableSubjects'])->name('available');
+            Route::post('/select', [GuruMataPelajaranController::class, 'setSelectedSubject'])->name('select');
+            Route::get('/current', [GuruMataPelajaranController::class, 'getCurrentSubject'])->name('current');
+        });
     });
     
     // Tenaga Usaha Routes
@@ -88,9 +96,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('kepala-sekolah')->name('kepala_sekolah.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\KepalaSekolahController::class, 'dashboard'])->name('dashboard');
         Route::get('/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'notifications'])->name('notifications');
-        Route::post('/notifications/{id}/read', [App\Http\Controllers\KepalaSekolahController::class, 'markNotificationAsRead'])->name('notifications.read');
+        Route::post('/notifications/{id}/mark-read', [App\Http\Controllers\KepalaSekolahController::class, 'markNotificationAsRead'])->name('notifications.mark_read');
+        Route::delete('/notifications/{id}/delete', [App\Http\Controllers\KepalaSekolahController::class, 'deleteNotification'])->name('notifications.delete');
         Route::post('/notifications/read-all', [App\Http\Controllers\KepalaSekolahController::class, 'markAllNotificationsAsRead'])->name('notifications.read_all');
+        Route::get('/guru', [App\Http\Controllers\KepalaSekolahController::class, 'guru'])->name('guru');
         Route::get('/guru/{guru}/activity', [App\Http\Controllers\KepalaSekolahController::class, 'guruActivity'])->name('guru.activity');
+        Route::get('/laporan', [App\Http\Controllers\KepalaSekolahController::class, 'laporan'])->name('laporan');
             Route::get('/api/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'getNotifications'])->name('api.notifications');
             Route::get('/api/online-status', [App\Http\Controllers\KepalaSekolahController::class, 'getOnlineStatus'])->name('online_status');
             Route::get('/api/today-stats', [App\Http\Controllers\KepalaSekolahController::class, 'getTodayStats'])->name('api.today_stats');

@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Guru;
 use App\Models\Notification;
 use App\Models\GuruActivity;
+use App\Models\Materi;
+use App\Models\Kuis;
+use App\Models\Rangkuman;
 use App\Services\ActivityTracker;
 
 class KepalaSekolahController extends Controller
@@ -82,6 +85,40 @@ class KepalaSekolahController extends Controller
             ]);
         
         return response()->json(['success' => true]);
+    }
+    
+    public function deleteNotification($id)
+    {
+        $notification = Notification::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
+        
+        if ($notification) {
+            $notification->delete();
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json(['success' => false], 404);
+    }
+    
+    public function guru()
+    {
+        $gurus = Guru::with(['user', 'activities'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+        
+        return view('kepala_sekolah.guru', compact('gurus'));
+    }
+    
+    public function laporan()
+    {
+        $gurus = Guru::with(['user', 'activities'])->get();
+        $totalGuru = $gurus->count();
+        $totalMateri = Materi::count();
+        $totalKuis = Kuis::count();
+        $totalRangkuman = Rangkuman::count();
+        
+        return view('kepala_sekolah.laporan', compact('gurus', 'totalGuru', 'totalMateri', 'totalKuis', 'totalRangkuman'));
     }
     
     public function guruActivity($guruId)
