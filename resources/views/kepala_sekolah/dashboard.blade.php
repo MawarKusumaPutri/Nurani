@@ -94,9 +94,9 @@
         </div>
 
         <!-- Main Dashboard Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Data Guru dan Mata Pelajaran -->
-            <div class="lg:col-span-2 bg-white rounded-lg shadow-md">
+            <div class="lg:col-span-3 bg-white rounded-lg shadow-md">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900">Data Guru dan Mata Pelajaran</h3>
                 </div>
@@ -180,22 +180,22 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
+                <!-- Fitur Utama -->
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Aksi Cepat</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">Fitur Utama</h3>
                     </div>
                     <div class="p-6 space-y-3">
-                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
+                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-chart-bar mr-2"></i>Laporan Kehadiran
                         </a>
-                        <a href="{{ route('kepala_sekolah.guru') }}" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
+                        <a href="{{ route('kepala_sekolah.guru') }}" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-users mr-2"></i>Kelola Data Guru
                         </a>
-                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
+                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-file-alt mr-2"></i>Laporan Bulanan
                         </a>
-                        <a href="{{ route('kepala_sekolah.notifications') }}" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
+                        <a href="{{ route('kepala_sekolah.notifications') }}" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-cog mr-2"></i>Pengaturan Sistem
                         </a>
                     </div>
@@ -252,9 +252,268 @@
                 </div>
             </div>
         </div>
+
+        <!-- Real-time Attendance Monitoring -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Pemantauan Kehadiran Real-time</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Hadir</p>
+                                <p class="text-2xl font-bold text-green-600">{{ \App\Models\Guru::count() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-yellow-500 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Terlambat</p>
+                                <p class="text-2xl font-bold text-yellow-600">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Tidak Hadir</p>
+                                <p class="text-2xl font-bold text-red-600">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                        Kehadiran 100% Hari Ini
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approval System -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Persetujuan Izin</h3>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-clock text-yellow-500 mr-3"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Izin Guru - Siti Mundari</p>
+                                <p class="text-xs text-gray-500">Sakit - 2 hari</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
+                                <i class="fas fa-check mr-1"></i>Setujui
+                            </button>
+                            <button class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
+                                <i class="fas fa-times mr-1"></i>Tolak
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center text-sm text-gray-500">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        Tidak ada izin yang menunggu persetujuan
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Graphs -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Grafik Statistik</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Kehadiran Pie Chart -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-4">Kehadiran Hari Ini</h4>
+                        <div class="flex justify-center">
+                            <canvas id="attendancePieChart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="mt-4 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Hadir</span>
+                                </div>
+                                <span class="text-sm font-medium">13 (100%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Terlambat</span>
+                                </div>
+                                <span class="text-sm font-medium">0 (0%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Tidak Hadir</span>
+                                </div>
+                                <span class="text-sm font-medium">0 (0%)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aktivitas Pembelajaran Pie Chart -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-4">Aktivitas Pembelajaran</h4>
+                        <div class="flex justify-center">
+                            <canvas id="activityPieChart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="mt-4 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Materi Dibuat</span>
+                                </div>
+                                <span class="text-sm font-medium">12 (48%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Kuis Dibuat</span>
+                                </div>
+                                <span class="text-sm font-medium">8 (32%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-gray-600">Rangkuman</span>
+                                </div>
+                                <span class="text-sm font-medium">5 (20%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- School Policies & Evaluations -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Evaluasi & Kebijakan Sekolah</h3>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h4 class="text-sm font-medium text-gray-900">Pengumuman Resmi</h4>
+                        <p class="text-sm text-gray-600 mt-1">Rapat koordinasi guru akan dilaksanakan pada hari Jumat, 25 Oktober 2024 pukul 14.00 WIB.</p>
+                        <p class="text-xs text-gray-500 mt-2">Diposting: 22 Oktober 2024</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="text-sm font-medium text-gray-900">Evaluasi Kinerja</h4>
+                        <p class="text-sm text-gray-600 mt-1">Evaluasi kinerja guru periode Oktober 2024 menunjukkan peningkatan 15% dalam kualitas pembelajaran.</p>
+                        <p class="text-xs text-gray-500 mt-2">Laporan: 20 Oktober 2024</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Tambah Pengumuman
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Kehadiran Pie Chart
+    const attendanceCtx = document.getElementById('attendancePieChart').getContext('2d');
+    new Chart(attendanceCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Hadir', 'Terlambat', 'Tidak Hadir'],
+            datasets: [{
+                data: [13, 0, 0],
+                backgroundColor: [
+                    '#10B981', // Green
+                    '#F59E0B', // Yellow
+                    '#EF4444'  // Red
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Aktivitas Pembelajaran Pie Chart
+    const activityCtx = document.getElementById('activityPieChart').getContext('2d');
+    new Chart(activityCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Materi Dibuat', 'Kuis Dibuat', 'Rangkuman'],
+            datasets: [{
+                data: [12, 8, 5],
+                backgroundColor: [
+                    '#3B82F6', // Blue
+                    '#10B981', // Green
+                    '#8B5CF6'  // Purple
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 
 <style>
 /* Activity Items Styling */

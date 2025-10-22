@@ -110,4 +110,80 @@ Route::middleware('auth')->group(function () {
             Route::get('/api/activity-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getActivityDistribution'])->name('api.activity_distribution');
             Route::get('/api/status-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getStatusDistribution'])->name('api.status_distribution');
     });
+
+    // TU Routes
+    Route::prefix('tu')->name('tu.')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\TuController::class, 'dashboard'])->name('dashboard');
+        
+        // Data Guru Management
+        Route::prefix('guru')->name('guru.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'guruIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'guruCreate'])->name('create');
+            Route::post('/', [App\Http\Controllers\TuController::class, 'guruStore'])->name('store');
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'guruEdit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'guruUpdate'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'guruDestroy'])->name('destroy');
+        });
+        
+        // Data Siswa Management
+        Route::prefix('siswa')->name('siswa.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'siswaIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'siswaCreate'])->name('create');
+        });
+        
+        // Presensi Management
+        Route::prefix('presensi')->name('presensi.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'presensiIndex'])->name('index');
+            Route::post('/verify', [App\Http\Controllers\TuController::class, 'presensiVerify'])->name('verify');
+        });
+        
+        // Izin Management
+        Route::prefix('izin')->name('izin.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'izinIndex'])->name('index');
+            Route::post('/{id}/approve', [App\Http\Controllers\TuController::class, 'izinApprove'])->name('approve');
+            Route::post('/{id}/reject', [App\Http\Controllers\TuController::class, 'izinReject'])->name('reject');
+        });
+        
+        // Sakit Management
+        Route::prefix('sakit')->name('sakit.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'sakitIndex'])->name('index');
+        });
+        
+        // Jadwal Management
+        Route::prefix('jadwal')->name('jadwal.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'jadwalIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'jadwalCreate'])->name('create');
+        });
+        
+        // Kalender Management
+        Route::prefix('kalender')->name('kalender.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'kalenderIndex'])->name('index');
+        });
+        
+        // Arsip Management
+        Route::prefix('arsip')->name('arsip.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'arsipIndex'])->name('index');
+            Route::post('/upload', [App\Http\Controllers\TuController::class, 'arsipUpload'])->name('upload');
+        });
+        
+        // Surat Management
+        Route::prefix('surat')->name('surat.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'suratIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'suratCreate'])->name('create');
+        });
+        
+        // Laporan Management
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'laporanIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'laporanCreate'])->name('create');
+            Route::post('/send', [App\Http\Controllers\TuController::class, 'laporanSend'])->name('send');
+        });
+        
+        // Pengumuman Management
+        Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'pengumumanIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'pengumumanCreate'])->name('create');
+            Route::post('/send', [App\Http\Controllers\TuController::class, 'pengumumanSend'])->name('send');
+        });
+    });
 });
