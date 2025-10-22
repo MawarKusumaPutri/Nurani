@@ -364,235 +364,224 @@
             letter-spacing: 0.5px;
         }
 
-        /* Main Content */
-        .main-content {
+        /* Hero Section */
+        .hero-section {
             margin-top: 80px;
-            min-height: calc(100vh - 200px);
-            background: linear-gradient(135deg, rgba(241, 248, 233, 0.3) 0%, rgba(232, 245, 232, 0.3) 100%);
-            display: flex;
-            align-items: center;
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .main-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(70, 146, 60, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(70, 146, 60, 0.03) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .content-overlay {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .content-left {
-            flex: 1;
-            color: #46923c;
-        }
-
-        .content-right {
-            flex: 1;
-            text-align: center;
-            position: relative;
-        }
-
-
-        .content-right::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: -1;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.02); opacity: 1; }
-        }
-
-        .badges {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .badge-item {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            height: calc(100vh - 80px);
             position: relative;
             overflow: hidden;
-        }
-
-        .badge-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .badge-item:hover::before {
-            left: 100%;
-        }
-
-        .badge-item:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            border-color: rgba(255,255,255,0.5);
-        }
-
-        .badge-item img {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 10px;
-        }
-
-        .badge-text {
-            font-size: 12px;
-            font-weight: 500;
-            color: #46923c;
-        }
-
-        .main-title {
-            font-size: 56px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
-            background: linear-gradient(45deg, #46923c, #46923c, #46923c);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease-in-out infinite;
-            letter-spacing: 2px;
-            line-height: 1.2;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .subtitle {
-            font-size: 18px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-            color: #46923c;
-        }
-
-        .tagline {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #46923c;
-        }
-
-        .description {
-            font-size: 16px;
-            opacity: 0.8;
-            position: relative;
-            color: #46923c;
-        }
-
-        .description::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100px;
-            height: 3px;
-            background: #46923c;
-        }
-
-        .school-logo {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #87CEEB, #4682B4);
-            backdrop-filter: blur(20px);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            border: 3px solid #87CEEB;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .school-logo::before {
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/image/foto_MTS/20251002_105433-fotor-20251022182659.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            animation: backgroundSlide 20s ease-in-out infinite;
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            animation: backgroundSlide 20s ease-in-out infinite, fadeIn 2s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero-section:hover .hero-background {
+            transform: scale(1.05);
+        }
+
+        @keyframes backgroundSlide {
+            0%, 50% {
+                background-image: url('/image/foto_MTS/20251002_105433-fotor-20251022182659.png');
+            }
+            25%, 75% {
+                background-image: url('/image/foto_MTS/20251002_111603-fotor-20251022164553.png');
+            }
+        }
+
+        .hero-background::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: rotate 4s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(70, 146, 60, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+            z-index: 2;
         }
 
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .school-logo:hover {
-            transform: scale(1.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .school-logo i {
-            font-size: 80px;
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: left;
             color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
 
-        .school-name {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #46923c;
+        .hero-text-container {
+            flex: 0 0 45%;
+            max-width: 500px;
+            padding-right: 20px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+            position: relative;
+            z-index: 4;
         }
 
-        .school-motto {
-            font-size: 16px;
-            opacity: 0.8;
-            color: #46923c;
+        .hero-image-container {
+            flex: 0 0 55%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 1s ease-out 1s both;
+            position: relative;
+            z-index: 3;
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 3.5s both;
+        }
+
+        .hero-badge {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out calc(3.5s + var(--delay, 0s)) both;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hero-badge:nth-child(1) { --delay: 0s; }
+        .hero-badge:nth-child(2) { --delay: 0.2s; }
+        .hero-badge:nth-child(3) { --delay: 0.4s; }
+
+        .hero-badge:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-badge:hover i {
+            color: #2d5a2d;
+            transform: scale(1.1);
+        }
+
+        .hero-badge:hover span {
+            color: #2d5a2d;
+        }
+
+        .hero-badge i {
+            font-size: 20px;
+            color: #46923c;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .hero-badge span {
+            font-weight: 600;
+            color: #46923c;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease-out 2s both;
+        }
+
+        .hero-tagline {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+            color: #ffd700;
+            animation: fadeInUp 1s ease-out 2.5s both;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            font-weight: 400;
+            opacity: 0.9;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+            max-width: 450px;
+            margin: 0;
+            animation: fadeInUp 1s ease-out 3s both;
+        }
+
+        .hero-description::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: #ffd700;
+            margin: 20px 0;
+            animation: fadeInUp 1s ease-out 3.5s both;
+        }
+
+
 
         /* Footer */
         .footer {
@@ -660,26 +649,146 @@
                 gap: 20px;
             }
 
-            .content-overlay {
+            .hero-section {
+                height: calc(100vh - 80px);
+            }
+
+            .hero-content {
                 flex-direction: column;
                 text-align: center;
             }
 
-            .main-title {
+            .hero-text-container {
+                flex: 1;
+                max-width: 100%;
+                padding-right: 0;
+                margin-bottom: 30px;
+                background: rgba(0, 0, 0, 0.5);
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .hero-image-container {
+                display: none;
+            }
+
+            .hero-badges {
+                justify-content: center;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .hero-badge {
+                padding: 8px 12px;
+                font-size: 10px;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .hero-badge i {
+                font-size: 16px;
+            }
+
+            .hero-badge span {
+                font-size: 10px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .hero-title {
+                font-size: 42px;
+                margin-bottom: 15px;
+            }
+
+            .hero-tagline {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+
+            .hero-description {
+                font-size: 16px;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .hero-text-container {
+                flex: 0 0 50%;
+                max-width: 500px;
+                padding-right: 20px;
+                padding: 30px;
+                margin: 15px;
+            }
+
+            .hero-image-container {
+                flex: 0 0 50%;
+            }
+
+            .hero-badges {
+                margin-top: 25px;
+                gap: 12px;
+            }
+
+            .hero-badge {
+                padding: 10px 15px;
+                font-size: 11px;
+            }
+
+            .hero-badge i {
+                font-size: 18px;
+            }
+
+            .hero-badge span {
+                font-size: 11px;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .hero-tagline {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text-container {
+                flex: 1;
+                padding: 20px 15px;
+                margin: 5px;
+            }
+
+            .hero-badges {
+                flex-direction: row;
+                align-items: center;
+                margin-top: 15px;
+                gap: 8px;
+            }
+
+            .hero-badge {
+                flex: 1;
+                min-width: 0;
+                justify-content: center;
+                padding: 6px 10px;
+            }
+
+            .hero-badge i {
+                font-size: 14px;
+            }
+
+            .hero-badge span {
+                font-size: 9px;
+            }
+
+            .hero-title {
                 font-size: 32px;
             }
 
-            .badges {
-                justify-content: center;
-            }
-
-            .school-logo {
-                width: 150px;
-                height: 150px;
-            }
-
-            .school-logo i {
-                font-size: 60px;
+            .hero-tagline {
+                font-size: 18px;
             }
         }
             </style>
@@ -702,10 +811,7 @@
             
             <nav class="nav-menu">
                 <a href="#home">BERANDA</a>
-                <a href="#administrasi">ADMINISTRASI</a>
                 <a href="{{ route('tentang') }}">TENTANG</a>
-                <a href="#programs">PROGRAM</a>
-                <a href="#contact">KONTAK</a>
                 
                 <div class="login-dropdown">
                     <a href="#" class="login-btn" onclick="toggleDropdown()">
@@ -721,40 +827,37 @@
         </div>
         </header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="content-overlay">
-            <div class="content-left">
-                <div class="badges">
-                    <div class="badge-item">
-                        <i class="fas fa-graduation-cap" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
-                        <div class="badge-text">MTs Nurul Aiman</div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <div class="hero-text-container">
+                <p class="hero-subtitle">Madrasah Tsanawiyah Unggulan</p>
+                <h1 class="hero-title">MENCIPTAKAN MASA DEPAN</h1>
+                <p class="hero-tagline">BERKONTRIBUSI UNTUK DUNIA</p>
+                <p class="hero-description">Membangun Generasi Berkarakter dan Berprestasi</p>
+                
+                <div class="hero-badges">
+                    <div class="hero-badge">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>MTs Nurul Aiman</span>
                     </div>
-                    <div class="badge-item">
-                        <i class="fas fa-book-open" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
-                        <div class="badge-text">PENDIDIKAN BERKUALITAS</div>
+                    <div class="hero-badge">
+                        <i class="fas fa-book-open"></i>
+                        <span>PENDIDIKAN BERKUALITAS</span>
                     </div>
-                    <div class="badge-item">
-                        <i class="fas fa-award" style="font-size: 40px; color: #46923c; margin-bottom: 10px;"></i>
-                        <div class="badge-text">UNGGUL</div>
+                    <div class="hero-badge">
+                        <i class="fas fa-award"></i>
+                        <span>UNGGUL</span>
                     </div>
                 </div>
-                
-                <p class="subtitle">Madrasah Tsanawiyah Unggulan</p>
-                <h1 class="main-title">MENCIPTAKAN MASA DEPAN</h1>
-                <p class="tagline">BERKONTRIBUSI UNTUK DUNIA</p>
-                <p class="description">Membangun Generasi Berkarakter dan Berprestasi</p>
             </div>
             
-            <div class="content-right">
-                <div class="school-logo">
-                    <i class="fas fa-mosque"></i>
-                </div>
-                <h2 class="school-name">MTs Nurul Aiman</h2>
-                <p class="school-motto">Madrasah Unggulan dengan Teknologi Modern</p>
+            <div class="hero-image-container">
+                <!-- Space for background image to show through -->
             </div>
-                </div>
-            </main>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer" style="background: #46923c !important;">
@@ -988,6 +1091,15 @@
                     });
                 }
             });
+        });
+
+        // Parallax effect for hero background
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroBackground = document.querySelector('.hero-background');
+            if (heroBackground) {
+                heroBackground.style.transform = `scale(${1.1 + scrolled * 0.0005})`;
+            }
         });
     </script>
     </body>
