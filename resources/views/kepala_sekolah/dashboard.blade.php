@@ -132,9 +132,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    <a href="{{ route('kepala_sekolah.guru') }}" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors inline-block text-center">
                         <i class="fas fa-eye mr-2"></i>Lihat Semua Data
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -186,18 +186,18 @@
                         <h3 class="text-lg font-semibold text-gray-900">Aksi Cepat</h3>
                     </div>
                     <div class="p-6 space-y-3">
-                        <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-chart-bar mr-2"></i>Laporan Kehadiran
-                        </button>
-                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                        </a>
+                        <a href="{{ route('kepala_sekolah.guru') }}" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-users mr-2"></i>Kelola Data Guru
-                        </button>
-                        <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                        </a>
+                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-file-alt mr-2"></i>Laporan Bulanan
-                        </button>
-                        <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors text-left">
+                        </a>
+                        <a href="{{ route('kepala_sekolah.notifications') }}" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors text-left inline-block">
                             <i class="fas fa-cog mr-2"></i>Pengaturan Sistem
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
