@@ -10,7 +10,7 @@
     <style>
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -34,7 +34,7 @@
             transform: translateY(-5px);
         }
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             color: white;
         }
         .stat-card .card-body {
@@ -47,31 +47,31 @@
         }
         .content-card {
             background: white;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #2E7D32;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 8px;
             padding: 10px 20px;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
         }
         .navbar-brand {
             font-weight: bold;
-            color: #667eea !important;
+            color: #2E7D32 !important;
         }
         .materi-item {
-            border-left: 3px solid #667eea;
+            border-left: 3px solid #2E7D32;
             padding: 15px;
             margin-bottom: 10px;
-            background: #f8f9fa;
+            background: #F0F4F0;
             border-radius: 8px;
         }
         .kuis-badge {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
@@ -84,12 +84,12 @@
             font-weight: 500;
         }
         .status-published {
-            background: #d4edda;
-            color: #155724;
+            background: #F0F4F0;
+            color: #2E7D32;
         }
         .status-draft {
-            background: #fff3cd;
-            color: #856404;
+            background: #F0F4F0;
+            color: #4CAF50;
         }
     </style>
 </head>

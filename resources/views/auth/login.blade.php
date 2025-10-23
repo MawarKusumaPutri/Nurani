@@ -13,7 +13,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             height: 100vh;
             overflow: hidden;
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         
         .login-container {
@@ -41,7 +41,7 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         
         .logo-section {
@@ -52,13 +52,13 @@
         .logo {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            box-shadow: 0 8px 32px rgba(45, 90, 39, 0.3);
+            box-shadow: 0 8px 32px rgba(46, 125, 50, 0.3);
         }
         
         .logo i {
@@ -69,7 +69,7 @@
         .brand-name {
             font-size: 28px;
             font-weight: bold;
-            color: #2d5a27;
+            color: #2E7D32;
             margin-bottom: 10px;
         }
         
@@ -111,12 +111,12 @@
             padding: 15px 20px;
             font-size: 16px;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            background: #F0F4F0;
         }
         
         .form-control:focus {
-            border-color: #2d5a27;
-            box-shadow: 0 0 0 0.2rem rgba(45, 90, 39, 0.25);
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
             background: white;
         }
         
@@ -137,7 +137,7 @@
         }
         
         .btn-login {
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 12px;
             padding: 15px 30px;
@@ -151,7 +151,7 @@
         
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 90, 39, 0.3);
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
         }
         
         .form-links {
@@ -165,7 +165,7 @@
         }
         
         .form-links a:hover {
-            color: #2d5a27;
+            color: #2E7D32;
         }
         
         .register-link {
@@ -173,7 +173,7 @@
         }
         
         .register-link .highlight {
-            color: #2d5a27;
+            color: #2E7D32;
             font-weight: 600;
         }
         
@@ -203,7 +203,7 @@
         }
         
         .feature-item i {
-            color: #2d5a27;
+            color: #2E7D32;
             margin-right: 10px;
             width: 20px;
         }
