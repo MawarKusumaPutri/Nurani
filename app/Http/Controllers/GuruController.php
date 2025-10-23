@@ -137,13 +137,20 @@ class GuruController extends Controller
         }
 
         // Update data guru
-        $guru->update([
+        $updateData = [
             'nip' => $request->nip,
             'mata_pelajaran' => $request->mata_pelajaran,
             'biodata' => $request->biodata,
             'kontak' => $request->kontak,
             'keahlian' => $request->keahlian
-        ]);
+        ];
+        
+        // Add foto to update data if it was uploaded
+        if ($request->hasFile('foto')) {
+            $updateData['foto'] = $guru->foto;
+        }
+        
+        $guru->update($updateData);
 
         return redirect()->route('guru.profil')->with('success', 'Profil berhasil diperbarui');
     }

@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -68,9 +72,14 @@
                         Dashboard Guru
                     </h4>
                     <div class="text-center mb-4">
-                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                            <i class="fas fa-user fa-2x text-primary"></i>
-                        </div>
+                        @if($guru->foto)
+                            <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" 
+                                 class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid white;">
+                        @else
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            </div>
+                        @endif
                         <h6 class="text-white mt-2 mb-1">{{ $guru->user->name }}</h6>
                         <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>
                     </div>
@@ -203,8 +212,14 @@
                             <div class="mb-3">
                                 <label for="foto" class="form-label">Foto Profil</label>
                                 <input type="file" class="form-control" id="foto" name="foto" 
-                                       accept="image/*">
+                                       accept="image/*" onchange="previewImage(this)">
                                 <div class="form-text">Format: JPG, PNG, GIF. Maksimal 2MB</div>
+                                
+                                <!-- Preview Container -->
+                                <div id="imagePreview" class="mt-3" style="display: none;">
+                                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                                </div>
+                                
                                 @error('foto')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
@@ -278,5 +293,38 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+        
+        // Debug function to check foto path
+        function debugFoto() {
+            @if($guru->foto)
+                console.log('Foto path:', '{{ $guru->foto }}');
+                console.log('Storage URL:', '{{ Storage::url($guru->foto) }}');
+            @endif
+        }
+        
+        // Call debug function on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            debugFoto();
+        });
+    </script>
 </body>
 </html>
