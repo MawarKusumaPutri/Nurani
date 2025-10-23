@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -103,8 +104,12 @@
                         Dashboard Guru
                     </h4>
                     <div class="text-center mb-4">
-                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                            <i class="fas fa-user fa-2x text-primary"></i>
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; overflow: hidden;">
+                            @if($guru->foto)
+                                <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" class="w-100 h-100" style="object-fit: cover;">
+                            @else
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            @endif
                         </div>
                         <h6 class="text-white mt-2 mb-1">{{ $guru->user->name }}</h6>
                         <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>

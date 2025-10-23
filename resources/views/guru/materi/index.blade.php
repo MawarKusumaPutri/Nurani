@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -81,8 +82,12 @@
                         Dashboard Guru
                     </h4>
                     <div class="text-center mb-4">
-                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                            <i class="fas fa-user fa-2x text-primary"></i>
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; overflow: hidden;">
+                            @if($guru->foto)
+                                <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" class="w-100 h-100" style="object-fit: cover;">
+                            @else
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            @endif
                         </div>
                         <h6 class="text-white mt-2 mb-1">{{ $guru->user->name }}</h6>
                         <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>
@@ -327,12 +332,22 @@
                         <a href="{{ route('guru.materi.create') }}" class="btn btn-primary btn-lg">
                             <i class="fas fa-plus me-2"></i>Tambah Materi Pertama
                         </a>
+                        <div class="mt-3">
+                            <a href="https://www.youtube.com" target="_blank" class="btn btn-danger btn-lg">
+                                <i class="fab fa-youtube me-2"></i>YouTube
+                            </a>
+                        </div>
                     </div>
                 @endif
             </div>
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple JavaScript for any future functionality
+    </script>
+    
 </body>
 </html>

@@ -154,4 +154,48 @@ class GuruController extends Controller
 
         return redirect()->route('guru.profil')->with('success', 'Profil berhasil diperbarui');
     }
+
+    public function storeMateri(Request $request)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru) {
+            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
+        }
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'tipe_materi' => 'required|string',
+            'mata_pelajaran' => 'required|string',
+            'kelas' => 'required|string',
+            'video_url' => 'nullable|url',
+            'video_title' => 'nullable|string',
+            'video_thumbnail' => 'nullable|string',
+            'video_duration' => 'nullable|string'
+        ]);
+
+        $materiData = [
+            'guru_id' => $guru->id,
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tipe_materi' => $request->tipe_materi,
+            'mata_pelajaran' => $request->mata_pelajaran,
+            'kelas' => $request->kelas,
+            'is_active' => true
+        ];
+
+        // Add video data if it's a YouTube video
+        if ($request->tipe_materi === 'video_youtube') {
+            $materiData['video_url'] = $request->video_url;
+            $materiData['video_title'] = $request->video_title;
+            $materiData['video_thumbnail'] = $request->video_thumbnail;
+            $materiData['video_duration'] = $request->video_duration;
+        }
+
+        // Create materi using the Materi model
+        \App\Models\Materi::create($materiData);
+
+        return redirect()->route('guru.materi.index')->with('success', 'Materi berhasil ditambahkan!');
+    }
 }

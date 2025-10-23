@@ -48,10 +48,10 @@ class KuisController extends Controller
             'deskripsi' => 'nullable|string',
             'kelas' => 'required|string|max:255',
             'mata_pelajaran' => 'required|string|max:255',
-            'tipe_kuis' => 'required|in:pilihan_ganda,video',
+            'tipe_kuis' => 'required|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
-            'video_url' => 'required_if:tipe_kuis,video|nullable|url',
-            'video_soal' => 'required_if:tipe_kuis,video|nullable|string',
+            'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
+            'esai_petunjuk' => 'nullable|string',
             'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
             'soal.*.pertanyaan' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_a' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
@@ -75,11 +75,11 @@ class KuisController extends Controller
             'is_active' => true
         ];
 
-        if ($request->tipe_kuis === 'video') {
-            // Handle video quiz
-            $kuisData['video_url'] = $request->video_url;
-            $kuisData['video_soal'] = $request->video_soal;
-            $kuisData['soal'] = null; // No multiple choice questions for video quiz
+        if ($request->tipe_kuis === 'esai') {
+            // Handle essay quiz
+            $kuisData['esai_soal'] = $request->esai_soal;
+            $kuisData['esai_petunjuk'] = $request->esai_petunjuk;
+            $kuisData['soal'] = null; // No multiple choice questions for essay quiz
         } else {
             // Handle multiple choice quiz
             $soalFormatted = [];
@@ -143,10 +143,10 @@ class KuisController extends Controller
             'deskripsi' => 'nullable|string',
             'kelas' => 'required|string|max:255',
             'mata_pelajaran' => 'required|string|max:255',
-            'tipe_kuis' => 'required|in:pilihan_ganda,video',
+            'tipe_kuis' => 'required|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
-            'video_url' => 'required_if:tipe_kuis,video|nullable|url',
-            'video_soal' => 'required_if:tipe_kuis,video|nullable|string',
+            'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
+            'esai_petunjuk' => 'nullable|string',
             'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
             'soal.*.pertanyaan' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_a' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',

@@ -17,8 +17,12 @@ class Kuis extends Model
         'mata_pelajaran',
         'tipe_kuis',
         'video_url',
+        'video_title',
+        'video_thumbnail',
         'video_soal',
         'soal',
+        'esai_soal',
+        'esai_petunjuk',
         'durasi_menit',
         'tanggal_mulai',
         'tanggal_selesai',
@@ -60,10 +64,17 @@ class Kuis extends Model
         $videoId = $this->extractVideoId($this->video_url);
         
         if (!$videoId) {
+            // Log for debugging
+            \Log::error('Failed to extract video ID from URL: ' . $this->video_url);
             return null;
         }
 
-        return "https://www.youtube.com/embed/{$videoId}";
+        $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+        
+        // Log for debugging
+        \Log::info('Generated embed URL: ' . $embedUrl);
+        
+        return $embedUrl;
     }
 
     private function extractVideoId($url)
@@ -72,15 +83,19 @@ class Kuis extends Model
         $patterns = [
             '/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/',
             '/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/',
-            '/youtube\.com\/v\/([a-zA-Z0-9_-]+)/'
+            '/youtube\.com\/v\/([a-zA-Z0-9_-]+)/',
+            '/youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/',
+            '/youtu\.be\/([a-zA-Z0-9_-]+)/'
         ];
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $url, $matches)) {
+                \Log::info('Extracted video ID: ' . $matches[1] . ' from URL: ' . $url);
                 return $matches[1];
             }
         }
 
+        \Log::error('No video ID found in URL: ' . $url);
         return null;
     }
 }
