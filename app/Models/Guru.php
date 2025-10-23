@@ -87,6 +87,6 @@ class Guru extends Model
      */
     public function recentActivities(): HasMany
     {
-        return $this->hasMany(GuruActivity::class)->orderBy('activity_time', 'desc')->limit(10);
+        return $this->hasMany(GuruActivity::class)->orderBy('activity_time', 'desc');
     }
 }

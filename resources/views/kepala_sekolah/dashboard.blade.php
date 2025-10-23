@@ -46,7 +46,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #2E7D32;">
                         <i class="fas fa-users text-xl"></i>
                     </div>
                     <div class="ml-4">
@@ -58,7 +58,7 @@
 
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #4CAF50;">
                         <i class="fas fa-graduation-cap text-xl"></i>
                     </div>
                     <div class="ml-4">
@@ -70,7 +70,7 @@
 
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #2E7D32;">
                         <i class="fas fa-chart-line text-xl"></i>
                     </div>
                     <div class="ml-4">
@@ -82,7 +82,7 @@
 
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #4CAF50;">
                         <i class="fas fa-trophy text-xl"></i>
                     </div>
                     <div class="ml-4">
@@ -120,11 +120,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $guru->mata_pelajaran }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($guru->status === 'aktif')
-                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Aktif</span>
+                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #2E7D32;">Aktif</span>
                                         @elseif($guru->status === 'izin')
-                                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Izin</span>
+                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #4CAF50;">Izin</span>
                                         @else
-                                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Sakit</span>
+                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #2E7D32;">Sakit</span>
                                         @endif
                                     </td>
                                 </tr>

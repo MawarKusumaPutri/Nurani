@@ -19,7 +19,7 @@ class KepalaSekolahController extends Controller
         $user = Auth::user();
         
         // Get all gurus
-        $gurus = Guru::with(['user', 'mataPelajaranAktif', 'recentActivities'])->get();
+        $gurus = Guru::with(['user', 'recentActivities'])->get();
         
         // Get online/offline status
         $onlineGurus = ActivityTracker::getOnlineGurus();
