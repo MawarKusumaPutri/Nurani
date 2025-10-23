@@ -89,11 +89,39 @@
                     <div>
                         <h2 class="mb-1">Manajemen Kuis</h2>
                         <p class="text-muted mb-0">Kelola kuis dan latihan untuk siswa</p>
+                        @if($selectedMataPelajaran)
+                            <span class="badge bg-primary">{{ $selectedMataPelajaran }}</span>
+                        @endif
                     </div>
                     <a href="{{ route('guru.kuis.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Buat Kuis
                     </a>
                 </div>
+
+                <!-- Mata Pelajaran Switcher -->
+                @if($mataPelajaranList->count() > 1)
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">
+                                <i class="fas fa-exchange-alt me-2 text-primary"></i>
+                                Filter Berdasarkan Mata Pelajaran
+                            </h6>
+                            <div class="row">
+                                @foreach($mataPelajaranList as $mp)
+                                    <div class="col-md-4 col-lg-3 mb-2">
+                                        <a href="{{ route('guru.kuis.index', ['mata_pelajaran' => $mp->mata_pelajaran]) }}" 
+                                           class="btn w-100 {{ $selectedMataPelajaran == $mp->mata_pelajaran ? 'btn-primary' : 'btn-outline-primary' }}">
+                                            <i class="fas fa-book me-2"></i>{{ $mp->mata_pelajaran }}
+                                            @if($selectedMataPelajaran == $mp->mata_pelajaran)
+                                                <i class="fas fa-check float-end"></i>
+                                            @endif
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">

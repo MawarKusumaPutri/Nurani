@@ -1,0 +1,265 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Rangkuman - {{ $guru->user->name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 12px 16px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .avatar-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-3">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="avatar-container me-3">
+                            @if($guru->foto)
+                                <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil">
+                            @else
+                                <div class="bg-white d-flex align-items-center justify-content-center h-100">
+                                    <i class="fas fa-user text-muted"></i>
+                                </div>
+                            @endif
+                        </div>
+                        <div>
+                            <h6 class="text-white mb-0">{{ $guru->user->name }}</h6>
+                            <small class="text-white-50">{{ $guru->nip }}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <nav class="nav flex-column px-3">
+                    <a href="{{ route('guru.dashboard') }}" class="nav-link">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a href="{{ route('guru.materi.index') }}" class="nav-link">
+                        <i class="fas fa-book me-2"></i>Materi
+                    </a>
+                    <a href="{{ route('guru.kuis.index') }}" class="nav-link">
+                        <i class="fas fa-question-circle me-2"></i>Kuis
+                    </a>
+                    <a href="{{ route('guru.rangkuman.index') }}" class="nav-link active">
+                        <i class="fas fa-clipboard-list me-2"></i>Rangkuman
+                    </a>
+                    <a href="{{ route('guru.profil') }}" class="nav-link">
+                        <i class="fas fa-user me-2"></i>Profil
+                    </a>
+                    <a href="{{ route('logout') }}" class="nav-link">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">Buat Rangkuman Baru</h2>
+                        <p class="text-muted mb-0">Buat rangkuman materi yang telah diajarkan</p>
+                    </div>
+                    <a href="{{ route('guru.rangkuman.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Kembali
+                    </a>
+                </div>
+
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <!-- Form -->
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('guru.rangkuman.store') }}" method="POST">
+                            @csrf
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="mata_pelajaran" class="form-label">
+                                        <i class="fas fa-book me-2 text-primary"></i>Mata Pelajaran
+                                    </label>
+                                    <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required>
+                                        <option value="">Pilih Mata Pelajaran</option>
+                                        @if($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan')
+                                            @foreach(explode(', ', $guru->mata_pelajaran) as $mp)
+                                                <option value="{{ trim($mp) }}">{{ trim($mp) }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="kelas" class="form-label">
+                                        <i class="fas fa-users me-2 text-primary"></i>Kelas
+                                    </label>
+                                    <select class="form-select" id="kelas" name="kelas" required>
+                                        <option value="">Pilih Kelas</option>
+                                        <option value="VII">VII</option>
+                                        <option value="VIII">VIII</option>
+                                        <option value="IX">IX</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="tanggal_pertemuan" class="form-label">
+                                        <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Pertemuan
+                                    </label>
+                                    <input type="date" class="form-control" id="tanggal_pertemuan" name="tanggal_pertemuan" 
+                                           value="{{ old('tanggal_pertemuan', date('Y-m-d')) }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="jam_mulai" class="form-label">
+                                        <i class="fas fa-clock me-2 text-primary"></i>Jam Mulai
+                                    </label>
+                                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" 
+                                           value="{{ old('jam_mulai') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="jam_selesai" class="form-label">
+                                        <i class="fas fa-clock me-2 text-primary"></i>Jam Selesai
+                                    </label>
+                                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" 
+                                           value="{{ old('jam_selesai') }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="topik" class="form-label">
+                                        <i class="fas fa-tag me-2 text-primary"></i>Topik Materi
+                                    </label>
+                                    <input type="text" class="form-control" id="topik" name="topik" 
+                                           value="{{ old('topik') }}" placeholder="Contoh: Sistem Pernapasan Manusia" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="materi_yang_diajarkan" class="form-label">
+                                    <i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Materi yang Diajarkan
+                                </label>
+                                <textarea class="form-control" id="materi_yang_diajarkan" name="materi_yang_diajarkan" 
+                                          rows="4" placeholder="Jelaskan materi yang telah diajarkan..." required>{{ old('materi_yang_diajarkan') }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="aktivitas_siswa" class="form-label">
+                                    <i class="fas fa-user-graduate me-2 text-primary"></i>Aktivitas Siswa
+                                </label>
+                                <textarea class="form-control" id="aktivitas_siswa" name="aktivitas_siswa" 
+                                          rows="3" placeholder="Jelaskan aktivitas yang dilakukan siswa..." required>{{ old('aktivitas_siswa') }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="evaluasi" class="form-label">
+                                    <i class="fas fa-chart-line me-2 text-primary"></i>Evaluasi Pembelajaran
+                                </label>
+                                <textarea class="form-control" id="evaluasi" name="evaluasi" 
+                                          rows="3" placeholder="Jelaskan evaluasi atau penilaian yang dilakukan..." required>{{ old('evaluasi') }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tindak_lanjut" class="form-label">
+                                    <i class="fas fa-forward me-2 text-primary"></i>Tindak Lanjut
+                                </label>
+                                <textarea class="form-control" id="tindak_lanjut" name="tindak_lanjut" 
+                                          rows="3" placeholder="Jelaskan rencana tindak lanjut untuk pertemuan berikutnya...">{{ old('tindak_lanjut') }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="catatan_khusus" class="form-label">
+                                    <i class="fas fa-sticky-note me-2 text-primary"></i>Catatan Khusus
+                                </label>
+                                <textarea class="form-control" id="catatan_khusus" name="catatan_khusus" 
+                                          rows="2" placeholder="Catatan khusus atau hal penting lainnya...">{{ old('catatan_khusus') }}</textarea>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Simpan Rangkuman
+                                </button>
+                                <a href="{{ route('guru.rangkuman.index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Batal
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class KuisController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->first();
         
@@ -17,11 +17,22 @@ class KuisController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        $kuis = $guru->kuis()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        // Get mata pelajaran yang dipilih
+        $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+        
+        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
+            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        }
 
-        return view('guru.kuis.index', compact('guru', 'kuis'));
+        $query = $guru->kuis();
+        if ($selectedMataPelajaran) {
+            $query->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+
+        $kuis = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('guru.kuis.index', compact('guru', 'kuis', 'mataPelajaranList', 'selectedMataPelajaran'));
     }
 
     public function create()

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RangkumanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->first();
         
@@ -17,11 +17,22 @@ class RangkumanController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        $rangkuman = $guru->rangkuman()
-            ->orderBy('tanggal_pertemuan', 'desc')
-            ->paginate(10);
+        // Get mata pelajaran yang dipilih
+        $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+        
+        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
+            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        }
 
-        return view('guru.rangkuman.index', compact('guru', 'rangkuman'));
+        $query = $guru->rangkuman();
+        if ($selectedMataPelajaran) {
+            $query->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+
+        $rangkuman = $query->orderBy('tanggal_pertemuan', 'desc')->paginate(10);
+
+        return view('guru.rangkuman.index', compact('guru', 'rangkuman', 'mataPelajaranList', 'selectedMataPelajaran'));
     }
 
     public function create()

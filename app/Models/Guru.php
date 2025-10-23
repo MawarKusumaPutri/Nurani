@@ -62,9 +62,16 @@ class Guru extends Model
     /**
      * Get active mata pelajaran for the guru.
      */
-    public function mataPelajaranAktif(): HasMany
+    public function getMataPelajaranAktifAttribute()
     {
-        return $this->hasMany(GuruMataPelajaran::class)->where('is_active', true)->orderBy('urutan');
+        if (!$this->mata_pelajaran || $this->mata_pelajaran === 'Belum ditentukan') {
+            return collect();
+        }
+        
+        $subjects = explode(', ', $this->mata_pelajaran);
+        return collect($subjects)->map(function ($subject) {
+            return (object)['mata_pelajaran' => trim($subject)];
+        });
     }
 
     /**
