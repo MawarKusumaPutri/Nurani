@@ -9,7 +9,7 @@
     <style>
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -29,14 +29,14 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 8px;
             cursor: pointer;
             pointer-events: auto;
         }
         .btn-primary:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
             transform: translateY(-1px);
         }
         .btn-primary:active {
@@ -47,8 +47,8 @@
             border: 1px solid #e0e0e0;
         }
         .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
         }
         .question-item {
             border: 1px solid #e0e0e0;
@@ -58,7 +58,7 @@
             background: #f8f9fa;
         }
         .question-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             color: white;
             width: 30px;
             height: 30px;
