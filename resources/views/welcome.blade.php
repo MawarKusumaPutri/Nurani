@@ -455,7 +455,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(70, 146, 60, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
             z-index: 2;
         }
 
@@ -476,6 +476,7 @@
         .hero-text-container {
             flex: 0 0 40%;
             max-width: 450px;
+            padding: 30px;
             padding-right: 30px;
             animation: fadeInUp 1s ease-out 0.5s both;
             position: relative;
@@ -514,16 +515,16 @@
 
         .hero-badge {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border-radius: 12px;
-            padding: 10px 16px;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
             animation: fadeInUp 1s ease-out calc(3.5s + var(--delay, 0s)) both;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             flex: 1;
             min-width: 0;
         }
@@ -570,7 +571,7 @@
             font-size: 24px;
             font-weight: 300;
             margin-bottom: 20px;
-            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
             letter-spacing: 1px;
             animation: fadeInUp 1s ease-out 1.5s both;
         }
@@ -579,11 +580,8 @@
             font-size: 48px;
             font-weight: 800;
             margin-bottom: 20px;
-            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.9);
-            background: linear-gradient(45deg, #ffffff, #f0f0f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8);
+            color: #ffffff;
             line-height: 1.1;
             animation: fadeInUp 1s ease-out 2s both;
         }
@@ -592,7 +590,7 @@
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 15px;
-            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
             color: #ffd700;
             animation: fadeInUp 1s ease-out 2.5s both;
         }
@@ -600,8 +598,8 @@
         .hero-description {
             font-size: 16px;
             font-weight: 400;
-            opacity: 0.9;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+            opacity: 0.95;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.8);
             max-width: 400px;
             margin: 0;
             animation: fadeInUp 1s ease-out 3s both;
