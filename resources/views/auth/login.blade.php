@@ -227,7 +227,7 @@
                 <p class="brand-subtitle">Teaching Management System</p>
             </div>
             
-            <h2 class="form-title">Masuk ke Akun Guru</h2>
+            <h2 class="form-title">Masuk ke TMS NURANI</h2>
             <p class="form-subtitle">Silakan masukkan kredensial Anda untuk mengakses TMS</p>
             
             @if ($errors->any())
@@ -244,11 +244,21 @@
                 @csrf
                 
                 <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-control" name="role" required>
+                        <option value="">Pilih Role</option>
+                        <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
+                        <option value="kepala_sekolah" {{ old('role') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                        <option value="tu" {{ old('role') == 'tu' ? 'selected' : '' }}>Tenaga Usaha</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" 
                            class="form-control" 
                            name="email" 
-                           placeholder="Masukkan email guru Anda"
+                           placeholder="Masukkan email Anda"
                            value="{{ old('email') }}"
                            required>
                 </div>

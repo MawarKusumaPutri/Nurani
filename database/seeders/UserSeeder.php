@@ -203,12 +203,12 @@ class UserSeeder extends Seeder
 
         // Create Kepala Sekolah User
         User::updateOrCreate(
-            ['email' => 'kepala.sekolah@mtssnuraiman.sch.id'],
+            ['email' => 'maman.suparman@mtssnuraiman.scl'],
             [
-                'name' => 'Kepala Sekolah MTs Nurul Aiman',
+                'name' => 'Maman Suparman, A.KS',
                 'password' => Hash::make('AdminKS@2024'),
                 'role' => 'kepala_sekolah',
-                'nip' => 'KS001',
+                'nip' => '9661750652200022',
                 'phone' => '081234567891',
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]

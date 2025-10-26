@@ -10,7 +10,7 @@ Password: Guru123!
 
 ### 👨‍💼 **KEPALA SEKOLAH (Principal)**
 ```
-Email: kepala.sekolah@mtssnuraiman.sch.id
+Email: maman.suparman@mtssnuraiman.scl
 Password: AdminKS@2024
 ```
 

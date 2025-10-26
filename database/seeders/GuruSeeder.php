@@ -163,11 +163,11 @@ class GuruSeeder extends Seeder
         // Data Kepala Sekolah
         $kepalaSekolahData = [
             [
-                'name' => 'Dr. H. Abdul Rahman, M.Pd',
-                'email' => 'kepala.sekolah@nurani.com',
-                'password' => Hash::make('password123'),
+                'name' => 'Maman Suparman, A.KS',
+                'email' => 'maman.suparman@mtssnuraiman.scl',
+                'password' => Hash::make('AdminKS@2024'),
                 'role' => 'kepala_sekolah',
-                'nip' => 'KS001',
+                'nip' => '9661750652200022',
                 'phone' => '081234567200',
                 'address' => 'Sumedang, Jawa Barat'
             ]
