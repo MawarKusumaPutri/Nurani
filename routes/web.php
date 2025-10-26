@@ -102,6 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/notifications/read-all', [App\Http\Controllers\KepalaSekolahController::class, 'markAllNotificationsAsRead'])->name('notifications.read_all');
         Route::get('/guru', [App\Http\Controllers\KepalaSekolahController::class, 'guru'])->name('guru');
         Route::get('/guru/{guru}/activity', [App\Http\Controllers\KepalaSekolahController::class, 'guruActivity'])->name('guru.activity');
+        Route::get('/guru-activity', [App\Http\Controllers\KepalaSekolahController::class, 'guruActivity'])->name('guru_activity');
         Route::get('/laporan', [App\Http\Controllers\KepalaSekolahController::class, 'laporan'])->name('laporan');
             Route::get('/api/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'getNotifications'])->name('api.notifications');
             Route::get('/api/online-status', [App\Http\Controllers\KepalaSekolahController::class, 'getOnlineStatus'])->name('online_status');

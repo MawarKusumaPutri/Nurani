@@ -10,7 +10,7 @@
     <style>
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -34,7 +34,7 @@
             transform: translateY(-5px);
         }
         .activity-item {
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #2E7D32;
             transition: all 0.3s ease;
         }
         .activity-item:hover {
@@ -75,7 +75,7 @@
                         <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                             <i class="fas fa-user-tie fa-2x text-primary"></i>
                         </div>
-                        <h6 class="text-white mt-2 mb-1">{{ Auth::user()->name }}</h6>
+                        <h6 class="text-white mt-2 mb-1">Maman Suparman, A.KS</h6>
                         <small class="text-white-50">Kepala Sekolah</small>
                     </div>
                 </div>

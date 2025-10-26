@@ -121,15 +121,25 @@ class KepalaSekolahController extends Controller
         return view('kepala_sekolah.laporan', compact('gurus', 'totalGuru', 'totalMateri', 'totalKuis', 'totalRangkuman'));
     }
     
-    public function guruActivity($guruId)
+    public function guruActivity($guruId = null)
     {
-        $guru = Guru::with(['user', 'activities'])->findOrFail($guruId);
-        
-        $activities = $guru->activities()
-            ->orderBy('activity_time', 'desc')
-            ->paginate(20);
-        
-        return view('kepala_sekolah.guru_activity', compact('guru', 'activities'));
+        if ($guruId) {
+            $guru = Guru::with(['user', 'activities'])->findOrFail($guruId);
+            
+            $activities = $guru->activities()
+                ->orderBy('activity_time', 'desc')
+                ->paginate(20);
+            
+            return view('kepala_sekolah.guru_activity', compact('guru', 'activities'));
+        } else {
+            // Show all guru activities
+            $gurus = Guru::with(['user', 'activities'])->get();
+            $activities = GuruActivity::with(['guru.user'])
+                ->orderBy('activity_time', 'desc')
+                ->paginate(20);
+            
+            return view('kepala_sekolah.guru_activity', compact('gurus', 'activities'));
+        }
     }
     
     public function getNotifications()

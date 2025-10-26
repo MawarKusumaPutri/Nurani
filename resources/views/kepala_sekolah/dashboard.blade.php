@@ -1,130 +1,233 @@
-@extends('layouts.app')
-
-@section('title', 'Dashboard Kepala Sekolah - TMS NURANI')
-
-@section('content')
-<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-    <!-- Header Dashboard -->
-    <div class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Dashboard Kepala Sekolah</h1>
-                    <p class="text-gray-600">Selamat datang, {{ Auth::user()->name }}</p>
-                    <p class="text-sm text-gray-500">NUPTK: {{ Auth::user()->nip }}</p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kepala Sekolah - {{ Auth::user()->name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+        }
+        .stat-card .card-body {
+            padding: 2rem;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .content-card {
+            background: white;
+            border-left: 4px solid #2E7D32;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2E7D32 !important;
+        }
+        .feature-btn {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 4px 0;
+        }
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .feature-btn.laporan {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+        }
+        .feature-btn.guru {
+            background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
+            color: white;
+        }
+        .feature-btn.bulanan {
+            background: linear-gradient(135deg, #7B1FA2 0%, #BA68C8 100%);
+            color: white;
+        }
+        .feature-btn.pengaturan {
+            background: linear-gradient(135deg, #F57C00 0%, #FFB74D 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-4">
+                    <h4 class="text-white mb-4">
+                        <i class="fas fa-user-tie me-2"></i>
+                        Dashboard Kepala Sekolah
+                    </h4>
+                    <div class="text-center mb-4">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user-tie fa-2x text-primary"></i>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                        Kepala Sekolah
-                    </span>
+                        <h6 class="text-white mt-2 mb-1">Maman Suparman, A.KS</h6>
+                        <small class="text-white-50">Kepala Sekolah</small>
+                        </div>
+                    </div>
                     
-                    <!-- Notification Bell in Gray Area -->
-                    <div class="relative bg-gray-100 rounded-full p-3 hover:bg-gray-200 transition-colors cursor-pointer">
-                        <div class="relative">
-                            <i class="fas fa-bell text-red-500 text-xl"></i>
-                            <!-- Badge yang selalu ada, tapi angka berubah -->
-                            <span class="notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold shadow-lg" id="notificationCount">
+                <nav class="nav flex-column px-3">
+                    <a href="{{ route('kepala_sekolah.dashboard') }}" class="nav-link active">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                    <a href="{{ route('kepala_sekolah.laporan') }}" class="nav-link">
+                        <i class="fas fa-chart-bar me-2"></i>Laporan
+                    </a>
+                    <a href="{{ route('kepala_sekolah.guru') }}" class="nav-link">
+                        <i class="fas fa-users me-2"></i>Data Guru
+                    </a>
+                    <a href="{{ route('kepala_sekolah.guru_activity') }}" class="nav-link">
+                        <i class="fas fa-chalkboard-teacher me-2"></i>Aktivitas Guru
+                    </a>
+                    <a href="{{ route('kepala_sekolah.notifications') }}" class="nav-link">
+                        <i class="fas fa-bell me-2"></i>Notifikasi
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </form>
+                </nav>
+    </div>
+
+    <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">Selamat Datang, Maman Suparman, A.KS!</h2>
+                        <p class="text-muted">Dashboard Kepala Sekolah MTs Nurul Aiman</p>
+                        <p class="text-muted small">NUPTK: 9661750652200022</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <span class="badge bg-primary px-3 py-2">Kepala Sekolah</span>
+                        </div>
+                        <div class="position-relative me-3">
+                            <i class="fas fa-bell text-danger fs-4"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {{ $unreadNotifications }}
                             </span>
                         </div>
                     </div>
-                    
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
-                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                        </button>
-                    </form>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-2x mb-3"></i>
+                                <div class="stat-number">{{ \App\Models\Guru::count() }}</div>
+                                <p class="mb-0">Total Guru</p>
+            </div>
+                    </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-graduation-cap fa-2x mb-3"></i>
+                                <div class="stat-number">180</div>
+                                <p class="mb-0">Total Siswa</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #2E7D32;">
-                        <i class="fas fa-users text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Guru</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ \App\Models\Guru::count() }}</p>
-                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chart-line fa-2x mb-3"></i>
+                                <div class="stat-number">85%</div>
+                                <p class="mb-0">Kehadiran Rata-rata</p>
                 </div>
             </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #4CAF50;">
-                        <i class="fas fa-graduation-cap text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Siswa</p>
-                        <p class="text-2xl font-bold text-gray-900">180</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #2E7D32;">
-                        <i class="fas fa-chart-line text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Kehadiran Rata-rata</p>
-                        <p class="text-2xl font-bold text-gray-900">85%</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full" style="background: #F0F4F0; color: #4CAF50;">
-                        <i class="fas fa-trophy text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Prestasi Bulan Ini</p>
-                        <p class="text-2xl font-bold text-gray-900">3</p>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-trophy fa-2x mb-3"></i>
+                                <div class="stat-number">3</div>
+                                <p class="mb-0">Prestasi Bulan Ini</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Dashboard Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Main Content Row -->
+                <div class="row">
             <!-- Data Guru dan Mata Pelajaran -->
-            <div class="lg:col-span-3 bg-white rounded-lg shadow-md">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Data Guru dan Mata Pelajaran</h3>
+                    <div class="col-lg-8 mb-4">
+                        <div class="card content-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Data Guru dan Mata Pelajaran</h5>
                 </div>
-                <div class="p-6">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Guru</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mata Pelajaran</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Nama Guru</th>
+                                                <th>Mata Pelajaran</th>
+                                                <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                                        <tbody>
                                 @php
                                     $gurus = \App\Models\Guru::with('user')->take(5)->get();
                                 @endphp
                                 @foreach($gurus as $guru)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $guru->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $guru->mata_pelajaran }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                <td>{{ $guru->user->name }}</td>
+                                                <td>{{ $guru->mata_pelajaran }}</td>
+                                                <td>
                                         @if($guru->status === 'aktif')
-                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #2E7D32;">Aktif</span>
+                                                        <span class="badge bg-success">Aktif</span>
                                         @elseif($guru->status === 'izin')
-                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #4CAF50;">Izin</span>
+                                                        <span class="badge bg-warning">Izin</span>
                                         @else
-                                            <span class="px-2 py-1 rounded text-xs" style="background: #F0F4F0; color: #2E7D32;">Sakit</span>
+                                                        <span class="badge bg-danger">Sakit</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -132,20 +235,21 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="{{ route('kepala_sekolah.guru') }}" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors inline-block text-center">
-                        <i class="fas fa-eye mr-2"></i>Lihat Semua Data
+                                <a href="{{ route('kepala_sekolah.guru') }}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-2"></i>Lihat Semua Data
                     </a>
                 </div>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="space-y-6">
-                <!-- Kehadiran Hari Ini -->
-                <div class="bg-white rounded-lg shadow-md">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Kehadiran Hari Ini</h3>
                     </div>
-                    <div class="p-6">
+
+                    <!-- Sidebar Content -->
+                    <div class="col-lg-4">
+                        <!-- Kehadiran Hari Ini -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Kehadiran Hari Ini</h5>
+                            </div>
+                            <div class="card-body">
                     @php
                         $totalGuru = \App\Models\Guru::count();
                         $hadir = \App\Models\Guru::where('status', 'aktif')->count();
@@ -153,582 +257,101 @@
                         $sakit = \App\Models\Guru::where('status', 'sakit')->count();
                         $persentase = $totalGuru > 0 ? round(($hadir / $totalGuru) * 100) : 0;
                     @endphp
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Total Guru</span>
-                            <span class="font-semibold">{{ $totalGuru }}</span>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Total Guru</span>
+                                        <span class="fw-bold">{{ $totalGuru }}</span>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Hadir</span>
-                            <span class="font-semibold text-green-600">{{ $hadir }}</span>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Hadir</span>
+                                        <span class="fw-bold text-success">{{ $hadir }}</span>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Izin</span>
-                            <span class="font-semibold text-yellow-600">{{ $izin }}</span>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Izin</span>
+                                        <span class="fw-bold text-warning">{{ $izin }}</span>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Sakit</span>
-                            <span class="font-semibold text-red-600">{{ $sakit }}</span>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Sakit</span>
+                                        <span class="fw-bold text-danger">{{ $sakit }}</span>
                         </div>
                     </div>
-                        <div class="mt-4">
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full" style="width: {{ $persentase }}%"></div>
+                                <div class="progress mb-2" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: {{ $persentase }}%"></div>
                             </div>
-                            <p class="text-sm text-gray-600 mt-2">{{ $persentase }}% Kehadiran</p>
-                        </div>
+                                <p class="text-center mb-0">{{ $persentase }}% Kehadiran</p>
                     </div>
                 </div>
 
                 <!-- Fitur Utama -->
-                <div class="bg-white rounded-lg shadow-md">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Fitur Utama</h3>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Fitur Utama</h5>
                     </div>
-                    <div class="p-6 space-y-3">
-                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
-                            <i class="fas fa-chart-bar mr-2"></i>Laporan Kehadiran
-                        </a>
-                        <a href="{{ route('kepala_sekolah.guru') }}" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
-                            <i class="fas fa-users mr-2"></i>Kelola Data Guru
-                        </a>
-                        <a href="{{ route('kepala_sekolah.laporan') }}" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
-                            <i class="fas fa-file-alt mr-2"></i>Laporan Bulanan
-                        </a>
-                        <a href="{{ route('kepala_sekolah.notifications') }}" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-lg transition-colors text-left inline-block">
-                            <i class="fas fa-cog mr-2"></i>Pengaturan Sistem
-                        </a>
-                    </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <a href="{{ route('kepala_sekolah.laporan') }}" class="btn feature-btn laporan">
+                                        <i class="fas fa-chart-bar me-2"></i>Laporan Kehadiran
+                                    </a>
+                                    <a href="{{ route('kepala_sekolah.guru') }}" class="btn feature-btn guru">
+                                        <i class="fas fa-users me-2"></i>Kelola Data Guru
+                                    </a>
+                                    <a href="{{ route('kepala_sekolah.laporan') }}" class="btn feature-btn bulanan">
+                                        <i class="fas fa-file-alt me-2"></i>Laporan Bulanan
+                                    </a>
+                                    <a href="{{ route('kepala_sekolah.notifications') }}" class="btn feature-btn pengaturan">
+                                        <i class="fas fa-cog me-2"></i>Pengaturan Sistem
+                                    </a>
+                                </div>
+                            </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Activities -->
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
-            </div>
-            <div class="p-6">
-                <div class="space-y-4" id="recentActivitiesList">
-                    @forelse($recentActivities as $activity)
-                        <div class="flex items-center space-x-3 activity-item" data-activity-time="{{ $activity->activity_time->toISOString() }}">
-                            <div class="w-2 h-2 rounded-full activity-dot
-                                @if($activity->activity_type == 'login') bg-green-500
-                                @elseif($activity->activity_type == 'logout') bg-red-500
-                                @elseif($activity->activity_type == 'create_materi') bg-blue-500
-                                @elseif($activity->activity_type == 'create_kuis') bg-yellow-500
-                                @elseif($activity->activity_type == 'create_rangkuman') bg-purple-500
-                                @else bg-gray-500
-                                @endif
-                            "></div>
-                            <div class="flex-1">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-medium">{{ $activity->guru->user->name }}</span>
-                                    {{ $activity->description }}
-                                </p>
-                                <div class="flex items-center space-x-2 mt-1">
-                                    <p class="text-xs text-gray-500 activity-relative-time">
-                                        {{ $activity->activity_time->diffForHumans() }}
-                                    </p>
-                                    <span class="text-xs text-gray-400">•</span>
-                                    <p class="text-xs text-gray-500 activity-absolute-time">
-                                        @php
-                                            $timezone = $activity->metadata['timezone'] ?? 'Asia/Jakarta';
-                                            $timezoneAbbr = $activity->metadata['timezone_abbr'] ?? 'WIB';
-                                            $formattedTime = $activity->activity_time->setTimezone($timezone)->format('d M Y, H:i') . ' ' . $timezoneAbbr;
-                                        @endphp
-                                        {{ $formattedTime }}
-                                    </p>
+                <!-- Aktivitas Terbaru -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Aktivitas Terbaru</h5>
+                            </div>
+                            <div class="card-body">
+                                @forelse($recentActivities as $activity)
+                                <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                    <div class="me-3">
+                                        @if($activity->activity_type == 'login')
+                                            <i class="fas fa-sign-in-alt text-success"></i>
+                                        @elseif($activity->activity_type == 'logout')
+                                            <i class="fas fa-sign-out-alt text-danger"></i>
+                                        @elseif($activity->activity_type == 'create_materi')
+                                            <i class="fas fa-file-alt text-primary"></i>
+                                        @elseif($activity->activity_type == 'create_kuis')
+                                            <i class="fas fa-question-circle text-warning"></i>
+                                        @elseif($activity->activity_type == 'create_rangkuman')
+                                            <i class="fas fa-clipboard text-info"></i>
+                                        @else
+                                            <i class="fas fa-circle text-secondary"></i>
+                                        @endif
+                        </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-1">
+                                            <strong>{{ $activity->guru->user->name }}</strong>
+                                            {{ $activity->description }}
+                                        </p>
+                                        <small class="text-muted">{{ $activity->activity_time->diffForHumans() }}</small>
+                        </div>
                                 </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center py-8">
-                            <div class="text-gray-400 text-4xl mb-2">📊</div>
-                            <p class="text-gray-500">Tidak ada aktivitas terbaru</p>
-                            <p class="text-sm text-gray-400">Aktivitas guru akan muncul di sini</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-        <!-- Real-time Attendance Monitoring -->
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Pemantauan Kehadiran Real-time</h3>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Hadir</p>
-                                <p class="text-2xl font-bold text-green-600">{{ \App\Models\Guru::count() }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <div class="flex items-center">
-                            <i class="fas fa-clock text-yellow-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Terlambat</p>
-                                <p class="text-2xl font-bold text-yellow-600">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-red-50 p-4 rounded-lg">
-                        <div class="flex items-center">
-                            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Tidak Hadir</p>
-                                <p class="text-2xl font-bold text-red-600">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                        Kehadiran 100% Hari Ini
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Approval System -->
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Persetujuan Izin</h3>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                        <div class="flex items-center">
-                            <i class="fas fa-user-clock text-yellow-500 mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">Izin Guru - Siti Mundari</p>
-                                <p class="text-xs text-gray-500">Sakit - 2 hari</p>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
-                                <i class="fas fa-check mr-1"></i>Setujui
-                            </button>
-                            <button class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
-                                <i class="fas fa-times mr-1"></i>Tolak
-                            </button>
-                        </div>
-                    </div>
-                    <div class="text-center text-sm text-gray-500">
-                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                        Tidak ada izin yang menunggu persetujuan
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Statistics Graphs -->
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Grafik Statistik</h3>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Kehadiran Pie Chart -->
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-700 mb-4">Kehadiran Hari Ini</h4>
-                        <div class="flex justify-center">
-                            <canvas id="attendancePieChart" width="200" height="200"></canvas>
-                        </div>
-                        <div class="mt-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Hadir</span>
+                                @empty
+                                <div class="text-center py-4">
+                                    <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Tidak ada aktivitas terbaru</p>
                                 </div>
-                                <span class="text-sm font-medium">13 (100%)</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Terlambat</span>
-                                </div>
-                                <span class="text-sm font-medium">0 (0%)</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Tidak Hadir</span>
-                                </div>
-                                <span class="text-sm font-medium">0 (0%)</span>
+                                @endforelse
                             </div>
                         </div>
                     </div>
-
-                    <!-- Aktivitas Pembelajaran Pie Chart -->
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-700 mb-4">Aktivitas Pembelajaran</h4>
-                        <div class="flex justify-center">
-                            <canvas id="activityPieChart" width="200" height="200"></canvas>
-                        </div>
-                        <div class="mt-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Materi Dibuat</span>
-                                </div>
-                                <span class="text-sm font-medium">12 (48%)</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Kuis Dibuat</span>
-                                </div>
-                                <span class="text-sm font-medium">8 (32%)</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-600">Rangkuman</span>
-                                </div>
-                                <span class="text-sm font-medium">5 (20%)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- School Policies & Evaluations -->
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Evaluasi & Kebijakan Sekolah</h3>
-            </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <h4 class="text-sm font-medium text-gray-900">Pengumuman Resmi</h4>
-                        <p class="text-sm text-gray-600 mt-1">Rapat koordinasi guru akan dilaksanakan pada hari Jumat, 25 Oktober 2024 pukul 14.00 WIB.</p>
-                        <p class="text-xs text-gray-500 mt-2">Diposting: 22 Oktober 2024</p>
-                    </div>
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <h4 class="text-sm font-medium text-gray-900">Evaluasi Kinerja</h4>
-                        <p class="text-sm text-gray-600 mt-1">Evaluasi kinerja guru periode Oktober 2024 menunjukkan peningkatan 15% dalam kualitas pembelajaran.</p>
-                        <p class="text-xs text-gray-500 mt-2">Laporan: 20 Oktober 2024</p>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Tambah Pengumuman
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
-
-<!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Kehadiran Pie Chart
-    const attendanceCtx = document.getElementById('attendancePieChart').getContext('2d');
-    new Chart(attendanceCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Hadir', 'Terlambat', 'Tidak Hadir'],
-            datasets: [{
-                data: [13, 0, 0],
-                backgroundColor: [
-                    '#10B981', // Green
-                    '#F59E0B', // Yellow
-                    '#EF4444'  // Red
-                ],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Aktivitas Pembelajaran Pie Chart
-    const activityCtx = document.getElementById('activityPieChart').getContext('2d');
-    new Chart(activityCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Materi Dibuat', 'Kuis Dibuat', 'Rangkuman'],
-            datasets: [{
-                data: [12, 8, 5],
-                backgroundColor: [
-                    '#3B82F6', // Blue
-                    '#10B981', // Green
-                    '#8B5CF6'  // Purple
-                ],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-});
-</script>
-
-<style>
-/* Activity Items Styling */
-.activity-item {
-    transition: all 0.3s ease;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-}
-
-.activity-item:hover {
-    background-color: #f8fafc;
-    border-color: #e2e8f0;
-    transform: translateX(4px);
-}
-
-.activity-dot {
-    transition: all 0.3s ease;
-}
-
-.activity-item:hover .activity-dot {
-    transform: scale(1.2);
-}
-
-.activity-relative-time {
-    font-weight: 500;
-    color: #6b7280;
-}
-
-.activity-absolute-time {
-    font-weight: 400;
-    color: #9ca3af;
-}
-
-/* Notification Bell in Gray Area */
-.bg-gray-100 {
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.bg-gray-100:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Notification Bell Styling */
-.fa-bell {
-    animation: bellRing 2s infinite;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-    transition: all 0.3s ease;
-}
-
-@keyframes bellRing {
-    0%, 50%, 100% {
-        transform: rotate(0deg);
-    }
-    10%, 30% {
-        transform: rotate(-10deg);
-    }
-    20%, 40% {
-        transform: rotate(10deg);
-    }
-}
-
-/* Notification Badge Styling - Always Visible */
-.notification-badge {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-    border: 2px solid white;
-    min-width: 24px;
-    min-height: 24px;
-    display: flex !important;
-}
-
-/* Animation only when there are notifications */
-.notification-badge.animate-bounce {
-    animation: bounce 1s infinite;
-}
-
-.notification-badge.animate-pulse {
-    animation: pulse 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-3px);
-    }
-    60% {
-        transform: translateY(-1px);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-    }
-}
-
-/* Hover effect for notification bell */
-.relative:hover .fa-bell {
-    transform: scale(1.1);
-    transition: transform 0.2s ease;
-}
-
-.relative:hover .notification-badge {
-    transform: scale(1.2);
-    transition: transform 0.2s ease;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .activity-item {
-        padding: 8px;
-    }
-    
-    .activity-item .flex {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-    
-    .notification-badge {
-        height: 20px;
-        width: 20px;
-        font-size: 10px;
-    }
-}
-</style>
-
-<script>
-// Auto-update relative time for activities
-function updateActivityTimes() {
-    const activityItems = document.querySelectorAll('.activity-item');
-    
-    activityItems.forEach(item => {
-        const activityTime = new Date(item.dataset.activityTime);
-        const relativeTimeElement = item.querySelector('.activity-relative-time');
-        
-        if (relativeTimeElement) {
-            const now = new Date();
-            const diffInSeconds = Math.floor((now - activityTime) / 1000);
-            
-            let relativeTime;
-            if (diffInSeconds < 60) {
-                relativeTime = `${diffInSeconds} detik yang lalu`;
-            } else if (diffInSeconds < 3600) {
-                const minutes = Math.floor(diffInSeconds / 60);
-                relativeTime = `${minutes} menit yang lalu`;
-            } else if (diffInSeconds < 86400) {
-                const hours = Math.floor(diffInSeconds / 3600);
-                relativeTime = `${hours} jam yang lalu`;
-            } else {
-                const days = Math.floor(diffInSeconds / 86400);
-                relativeTime = `${days} hari yang lalu`;
-            }
-            
-            relativeTimeElement.textContent = relativeTime;
-        }
-    });
-}
-
-// Update activity times every 30 seconds
-setInterval(updateActivityTimes, 30000);
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateActivityTimes();
-    updateNotificationBadge();
-    
-    // Add click functionality to notification bell
-    const notificationBell = document.querySelector('.bg-gray-100');
-    if (notificationBell) {
-        notificationBell.addEventListener('click', function() {
-            // Show notification panel or redirect to notifications
-            window.location.href = '/kepala-sekolah/notifications';
-        });
-    }
-});
-
-// Update notification badge
-function updateNotificationBadge() {
-    fetch('/kepala-sekolah/api/notifications')
-        .then(response => response.json())
-        .then(data => {
-            const badge = document.getElementById('notificationCount');
-            const bell = document.querySelector('.fa-bell');
-            
-            if (badge) {
-                // Update badge number
-                badge.textContent = data.length;
-                
-                if (data.length > 0) {
-                    // Add animation when there are notifications
-                    badge.classList.add('animate-bounce');
-                    bell.classList.add('animate-pulse');
-                } else {
-                    // Remove animation when no notifications
-                    badge.classList.remove('animate-bounce');
-                    bell.classList.remove('animate-pulse');
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error updating notification badge:', error);
-        });
-}
-
-// Update notification badge every 30 seconds
-setInterval(updateNotificationBadge, 30000);
-</script>
+</body>
+</html>
