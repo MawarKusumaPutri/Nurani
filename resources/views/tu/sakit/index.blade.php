@@ -93,15 +93,24 @@
                 <h1 class="h2">Data Sakit</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-primary">
+                        <a href="{{ route('tu.sakit.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Data Sakit
-                        </button>
+                        </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
             <!-- Filter Section -->
             <div class="row mb-4">

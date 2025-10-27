@@ -143,17 +143,22 @@ Route::middleware('auth')->group(function () {
         // Sakit Management
         Route::prefix('sakit')->name('sakit.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'sakitIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'sakitCreate'])->name('create');
+            Route::post('/store', [App\Http\Controllers\TuController::class, 'sakitStore'])->name('store');
         });
         
         // Jadwal Management
         Route::prefix('jadwal')->name('jadwal.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'jadwalIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'jadwalCreate'])->name('create');
+            Route::post('/store', [App\Http\Controllers\TuController::class, 'jadwalStore'])->name('store');
         });
         
         // Kalender Management
         Route::prefix('kalender')->name('kalender.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'kalenderIndex'])->name('index');
+            Route::get('/create', [App\Http\Controllers\TuController::class, 'kalenderCreate'])->name('create');
+            Route::post('/store', [App\Http\Controllers\TuController::class, 'kalenderStore'])->name('store');
         });
         
         // Arsip Management
@@ -166,6 +171,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('surat')->name('surat.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'suratIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'suratCreate'])->name('create');
+            Route::post('/send', [App\Http\Controllers\TuController::class, 'suratSend'])->name('send');
         });
         
         // Laporan Management
