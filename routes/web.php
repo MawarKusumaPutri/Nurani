@@ -86,12 +86,6 @@ Route::middleware('auth')->group(function () {
         });
     });
     
-    // Tenaga Usaha Routes
-    Route::prefix('tu')->name('tu.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('tu.dashboard');
-        })->name('dashboard');
-    });
     
     // Kepala Sekolah Routes
     Route::prefix('kepala-sekolah')->name('kepala_sekolah.')->group(function () {
