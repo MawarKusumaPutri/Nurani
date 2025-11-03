@@ -6,6 +6,7 @@
     <title>Dashboard Kepala Sekolah - {{ Auth::user()->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         .sidebar {
             min-height: 100vh;
@@ -215,19 +216,51 @@
                             </thead>
                                         <tbody>
                                 @php
-                                    $gurus = \App\Models\Guru::with('user')->take(5)->get();
+                                    // Prioritaskan guru yang sudah presensi (sakit, izin, hadir)
+                                    // Urutkan: sakit dulu, lalu izin, lalu hadir, lalu belum presensi
+                                    $gurusWithPresensi = $gurus->filter(function($guru) use ($guruPresensiStatus) {
+                                        return isset($guruPresensiStatus[$guru->id]);
+                                    })->sortBy(function($guru) use ($guruPresensiStatus) {
+                                        $jenis = $guruPresensiStatus[$guru->id]['jenis'];
+                                        if ($jenis === 'sakit') return 1;
+                                        if ($jenis === 'izin') return 2;
+                                        if ($jenis === 'hadir') return 3;
+                                        return 4;
+                                    });
+                                    $gurusWithoutPresensi = $gurus->filter(function($guru) use ($guruPresensiStatus) {
+                                        return !isset($guruPresensiStatus[$guru->id]);
+                                    });
+                                    // Gabungkan: yang sudah presensi dulu (semua), lalu yang belum presensi (5 pertama)
+                                    $displayGurus = $gurusWithPresensi->merge($gurusWithoutPresensi->take(5));
                                 @endphp
-                                @foreach($gurus as $guru)
+                                @foreach($displayGurus as $guru)
                                 <tr>
                                                 <td>{{ $guru->user->name }}</td>
                                                 <td>{{ $guru->mata_pelajaran }}</td>
                                                 <td>
-                                        @if($guru->status === 'aktif')
-                                                        <span class="badge bg-success">Aktif</span>
-                                        @elseif($guru->status === 'izin')
-                                                        <span class="badge bg-warning">Izin</span>
+                                        @if(isset($guruPresensiStatus[$guru->id]))
+                                            @php
+                                                $presensiStatus = $guruPresensiStatus[$guru->id];
+                                            @endphp
+                                            @if($presensiStatus['jenis'] === 'hadir')
+                                                <span class="badge bg-success">Hadir</span>
+                                            @elseif($presensiStatus['jenis'] === 'izin')
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-file-alt me-1"></i>Izin
+                                                    @if($presensiStatus['keterangan'])
+                                                        <small>({{ Str::limit($presensiStatus['keterangan'], 20) }})</small>
+                                                    @endif
+                                                </span>
+                                            @elseif($presensiStatus['jenis'] === 'sakit')
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-user-injured me-1"></i>Sakit
+                                                    @if($presensiStatus['keterangan'])
+                                                        <small>({{ Str::limit($presensiStatus['keterangan'], 20) }})</small>
+                                                    @endif
+                                                </span>
+                                            @endif
                                         @else
-                                                        <span class="badge bg-danger">Sakit</span>
+                                            <span class="badge bg-secondary">Belum Presensi</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -247,40 +280,54 @@
                         <!-- Kehadiran Hari Ini -->
                         <div class="card mb-4">
                             <div class="card-header">
-                                <h5 class="mb-0">Kehadiran Hari Ini</h5>
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-pie me-2"></i>Kehadiran Hari Ini
+                                </h5>
                             </div>
                             <div class="card-body">
-                    @php
-                        $totalGuru = \App\Models\Guru::count();
-                        $hadir = \App\Models\Guru::where('status', 'aktif')->count();
-                        $izin = \App\Models\Guru::where('status', 'izin')->count();
-                        $sakit = \App\Models\Guru::where('status', 'sakit')->count();
-                        $persentase = $totalGuru > 0 ? round(($hadir / $totalGuru) * 100) : 0;
-                    @endphp
+                                <!-- Pie Chart -->
+                                <div class="mb-4" style="position: relative; height: 250px;">
+                                    <canvas id="presensiPieChart"></canvas>
+                                </div>
+                                
+                                <!-- Statistics -->
                                 <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Total Guru</span>
-                                        <span class="fw-bold">{{ $totalGuru }}</span>
-                        </div>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Hadir</span>
-                                        <span class="fw-bold text-success">{{ $hadir }}</span>
-                        </div>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Izin</span>
-                                        <span class="fw-bold text-warning">{{ $izin }}</span>
-                        </div>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Sakit</span>
-                                        <span class="fw-bold text-danger">{{ $sakit }}</span>
-                        </div>
-                    </div>
-                                <div class="progress mb-2" style="height: 8px;">
-                                    <div class="progress-bar bg-success" style="width: {{ $persentase }}%"></div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span><i class="fas fa-users me-2 text-primary"></i>Total Guru</span>
+                                        <span class="fw-bold">{{ $totalGurus }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span><i class="fas fa-check-circle me-2 text-success"></i>Hadir</span>
+                                        <span class="fw-bold text-success">{{ $presensiHadir }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span><i class="fas fa-file-alt me-2 text-warning"></i>Izin</span>
+                                        <span class="fw-bold text-warning">{{ $presensiIzin }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span><i class="fas fa-user-injured me-2 text-danger"></i>Sakit</span>
+                                        <span class="fw-bold text-danger">{{ $presensiSakit }}</span>
+                                    </div>
+                                    @if($belumPresensi > 0)
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span><i class="fas fa-clock me-2 text-secondary"></i>Belum Presensi</span>
+                                        <span class="fw-bold text-secondary">{{ $belumPresensi }}</span>
+                                    </div>
+                                    @endif
+                                </div>
+                                
+                                @php
+                                    $totalPresensi = $presensiHadir + $presensiIzin + $presensiSakit;
+                                    $persentase = $totalGurus > 0 ? round(($totalPresensi / $totalGurus) * 100) : 0;
+                                @endphp
+                                <div class="progress mb-2" style="height: 10px; border-radius: 5px;">
+                                    <div class="progress-bar bg-success" style="width: {{ $persentase }}%" role="progressbar"></div>
+                                </div>
+                                <p class="text-center mb-0 text-muted">
+                                    <small>{{ $persentase }}% Guru Sudah Presensi</small>
+                                </p>
                             </div>
-                                <p class="text-center mb-0">{{ $persentase }}% Kehadiran</p>
-                    </div>
-                </div>
+                        </div>
 
                 <!-- Fitur Utama -->
                         <div class="card">
@@ -353,5 +400,94 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Pie Chart untuk Presensi Guru
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('presensiPieChart');
+            if (ctx) {
+                const presensiData = {
+                    hadir: {{ $presensiHadir }},
+                    izin: {{ $presensiIzin }},
+                    sakit: {{ $presensiSakit }},
+                    belumPresensi: {{ $belumPresensi }}
+                };
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            'Hadir ({{ $presensiHadir }})',
+                            'Izin ({{ $presensiIzin }})',
+                            'Sakit ({{ $presensiSakit }})',
+                            @if($belumPresensi > 0)
+                            'Belum Presensi ({{ $belumPresensi }})'
+                            @endif
+                        ],
+                        datasets: [{
+                            label: 'Presensi Guru',
+                            data: [
+                                presensiData.hadir,
+                                presensiData.izin,
+                                presensiData.sakit,
+                                @if($belumPresensi > 0)
+                                presensiData.belumPresensi
+                                @endif
+                            ],
+                            backgroundColor: [
+                                '#28a745', // Hijau untuk Hadir
+                                '#ffc107', // Kuning untuk Izin
+                                '#dc3545', // Merah untuk Sakit
+                                @if($belumPresensi > 0)
+                                '#6c757d'  // Abu-abu untuk Belum Presensi
+                                @endif
+                            ],
+                            borderColor: [
+                                '#1e7e34',
+                                '#e0a800',
+                                '#c82333',
+                                @if($belumPresensi > 0)
+                                '#545b62'
+                                @endif
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    font: {
+                                        size: 12
+                                    },
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const total = {{ $totalGurus }};
+                                        const value = context.parsed;
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        label += value + ' guru (' + percentage + '%)';
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

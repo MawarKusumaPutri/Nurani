@@ -33,18 +33,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.presensi.index') }}">
+                        <a class="nav-link active" href="{{ route('tu.presensi.index') }}">
                             <i class="fas fa-calendar-check"></i> Presensi
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.izin.index') }}">
-                            <i class="fas fa-file-alt"></i> Izin
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('tu.sakit.index') }}">
-                            <i class="fas fa-user-injured"></i> Sakit
                         </a>
                     </li>
                     <li class="nav-item">

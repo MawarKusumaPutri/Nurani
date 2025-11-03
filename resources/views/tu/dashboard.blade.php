@@ -38,16 +38,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.izin.index') }}">
-                            <i class="fas fa-file-alt"></i> Izin
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.sakit.index') }}">
-                            <i class="fas fa-user-injured"></i> Sakit
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.jadwal.index') }}">
                             <i class="fas fa-calendar"></i> Jadwal
                         </a>
@@ -184,21 +174,7 @@
                                     <a href="{{ route('tu.presensi.index') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
                                         <i class="fas fa-calendar-check fa-3x mb-3"></i>
                                         <h6>Presensi</h6>
-                                        <small class="text-muted">Verifikasi presensi</small>
-                                    </a>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <a href="{{ route('tu.izin.index') }}" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
-                                        <i class="fas fa-file-alt fa-3x mb-3"></i>
-                                        <h6>Izin</h6>
-                                        <small class="text-muted">Kelola izin guru</small>
-                                    </a>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <a href="{{ route('tu.sakit.index') }}" class="btn btn-outline-danger w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
-                                        <i class="fas fa-user-injured fa-3x mb-3"></i>
-                                        <h6>Sakit</h6>
-                                        <small class="text-muted">Data sakit guru</small>
+                                        <small class="text-muted">Presensi, Izin & Sakit</small>
                                     </a>
                                 </div>
                                 <div class="col-md-3 mb-3">

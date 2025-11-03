@@ -164,6 +164,40 @@
                                             </div>
                                         </div>
                                         
+                                        <div class="mb-2">
+                                            <small class="text-muted">Status Presensi Hari Ini:</small>
+                                            <div class="d-flex align-items-center mt-1">
+                                                @if($guru->presensi_status)
+                                                    @php
+                                                        $presensiStatus = $guru->presensi_status;
+                                                    @endphp
+                                                    @if($presensiStatus['jenis'] === 'hadir')
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check-circle me-1"></i>Hadir
+                                                        </span>
+                                                    @elseif($presensiStatus['jenis'] === 'izin')
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="fas fa-file-alt me-1"></i>Izin
+                                                            @if($presensiStatus['keterangan'])
+                                                                <small class="d-block mt-1">{{ Str::limit($presensiStatus['keterangan'], 30) }}</small>
+                                                            @endif
+                                                        </span>
+                                                    @elseif($presensiStatus['jenis'] === 'sakit')
+                                                        <span class="badge bg-danger">
+                                                            <i class="fas fa-user-injured me-1"></i>Sakit
+                                                            @if($presensiStatus['keterangan'])
+                                                                <small class="d-block mt-1">{{ Str::limit($presensiStatus['keterangan'], 30) }}</small>
+                                                            @endif
+                                                        </span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-clock me-1"></i>Belum Presensi
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <a href="{{ route('kepala_sekolah.guru.activity', $guru->id) }}" 

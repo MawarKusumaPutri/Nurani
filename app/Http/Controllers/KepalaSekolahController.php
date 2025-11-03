@@ -10,7 +10,9 @@ use App\Models\GuruActivity;
 use App\Models\Materi;
 use App\Models\Kuis;
 use App\Models\Rangkuman;
+use App\Models\Presensi;
 use App\Services\ActivityTracker;
+use Carbon\Carbon;
 
 class KepalaSekolahController extends Controller
 {
@@ -37,16 +39,54 @@ class KepalaSekolahController extends Controller
             ->limit(20)
             ->get();
         
+        // Get today's presensi (approved only)
+        $todayPresensi = Presensi::with('guru.user')
+            ->whereDate('tanggal', Carbon::today())
+            ->where('status_verifikasi', 'approved')
+            ->get();
+        
+        // Get presensi status for each guru and sort by presensi status (presensi first)
+        $guruPresensiStatus = [];
+        foreach ($gurus as $guru) {
+            $todayPresensiGuru = $todayPresensi->where('guru_id', $guru->id)->first();
+            $guruPresensiStatus[$guru->id] = $todayPresensiGuru ? [
+                'jenis' => $todayPresensiGuru->jenis,
+                'status' => ucfirst($todayPresensiGuru->jenis),
+                'keterangan' => $todayPresensiGuru->keterangan,
+            ] : null;
+        }
+        
+        // Sort gurus: yang sudah presensi dulu (prioritas: sakit > izin > hadir), lalu yang belum presensi
+        $gurus = $gurus->sortBy(function($guru) use ($guruPresensiStatus) {
+            if (isset($guruPresensiStatus[$guru->id])) {
+                $jenis = $guruPresensiStatus[$guru->id]['jenis'];
+                // Prioritas: sakit = 1, izin = 2, hadir = 3
+                if ($jenis === 'sakit') return 1;
+                if ($jenis === 'izin') return 2;
+                if ($jenis === 'hadir') return 3;
+            }
+            // Belum presensi = 4
+            return 4;
+        })->values();
+        
         // Statistics
         $totalGurus = $gurus->count();
         $onlineCount = $onlineGurus->count();
         $offlineCount = $offlineGurus->count();
         $unreadNotifications = $notifications->where('is_read', false)->count();
         
+        // Calculate presensi statistics for pie chart
+        $presensiHadir = $todayPresensi->where('jenis', 'hadir')->count();
+        $presensiSakit = $todayPresensi->where('jenis', 'sakit')->count();
+        $presensiIzin = $todayPresensi->where('jenis', 'izin')->count();
+        $belumPresensi = $totalGurus - ($presensiHadir + $presensiSakit + $presensiIzin);
+        
         return view('kepala_sekolah.dashboard', compact(
             'user', 'gurus', 'onlineGurus', 'offlineGurus', 
             'notifications', 'recentActivities', 'totalGurus', 
-            'onlineCount', 'offlineCount', 'unreadNotifications'
+            'onlineCount', 'offlineCount', 'unreadNotifications',
+            'guruPresensiStatus', 'presensiHadir', 'presensiSakit', 
+            'presensiIzin', 'belumPresensi'
         ));
     }
     
@@ -110,17 +150,30 @@ class KepalaSekolahController extends Controller
         }])->orderBy('created_at', 'desc')
             ->get();
         
+        // Get today's presensi (approved only)
+        $todayPresensi = Presensi::with('guru.user')
+            ->whereDate('tanggal', Carbon::today())
+            ->where('status_verifikasi', 'approved')
+            ->get();
+        
         // Determine online status for each guru
         $onlineGuruIds = ActivityTracker::getOnlineGurus()->pluck('id')->toArray();
         
-        // Add login status and time to each guru
-        $gurus = $gurus->map(function($guru) use ($onlineGuruIds) {
+        // Add login status and time to each guru, plus presensi status
+        $gurus = $gurus->map(function($guru) use ($onlineGuruIds, $todayPresensi) {
             $isOnline = in_array($guru->id, $onlineGuruIds);
             $lastLogin = $guru->activities->first();
             
             $guru->is_online = $isOnline;
             $guru->last_login_time = $lastLogin ? $lastLogin->activity_time : null;
             $guru->last_login_metadata = $lastLogin ? $lastLogin->metadata : null;
+            
+            // Get today's presensi status
+            $todayPresensiGuru = $todayPresensi->where('guru_id', $guru->id)->first();
+            $guru->presensi_status = $todayPresensiGuru ? [
+                'jenis' => $todayPresensiGuru->jenis,
+                'keterangan' => $todayPresensiGuru->keterangan,
+            ] : null;
             
             return $guru;
         });

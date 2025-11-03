@@ -89,4 +89,12 @@ class Guru extends Model
     {
         return $this->hasMany(GuruActivity::class)->orderBy('activity_time', 'desc');
     }
+
+    /**
+     * Get the presensi for the guru.
+     */
+    public function presensi(): HasMany
+    {
+        return $this->hasMany(Presensi::class);
+    }
 }

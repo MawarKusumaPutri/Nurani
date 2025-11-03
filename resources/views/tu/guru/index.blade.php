@@ -38,16 +38,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.izin.index') }}">
-                            <i class="fas fa-file-alt"></i> Izin
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.sakit.index') }}">
-                            <i class="fas fa-user-injured"></i> Sakit
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.jadwal.index') }}">
                             <i class="fas fa-calendar"></i> Jadwal
                         </a>
@@ -169,82 +159,65 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Sample Data -->
+                                        @php
+                                            $guruList = [
+                                                ['no' => 1, 'nip' => 'GRU002', 'nama' => 'Nurhadi, S.Pd', 'mata_pelajaran' => 'Matematika', 'jenis_kelamin' => 'Laki-laki', 'phone' => '081234567891', 'status' => 'aktif'],
+                                                ['no' => 2, 'nip' => 'GRU003', 'nama' => 'Keysha', 'mata_pelajaran' => 'Bahasa Inggris', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567892', 'status' => 'aktif'],
+                                                ['no' => 3, 'nip' => 'GRU004', 'nama' => 'Fadli', 'mata_pelajaran' => 'Bahasa Arab', 'jenis_kelamin' => 'Laki-laki', 'phone' => '081234567893', 'status' => 'aktif'],
+                                                ['no' => 4, 'nip' => 'GRU005', 'nama' => 'Siti Mundari, S.Ag', 'mata_pelajaran' => 'IPA, Prakarya, Basa Sunda', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567894', 'status' => 'aktif'],
+                                                ['no' => 5, 'nip' => 'GRU006', 'nama' => 'Lola Nurlaela, S.Pd.I.', 'mata_pelajaran' => 'SKI, Akidah Akhlak', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567895', 'status' => 'aktif'],
+                                                ['no' => 6, 'nip' => 'GRU007', 'nama' => 'Desy Nurfalah', 'mata_pelajaran' => 'Bahasa Indonesia', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567896', 'status' => 'aktif'],
+                                                ['no' => 7, 'nip' => 'GRU008', 'nama' => 'M. Rizmal Maulana', 'mata_pelajaran' => 'Fiqih, Al-Qur\'an Hadist', 'jenis_kelamin' => 'Laki-laki', 'phone' => '081234567897', 'status' => 'aktif'],
+                                                ['no' => 8, 'nip' => 'GRU009', 'nama' => 'Hamzah Nazmudin', 'mata_pelajaran' => 'Penjaskes, IPS', 'jenis_kelamin' => 'Laki-laki', 'phone' => '081234567898', 'status' => 'aktif'],
+                                                ['no' => 9, 'nip' => 'GRU010', 'nama' => 'Sopyan', 'mata_pelajaran' => 'PKN', 'jenis_kelamin' => 'Laki-laki', 'phone' => '081234567899', 'status' => 'aktif'],
+                                                ['no' => 10, 'nip' => 'GRU011', 'nama' => 'Syifa Restu Rahayu', 'mata_pelajaran' => 'Seni Budaya', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567900', 'status' => 'aktif'],
+                                                ['no' => 11, 'nip' => 'GRU012', 'nama' => 'Weny', 'mata_pelajaran' => 'Tahsin', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567901', 'status' => 'aktif'],
+                                                ['no' => 12, 'nip' => 'GRU013', 'nama' => 'Tintin Martini', 'mata_pelajaran' => 'BTQ, Tahsin', 'jenis_kelamin' => 'Perempuan', 'phone' => '081234567902', 'status' => 'aktif'],
+                                            ];
+                                        @endphp
+                                        @foreach($guruList as $guru)
                                         <tr>
-                                            <td>1</td>
-                                            <td>196512151990031001</td>
-                                            <td>Dr. Ahmad Suryadi, M.Pd</td>
-                                            <td>Matematika</td>
-                                            <td>Laki-laki</td>
-                                            <td>081234567890</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
+                                            <td>{{ $guru['no'] }}</td>
+                                            <td>{{ $guru['nip'] }}</td>
+                                            <td>{{ $guru['nama'] }}</td>
+                                            <td>{{ $guru['mata_pelajaran'] }}</td>
+                                            <td>{{ $guru['jenis_kelamin'] }}</td>
+                                            <td>{{ $guru['phone'] }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary me-1">
+                                                @if($guru['status'] === 'aktif')
+                                                    <span class="badge bg-success">Aktif</span>
+                                                @else
+                                                    <span class="badge bg-warning">Tidak Aktif</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary me-1" onclick="editGuru('{{ $guru['nip'] }}', '{{ $guru['nama'] }}')">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </button>
-                                                <button class="btn btn-sm btn-danger">
+                                                <button class="btn btn-sm btn-danger" onclick="hapusGuru('{{ $guru['nip'] }}', '{{ $guru['nama'] }}')">
                                                     <i class="fas fa-trash"></i> Hapus
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>197203151995032002</td>
-                                            <td>Siti Nurhaliza, S.Pd</td>
-                                            <td>Bahasa Indonesia</td>
-                                            <td>Perempuan</td>
-                                            <td>081234567891</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>197805201998031003</td>
-                                            <td>Budi Santoso, M.Pd</td>
-                                            <td>IPA</td>
-                                            <td>Laki-laki</td>
-                                            <td>081234567892</td>
-                                            <td><span class="badge bg-warning">Tidak Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
                             
                             <!-- Pagination -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="d-flex justify-content-between align-items-center mt-4 pagination-custom">
+                                <div class="text-muted small">
+                                    Menampilkan 1 sampai 12 dari 12 guru
+                                </div>
+                                <div class="d-flex">
+                                    <button class="btn btn-outline-secondary btn-sm me-2" disabled>
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -252,4 +225,28 @@
         </main>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<style>
+.pagination-custom .btn {
+    min-width: 100px;
+}
+</style>
+<script>
+function editGuru(nip, nama) {
+    if (confirm('Edit data guru ' + nama + ' (NIP: ' + nip + ')?')) {
+        // Implementation for editing guru
+        alert('Fitur edit guru untuk ' + nama + ' akan dibuka');
+    }
+}
+
+function hapusGuru(nip, nama) {
+    if (confirm('Apakah Anda yakin ingin menghapus data guru ' + nama + ' (NIP: ' + nip + ')?\n\nData yang dihapus tidak dapat dikembalikan!')) {
+        // Implementation for deleting guru
+        alert('Data guru ' + nama + ' berhasil dihapus');
+        location.reload();
+    }
+}
+</script>
 @endsection

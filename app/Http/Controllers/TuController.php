@@ -74,13 +74,59 @@ class TuController extends Controller
     // Presensi Management
     public function presensiIndex()
     {
-        return view('tu.presensi.index');
+        // Get all presensi with guru info
+        $presensiList = \App\Models\Presensi::with('guru.user')
+            ->orderByRaw("CASE WHEN status_verifikasi = 'pending' THEN 0 ELSE 1 END")
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Sort all presensi with pending first
+        $allPresensi = $presensiList->sortBy(function($item) {
+            // Pending first (0), then approved (1), then rejected (2)
+            if ($item->status_verifikasi === 'pending') return 0;
+            if ($item->status_verifikasi === 'approved') return 1;
+            return 2;
+        })->values();
+        
+        // Separate by jenis for backward compatibility (if needed for tabs)
+        $presensiHadir = $allPresensi->where('jenis', 'hadir');
+        $presensiIzin = $allPresensi->where('jenis', 'izin');
+        $presensiSakit = $allPresensi->where('jenis', 'sakit');
+        
+        // Count pending for each type (for badges)
+        $pendingHadir = $presensiHadir->where('status_verifikasi', 'pending')->count();
+        $pendingIzin = $presensiIzin->where('status_verifikasi', 'pending')->count();
+        $pendingSakit = $presensiSakit->where('status_verifikasi', 'pending')->count();
+        $totalPending = $allPresensi->where('status_verifikasi', 'pending')->count();
+        
+        return view('tu.presensi.index', compact(
+            'allPresensi',
+            'presensiList', 
+            'presensiHadir', 
+            'presensiIzin', 
+            'presensiSakit',
+            'pendingHadir',
+            'pendingIzin',
+            'pendingSakit',
+            'totalPending'
+        ));
     }
     
-    public function presensiVerify(Request $request)
+    public function presensiVerify($id, Request $request)
     {
-        // Implementation for verifying attendance
-        return redirect()->route('tu.presensi.index')->with('success', 'Presensi berhasil diverifikasi');
+        $presensi = \App\Models\Presensi::findOrFail($id);
+        
+        $presensi->update([
+            'status_verifikasi' => $request->action === 'approve' ? 'approved' : 'rejected',
+            'verified_by' => Auth::id(),
+            'verified_at' => now(),
+        ]);
+        
+        $message = $request->action === 'approve' ? 'Presensi berhasil disetujui' : 'Presensi ditolak';
+        
+        return redirect()->route('tu.presensi.index')
+            ->with('success', $message);
     }
     
     // Izin Management

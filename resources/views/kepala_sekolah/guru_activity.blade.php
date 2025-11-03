@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Aktivitas {{ $guru->user->name }} - Kepala Sekolah</title>
+    <title>Aktivitas Guru{{ isset($guru) ? ' - ' . $guru->user->name : '' }} - Kepala Sekolah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -159,7 +159,7 @@
                             <i class="fas fa-chart-line me-2 text-primary"></i>
                             Aktivitas Guru
                         </h2>
-                        <p class="text-muted mb-0">Pantau aktivitas pembelajaran {{ $guru->user->name }}</p>
+                        <p class="text-muted mb-0">Pantau aktivitas pembelajaran{{ isset($guru) ? ' ' . $guru->user->name : ' Semua Guru' }}</p>
                     </div>
                     <div>
                         <a href="{{ route('kepala_sekolah.guru') }}" class="btn btn-outline-primary">
@@ -182,6 +182,7 @@
                                     <div class="col-md-10">
                                         <div class="row">
                                             <div class="col-md-6">
+                                                @if(isset($guru))
                                                 <h3 class="mb-2 text-white">{{ $guru->user->name }}</h3>
                                                 <div class="mb-2">
                                                     <i class="fas fa-id-card me-2"></i>
@@ -193,12 +194,20 @@
                                                     <span class="text-white-50">Mata Pelajaran:</span>
                                                     <span class="text-white fw-bold">{{ $guru->mata_pelajaran }}</span>
                                                 </div>
+                                                @else
+                                                <h3 class="mb-2 text-white">Semua Guru</h3>
+                                                <div class="mb-2">
+                                                    <i class="fas fa-users me-2"></i>
+                                                    <span class="text-white-50">Total Guru:</span>
+                                                    <span class="text-white fw-bold">{{ $gurus->count() ?? 0 }}</span>
+                                                </div>
+                                                @endif
                                             </div>
                                             <div class="col-md-6 text-end">
                                                 <div class="mb-3">
                                                     <span class="badge bg-white text-primary px-3 py-2 fs-6">
                                                         <i class="fas fa-circle text-success me-2"></i>Aktif
-                                                    </span>
+                                            </span>
                                                 </div>
                                                 <div class="text-white-50">
                                                     <small>Total Aktivitas: <strong class="text-white">{{ $activities->total() }}</strong></small>
@@ -218,17 +227,17 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-white border-bottom">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">
+                                <h5 class="mb-0">
                                         <i class="fas fa-history me-2 text-primary"></i>
-                                        Riwayat Aktivitas
-                                    </h5>
+                                    Riwayat Aktivitas
+                                </h5>
                                     <span class="badge bg-primary">{{ $activities->total() }} Aktivitas</span>
                                 </div>
                             </div>
                             <div class="card-body p-4">
                                 @if($activities->count() > 0)
                                     <div class="timeline">
-                                        @foreach($activities as $activity)
+                                    @foreach($activities as $activity)
                                             <div class="timeline-item mb-4">
                                                 <div class="d-flex">
                                                     <!-- Timeline Icon -->
@@ -263,9 +272,9 @@
                                                     <!-- Timeline Content -->
                                                     <div class="flex-grow-1">
                                                         <div class="card border-0 shadow-sm activity-{{ $activity->activity_type }}">
-                                                            <div class="card-body">
+                                            <div class="card-body">
                                                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                    <div class="flex-grow-1">
+                                                    <div class="flex-grow-1">
                                                                         @if($activity->activity_type === 'logout')
                                                                             <h6 class="mb-1 fw-bold">Logout</h6>
                                                                             <p class="text-muted mb-0 small">
@@ -275,14 +284,16 @@
                                                                         @elseif(in_array($activity->activity_type, ['create_materi', 'create_kuis', 'create_rangkuman']))
                                                                             @php
                                                                                 $mataPelajaran = $activity->mata_pelajaran_mengajar ?? 
-                                                                                    ((isset($mataPelajaranList) && !empty($mataPelajaranList)) ? $mataPelajaranList[0] : ($guru->mata_pelajaran ?? 'Mata Pelajaran'));
+                                                                                    (isset($guru) 
+                                                                                        ? ((isset($mataPelajaranList) && !empty($mataPelajaranList)) ? $mataPelajaranList[0] : ($guru->mata_pelajaran ?? 'Mata Pelajaran'))
+                                                                                        : ($activity->guru->mata_pelajaran ?? 'Mata Pelajaran'));
                                                                             @endphp
                                                                             <h6 class="mb-1 fw-bold">
                                                                                 <i class="fas fa-chalkboard-teacher me-2 text-primary"></i>
                                                                                 Mengajar {{ $mataPelajaran }}
                                                                             </h6>
                                                                             <p class="mb-0 small">
-                                                                                <strong>{{ $guru->user->name }}</strong> habis mengajar 
+                                                                                <strong>{{ isset($guru) ? $guru->user->name : $activity->guru->user->name }}</strong> habis mengajar 
                                                                                 <strong class="text-primary">{{ $mataPelajaran }}</strong> 
                                                                                 pada jam <strong>{{ $activity->activity_time->format('H:i') }}</strong>
                                                                             </p>
@@ -296,11 +307,11 @@
                                                                             </h6>
                                                                             <p class="text-muted mb-0 small">{{ $activity->description }}</p>
                                                                             <p class="text-muted mb-0 small mt-1">
-                                                                                <i class="fas fa-clock me-1"></i>
-                                                                                {{ $activity->activity_time->format('d M Y, H:i') }}
+                                                                    <i class="fas fa-clock me-1"></i>
+                                                                    {{ $activity->activity_time->format('d M Y, H:i') }}
                                                                             </p>
                                                                         @endif
-                                                                    </div>
+                                                            </div>
                                                                     <div>
                                                                         @if($activity->activity_type === 'logout')
                                                                             <span class="badge bg-danger rounded-pill">
@@ -316,14 +327,14 @@
                                                                                 {{ $activity->activity_type === 'login' ? 'Login' : ucfirst(str_replace('_', ' ', $activity->activity_type)) }}
                                                                             </span>
                                                                         @endif
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </div>
+                                                            </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        </div>
+                                    @endforeach
                                     </div>
 
                                     <!-- Pagination -->

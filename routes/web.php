@@ -84,6 +84,12 @@ Route::middleware('auth')->group(function () {
             Route::post('/select', [GuruMataPelajaranController::class, 'setSelectedSubject'])->name('select');
             Route::get('/current', [GuruMataPelajaranController::class, 'getCurrentSubject'])->name('current');
         });
+        
+        // Presensi Routes
+        Route::prefix('presensi')->name('presensi.')->group(function () {
+            Route::get('/', [App\Http\Controllers\PresensiController::class, 'index'])->name('index');
+            Route::post('/', [App\Http\Controllers\PresensiController::class, 'store'])->name('store');
+        });
     });
     
     
@@ -130,7 +136,7 @@ Route::middleware('auth')->group(function () {
         // Presensi Management
         Route::prefix('presensi')->name('presensi.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'presensiIndex'])->name('index');
-            Route::post('/verify', [App\Http\Controllers\TuController::class, 'presensiVerify'])->name('verify');
+            Route::post('/{id}/verify', [App\Http\Controllers\TuController::class, 'presensiVerify'])->name('verify');
         });
         
         // Izin Management
