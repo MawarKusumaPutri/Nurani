@@ -42,6 +42,20 @@
         .status-offline {
             color: #dc3545;
         }
+        .pagination-custom .btn-primary {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .pagination-custom .btn-primary:hover {
+            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+        }
+        .pagination-custom .btn-outline-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -165,8 +179,31 @@
 
                         <!-- Pagination -->
                         <div class="col-12">
-                            <div class="d-flex justify-content-center mt-4">
-                                {{ $gurus->links() }}
+                            <div class="d-flex justify-content-between align-items-center mt-4 pagination-custom">
+                                <div class="text-muted small">
+                                    Menampilkan {{ $gurus->firstItem() ?? 0 }} sampai {{ $gurus->lastItem() ?? 0 }} dari {{ $gurus->total() }} guru
+                                </div>
+                                <div class="d-flex">
+                                    @if($gurus->onFirstPage())
+                                        <button class="btn btn-outline-secondary btn-sm me-2" disabled>
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </button>
+                                    @else
+                                        <a href="{{ $gurus->previousPageUrl() }}" class="btn btn-primary btn-sm me-2">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </a>
+                                    @endif
+                                    
+                                    @if($gurus->hasMorePages())
+                                        <a href="{{ $gurus->nextPageUrl() }}" class="btn btn-primary btn-sm">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @else

@@ -162,7 +162,67 @@ class KepalaSekolahController extends Controller
                 ->orderBy('activity_time', 'desc')
                 ->paginate(20);
             
-            return view('kepala_sekolah.guru_activity', compact('guru', 'activities'));
+            // Get mata pelajaran list for this guru
+            $mataPelajaranList = [];
+            if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
+                $mataPelajaranList = array_map('trim', explode(', ', $guru->mata_pelajaran));
+            }
+            
+            // Enhance activities with mata pelajaran info
+            $activities->getCollection()->transform(function($activity) use ($guru, $mataPelajaranList) {
+                // Get mata pelajaran from related materi/kuis/rangkuman if available
+                if (in_array($activity->activity_type, ['create_materi', 'create_kuis', 'create_rangkuman'])) {
+                    $mataPelajaran = null;
+                    
+                    // Try to get from metadata first
+                    if ($activity->metadata && isset($activity->metadata['mata_pelajaran'])) {
+                        $mataPelajaran = $activity->metadata['mata_pelajaran'];
+                    } else {
+                        // Try to get from related model based on activity time
+                        $activityTime = $activity->activity_time;
+                        $timeStart = $activityTime->copy()->subMinutes(5);
+                        $timeEnd = $activityTime->copy()->addMinutes(5);
+                        
+                        if ($activity->activity_type === 'create_materi') {
+                            $materi = Materi::where('guru_id', $guru->id)
+                                ->whereBetween('created_at', [$timeStart, $timeEnd])
+                                ->first();
+                            if ($materi && isset($materi->mata_pelajaran) && $materi->mata_pelajaran) {
+                                $mataPelajaran = $materi->mata_pelajaran;
+                            }
+                        } elseif ($activity->activity_type === 'create_kuis') {
+                            $kuis = Kuis::where('guru_id', $guru->id)
+                                ->whereBetween('created_at', [$timeStart, $timeEnd])
+                                ->first();
+                            if ($kuis && $kuis->mata_pelajaran) {
+                                $mataPelajaran = $kuis->mata_pelajaran;
+                            }
+                        } elseif ($activity->activity_type === 'create_rangkuman') {
+                            $rangkuman = Rangkuman::where('guru_id', $guru->id)
+                                ->whereBetween('created_at', [$timeStart, $timeEnd])
+                                ->first();
+                            if ($rangkuman && $rangkuman->mata_pelajaran) {
+                                $mataPelajaran = $rangkuman->mata_pelajaran;
+                            }
+                        }
+                        
+                        // If still not found, distribute across mata pelajaran based on time
+                        if (!$mataPelajaran && !empty($mataPelajaranList)) {
+                            $activityIndex = $guru->activities()
+                                ->where('activity_time', '<=', $activity->activity_time)
+                                ->whereIn('activity_type', ['create_materi', 'create_kuis', 'create_rangkuman'])
+                                ->count();
+                            $mataPelajaran = $mataPelajaranList[$activityIndex % count($mataPelajaranList)];
+                        }
+                    }
+                    
+                    $activity->mata_pelajaran_mengajar = $mataPelajaran;
+                }
+                
+                return $activity;
+            });
+            
+            return view('kepala_sekolah.guru_activity', compact('guru', 'activities', 'mataPelajaranList'));
         } else {
             // Show all guru activities
             $gurus = Guru::with(['user', 'activities'])->get();
