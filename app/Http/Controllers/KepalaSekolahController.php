@@ -103,9 +103,41 @@ class KepalaSekolahController extends Controller
     
     public function guru()
     {
-        $gurus = Guru::with(['user', 'activities'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $gurus = Guru::with(['user', 'activities' => function($query) {
+            $query->where('activity_type', 'login')
+                  ->orderBy('activity_time', 'desc')
+                  ->limit(1);
+        }])->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Determine online status for each guru
+        $onlineGuruIds = ActivityTracker::getOnlineGurus()->pluck('id')->toArray();
+        
+        // Add login status and time to each guru
+        $gurus = $gurus->map(function($guru) use ($onlineGuruIds) {
+            $isOnline = in_array($guru->id, $onlineGuruIds);
+            $lastLogin = $guru->activities->first();
+            
+            $guru->is_online = $isOnline;
+            $guru->last_login_time = $lastLogin ? $lastLogin->activity_time : null;
+            $guru->last_login_metadata = $lastLogin ? $lastLogin->metadata : null;
+            
+            return $guru;
+        });
+        
+        // Paginate manually
+        $page = request()->get('page', 1);
+        $perPage = 12;
+        $total = $gurus->count();
+        $items = $gurus->slice(($page - 1) * $perPage, $perPage)->values();
+        
+        $gurus = new \Illuminate\Pagination\LengthAwarePaginator(
+            $items,
+            $total,
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
         
         return view('kepala_sekolah.guru', compact('gurus'));
     }

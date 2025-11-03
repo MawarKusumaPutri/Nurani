@@ -107,9 +107,6 @@
                             <span class="badge bg-primary">{{ $selectedMataPelajaran }}</span>
                         @endif
                     </div>
-                    <a href="{{ route('guru.rangkuman.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Buat Rangkuman
-                    </a>
                 </div>
 
                 <!-- Mata Pelajaran Switcher -->

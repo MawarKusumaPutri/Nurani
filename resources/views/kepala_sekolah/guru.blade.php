@@ -123,13 +123,34 @@
                                             <p class="mb-1">{{ $guru->mata_pelajaran }}</p>
                                         </div>
                                         
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <small class="text-muted">Status:</small>
-                                                <span class="badge bg-{{ $guru->status === 'aktif' ? 'success' : 'secondary' }}">
-                                                    {{ ucfirst($guru->status) }}
-                                                </span>
+                                        <div class="mb-2">
+                                            <small class="text-muted">Status Login:</small>
+                                            <div class="d-flex align-items-center mt-1">
+                                                @if($guru->is_online ?? false)
+                                                    <span class="badge bg-success me-2">
+                                                        <i class="fas fa-circle me-1" style="font-size: 8px;"></i>Aktif
+                                                    </span>
+                                                    @if($guru->last_login_time)
+                                                        <small class="text-muted status-time" data-time="{{ $guru->last_login_time }}">
+                                                            Login: {{ \Carbon\Carbon::parse($guru->last_login_time)->format('H:i') }}
+                                                        </small>
+                                                    @endif
+                                                @else
+                                                    <span class="badge bg-secondary me-2">
+                                                        <i class="fas fa-circle me-1" style="font-size: 8px;"></i>Offline
+                                                    </span>
+                                                    @if($guru->last_login_time)
+                                                        <small class="text-muted status-time" data-time="{{ $guru->last_login_time }}">
+                                                            Terakhir: {{ \Carbon\Carbon::parse($guru->last_login_time)->diffForHumans() }}
+                                                        </small>
+                                                    @else
+                                                        <small class="text-muted">Belum pernah login</small>
+                                                    @endif
+                                                @endif
                                             </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <a href="{{ route('kepala_sekolah.guru.activity', $guru->id) }}" 
                                                    class="btn btn-sm btn-outline-primary">
@@ -163,5 +184,45 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update time display setiap menit tanpa reload
+        setInterval(function() {
+            document.querySelectorAll('.status-time').forEach(function(el) {
+                if (el.dataset.time) {
+                    const time = new Date(el.dataset.time);
+                    const now = new Date();
+                    const diffMs = now - time;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    
+                    if (diffMins < 30) {
+                        // Masih online
+                        const timeStr = time.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+                        el.textContent = 'Login: ' + timeStr;
+                    } else {
+                        // Sudah offline
+                        el.textContent = 'Terakhir: ' + getTimeAgo(time);
+                    }
+                }
+            });
+        }, 60000); // Setiap 1 menit
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Baru saja';
+            if (diffMins < 60) return diffMins + ' menit yang lalu';
+            if (diffHours < 24) return diffHours + ' jam yang lalu';
+            return diffDays + ' hari yang lalu';
+        }
+
+        // Auto-refresh status login setiap 60 detik (optional, bisa diaktifkan jika diperlukan)
+        // setInterval(function() {
+        //     location.reload();
+        // }, 60000);
+    </script>
 </body>
 </html>
