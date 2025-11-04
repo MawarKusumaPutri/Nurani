@@ -123,6 +123,11 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="presensi-tab" data-bs-toggle="tab" data-bs-target="#presensi" type="button" role="tab">
                         <i class="fas fa-calendar-check me-2"></i> Presensi
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hadir-tab" data-bs-toggle="tab" data-bs-target="#hadir" type="button" role="tab">
+                        <i class="fas fa-check-circle me-2"></i> Hadir
                         @if($pendingHadir > 0)
                             <span class="badge bg-danger ms-2">{{ $pendingHadir }}</span>
                         @endif
@@ -289,6 +294,157 @@
                                                 @else
                                                     <tr>
                                                         <td colspan="9" class="text-center text-muted">Belum ada data presensi</td>
+                                                    </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hadir Tab -->
+                <div class="tab-pane fade" id="hadir" role="tabpanel">
+                    @if($pendingHadir > 0)
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Perhatian!</strong> Ada <strong>{{ $pendingHadir }}</strong> presensi hadir yang menunggu verifikasi.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    @endif
+                    
+                    <!-- Filter Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-select">
+                                                <option value="">Semua Status</option>
+                                                <option value="pending">Menunggu Persetujuan</option>
+                                                <option value="approved">Disetujui</option>
+                                                <option value="rejected">Ditolak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Tanggal Mulai</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Tanggal Selesai</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">&nbsp;</label>
+                                            <button class="btn btn-primary d-block w-100">
+                                                <i class="fas fa-search"></i> Filter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hadir List -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-check-circle"></i> Daftar Presensi Hadir
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Nama Guru</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Jam Masuk</th>
+                                                    <th>Jam Keluar</th>
+                                                    <th>Status Verifikasi</th>
+                                                    <th>Keterangan</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if($presensiHadir->count() > 0)
+                                                    @foreach($presensiHadir as $index => $hadir)
+                                                    <tr class="{{ $hadir->status_verifikasi === 'pending' ? 'table-warning' : '' }}">
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>
+                                                            <strong>{{ $hadir->guru->user->name }}</strong>
+                                                            @if($hadir->status_verifikasi === 'pending')
+                                                                <span class="badge bg-danger ms-2">Baru</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $hadir->tanggal->format('d/m/Y') }}</td>
+                                                        <td>
+                                                            @if($hadir->jam_masuk)
+                                                                <span class="badge bg-success text-white">
+                                                                    <i class="fas fa-clock me-1"></i>{{ date('H:i', strtotime($hadir->jam_masuk)) }}
+                                                                </span>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($hadir->jam_keluar)
+                                                                <span class="badge bg-info text-white">
+                                                                    <i class="fas fa-clock me-1"></i>{{ date('H:i', strtotime($hadir->jam_keluar)) }}
+                                                                </span>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($hadir->status_verifikasi === 'pending')
+                                                                <span class="badge bg-warning text-dark">Menunggu</span>
+                                                            @elseif($hadir->status_verifikasi === 'approved')
+                                                                <span class="badge bg-success">Disetujui</span>
+                                                            @else
+                                                                <span class="badge bg-danger">Ditolak</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $hadir->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            @if($hadir->status_verifikasi === 'pending')
+                                                                <form action="{{ route('tu.presensi.verify', $hadir->id) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    <input type="hidden" name="action" value="approve">
+                                                                    <button type="submit" class="btn btn-sm btn-success me-1" onclick="return confirm('Setujui presensi hadir ini?')">
+                                                                        <i class="fas fa-check"></i> Setujui
+                                                                    </button>
+                                                                </form>
+                                                                <form action="{{ route('tu.presensi.verify', $hadir->id) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    <input type="hidden" name="action" value="reject">
+                                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tolak presensi hadir ini?')">
+                                                                        <i class="fas fa-times"></i> Tolak
+                                                                    </button>
+                                                                </form>
+                                                            @elseif($hadir->status_verifikasi === 'approved')
+                                                                <span class="badge bg-success">
+                                                                    <i class="fas fa-check-circle"></i> Sudah Disetujui
+                                                                </span>
+                                                            @else
+                                                                <span class="badge bg-danger">
+                                                                    <i class="fas fa-times-circle"></i> Ditolak
+                                                                </span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="8" class="text-center text-muted">Belum ada data presensi hadir</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
