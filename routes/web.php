@@ -180,12 +180,6 @@ Route::middleware('auth')->group(function () {
             Route::post('/send', [App\Http\Controllers\TuController::class, 'suratSend'])->name('send');
         });
         
-        // Laporan Management
-        Route::prefix('laporan')->name('laporan.')->group(function () {
-            Route::get('/', [App\Http\Controllers\TuController::class, 'laporanIndex'])->name('index');
-            Route::get('/create', [App\Http\Controllers\TuController::class, 'laporanCreate'])->name('create');
-            Route::post('/send', [App\Http\Controllers\TuController::class, 'laporanSend'])->name('send');
-        });
         
         // Pengumuman Management
         Route::prefix('pengumuman')->name('pengumuman.')->group(function () {

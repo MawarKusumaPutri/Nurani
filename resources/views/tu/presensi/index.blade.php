@@ -58,11 +58,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.laporan.index') }}">
-                            <i class="fas fa-chart-bar"></i> Laporan
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.pengumuman.index') }}">
                             <i class="fas fa-bullhorn"></i> Pengumuman
                         </a>
@@ -70,8 +65,8 @@
                 </ul>
                 
                 <div class="mt-auto">
-                    <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm w-100">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a class="nav-link" href="{{ route('logout') }}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </div>
             </div>
@@ -155,42 +150,6 @@
             <div class="tab-content" id="presensiTabsContent">
                 <!-- Presensi Tab -->
                 <div class="tab-pane fade show active" id="presensi" role="tabpanel">
-                    <!-- Filter Section -->
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal</label>
-                                            <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Status</label>
-                                            <select class="form-select">
-                                                <option value="">Semua Status</option>
-                                                <option value="hadir">Hadir</option>
-                                                <option value="izin">Izin</option>
-                                                <option value="sakit">Sakit</option>
-                                                <option value="alpa">Alpa</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Cari Guru</label>
-                                            <input type="text" class="form-control" placeholder="Nama guru">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">&nbsp;</label>
-                                            <button class="btn btn-primary d-block w-100">
-                                                <i class="fas fa-search"></i> Filter
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Presensi List -->
                     <div class="row">
                         <div class="col-md-12">
@@ -320,31 +279,34 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Status</label>
-                                            <select class="form-select">
-                                                <option value="">Semua Status</option>
-                                                <option value="pending">Menunggu Persetujuan</option>
-                                                <option value="approved">Disetujui</option>
-                                                <option value="rejected">Ditolak</option>
-                                            </select>
+                                    <form method="GET" action="{{ route('tu.presensi.index') }}" id="filterHadirForm">
+                                        <input type="hidden" name="tab" value="hadir">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-select" name="status_hadir" id="statusHadir">
+                                                    <option value="">Semua Status</option>
+                                                    <option value="pending" {{ request('status_hadir') == 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                                    <option value="approved" {{ request('status_hadir') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                                                    <option value="rejected" {{ request('status_hadir') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Mulai</label>
+                                                <input type="date" class="form-control" name="tanggal_mulai_hadir" value="{{ request('tanggal_mulai_hadir') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Selesai</label>
+                                                <input type="date" class="form-control" name="tanggal_selesai_hadir" value="{{ request('tanggal_selesai_hadir') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary d-block w-100">
+                                                    <i class="fas fa-search"></i> Filter
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Mulai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Selesai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">&nbsp;</label>
-                                            <button class="btn btn-primary d-block w-100">
-                                                <i class="fas fa-search"></i> Filter
-                                            </button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -471,31 +433,34 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Status Izin</label>
-                                            <select class="form-select">
-                                                <option value="">Semua Status</option>
-                                                <option value="pending">Menunggu Persetujuan</option>
-                                                <option value="approved">Disetujui</option>
-                                                <option value="rejected">Ditolak</option>
-                                            </select>
+                                    <form method="GET" action="{{ route('tu.presensi.index') }}" id="filterIzinForm">
+                                        <input type="hidden" name="tab" value="izin">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Status Izin</label>
+                                                <select class="form-select" name="status_izin" id="statusIzin">
+                                                    <option value="">Semua Status</option>
+                                                    <option value="pending" {{ request('status_izin') == 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                                    <option value="approved" {{ request('status_izin') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                                                    <option value="rejected" {{ request('status_izin') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Mulai</label>
+                                                <input type="date" class="form-control" name="tanggal_mulai_izin" value="{{ request('tanggal_mulai_izin') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Selesai</label>
+                                                <input type="date" class="form-control" name="tanggal_selesai_izin" value="{{ request('tanggal_selesai_izin') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary d-block w-100">
+                                                    <i class="fas fa-search"></i> Filter
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Mulai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Selesai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">&nbsp;</label>
-                                            <button class="btn btn-primary d-block w-100">
-                                                <i class="fas fa-search"></i> Filter
-                                            </button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -604,31 +569,34 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Status</label>
-                                            <select class="form-select">
-                                                <option value="">Semua Status</option>
-                                                <option value="pending">Menunggu Persetujuan</option>
-                                                <option value="approved">Disetujui</option>
-                                                <option value="rejected">Ditolak</option>
-                                            </select>
+                                    <form method="GET" action="{{ route('tu.presensi.index') }}" id="filterSakitForm">
+                                        <input type="hidden" name="tab" value="sakit">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-select" name="status_sakit" id="statusSakit">
+                                                    <option value="">Semua Status</option>
+                                                    <option value="pending" {{ request('status_sakit') == 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                                                    <option value="approved" {{ request('status_sakit') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                                                    <option value="rejected" {{ request('status_sakit') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Mulai</label>
+                                                <input type="date" class="form-control" name="tanggal_mulai_sakit" value="{{ request('tanggal_mulai_sakit') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tanggal Selesai</label>
+                                                <input type="date" class="form-control" name="tanggal_selesai_sakit" value="{{ request('tanggal_selesai_sakit') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary d-block w-100">
+                                                    <i class="fas fa-search"></i> Filter
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Mulai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Tanggal Selesai</label>
-                                            <input type="date" class="form-control">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">&nbsp;</label>
-                                            <button class="btn btn-primary d-block w-100">
-                                                <i class="fas fa-search"></i> Filter
-                                            </button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -762,5 +730,46 @@ function approveSakit(id, namaGuru) {
 function rejectSakit(id, namaGuru) {
     // Function replaced by form submission
 }
+
+// Auto-submit filter saat dropdown Status berubah
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter Hadir
+    const statusHadir = document.getElementById('statusHadir');
+    const filterHadirForm = document.getElementById('filterHadirForm');
+    if (statusHadir && filterHadirForm) {
+        statusHadir.addEventListener('change', function() {
+            filterHadirForm.submit();
+        });
+    }
+    
+    // Filter Izin
+    const statusIzin = document.getElementById('statusIzin');
+    const filterIzinForm = document.getElementById('filterIzinForm');
+    if (statusIzin && filterIzinForm) {
+        statusIzin.addEventListener('change', function() {
+            filterIzinForm.submit();
+        });
+    }
+    
+    // Filter Sakit
+    const statusSakit = document.getElementById('statusSakit');
+    const filterSakitForm = document.getElementById('filterSakitForm');
+    if (statusSakit && filterSakitForm) {
+        statusSakit.addEventListener('change', function() {
+            filterSakitForm.submit();
+        });
+    }
+    
+    // Aktifkan tab sesuai parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab');
+    if (tab) {
+        const tabButton = document.querySelector(`[data-bs-target="#${tab}"]`);
+        if (tabButton) {
+            const tabTrigger = new bootstrap.Tab(tabButton);
+            tabTrigger.show();
+        }
+    }
+});
 </script>
 @endsection

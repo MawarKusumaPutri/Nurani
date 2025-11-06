@@ -262,9 +262,6 @@
                     <a class="nav-link active" href="{{ route('guru.kuis.index') }}">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
-                    <a class="nav-link" href="{{ route('guru.rangkuman.index') }}">
-                        <i class="fas fa-file-alt me-2"></i> Rangkuman
-                    </a>
                     <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>

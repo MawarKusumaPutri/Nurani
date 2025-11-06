@@ -58,11 +58,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.laporan.index') }}">
-                            <i class="fas fa-chart-bar"></i> Laporan
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.pengumuman.index') }}">
                             <i class="fas fa-bullhorn"></i> Pengumuman
                         </a>
@@ -70,8 +65,8 @@
                 </ul>
                 
                 <div class="mt-auto">
-                    <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm w-100">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a class="nav-link" href="{{ route('logout') }}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </div>
             </div>
@@ -189,13 +184,6 @@
                                         <i class="fas fa-archive fa-3x mb-3"></i>
                                         <h6>Arsip</h6>
                                         <small class="text-muted">Arsip dokumen</small>
-                                    </a>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <a href="{{ route('tu.laporan.index') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
-                                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
-                                        <h6>Laporan</h6>
-                                        <small class="text-muted">Buat laporan</small>
                                     </a>
                                 </div>
                             </div>

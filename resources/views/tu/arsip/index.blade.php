@@ -58,11 +58,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.laporan.index') }}">
-                            <i class="fas fa-chart-bar"></i> Laporan
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.pengumuman.index') }}">
                             <i class="fas fa-bullhorn"></i> Pengumuman
                         </a>
@@ -70,8 +65,8 @@
                 </ul>
                 
                 <div class="mt-auto">
-                    <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm w-100">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a class="nav-link" href="{{ route('logout') }}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </div>
             </div>
@@ -174,10 +169,10 @@
                                         <!-- Sample Data -->
                                         <tr>
                                             <td>1</td>
-                                            <td>Laporan Bulanan Oktober 2024</td>
-                                            <td><span class="badge bg-primary">Laporan</span></td>
-                                            <td><i class="fas fa-file-pdf text-danger"></i> laporan_okt_2024.pdf</td>
-                                            <td>2.5 MB</td>
+                                            <td>Surat Keputusan No. 001/2024</td>
+                                            <td><span class="badge bg-primary">Keputusan</span></td>
+                                            <td><i class="fas fa-file-pdf text-danger"></i> sk_001_2024.pdf</td>
+                                            <td>1.2 MB</td>
                                             <td><span class="badge bg-warning">Sedang</span></td>
                                             <td>25 Okt 2024</td>
                                             <td>Tenaga Usaha</td>

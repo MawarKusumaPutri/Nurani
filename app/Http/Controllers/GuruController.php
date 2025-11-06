@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Materi;
 use App\Models\Kuis;
-use App\Models\Rangkuman;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,12 +51,6 @@ class GuruController extends Controller
         }
         $totalKuis = $kuisQuery->count();
         
-        $rangkumanQuery = $guru->rangkuman();
-        if ($selectedMataPelajaran) {
-            $rangkumanQuery->where('mata_pelajaran', $selectedMataPelajaran);
-        }
-        $totalRangkuman = $rangkumanQuery->count();
-        
         // Materi terbaru berdasarkan mata pelajaran
         $materiTerbaru = $query
             ->orderBy('created_at', 'desc')
@@ -71,12 +64,6 @@ class GuruController extends Controller
             ->orderBy('tanggal_mulai', 'asc')
             ->limit(3)
             ->get();
-            
-        // Rangkuman bulan ini berdasarkan mata pelajaran
-        $rangkumanBulanIni = $rangkumanQuery
-            ->whereMonth('tanggal_pertemuan', now()->month)
-            ->whereYear('tanggal_pertemuan', now()->year)
-            ->count();
 
         return view('guru.dashboard', compact(
             'guru',
@@ -85,10 +72,8 @@ class GuruController extends Controller
             'totalMateri',
             'materiPublished',
             'totalKuis',
-            'totalRangkuman',
             'materiTerbaru',
-            'kuisAktif',
-            'rangkumanBulanIni'
+            'kuisAktif'
         ));
     }
 

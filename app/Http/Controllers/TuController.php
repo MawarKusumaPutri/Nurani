@@ -72,7 +72,7 @@ class TuController extends Controller
     }
     
     // Presensi Management
-    public function presensiIndex()
+    public function presensiIndex(Request $request)
     {
         // Get all presensi with guru info
         $presensiList = \App\Models\Presensi::with('guru.user')
@@ -93,6 +93,51 @@ class TuController extends Controller
         $presensiHadir = $allPresensi->where('jenis', 'hadir');
         $presensiIzin = $allPresensi->where('jenis', 'izin');
         $presensiSakit = $allPresensi->where('jenis', 'sakit');
+        
+        // Apply filters for Hadir tab
+        if ($request->has('status_hadir') && $request->status_hadir !== '') {
+            $presensiHadir = $presensiHadir->where('status_verifikasi', $request->status_hadir);
+        }
+        if ($request->has('tanggal_mulai_hadir') && $request->tanggal_mulai_hadir) {
+            $presensiHadir = $presensiHadir->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') >= $request->tanggal_mulai_hadir;
+            });
+        }
+        if ($request->has('tanggal_selesai_hadir') && $request->tanggal_selesai_hadir) {
+            $presensiHadir = $presensiHadir->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') <= $request->tanggal_selesai_hadir;
+            });
+        }
+        
+        // Apply filters for Izin tab
+        if ($request->has('status_izin') && $request->status_izin !== '') {
+            $presensiIzin = $presensiIzin->where('status_verifikasi', $request->status_izin);
+        }
+        if ($request->has('tanggal_mulai_izin') && $request->tanggal_mulai_izin) {
+            $presensiIzin = $presensiIzin->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') >= $request->tanggal_mulai_izin;
+            });
+        }
+        if ($request->has('tanggal_selesai_izin') && $request->tanggal_selesai_izin) {
+            $presensiIzin = $presensiIzin->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') <= $request->tanggal_selesai_izin;
+            });
+        }
+        
+        // Apply filters for Sakit tab
+        if ($request->has('status_sakit') && $request->status_sakit !== '') {
+            $presensiSakit = $presensiSakit->where('status_verifikasi', $request->status_sakit);
+        }
+        if ($request->has('tanggal_mulai_sakit') && $request->tanggal_mulai_sakit) {
+            $presensiSakit = $presensiSakit->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') >= $request->tanggal_mulai_sakit;
+            });
+        }
+        if ($request->has('tanggal_selesai_sakit') && $request->tanggal_selesai_sakit) {
+            $presensiSakit = $presensiSakit->filter(function($item) use ($request) {
+                return $item->tanggal->format('Y-m-d') <= $request->tanggal_selesai_sakit;
+            });
+        }
         
         // Count pending for each type (for badges)
         $pendingHadir = $presensiHadir->where('status_verifikasi', 'pending')->count();
@@ -429,7 +474,6 @@ class TuController extends Controller
             'keputusan' => 'Keputusan',
             'surat_masuk' => 'Surat Masuk',
             'surat_keluar' => 'Surat Keluar',
-            'laporan' => 'Laporan',
             'lainnya' => 'Lainnya',
             default => 'Dokumen'
         };
@@ -450,68 +494,6 @@ class TuController extends Controller
         return view('tu.surat.create');
     }
     
-    // Laporan Management
-    public function laporanIndex()
-    {
-        return view('tu.laporan.index');
-    }
-    
-    public function laporanCreate()
-    {
-        return view('tu.laporan.create');
-    }
-    
-    public function laporanSend(Request $request)
-    {
-        $request->validate([
-            'jenis_laporan' => 'required|string',
-            'periode' => 'required|string',
-            'judul_laporan' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'penerima' => 'required|string',
-            'prioritas' => 'nullable|string',
-            'kategori' => 'nullable|string',
-            'lampiran' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-            'cc_email' => 'nullable|boolean'
-        ]);
-
-        // Simpan data laporan (implementasi sesuai kebutuhan)
-        $laporanData = [
-            'jenis_laporan' => $request->jenis_laporan,
-            'periode' => $request->periode,
-            'judul_laporan' => $request->judul_laporan,
-            'deskripsi' => $request->deskripsi,
-            'penerima' => $request->penerima,
-            'prioritas' => $request->prioritas ?? 'sedang',
-            'kategori' => $request->kategori,
-            'created_by' => Auth::id(),
-            'created_at' => now()
-        ];
-
-        // Handle file upload jika ada
-        if ($request->hasFile('lampiran')) {
-            $file = $request->file('lampiran');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/laporan', $filename);
-            $laporanData['lampiran'] = $filename;
-        }
-
-        // Simpan ke database (implementasi sesuai model yang ada)
-        // Laporan::create($laporanData);
-
-        // Kirim notifikasi ke penerima (implementasi sesuai kebutuhan)
-        $penerimaText = match($request->penerima) {
-            'kepala_sekolah' => 'Kepala Sekolah',
-            'yayasan' => 'Yayasan',
-            'dinas_pendidikan' => 'Dinas Pendidikan',
-            'internal' => 'Internal Sekolah',
-            default => 'Penerima'
-        };
-
-        return redirect()->route('tu.laporan.index')->with('success', 
-            "Laporan '{$request->judul_laporan}' berhasil dikirim ke {$penerimaText}!"
-        );
-    }
     
     // Surat Management
     public function suratSend(Request $request)

@@ -110,9 +110,6 @@
                     <a class="nav-link" href="{{ route('guru.kuis.index') }}">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
-                    <a class="nav-link" href="{{ route('guru.rangkuman.index') }}">
-                        <i class="fas fa-clipboard-list me-2"></i> Rangkuman
-                    </a>
                     <hr class="text-white-50">
                     <a class="nav-link" href="{{ route('logout') }}">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout

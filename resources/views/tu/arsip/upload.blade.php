@@ -58,11 +58,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tu.laporan.index') }}">
-                            <i class="fas fa-chart-bar"></i> Laporan
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('tu.pengumuman.index') }}">
                             <i class="fas fa-bullhorn"></i> Pengumuman
                         </a>
@@ -70,8 +65,8 @@
                 </ul>
                 
                 <div class="mt-auto">
-                    <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm w-100">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a class="nav-link" href="{{ route('logout') }}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </div>
             </div>
@@ -117,7 +112,6 @@
                                                 <option value="keputusan">Keputusan</option>
                                                 <option value="surat_masuk">Surat Masuk</option>
                                                 <option value="surat_keluar">Surat Keluar</option>
-                                                <option value="laporan">Laporan</option>
                                                 <option value="lainnya">Lainnya</option>
                                             </select>
                                         </div>

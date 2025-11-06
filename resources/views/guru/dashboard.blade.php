@@ -132,9 +132,6 @@
                     <a class="nav-link" href="{{ route('guru.kuis.index') }}">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
-                    <a class="nav-link" href="{{ route('guru.rangkuman.index') }}">
-                        <i class="fas fa-clipboard-list me-2"></i> Rangkuman
-                    </a>
                     <hr class="text-white-50">
                     <a class="nav-link" href="{{ route('logout') }}">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
@@ -228,15 +225,6 @@
                                 <i class="fas fa-question-circle fa-2x mb-3"></i>
                                 <div class="stat-number">{{ $totalKuis }}</div>
                                 <div>Total Kuis</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card stat-card">
-                            <div class="card-body text-center">
-                                <i class="fas fa-clipboard-list fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $rangkumanBulanIni }}</div>
-                                <div>Rangkuman Bulan Ini</div>
                             </div>
                         </div>
                     </div>
@@ -357,12 +345,6 @@
                                         <a href="{{ route('guru.kuis.create') }}" class="btn btn-outline-success w-100">
                                             <i class="fas fa-question-circle me-2"></i>
                                             Buat Kuis
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <a href="{{ route('guru.rangkuman.create') }}" class="btn btn-outline-info w-100">
-                                            <i class="fas fa-clipboard-list me-2"></i>
-                                            Buat Rangkuman
                                         </a>
                                     </div>
                                     <div class="col-md-3 mb-3">
