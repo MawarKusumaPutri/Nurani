@@ -89,6 +89,40 @@
             background: linear-gradient(135deg, #F57C00 0%, #FFB74D 100%);
             color: white;
         }
+        .chart-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+        #presensiPieChart {
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.1));
+            animation: fadeInScale 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body>
@@ -199,7 +233,7 @@
                 <!-- Main Content Row -->
                 <div class="row">
             <!-- Data Guru dan Mata Pelajaran -->
-                    <div class="col-lg-8 mb-4">
+                    <div class="col-12 mb-4">
                         <div class="card content-card">
                             <div class="card-header">
                                 <h5 class="mb-0">Data Guru dan Mata Pelajaran</h5>
@@ -273,130 +307,67 @@
                     </a>
                 </div>
             </div>
-                    </div>
-
-                    <!-- Sidebar Content -->
-                    <div class="col-lg-4">
-                        <!-- Kehadiran Hari Ini -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-chart-pie me-2"></i>Kehadiran Hari Ini
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <!-- Pie Chart -->
-                                <div class="mb-4" style="position: relative; height: 250px;">
-                                    <canvas id="presensiPieChart"></canvas>
-                                </div>
-                                
-                                <!-- Statistics -->
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-users me-2 text-primary"></i>Total Guru</span>
-                                        <span class="fw-bold">{{ $totalGurus }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-check-circle me-2 text-success"></i>Hadir</span>
-                                        <span class="fw-bold text-success">{{ $presensiHadir }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-file-alt me-2 text-warning"></i>Izin</span>
-                                        <span class="fw-bold text-warning">{{ $presensiIzin }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-user-injured me-2 text-danger"></i>Sakit</span>
-                                        <span class="fw-bold text-danger">{{ $presensiSakit }}</span>
-                                    </div>
-                                    @if($belumPresensi > 0)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-clock me-2 text-secondary"></i>Belum Presensi</span>
-                                        <span class="fw-bold text-secondary">{{ $belumPresensi }}</span>
-                                    </div>
-                                    @endif
-                                </div>
-                                
-                                @php
-                                    $totalPresensi = $presensiHadir + $presensiIzin + $presensiSakit;
-                                    $persentase = $totalGurus > 0 ? round(($totalPresensi / $totalGurus) * 100) : 0;
-                                @endphp
-                                <div class="progress mb-2" style="height: 10px; border-radius: 5px;">
-                                    <div class="progress-bar bg-success" style="width: {{ $persentase }}%" role="progressbar"></div>
-                                </div>
-                                <p class="text-center mb-0 text-muted">
-                                    <small>{{ $persentase }}% Guru Sudah Presensi</small>
-                                </p>
+            
+            <!-- Kehadiran Hari Ini -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Kehadiran Hari Ini
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Pie Chart -->
+                        <div class="col-md-6 mb-4">
+                            <div class="chart-container" style="position: relative; height: 280px;">
+                                <canvas id="presensiPieChart"></canvas>
                             </div>
                         </div>
-
-                <!-- Fitur Utama -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Fitur Utama</h5>
-                    </div>
-                            <div class="card-body">
-                                <div class="d-grid gap-2">
-                                    <a href="{{ route('kepala_sekolah.laporan') }}" class="btn feature-btn laporan">
-                                        <i class="fas fa-chart-bar me-2"></i>Laporan Kehadiran
-                                    </a>
-                                    <a href="{{ route('kepala_sekolah.guru') }}" class="btn feature-btn guru">
-                                        <i class="fas fa-users me-2"></i>Kelola Data Guru
-                                    </a>
-                                    <a href="{{ route('kepala_sekolah.laporan') }}" class="btn feature-btn bulanan">
-                                        <i class="fas fa-file-alt me-2"></i>Laporan Bulanan
-                                    </a>
-                                    <a href="{{ route('kepala_sekolah.notifications') }}" class="btn feature-btn pengaturan">
-                                        <i class="fas fa-cog me-2"></i>Pengaturan Sistem
-                                    </a>
+                        
+                        <!-- Statistics -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="fas fa-users me-2 text-primary"></i>Total Guru</span>
+                                    <span class="fw-bold">{{ $totalGurus }}</span>
                                 </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="fas fa-check-circle me-2 text-success"></i>Hadir</span>
+                                    <span class="fw-bold text-success">{{ $presensiHadir }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="fas fa-file-alt me-2 text-warning"></i>Izin</span>
+                                    <span class="fw-bold text-warning">{{ $presensiIzin }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="fas fa-user-injured me-2 text-danger"></i>Sakit</span>
+                                    <span class="fw-bold text-danger">{{ $presensiSakit }}</span>
+                                </div>
+                                @if($belumPresensi > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="fas fa-clock me-2 text-secondary"></i>Belum Presensi</span>
+                                    <span class="fw-bold text-secondary">{{ $belumPresensi }}</span>
+                                </div>
+                                @endif
                             </div>
+                            
+                            @php
+                                $totalPresensi = $presensiHadir + $presensiIzin + $presensiSakit;
+                                $persentase = $totalGurus > 0 ? round(($totalPresensi / $totalGurus) * 100) : 0;
+                            @endphp
+                            <div class="progress mb-2" style="height: 10px; border-radius: 5px;">
+                                <div class="progress-bar bg-success" style="width: {{ $persentase }}%" role="progressbar"></div>
+                            </div>
+                            <p class="text-center mb-0 text-muted">
+                                <small>{{ $persentase }}% Guru Sudah Presensi</small>
+                            </p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+                    </div>
             </div>
         </div>
-
-                <!-- Aktivitas Terbaru -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Aktivitas Terbaru</h5>
-                            </div>
-                            <div class="card-body">
-                                @forelse($recentActivities as $activity)
-                                <div class="d-flex align-items-center mb-3 p-3 border rounded">
-                                    <div class="me-3">
-                                        @if($activity->activity_type == 'login')
-                                            <i class="fas fa-sign-in-alt text-success"></i>
-                                        @elseif($activity->activity_type == 'logout')
-                                            <i class="fas fa-sign-out-alt text-danger"></i>
-                                        @elseif($activity->activity_type == 'create_materi')
-                                            <i class="fas fa-file-alt text-primary"></i>
-                                        @elseif($activity->activity_type == 'create_kuis')
-                                            <i class="fas fa-question-circle text-warning"></i>
-                                        @elseif($activity->activity_type == 'create_rangkuman')
-                                            <i class="fas fa-clipboard text-info"></i>
-                                        @else
-                                            <i class="fas fa-circle text-secondary"></i>
-                                        @endif
-                        </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-1">
-                                            <strong>{{ $activity->guru->user->name }}</strong>
-                                            {{ $activity->description }}
-                                        </p>
-                                        <small class="text-muted">{{ $activity->activity_time->diffForHumans() }}</small>
-                        </div>
-                                </div>
-                                @empty
-                                <div class="text-center py-4">
-                                    <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Tidak ada aktivitas terbaru</p>
-                                </div>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -414,15 +385,23 @@
                     belumPresensi: {{ $belumPresensi }}
                 };
 
-                new Chart(ctx, {
-                    type: 'pie',
+                // Create gradient colors
+                const createGradient = (ctx, color1, color2) => {
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, color1);
+                    gradient.addColorStop(1, color2);
+                    return gradient;
+                };
+
+                const chart = new Chart(ctx, {
+                    type: 'doughnut',
                     data: {
                         labels: [
-                            'Hadir ({{ $presensiHadir }})',
-                            'Izin ({{ $presensiIzin }})',
-                            'Sakit ({{ $presensiSakit }})',
+                            'Hadir',
+                            'Izin',
+                            'Sakit',
                             @if($belumPresensi > 0)
-                            'Belum Presensi ({{ $belumPresensi }})'
+                            'Belum Presensi'
                             @endif
                         ],
                         datasets: [{
@@ -436,53 +415,110 @@
                                 @endif
                             ],
                             backgroundColor: [
-                                '#28a745', // Hijau untuk Hadir
-                                '#ffc107', // Kuning untuk Izin
-                                '#dc3545', // Merah untuk Sakit
+                                'rgba(40, 167, 69, 0.9)',   // Hijau untuk Hadir
+                                'rgba(255, 193, 7, 0.9)',   // Kuning untuk Izin
+                                'rgba(220, 53, 69, 0.9)',   // Merah untuk Sakit
                                 @if($belumPresensi > 0)
-                                '#6c757d'  // Abu-abu untuk Belum Presensi
+                                'rgba(108, 117, 125, 0.9)'  // Abu-abu untuk Belum Presensi
                                 @endif
                             ],
                             borderColor: [
-                                '#1e7e34',
-                                '#e0a800',
-                                '#c82333',
+                                '#28a745',
+                                '#ffc107',
+                                '#dc3545',
                                 @if($belumPresensi > 0)
-                                '#545b62'
+                                '#6c757d'
                                 @endif
                             ],
-                            borderWidth: 2
+                            borderWidth: 4,
+                            hoverBorderWidth: 6,
+                            hoverOffset: 10
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            animateRotate: true,
+                            animateScale: true,
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        },
                         plugins: {
                             legend: {
                                 position: 'bottom',
                                 labels: {
-                                    padding: 15,
+                                    padding: 20,
                                     font: {
-                                        size: 12
+                                        size: 13,
+                                        weight: '600',
+                                        family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
                                     },
-                                    usePointStyle: true
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    generateLabels: function(chart) {
+                                        const data = chart.data;
+                                        if (data.labels.length && data.datasets.length) {
+                                            const dataset = data.datasets[0];
+                                            return data.labels.map((label, i) => {
+                                                const value = dataset.data[i];
+                                                const total = dataset.data.reduce((a, b) => a + b, 0);
+                                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                return {
+                                                    text: `${label}: ${value} (${percentage}%)`,
+                                                    fillStyle: dataset.backgroundColor[i],
+                                                    strokeStyle: dataset.borderColor[i],
+                                                    lineWidth: dataset.borderWidth,
+                                                    hidden: isNaN(value) || value === 0,
+                                                    index: i
+                                                };
+                                            });
+                                        }
+                                        return [];
+                                    }
                                 }
                             },
                             tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 15,
+                                titleFont: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                bodyFont: {
+                                    size: 14
+                                },
+                                borderColor: 'rgba(255, 255, 255, 0.1)',
+                                borderWidth: 1,
+                                cornerRadius: 10,
+                                displayColors: true,
                                 callbacks: {
+                                    title: function(context) {
+                                        return context[0].label;
+                                    },
                                     label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
                                         const total = {{ $totalGurus }};
                                         const value = context.parsed;
                                         const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                        label += value + ' guru (' + percentage + '%)';
-                                        return label;
+                                        return [
+                                            `Jumlah: ${value} guru`,
+                                            `Persentase: ${percentage}%`
+                                        ];
+                                    },
+                                    afterLabel: function(context) {
+                                        const total = {{ $totalGurus }};
+                                        return `Total: ${total} guru`;
                                     }
                                 }
                             }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        onHover: (event, activeElements) => {
+                            ctx.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
                         }
                     }
                 });
