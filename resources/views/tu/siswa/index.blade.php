@@ -78,9 +78,9 @@
                 <h1 class="h2">Data Siswa</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-primary">
+                        <a href="{{ route('tu.siswa.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Siswa
-                        </button>
+                        </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>
@@ -127,107 +127,184 @@
                 </div>
             </div>
 
-            <!-- Siswa List -->
+            <!-- Siswa List by Class -->
             <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
+                <!-- Kelas 7 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-users"></i> Daftar Siswa
+                                <i class="fas fa-graduation-cap me-2"></i> Kelas 7
                             </h5>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
+                        <div class="card-body p-0">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light sticky-top">
                                         <tr>
-                                            <th>No</th>
+                                            <th style="width: 40px;">No</th>
                                             <th>NIS</th>
-                                            <th>Nama Siswa</th>
-                                            <th>Kelas</th>
-                                            <th>Jenis Kelamin</th>
-                                            <th>Tanggal Lahir</th>
+                                            <th>Nama</th>
+                                            <th>JK</th>
                                             <th>Status</th>
-                                            <th>Aksi</th>
+                                            <th style="width: 100px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Sample Data -->
+                                        @forelse($siswaKelas7 as $index => $siswa)
                                         <tr>
-                                            <td>1</td>
-                                            <td>2024001</td>
-                                            <td>Ahmad Fauzi</td>
-                                            <td>7A</td>
-                                            <td>Laki-laki</td>
-                                            <td>15-03-2010</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $siswa->nis }}</td>
+                                            <td>{{ $siswa->nama }}</td>
+                                            <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
+                                                <span class="badge bg-{{ $siswa->status === 'aktif' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($siswa->status) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('tu.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-primary me-1" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
                                         </tr>
+                                        @empty
                                         <tr>
-                                            <td>2</td>
-                                            <td>2024002</td>
-                                            <td>Siti Nurhaliza</td>
-                                            <td>7A</td>
-                                            <td>Perempuan</td>
-                                            <td>22-07-2010</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
+                                            <td colspan="6" class="text-center text-muted">Tidak ada data siswa</td>
                                         </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>2024003</td>
-                                            <td>Budi Santoso</td>
-                                            <td>8B</td>
-                                            <td>Laki-laki</td>
-                                            <td>10-12-2009</td>
-                                            <td><span class="badge bg-warning">Tidak Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
-                            
-                            <!-- Pagination -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <small class="text-muted">
+                                <i class="fas fa-users me-1"></i>
+                                Total: <strong>3</strong> siswa
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kelas 8 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-graduation-cap me-2"></i> Kelas 8
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th style="width: 40px;">No</th>
+                                            <th>NIS</th>
+                                            <th>Nama</th>
+                                            <th>JK</th>
+                                            <th>Status</th>
+                                            <th style="width: 100px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($siswaKelas8 as $index => $siswa)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $siswa->nis }}</td>
+                                            <td>{{ $siswa->nama }}</td>
+                                            <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ $siswa->status === 'aktif' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($siswa->status) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('tu.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-primary me-1" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Tidak ada data siswa</td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <small class="text-muted">
+                                <i class="fas fa-users me-1"></i>
+                                Total: <strong>{{ $siswaKelas8->count() }}</strong> siswa
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kelas 9 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-graduation-cap me-2"></i> Kelas 9
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th style="width: 40px;">No</th>
+                                            <th>NIS</th>
+                                            <th>Nama</th>
+                                            <th>JK</th>
+                                            <th>Status</th>
+                                            <th style="width: 100px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($siswaKelas9 as $index => $siswa)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $siswa->nis }}</td>
+                                            <td>{{ $siswa->nama }}</td>
+                                            <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ $siswa->status === 'aktif' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($siswa->status) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('tu.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-primary me-1" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Tidak ada data siswa</td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <small class="text-muted">
+                                <i class="fas fa-users me-1"></i>
+                                Total: <strong>{{ $siswaKelas9->count() }}</strong> siswa
+                            </small>
                         </div>
                     </div>
                 </div>

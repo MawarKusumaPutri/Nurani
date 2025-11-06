@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Guru;
 use App\Models\User;
 use App\Models\Notification;
+use App\Models\Siswa;
 
 class TuController extends Controller
 {
@@ -62,13 +63,63 @@ class TuController extends Controller
     // Data Siswa Management
     public function siswaIndex()
     {
-        // Implementation for student data
-        return view('tu.siswa.index');
+        // Get all students grouped by class
+        $siswaKelas7 = Siswa::where('kelas', '7')->orderBy('nama')->get();
+        $siswaKelas8 = Siswa::where('kelas', '8')->orderBy('nama')->get();
+        $siswaKelas9 = Siswa::where('kelas', '9')->orderBy('nama')->get();
+        
+        return view('tu.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9'));
     }
     
     public function siswaCreate()
     {
         return view('tu.siswa.create');
+    }
+    
+    public function siswaStore(Request $request)
+    {
+        $request->validate([
+            'nis' => 'required|string|unique:siswas,nis',
+            'nama' => 'required|string',
+            'kelas' => 'required|string|in:7,8,9',
+            'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
+            'status' => 'required|string|in:aktif,tidak_aktif',
+            'alamat' => 'nullable|string',
+            'no_telp' => 'nullable|string',
+            'email' => 'nullable|email',
+        ]);
+        
+        Siswa::create($request->all());
+        
+        return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil ditambahkan');
+    }
+    
+    public function siswaEdit($id)
+    {
+        $siswa = Siswa::findOrFail($id);
+        return view('tu.siswa.edit', compact('siswa'));
+    }
+    
+    public function siswaUpdate(Request $request, $id)
+    {
+        $siswa = Siswa::findOrFail($id);
+        
+        $request->validate([
+            'nis' => 'required|string|unique:siswas,nis,' . $id,
+            'nama' => 'required|string',
+            'kelas' => 'required|string|in:7,8,9',
+            'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
+            'status' => 'required|string|in:aktif,tidak_aktif',
+            'alamat' => 'nullable|string',
+            'no_telp' => 'nullable|string',
+            'email' => 'nullable|email',
+        ]);
+        
+        $siswa->update($request->all());
+        
+        return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil diperbarui');
     }
     
     // Presensi Management

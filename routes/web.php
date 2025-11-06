@@ -131,6 +131,10 @@ Route::middleware('auth')->group(function () {
         Route::prefix('siswa')->name('siswa.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'siswaIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'siswaCreate'])->name('create');
+            Route::post('/', [App\Http\Controllers\TuController::class, 'siswaStore'])->name('store');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'siswaUpdate'])->name('update');
+            Route::patch('/{id}', [App\Http\Controllers\TuController::class, 'siswaUpdate']);
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'siswaEdit'])->name('edit');
         });
         
         // Presensi Management

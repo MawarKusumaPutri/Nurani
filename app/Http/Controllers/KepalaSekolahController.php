@@ -98,7 +98,14 @@ class KepalaSekolahController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
         
-        return view('kepala_sekolah.notifications', compact('notifications'));
+        // Count read and unread notifications
+        $totalNotifications = Notification::where('user_id', $user->id)->count();
+        $readNotifications = Notification::where('user_id', $user->id)
+            ->whereNotNull('read_at')
+            ->count();
+        $unreadNotifications = $totalNotifications - $readNotifications;
+        
+        return view('kepala_sekolah.notifications', compact('notifications', 'totalNotifications', 'readNotifications', 'unreadNotifications'));
     }
     
     public function markNotificationAsRead($id)
