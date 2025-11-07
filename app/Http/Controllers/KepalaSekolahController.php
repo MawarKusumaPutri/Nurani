@@ -11,6 +11,7 @@ use App\Models\Materi;
 use App\Models\Kuis;
 use App\Models\Rangkuman;
 use App\Models\Presensi;
+use App\Models\Siswa;
 use App\Services\ActivityTracker;
 use Carbon\Carbon;
 
@@ -475,5 +476,15 @@ class KepalaSekolahController extends Controller
             'labels' => ['Online', 'Offline'],
             'data' => [$onlineGurus->count(), $offlineGurus->count()]
         ]);
+    }
+    
+    public function siswaIndex()
+    {
+        // Get all students grouped by class (same data as TU)
+        $siswaKelas7 = Siswa::where('kelas', '7')->orderBy('nama')->get();
+        $siswaKelas8 = Siswa::where('kelas', '8')->orderBy('nama')->get();
+        $siswaKelas9 = Siswa::where('kelas', '9')->orderBy('nama')->get();
+        
+        return view('kepala_sekolah.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9'));
     }
 }

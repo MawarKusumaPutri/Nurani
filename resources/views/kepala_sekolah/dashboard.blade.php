@@ -154,6 +154,9 @@
                     <a href="{{ route('kepala_sekolah.guru') }}" class="nav-link">
                         <i class="fas fa-users me-2"></i>Data Guru
                     </a>
+                    <a href="{{ route('kepala_sekolah.siswa.index') }}" class="nav-link">
+                        <i class="fas fa-user-graduate me-2"></i>Data Siswa
+                    </a>
                     <a href="{{ route('kepala_sekolah.guru_activity') }}" class="nav-link">
                         <i class="fas fa-chalkboard-teacher me-2"></i>Aktivitas Guru
                     </a>
