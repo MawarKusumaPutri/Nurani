@@ -79,13 +79,30 @@ class GuruController extends Controller
 
     public function profil()
     {
+        // Redirect to new profile index route for backward compatibility
+        return redirect()->route('guru.profile.index');
+    }
+
+    public function profileIndex()
+    {
         $guru = Guru::where('user_id', Auth::id())->first();
         
         if (!$guru) {
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        return view('guru.profil', compact('guru'));
+        return view('guru.profile.index', compact('guru'));
+    }
+
+    public function profileEdit()
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru) {
+            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
+        }
+
+        return view('guru.profile.edit', compact('guru'));
     }
 
     public function updateProfil(Request $request)
@@ -113,8 +130,8 @@ class GuruController extends Controller
 
         // Handle foto upload
         if ($request->hasFile('foto')) {
-            if ($guru->foto && Storage::exists($guru->foto)) {
-                Storage::delete($guru->foto);
+            if ($guru->foto && Storage::disk('public')->exists($guru->foto)) {
+                Storage::disk('public')->delete($guru->foto);
             }
             
             $fotoPath = $request->file('foto')->store('guru/foto', 'public');
@@ -137,7 +154,7 @@ class GuruController extends Controller
         
         $guru->update($updateData);
 
-        return redirect()->route('guru.profil')->with('success', 'Profil berhasil diperbarui');
+        return redirect()->route('guru.profile.index')->with('success', 'Profil berhasil diperbarui');
     }
 
     public function storeMateri(Request $request)

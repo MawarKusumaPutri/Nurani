@@ -63,20 +63,20 @@
             <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 sidebar p-0">
                 <div class="p-3">
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="avatar-container me-3">
-                            @if($guru->foto)
-                                <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil">
-                            @else
-                                <div class="bg-white d-flex align-items-center justify-content-center h-100">
-                                    <i class="fas fa-user text-muted"></i>
-                                </div>
-                            @endif
-                        </div>
-                        <div>
-                            <h6 class="text-white mb-0">{{ $guru->user->name }}</h6>
-                            <small class="text-white-50">{{ $guru->nip }}</small>
-                        </div>
+                    <div class="text-center mb-4">
+                        @if($guru->foto)
+                            <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" 
+                                 class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        @else
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            </div>
+                        @endif
+                        <h6 class="text-white mb-1">{{ $guru->user->name }}</h6>
+                        <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>
+                        <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
                     </div>
                 </div>
                 
@@ -92,9 +92,6 @@
                     </a>
                     <a href="{{ route('guru.rangkuman.index') }}" class="nav-link active">
                         <i class="fas fa-clipboard-list me-2"></i>Rangkuman
-                    </a>
-                    <a href="{{ route('guru.profil') }}" class="nav-link">
-                        <i class="fas fa-user me-2"></i>Profil
                     </a>
                     <a href="{{ route('logout') }}" class="nav-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout

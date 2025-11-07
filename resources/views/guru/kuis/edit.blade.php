@@ -84,23 +84,23 @@
                     <div class="text-center mb-4">
                         @if($kuis->guru->foto)
                             <img src="{{ Storage::url($kuis->guru->foto) }}" alt="Foto Profil" 
-                                 class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid white;">
+                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                         @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                 <i class="fas fa-user fa-2x text-primary"></i>
                             </div>
                         @endif
                         <h6 class="text-white mt-2 mb-1">{{ $kuis->guru->user->name }}</h6>
                         <small class="text-white-50">{{ $kuis->guru->mata_pelajaran }}</small>
+                        <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
                     </div>
                 </div>
                 
                 <nav class="nav flex-column px-3">
                     <a class="nav-link" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.profil') }}">
-                        <i class="fas fa-user me-2"></i> Profil
                     </a>
                     <a class="nav-link" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi
@@ -202,9 +202,9 @@
                                         <select class="form-select @error('kelas') is-invalid @enderror" 
                                                 id="kelas" name="kelas" required>
                                             <option value="">Pilih Kelas</option>
-                                            <option value="VII" {{ old('kelas', $kuis->kelas) == 'VII' ? 'selected' : '' }}>VII</option>
-                                            <option value="VIII" {{ old('kelas', $kuis->kelas) == 'VIII' ? 'selected' : '' }}>VIII</option>
-                                            <option value="IX" {{ old('kelas', $kuis->kelas) == 'IX' ? 'selected' : '' }}>IX</option>
+                                            <option value="7" {{ old('kelas', $kuis->kelas) == '7' || old('kelas', $kuis->kelas) == 'VII' ? 'selected' : '' }}>Kelas 7</option>
+                                            <option value="8" {{ old('kelas', $kuis->kelas) == '8' || old('kelas', $kuis->kelas) == 'VIII' ? 'selected' : '' }}>Kelas 8</option>
+                                            <option value="9" {{ old('kelas', $kuis->kelas) == '9' || old('kelas', $kuis->kelas) == 'IX' ? 'selected' : '' }}>Kelas 9</option>
                                         </select>
                                         @error('kelas')
                                             <div class="text-danger small">{{ $message }}</div>

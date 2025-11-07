@@ -89,11 +89,8 @@
                     <a class="nav-link" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link active" href="{{ route('guru.profil') }}">
-                        <i class="fas fa-user me-2"></i> Profil
-                    </a>
                     <a class="nav-link" href="{{ route('guru.presensi.index') }}">
-                        <i class="fas fa-calendar-check me-2"></i> Presensi
+                        <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
                     <a class="nav-link" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presensi - {{ $guru->user->name }}</title>
+    <title>Presensi Guru - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -62,22 +62,27 @@
             <div class="col-md-3 col-lg-2 sidebar p-0">
                 <div class="d-flex flex-column p-3">
                     <div class="text-center mb-4">
-                        <div class="mb-3">
-                            <i class="fas fa-chalkboard-teacher fa-3x text-white"></i>
-                        </div>
+                        @if($guru->foto)
+                            <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" 
+                                 class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        @else
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            </div>
+                        @endif
                         <h5 class="text-white mb-1">{{ $guru->user->name }}</h5>
                         <small class="text-white-50">{{ $guru->mata_pelajaran ?? 'Mata Pelajaran' }}</small>
+                        <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
                     </div>
                     
                     <nav class="nav flex-column">
                         <a class="nav-link" href="{{ route('guru.dashboard') }}">
                             <i class="fas fa-home me-2"></i> Dashboard
                         </a>
-                        <a class="nav-link" href="{{ route('guru.profil') }}">
-                            <i class="fas fa-user me-2"></i> Profil
-                        </a>
                         <a class="nav-link active" href="{{ route('guru.presensi.index') }}">
-                            <i class="fas fa-calendar-check me-2"></i> Presensi
+                            <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                         </a>
                         <a class="nav-link" href="{{ route('guru.materi.index') }}">
                             <i class="fas fa-book me-2"></i> Materi
@@ -100,7 +105,7 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <h2 class="mb-4">
                     <i class="fas fa-calendar-check text-success me-2"></i>
-                    Presensi
+                    Presensi Guru
                 </h2>
 
                 @if(session('success'))

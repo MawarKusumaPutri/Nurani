@@ -40,8 +40,13 @@ Route::middleware('auth')->group(function () {
     // Guru Routes
     Route::prefix('guru')->name('guru.')->group(function () {
         Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('dashboard');
-        Route::get('/profil', [GuruController::class, 'profil'])->name('profil');
-        Route::put('/profil', [GuruController::class, 'updateProfil'])->name('profil.update');
+        Route::get('/profil', [GuruController::class, 'profil'])->name('profil'); // Backward compatibility
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [GuruController::class, 'profileIndex'])->name('index');
+            Route::get('/edit', [GuruController::class, 'profileEdit'])->name('edit');
+            Route::put('/', [GuruController::class, 'updateProfil'])->name('update');
+        });
+        Route::put('/profil', [GuruController::class, 'updateProfil'])->name('profil.update'); // Backward compatibility
         
         // Materi Routes
         Route::prefix('materi')->name('materi.')->group(function () {
