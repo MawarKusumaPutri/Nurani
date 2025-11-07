@@ -192,5 +192,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [App\Http\Controllers\TuController::class, 'pengumumanCreate'])->name('create');
             Route::post('/send', [App\Http\Controllers\TuController::class, 'pengumumanSend'])->name('send');
         });
+        
+        // Profile Management
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'profileIndex'])->name('index');
+            Route::get('/edit', [App\Http\Controllers\TuController::class, 'profileEdit'])->name('edit');
+            Route::put('/update', [App\Http\Controllers\TuController::class, 'profileUpdate'])->name('update');
+        });
     });
 });

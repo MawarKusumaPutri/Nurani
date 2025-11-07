@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Guru;
 use App\Models\User;
 use App\Models\Notification;
@@ -641,5 +643,66 @@ class TuController extends Controller
     {
         // Implementation for sending announcements
         return redirect()->route('tu.pengumuman.index')->with('success', 'Pengumuman berhasil dikirim');
+    }
+    
+    // Profile Management
+    public function profileIndex()
+    {
+        $user = Auth::user();
+        return view('tu.profile.index', compact('user'));
+    }
+    
+    public function profileEdit()
+    {
+        $user = Auth::user();
+        return view('tu.profile.edit', compact('user'));
+    }
+    
+    public function profileUpdate(Request $request)
+    {
+        $user = Auth::user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'nip' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'password' => 'nullable|min:6|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->nip = $request->nip;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($user->photo && Storage::disk('public')->exists('photos/' . $user->photo)) {
+                Storage::disk('public')->delete('photos/' . $user->photo);
+            }
+            
+            $file = $request->file('photo');
+            $filename = time() . '_' . $user->id . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+            $path = $file->storeAs('photos', $filename, 'public');
+            $user->photo = $filename;
+        }
+        
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        
+        $user->save();
+        
+        // Reload user from database to ensure fresh data
+        $user->refresh();
+        
+        // Refresh user data in session
+        Auth::login($user);
+        
+        return redirect()->route('tu.profile.index')->with('success', 'Profil berhasil diperbarui!');
     }
 }
