@@ -395,24 +395,26 @@
             const timezoneBadges = document.querySelectorAll('.timezone-badge');
             
             // Update time displays
-            timeDisplays.forEach((el, index) => {
+            timeDisplays.forEach((el) => {
                 const timestamp = el.getAttribute('data-timestamp');
                 if (timestamp) {
-                    // Check if it's a full datetime or just time
-                    const parentText = el.parentElement.textContent;
-                    if (parentText.includes(',')) {
+                    // Check if it's a full datetime or just time by looking at the original content
+                    const originalText = el.textContent.trim();
+                    // If it contains comma, it's full datetime format (d M Y, H:i)
+                    // If it's just H:i format, it's time only
+                    if (originalText.includes(',') || originalText.split(' ').length > 2) {
                         // Full datetime format
                         el.textContent = formatIndonesianDate(parseInt(timestamp));
                     } else {
-                        // Time only format
+                        // Time only format (H:i)
                         el.textContent = formatTime(parseInt(timestamp));
                     }
                 }
-                
-                // Update timezone badge
-                if (timezoneBadges[index]) {
-                    timezoneBadges[index].textContent = timezone;
-                }
+            });
+            
+            // Update all timezone badges
+            timezoneBadges.forEach((badge) => {
+                badge.textContent = timezone;
             });
             
             // Update date displays
@@ -427,6 +429,9 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateActivityTimes();
+            
+            // Update every minute to keep times synchronized
+            setInterval(updateActivityTimes, 60000);
         });
     </script>
 </body>
