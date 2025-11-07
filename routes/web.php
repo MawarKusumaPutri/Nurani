@@ -174,6 +174,7 @@ Route::middleware('auth')->group(function () {
         // Arsip Management
         Route::prefix('arsip')->name('arsip.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'arsipIndex'])->name('index');
+            Route::get('/upload', [App\Http\Controllers\TuController::class, 'arsipCreate'])->name('create');
             Route::post('/upload', [App\Http\Controllers\TuController::class, 'arsipUpload'])->name('upload');
         });
         

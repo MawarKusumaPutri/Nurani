@@ -78,7 +78,7 @@
                 <h1 class="h2">Arsip Dokumen</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <a href="{{ route('tu.arsip.upload') }}" class="btn btn-sm btn-primary">
+                        <a href="{{ route('tu.arsip.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-upload"></i> Upload Dokumen
                         </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">

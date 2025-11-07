@@ -475,6 +475,11 @@ class TuController extends Controller
         return view('tu.arsip.index');
     }
     
+    public function arsipCreate()
+    {
+        return view('tu.arsip.upload');
+    }
+    
     public function arsipUpload(Request $request)
     {
         $request->validate([
