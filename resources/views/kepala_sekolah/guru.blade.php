@@ -111,8 +111,9 @@
                                                         <i class="fas fa-circle me-1" style="font-size: 8px;"></i>Aktif
                                                     </span>
                                                     @if($guru->last_login_time)
-                                                        <small class="text-muted status-time" data-time="{{ $guru->last_login_time }}">
-                                                            Login: {{ \Carbon\Carbon::parse($guru->last_login_time)->format('H:i') }}
+                                                        <small class="text-muted status-time" data-time="{{ \Carbon\Carbon::parse($guru->last_login_time)->timestamp }}">
+                                                            Login: <span class="time-display">{{ \Carbon\Carbon::parse($guru->last_login_time)->format('H:i') }}</span>
+                                                            <span class="timezone-badge ms-1 badge bg-info"></span>
                                                         </small>
                                                     @endif
                                                 @else
@@ -120,8 +121,9 @@
                                                         <i class="fas fa-circle me-1" style="font-size: 8px;"></i>Offline
                                                     </span>
                                                     @if($guru->last_login_time)
-                                                        <small class="text-muted status-time" data-time="{{ $guru->last_login_time }}">
-                                                            Terakhir: {{ \Carbon\Carbon::parse($guru->last_login_time)->diffForHumans() }}
+                                                        <small class="text-muted status-time" data-time="{{ \Carbon\Carbon::parse($guru->last_login_time)->timestamp }}">
+                                                            Terakhir: <span class="time-relative">{{ \Carbon\Carbon::parse($guru->last_login_time)->diffForHumans() }}</span>
+                                                            <span class="timezone-badge ms-1 badge bg-info"></span>
                                                         </small>
                                                     @else
                                                         <small class="text-muted">Belum pernah login</small>
@@ -222,26 +224,95 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Function to get timezone abbreviation
+        function getTimezoneAbbreviation() {
+            const now = new Date();
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            // Map common timezones to WIB, WIT, WITA
+            if (timezone.includes('Jakarta') || timezone.includes('Asia/Jakarta')) {
+                return 'WIB';
+            } else if (timezone.includes('Makassar') || timezone.includes('Asia/Makassar') || timezone.includes('Ujung_Pandang')) {
+                return 'WITA';
+            } else if (timezone.includes('Jayapura') || timezone.includes('Asia/Jayapura')) {
+                return 'WIT';
+            }
+            
+            // Fallback: determine by UTC offset
+            const offset = -now.getTimezoneOffset() / 60;
+            if (offset === 7) return 'WIB';
+            if (offset === 8) return 'WITA';
+            if (offset === 9) return 'WIT';
+            
+            // Default to WIB if cannot determine
+            return 'WIB';
+        }
+
+        // Function to format time
+        function formatTime(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        // Function to update relative time
+        function updateRelativeTime(timestamp) {
+            const now = new Date();
+            const time = new Date(timestamp * 1000);
+            const diff = Math.floor((now - time) / 1000);
+            
+            if (diff < 60) return 'Baru saja';
+            if (diff < 3600) return Math.floor(diff / 60) + ' menit yang lalu';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' jam yang lalu';
+            if (diff < 604800) return Math.floor(diff / 86400) + ' hari yang lalu';
+            if (diff < 2592000) return Math.floor(diff / 604800) + ' minggu yang lalu';
+            if (diff < 31536000) return Math.floor(diff / 2592000) + ' bulan yang lalu';
+            return Math.floor(diff / 31536000) + ' tahun yang lalu';
+        }
+
         // Update time display setiap menit tanpa reload
-        setInterval(function() {
+        function updateTimeDisplays() {
+            const timezone = getTimezoneAbbreviation();
+            
             document.querySelectorAll('.status-time').forEach(function(el) {
                 if (el.dataset.time) {
-                    const time = new Date(el.dataset.time);
+                    const timestamp = parseInt(el.dataset.time);
+                    const time = new Date(timestamp * 1000);
                     const now = new Date();
                     const diffMs = now - time;
                     const diffMins = Math.floor(diffMs / 60000);
                     
+                    // Update timezone badge
+                    const timezoneBadge = el.querySelector('.timezone-badge');
+                    if (timezoneBadge) {
+                        timezoneBadge.textContent = timezone;
+                    }
+                    
                     if (diffMins < 30) {
                         // Masih online
-                        const timeStr = time.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
-                        el.textContent = 'Login: ' + timeStr;
+                        const timeDisplay = el.querySelector('.time-display');
+                        if (timeDisplay) {
+                            timeDisplay.textContent = formatTime(timestamp);
+                        }
                     } else {
                         // Sudah offline
-                        el.textContent = 'Terakhir: ' + getTimeAgo(time);
+                        const timeRelative = el.querySelector('.time-relative');
+                        if (timeRelative) {
+                            timeRelative.textContent = updateRelativeTime(timestamp);
+                        }
                     }
                 }
             });
-        }, 60000); // Setiap 1 menit
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimeDisplays();
+        });
+
+        // Update every minute
+        setInterval(updateTimeDisplays, 60000);
 
         function getTimeAgo(date) {
             const now = new Date();

@@ -61,6 +61,10 @@ class KuisController extends Controller
             'mata_pelajaran' => 'required|string|max:255',
             'tipe_kuis' => 'required|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
+            'tanggal_dibuat' => 'required|date',
+            'hari_dibuat' => 'required|string|max:20',
+            'waktu_dibuat' => 'required|date_format:H:i',
+            'zona_waktu' => 'required|string|max:10',
             'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
             'esai_petunjuk' => 'nullable|string',
             'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
@@ -83,6 +87,10 @@ class KuisController extends Controller
             'durasi_menit' => $request->durasi,
             'tanggal_mulai' => now(),
             'tanggal_selesai' => now()->addDays(7), // Default 7 hari
+            'tanggal_dibuat' => $request->tanggal_dibuat,
+            'hari_dibuat' => $request->hari_dibuat,
+            'waktu_dibuat' => $request->waktu_dibuat,
+            'zona_waktu' => $request->zona_waktu,
             'is_active' => true
         ];
 

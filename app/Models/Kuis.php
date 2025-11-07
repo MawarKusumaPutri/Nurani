@@ -26,6 +26,10 @@ class Kuis extends Model
         'durasi_menit',
         'tanggal_mulai',
         'tanggal_selesai',
+        'tanggal_dibuat',
+        'hari_dibuat',
+        'waktu_dibuat',
+        'zona_waktu',
         'is_active'
     ];
 

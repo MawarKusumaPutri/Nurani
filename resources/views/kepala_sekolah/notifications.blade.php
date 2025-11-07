@@ -499,8 +499,12 @@
                                                     <div class="notification-time">
                                                         <i class="fas fa-clock"></i>
                                                         <span>
-                                                            <strong>{{ $notification->created_at->diffForHumans() }}</strong>
-                                                            <span class="ms-2">({{ $notification->created_at->format('d M Y, H:i') }} WIB)</span>
+                                                            <strong class="time-relative">{{ $notification->created_at->diffForHumans() }}</strong>
+                                                            <span class="ms-2 time-absolute" 
+                                                                  data-timestamp="{{ $notification->created_at->timestamp }}">
+                                                                ({{ $notification->created_at->format('d M Y, H:i') }})
+                                                            </span>
+                                                            <span class="timezone-badge ms-1 badge bg-info"></span>
                                                         </span>
                                                     </div>
                                                     
@@ -833,6 +837,100 @@
                 });
             }
         }
+
+        // Function to get timezone abbreviation
+        function getTimezoneAbbreviation() {
+            const now = new Date();
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            // Map common timezones to WIB, WIT, WITA
+            if (timezone.includes('Jakarta') || timezone.includes('Asia/Jakarta')) {
+                return 'WIB';
+            } else if (timezone.includes('Makassar') || timezone.includes('Asia/Makassar') || timezone.includes('Ujung_Pandang')) {
+                return 'WITA';
+            } else if (timezone.includes('Jayapura') || timezone.includes('Asia/Jayapura')) {
+                return 'WIT';
+            }
+            
+            // Fallback: determine by UTC offset
+            const offset = -now.getTimezoneOffset() / 60;
+            if (offset === 7) return 'WIB';
+            if (offset === 8) return 'WITA';
+            if (offset === 9) return 'WIT';
+            
+            // Default to WIB if cannot determine
+            return 'WIB';
+        }
+
+        // Function to format date in Indonesian format
+        function formatIndonesianDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${day} ${month} ${year}, ${hours}:${minutes}`;
+        }
+
+        // Function to update relative time
+        function updateRelativeTime(timestamp) {
+            const now = new Date();
+            const time = new Date(timestamp * 1000);
+            const diff = Math.floor((now - time) / 1000);
+            
+            if (diff < 60) return 'Baru saja';
+            if (diff < 3600) return Math.floor(diff / 60) + ' menit yang lalu';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' jam yang lalu';
+            if (diff < 604800) return Math.floor(diff / 86400) + ' hari yang lalu';
+            if (diff < 2592000) return Math.floor(diff / 604800) + ' minggu yang lalu';
+            if (diff < 31536000) return Math.floor(diff / 2592000) + ' bulan yang lalu';
+            return Math.floor(diff / 31536000) + ' tahun yang lalu';
+        }
+
+        // Function to update all notification times
+        function updateNotificationTimes() {
+            const timezone = getTimezoneAbbreviation();
+            const timeAbsoluteElements = document.querySelectorAll('.time-absolute');
+            const timeRelativeElements = document.querySelectorAll('.time-relative');
+            const timezoneBadges = document.querySelectorAll('.timezone-badge');
+            
+            // Update absolute time and timezone badge
+            timeAbsoluteElements.forEach((el, index) => {
+                const timestamp = el.getAttribute('data-timestamp');
+                if (timestamp) {
+                    const formattedTime = formatIndonesianDate(parseInt(timestamp));
+                    el.textContent = `(${formattedTime})`;
+                }
+                
+                // Update timezone badge
+                if (timezoneBadges[index]) {
+                    timezoneBadges[index].textContent = timezone;
+                }
+            });
+            
+            // Update relative time
+            timeRelativeElements.forEach((el) => {
+                const timeAbsolute = el.parentElement.querySelector('.time-absolute');
+                if (timeAbsolute) {
+                    const timestamp = timeAbsolute.getAttribute('data-timestamp');
+                    if (timestamp) {
+                        el.textContent = updateRelativeTime(parseInt(timestamp));
+                    }
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNotificationTimes();
+            
+            // Update relative time every minute
+            setInterval(updateNotificationTimes, 60000);
+        });
     </script>
 </body>
 </html>

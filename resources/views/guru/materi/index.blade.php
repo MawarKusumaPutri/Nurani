@@ -176,6 +176,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <form action="{{ route('guru.materi.search') }}" method="GET" class="row g-3">
+                            @if($selectedMataPelajaran)
+                                <input type="hidden" name="mata_pelajaran" value="{{ $selectedMataPelajaran }}">
+                            @endif
                             <div class="col-md-4">
                                 <input type="text" class="form-control" name="search" 
                                        placeholder="Cari materi..." value="{{ request('search') }}">
@@ -199,6 +202,16 @@
                             </div>
                         </form>
                     </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <a href="{{ route('guru.materi.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Tambah Materi
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="btn btn-danger">
+                        <i class="fab fa-youtube me-2"></i>YouTube
+                    </a>
                 </div>
 
                 <!-- Materi List -->

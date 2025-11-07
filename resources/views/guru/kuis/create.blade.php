@@ -7,6 +7,7 @@
     <title>Buat Kuis - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .sidebar {
             min-height: 100vh;
@@ -201,6 +202,54 @@
                                         </div>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="tanggal_dibuat" class="form-label">Tanggal Dibuat <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control @error('tanggal_dibuat') is-invalid @enderror" 
+                                                       id="tanggal_dibuat" name="tanggal_dibuat" 
+                                                       value="{{ old('tanggal_dibuat') }}" 
+                                                       placeholder="Pilih Tanggal" required readonly>
+                                                @error('tanggal_dibuat')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="hari_dibuat" class="form-label">Hari <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control @error('hari_dibuat') is-invalid @enderror" 
+                                                       id="hari_dibuat" name="hari_dibuat" 
+                                                       value="{{ old('hari_dibuat') }}" required readonly>
+                                                @error('hari_dibuat')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="waktu_dibuat" class="form-label">Waktu <span class="text-danger">*</span></label>
+                                                <input type="time" class="form-control @error('waktu_dibuat') is-invalid @enderror" 
+                                                       id="waktu_dibuat" name="waktu_dibuat" 
+                                                       value="{{ old('waktu_dibuat') }}" required readonly>
+                                                @error('waktu_dibuat')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="mb-3">
+                                                <label for="zona_waktu" class="form-label">Zona Waktu <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control @error('zona_waktu') is-invalid @enderror" 
+                                                       id="zona_waktu" name="zona_waktu" 
+                                                       value="{{ old('zona_waktu') }}" required readonly>
+                                                @error('zona_waktu')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="mb-3">
                                         <label for="deskripsi" class="form-label">Deskripsi Kuis</label>
                                         <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
@@ -285,6 +334,8 @@
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
     <script>
         let questionCount = 0;
 
@@ -401,10 +452,108 @@
             }
         }
 
-        // Add first question automatically
+        // Function to get timezone abbreviation
+        function getTimezoneAbbreviation() {
+            const now = new Date();
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            // Map common timezones to WIB, WIT, WITA
+            if (timezone.includes('Jakarta') || timezone.includes('Asia/Jakarta')) {
+                return 'WIB';
+            } else if (timezone.includes('Makassar') || timezone.includes('Asia/Makassar') || timezone.includes('Ujung_Pandang')) {
+                return 'WITA';
+            } else if (timezone.includes('Jayapura') || timezone.includes('Asia/Jayapura')) {
+                return 'WIT';
+            }
+            
+            // Fallback: determine by UTC offset
+            const offset = -now.getTimezoneOffset() / 60;
+            if (offset === 7) return 'WIB';
+            if (offset === 8) return 'WITA';
+            if (offset === 9) return 'WIT';
+            
+            // Default to WIB if cannot determine
+            return 'WIB';
+        }
+
+        // Function to get day name in Indonesian
+        function getDayName(date) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            return days[date.getDay()];
+        }
+
+        // Initialize Flatpickr date picker
+        let flatpickrInstance;
+        
+        function initializeDatePicker() {
+            const tanggalInput = document.getElementById('tanggal_dibuat');
+            const now = new Date();
+            const defaultDate = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            
+            // Set default value
+            tanggalInput.value = defaultDate;
+            
+            // Initialize Flatpickr with Indonesian locale
+            flatpickrInstance = flatpickr(tanggalInput, {
+                dateFormat: "Y-m-d",
+                defaultDate: defaultDate,
+                minDate: "today",
+                maxDate: new Date().fp_incr(30), // 30 days from today
+                locale: "id", // Use Indonesian locale
+                firstDayOfWeek: 1, // Start week on Monday
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Update hari dropdown when date changes
+                    if (dateStr) {
+                        const selectedDate = new Date(dateStr);
+                        const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                        const hari = hariNama[selectedDate.getDay()];
+                        document.getElementById('hari_dibuat').value = hari;
+                    }
+                }
+            });
+        }
+        
+
+        // Function to set initial day based on current date
+        function setInitialDay() {
+            const tanggalInput = document.getElementById('tanggal_dibuat');
+            const hariInput = document.getElementById('hari_dibuat');
+            
+            if (tanggalInput.value) {
+                const selectedDate = new Date(tanggalInput.value);
+                const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const hari = hariNama[selectedDate.getDay()];
+                hariInput.value = hari;
+            }
+        }
+
+        // Function to update date, day, time fields
+        function updateDateTimeFields() {
+            const now = new Date();
+            const timezone = getTimezoneAbbreviation();
+            
+            // Get time in local timezone
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+            
+            // Update time and timezone fields
+            document.getElementById('waktu_dibuat').value = timeString;
+            document.getElementById('zona_waktu').value = timezone;
+        }
+
+        // Add first question automatically and update date/time
         document.addEventListener('DOMContentLoaded', function() {
             addQuestion(1);
             toggleQuizType(); // Initialize based on old value
+            initializeDatePicker(); // Initialize date picker with calendar
+            setTimeout(function() {
+                setInitialDay(); // Set initial day based on current date
+            }, 200);
+            updateDateTimeFields(); // Set initial time and timezone
+            
+            // Update time every second for real-time display
+            setInterval(updateDateTimeFields, 1000);
         });
     </script>
 </body>

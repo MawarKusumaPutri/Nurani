@@ -14,6 +14,7 @@ class Materi extends Model
         'judul',
         'deskripsi',
         'kelas',
+        'mata_pelajaran',
         'topik',
         'file_path',
         'file_type',

@@ -107,7 +107,8 @@ class MateriController extends Controller
             'topik' => $materi->topik
         ]);
 
-        return redirect()->route('guru.materi.index')->with('success', 'Materi berhasil ditambahkan');
+        // Redirect dengan mata_pelajaran yang sama agar materi baru langsung muncul
+        return redirect()->route('guru.materi.index', ['mata_pelajaran' => $materi->mata_pelajaran])->with('success', 'Materi berhasil ditambahkan');
     }
 
     public function show(Materi $materi)
@@ -211,7 +212,20 @@ class MateriController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
+        // Get mata pelajaran yang dipilih
+        $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+        
+        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
+            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        }
+
         $query = $guru->materi();
+        
+        // Filter by mata pelajaran if selected
+        if ($selectedMataPelajaran) {
+            $query->where('mata_pelajaran', $selectedMataPelajaran);
+        }
 
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
@@ -231,6 +245,6 @@ class MateriController extends Controller
 
         $materi = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('guru.materi.index', compact('guru', 'materi'));
+        return view('guru.materi.index', compact('guru', 'materi', 'mataPelajaranList', 'selectedMataPelajaran'));
     }
 }

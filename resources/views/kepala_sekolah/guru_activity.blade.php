@@ -245,7 +245,10 @@
                                                                             <h6 class="mb-1 fw-bold">Logout</h6>
                                                                             <p class="text-muted mb-0 small">
                                                                                 <i class="fas fa-clock me-1 text-danger"></i>
-                                                                                {{ $activity->activity_time->format('d M Y, H:i') }}
+                                                                                <span class="activity-time-display" data-timestamp="{{ $activity->activity_time->timestamp }}">
+                                                                                    {{ $activity->activity_time->format('d M Y, H:i') }}
+                                                                                </span>
+                                                                                <span class="timezone-badge ms-1 badge bg-info"></span>
                                                                             </p>
                                                                         @elseif(in_array($activity->activity_type, ['create_materi', 'create_kuis', 'create_rangkuman']))
                                                                             @php
@@ -261,11 +264,12 @@
                                                                             <p class="mb-0 small">
                                                                                 <strong>{{ isset($guru) ? $guru->user->name : $activity->guru->user->name }}</strong> habis mengajar 
                                                                                 <strong class="text-primary">{{ $mataPelajaran }}</strong> 
-                                                                                pada jam <strong>{{ $activity->activity_time->format('H:i') }}</strong>
+                                                                                pada jam <strong class="activity-time-display" data-timestamp="{{ $activity->activity_time->timestamp }}">{{ $activity->activity_time->format('H:i') }}</strong>
+                                                                                <span class="timezone-badge ms-1 badge bg-info"></span>
                                                                             </p>
                                                                             <p class="text-muted mb-0 small mt-1">
                                                                                 <i class="fas fa-calendar me-1"></i>
-                                                                                {{ $activity->activity_time->format('d M Y') }}
+                                                                                <span class="activity-date-display" data-timestamp="{{ $activity->activity_time->timestamp }}">{{ $activity->activity_time->format('d M Y') }}</span>
                                                                             </p>
                                                                         @else
                                                                             <h6 class="mb-1 fw-bold">
@@ -274,7 +278,8 @@
                                                                             <p class="text-muted mb-0 small">{{ $activity->description }}</p>
                                                                             <p class="text-muted mb-0 small mt-1">
                                                                     <i class="fas fa-clock me-1"></i>
-                                                                    {{ $activity->activity_time->format('d M Y, H:i') }}
+                                                                    <span class="activity-time-display" data-timestamp="{{ $activity->activity_time->timestamp }}">{{ $activity->activity_time->format('d M Y, H:i') }}</span>
+                                                                    <span class="timezone-badge ms-1 badge bg-info"></span>
                                                                             </p>
                                                                         @endif
                                                             </div>
@@ -323,5 +328,106 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to get timezone abbreviation
+        function getTimezoneAbbreviation() {
+            const now = new Date();
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            // Map common timezones to WIB, WIT, WITA
+            if (timezone.includes('Jakarta') || timezone.includes('Asia/Jakarta')) {
+                return 'WIB';
+            } else if (timezone.includes('Makassar') || timezone.includes('Asia/Makassar') || timezone.includes('Ujung_Pandang')) {
+                return 'WITA';
+            } else if (timezone.includes('Jayapura') || timezone.includes('Asia/Jayapura')) {
+                return 'WIT';
+            }
+            
+            // Fallback: determine by UTC offset
+            const offset = -now.getTimezoneOffset() / 60;
+            if (offset === 7) return 'WIB';
+            if (offset === 8) return 'WITA';
+            if (offset === 9) return 'WIT';
+            
+            // Default to WIB if cannot determine
+            return 'WIB';
+        }
+
+        // Function to format date in Indonesian format
+        function formatIndonesianDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${day} ${month} ${year}, ${hours}:${minutes}`;
+        }
+
+        // Function to format time only
+        function formatTime(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        // Function to format date only
+        function formatDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            
+            return `${day} ${month} ${year}`;
+        }
+
+        // Function to update all activity times
+        function updateActivityTimes() {
+            const timezone = getTimezoneAbbreviation();
+            const timeDisplays = document.querySelectorAll('.activity-time-display');
+            const dateDisplays = document.querySelectorAll('.activity-date-display');
+            const timezoneBadges = document.querySelectorAll('.timezone-badge');
+            
+            // Update time displays
+            timeDisplays.forEach((el, index) => {
+                const timestamp = el.getAttribute('data-timestamp');
+                if (timestamp) {
+                    // Check if it's a full datetime or just time
+                    const parentText = el.parentElement.textContent;
+                    if (parentText.includes(',')) {
+                        // Full datetime format
+                        el.textContent = formatIndonesianDate(parseInt(timestamp));
+                    } else {
+                        // Time only format
+                        el.textContent = formatTime(parseInt(timestamp));
+                    }
+                }
+                
+                // Update timezone badge
+                if (timezoneBadges[index]) {
+                    timezoneBadges[index].textContent = timezone;
+                }
+            });
+            
+            // Update date displays
+            dateDisplays.forEach((el) => {
+                const timestamp = el.getAttribute('data-timestamp');
+                if (timestamp) {
+                    el.textContent = formatDate(parseInt(timestamp));
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateActivityTimes();
+        });
+    </script>
 </body>
 </html>
