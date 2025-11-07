@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Guru;
 use App\Models\Notification;
 use App\Models\GuruActivity;
@@ -12,6 +14,7 @@ use App\Models\Kuis;
 use App\Models\Rangkuman;
 use App\Models\Presensi;
 use App\Models\Siswa;
+use App\Models\User;
 use App\Services\ActivityTracker;
 use Carbon\Carbon;
 
@@ -486,5 +489,98 @@ class KepalaSekolahController extends Controller
         $siswaKelas9 = Siswa::where('kelas', '9')->orderBy('nama')->get();
         
         return view('kepala_sekolah.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9'));
+    }
+    
+    // Profile Management
+    public function profileIndex()
+    {
+        $user = Auth::user();
+        return view('kepala_sekolah.profile.index', compact('user'));
+    }
+    
+    public function profileEdit()
+    {
+        $user = Auth::user();
+        return view('kepala_sekolah.profile.edit', compact('user'));
+    }
+    
+    public function profileUpdate(Request $request)
+    {
+        $user = Auth::user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'nip' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'password' => 'nullable|min:6|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->nip = $request->nip;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            try {
+                // Delete old photo if exists
+                if ($user->photo && Storage::disk('public')->exists('photos/' . $user->photo)) {
+                    Storage::disk('public')->delete('photos/' . $user->photo);
+                }
+                
+                $file = $request->file('photo');
+                $filename = time() . '_' . $user->id . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $path = $file->storeAs('photos', $filename, 'public');
+                
+                // Verify file was stored successfully
+                if ($path) {
+                    // Double check file exists
+                    $fullPath = 'photos/' . $filename;
+                    if (Storage::disk('public')->exists($fullPath)) {
+                        $user->photo = $filename;
+                    } else {
+                        // Try to get the actual stored filename
+                        $storedPath = $path;
+                        $actualFilename = basename($storedPath);
+                        if (Storage::disk('public')->exists('photos/' . $actualFilename)) {
+                            $user->photo = $actualFilename;
+                        } else {
+                            return back()->withErrors(['photo' => 'Gagal menyimpan foto. File tidak ditemukan setelah upload.'])->withInput();
+                        }
+                    }
+                } else {
+                    return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                }
+            } catch (\Exception $e) {
+                return back()->withErrors(['photo' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
+            }
+        }
+        
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        
+        $user->save();
+        
+        // Get fresh user data from database to ensure photo is loaded
+        $freshUser = User::find($user->id);
+        
+        // Refresh user data in session to update photo immediately
+        Auth::login($freshUser);
+        
+        // Clear all caches to ensure fresh data
+        try {
+            \Artisan::call('view:clear');
+            \Artisan::call('cache:clear');
+            \Artisan::call('config:clear');
+        } catch (\Exception $e) {
+            // Ignore cache errors
+        }
+        
+        return redirect()->route('kepala_sekolah.profile.index')->with('success', 'Profil berhasil diperbarui!');
     }
 }

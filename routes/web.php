@@ -105,6 +105,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/guru-activity', [App\Http\Controllers\KepalaSekolahController::class, 'guruActivity'])->name('guru_activity');
         Route::get('/siswa', [App\Http\Controllers\KepalaSekolahController::class, 'siswaIndex'])->name('siswa.index');
         Route::get('/laporan', [App\Http\Controllers\KepalaSekolahController::class, 'laporan'])->name('laporan');
+        
+        // Profile Routes
+        Route::get('/profile', [App\Http\Controllers\KepalaSekolahController::class, 'profileIndex'])->name('profile.index');
+        Route::get('/profile/edit', [App\Http\Controllers\KepalaSekolahController::class, 'profileEdit'])->name('profile.edit');
+        Route::put('/profile/update', [App\Http\Controllers\KepalaSekolahController::class, 'profileUpdate'])->name('profile.update');
             Route::get('/api/notifications', [App\Http\Controllers\KepalaSekolahController::class, 'getNotifications'])->name('api.notifications');
             Route::get('/api/online-status', [App\Http\Controllers\KepalaSekolahController::class, 'getOnlineStatus'])->name('online_status');
             Route::get('/api/today-stats', [App\Http\Controllers\KepalaSekolahController::class, 'getTodayStats'])->name('api.today_stats');

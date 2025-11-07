@@ -61,49 +61,7 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0">
-                <div class="p-4">
-                    <h4 class="text-white mb-4">
-                        <i class="fas fa-user-tie me-2"></i>
-                        Dashboard Kepala Sekolah
-                    </h4>
-                    <div class="text-center mb-4">
-                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                            <i class="fas fa-user-tie fa-2x text-primary"></i>
-                        </div>
-                        <h6 class="text-white mt-2 mb-1">Maman Suparman, A.KS</h6>
-                        <small class="text-white-50">Kepala Sekolah</small>
-                    </div>
-                </div>
-                
-                <nav class="nav flex-column px-3">
-                    <a href="{{ route('kepala_sekolah.dashboard') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-home me-2"></i>Dashboard
-                    </a>
-                    <a href="{{ route('kepala_sekolah.laporan') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.laporan') ? 'active' : '' }}">
-                        <i class="fas fa-chart-bar me-2"></i>Laporan
-                    </a>
-                    <a href="{{ route('kepala_sekolah.guru') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.guru*') ? 'active' : '' }}">
-                        <i class="fas fa-users me-2"></i>Data Guru
-                    </a>
-                    <a href="{{ route('kepala_sekolah.siswa.index') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.siswa*') ? 'active' : '' }}">
-                        <i class="fas fa-user-graduate me-2"></i>Data Siswa
-                    </a>
-                    <a href="{{ route('kepala_sekolah.guru_activity') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.guru_activity') ? 'active' : '' }}">
-                        <i class="fas fa-chalkboard-teacher me-2"></i>Aktivitas Guru
-                    </a>
-                    <a href="{{ route('kepala_sekolah.notifications') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.notifications') ? 'active' : '' }}">
-                        <i class="fas fa-bell me-2"></i>Notifikasi
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                        @csrf
-                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </button>
-                    </form>
-                </nav>
-            </div>
+            @include('partials.kepala-sekolah-sidebar')
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
