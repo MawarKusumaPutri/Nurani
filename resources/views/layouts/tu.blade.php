@@ -39,16 +39,18 @@
         }
         
         .profile-circle {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto;
-            font-size: 24px;
+            font-size: 40px;
             color: white;
+            border: 3px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .card {

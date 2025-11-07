@@ -16,12 +16,12 @@
                 }
             @endphp
             @if($hasPhoto && $photoUrl)
-                <img src="{{ $photoUrl }}?v={{ time() }}" alt="Foto Profil" class="mb-2" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: block; margin: 0 auto;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder').style.display='flex';">
-                <div id="profile-placeholder" class="profile-circle mb-2" style="display: none;">
+                <img src="{{ $photoUrl }}?v={{ time() }}" alt="Foto Profil" class="mb-2" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid rgba(255,255,255,0.5); display: block; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder').style.display='flex';">
+                <div id="profile-placeholder" class="profile-circle mb-2" style="display: none; width: 100px; height: 100px; font-size: 40px;">
                     <i class="fas fa-user-tie"></i>
                 </div>
             @else
-                <div class="profile-circle mb-2">
+                <div class="profile-circle mb-2" style="width: 100px; height: 100px; font-size: 40px;">
                     <i class="fas fa-user-tie"></i>
                 </div>
             @endif
