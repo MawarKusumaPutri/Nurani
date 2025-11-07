@@ -78,9 +78,6 @@
                 <h1 class="h2">Presensi Guru</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus"></i> Tambah Presensi
-                        </button>
                         <button type="button" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>
