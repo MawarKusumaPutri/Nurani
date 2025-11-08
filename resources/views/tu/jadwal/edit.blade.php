@@ -1,6 +1,6 @@
 @extends('layouts.tu')
 
-@section('title', 'Tambah Jadwal - TU Dashboard')
+@section('title', 'Edit Jadwal - TU Dashboard')
 
 @section('content')
 <div class="container-fluid">
@@ -10,7 +10,7 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Tambah Jadwal Pelajaran</h1>
+                <h1 class="h2">Edit Jadwal Pelajaran</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <a href="{{ route('tu.jadwal.index') }}" class="btn btn-sm btn-outline-secondary">
@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-calendar-plus"></i> Form Jadwal Pelajaran
+                                <i class="fas fa-edit"></i> Edit Jadwal Pelajaran
                             </h5>
                         </div>
                         <div class="card-body">
@@ -53,8 +53,9 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="{{ route('tu.jadwal.store') }}" id="jadwal-form">
+                            <form method="POST" action="{{ route('tu.jadwal.update', $jadwal->id) }}" id="jadwal-form">
                                 @csrf
+                                @method('PUT')
                                 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -63,7 +64,7 @@
                                             <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required>
                                                 <option value="">Pilih Mata Pelajaran</option>
                                                 @foreach($mataPelajaranList as $mataPelajaran)
-                                                    <option value="{{ $mataPelajaran }}">{{ $mataPelajaran }}</option>
+                                                    <option value="{{ $mataPelajaran }}" {{ $jadwal->mata_pelajaran == $mataPelajaran ? 'selected' : '' }}>{{ $mataPelajaran }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -74,7 +75,7 @@
                                             <select class="form-select" id="guru" name="guru" required>
                                                 <option value="">Pilih Guru</option>
                                                 @foreach($gurus as $guru)
-                                                    <option value="{{ $guru->id }}">{{ $guru->user->name }}</option>
+                                                    <option value="{{ $guru->id }}" {{ $jadwal->guru_id == $guru->id ? 'selected' : '' }}>{{ $guru->user->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -87,9 +88,9 @@
                                             <label for="kelas" class="form-label">Kelas <span class="text-danger">*</span></label>
                                             <select class="form-select" id="kelas" name="kelas" required>
                                                 <option value="">Pilih Kelas</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
+                                                <option value="7" {{ $jadwal->kelas == '7' ? 'selected' : '' }}>7</option>
+                                                <option value="8" {{ $jadwal->kelas == '8' ? 'selected' : '' }}>8</option>
+                                                <option value="9" {{ $jadwal->kelas == '9' ? 'selected' : '' }}>9</option>
                                             </select>
                                         </div>
                                     </div>
@@ -114,7 +115,7 @@
                                             <div id="calendar-widget" class="calendar-widget">
                                                 <div class="calendar-header">
                                                     <div class="selected-date-display" id="selected-date-display">
-                                                        <span id="selected-day-name">Pilih Tanggal</span>
+                                                        <span id="selected-day-name">{{ $jadwal->tanggal ? \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->isoFormat('dddd, DD MMMM YYYY') : ($jadwal->hari_nama ?? 'Pilih Tanggal') }}</span>
                                                         <button type="button" class="date-dropdown-btn" id="date-dropdown-btn">
                                                             <i class="fas fa-chevron-down"></i>
                                                         </button>
@@ -150,8 +151,8 @@
                                                     </div>
                                                 </div>
                                                 <!-- Hidden inputs for form submission -->
-                                                <input type="hidden" id="hari" name="hari" required>
-                                                <input type="hidden" id="tanggal" name="tanggal">
+                                                <input type="hidden" id="hari" name="hari" value="{{ $jadwal->hari }}" required>
+                                                <input type="hidden" id="tanggal" name="tanggal" value="{{ $jadwal->tanggal ? \Carbon\Carbon::parse($jadwal->tanggal)->format('Y-m-d') : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -160,18 +161,13 @@
                                             <label for="jam_mulai" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
                                             <select class="form-select" id="jam_mulai" name="jam_mulai" required>
                                                 <option value="">Pilih Jam Mulai</option>
-                                                <option value="07:00">07:00</option>
-                                                <option value="07:45">07:45</option>
-                                                <option value="08:30">08:30</option>
-                                                <option value="09:15">09:15</option>
-                                                <option value="10:00">10:00</option>
-                                                <option value="10:45">10:45</option>
-                                                <option value="11:30">11:30</option>
-                                                <option value="12:15">12:15</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="13:45">13:45</option>
-                                                <option value="14:30">14:30</option>
-                                                <option value="15:15">15:15</option>
+                                                @php
+                                                    $jamOptions = ['07:00', '07:45', '08:30', '09:15', '10:00', '10:45', '11:30', '12:15', '13:00', '13:45', '14:30', '15:15'];
+                                                    $jamMulai = \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i');
+                                                @endphp
+                                                @foreach($jamOptions as $jam)
+                                                    <option value="{{ $jam }}" {{ $jamMulai == $jam ? 'selected' : '' }}>{{ $jam }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -183,18 +179,13 @@
                                             <label for="jam_selesai" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
                                             <select class="form-select" id="jam_selesai" name="jam_selesai" required>
                                                 <option value="">Pilih Jam Selesai</option>
-                                                <option value="07:45">07:45</option>
-                                                <option value="08:30">08:30</option>
-                                                <option value="09:15">09:15</option>
-                                                <option value="10:00">10:00</option>
-                                                <option value="10:45">10:45</option>
-                                                <option value="11:30">11:30</option>
-                                                <option value="12:15">12:15</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="13:45">13:45</option>
-                                                <option value="14:30">14:30</option>
-                                                <option value="15:15">15:15</option>
-                                                <option value="16:00">16:00</option>
+                                                @php
+                                                    $jamSelesaiOptions = ['07:45', '08:30', '09:15', '10:00', '10:45', '11:30', '12:15', '13:00', '13:45', '14:30', '15:15', '16:00'];
+                                                    $jamSelesai = \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i');
+                                                @endphp
+                                                @foreach($jamSelesaiOptions as $jam)
+                                                    <option value="{{ $jam }}" {{ $jamSelesai == $jam ? 'selected' : '' }}>{{ $jam }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -203,8 +194,8 @@
                                             <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
                                             <select class="form-select" id="semester" name="semester" required>
                                                 <option value="">Pilih Semester</option>
-                                                <option value="1">Semester 1</option>
-                                                <option value="2">Semester 2</option>
+                                                <option value="1" {{ $jadwal->semester == '1' ? 'selected' : '' }}>Semester 1</option>
+                                                <option value="2" {{ $jadwal->semester == '2' ? 'selected' : '' }}>Semester 2</option>
                                             </select>
                                         </div>
                                     </div>
@@ -216,9 +207,9 @@
                                             <label for="tahun_ajaran" class="form-label">Tahun Ajaran <span class="text-danger">*</span></label>
                                             <select class="form-select" id="tahun_ajaran" name="tahun_ajaran" required>
                                                 <option value="">Pilih Tahun Ajaran</option>
-                                                <option value="2024/2025" selected>2024/2025</option>
-                                                <option value="2025/2026">2025/2026</option>
-                                                <option value="2026/2027">2026/2027</option>
+                                                <option value="2024/2025" {{ $jadwal->tahun_ajaran == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
+                                                <option value="2025/2026" {{ $jadwal->tahun_ajaran == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
+                                                <option value="2026/2027" {{ $jadwal->tahun_ajaran == '2026/2027' ? 'selected' : '' }}>2026/2027</option>
                                             </select>
                                         </div>
                                     </div>
@@ -226,9 +217,9 @@
                                         <div class="mb-3">
                                             <label for="status" class="form-label">Status Jadwal</label>
                                             <select class="form-select" id="status" name="status">
-                                                <option value="aktif" selected>Aktif</option>
-                                                <option value="nonaktif">Nonaktif</option>
-                                                <option value="sementara">Sementara</option>
+                                                <option value="aktif" {{ $jadwal->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                <option value="nonaktif" {{ $jadwal->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                                <option value="sementara" {{ $jadwal->status == 'sementara' ? 'selected' : '' }}>Sementara</option>
                                             </select>
                                         </div>
                                     </div>
@@ -236,14 +227,14 @@
 
                                 <div class="mb-3">
                                     <label for="keterangan" class="form-label">Keterangan</label>
-                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="3" placeholder="Tambahkan keterangan khusus untuk jadwal ini"></textarea>
+                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="3" placeholder="Tambahkan keterangan khusus untuk jadwal ini">{{ $jadwal->keterangan }}</textarea>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_berulang" name="is_berulang">
+                                                <input class="form-check-input" type="checkbox" id="is_berulang" name="is_berulang" {{ $jadwal->is_berulang ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_berulang">
                                                     Jadwal Berulang (Setiap Minggu)
                                                 </label>
@@ -253,7 +244,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_lab" name="is_lab">
+                                                <input class="form-check-input" type="checkbox" id="is_lab" name="is_lab" {{ $jadwal->is_lab ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_lab">
                                                     Menggunakan Laboratorium
                                                 </label>
@@ -665,6 +656,30 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize calendar
     renderCalendar();
+    
+    // Pre-select date if exists
+    @if($jadwal->tanggal)
+        const existingDateStr = '{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('Y-m-d') }}';
+        if (existingDateStr) {
+            const existingDate = new Date(existingDateStr + 'T00:00:00');
+            if (!isNaN(existingDate.getTime())) {
+                currentDate = new Date(existingDate);
+                renderCalendar();
+                setTimeout(() => {
+                    selectDate(existingDate);
+                }, 100);
+            }
+        }
+    @elseif($jadwal->hari)
+        // If no date but has hari, set hari value
+        document.getElementById('hari').value = '{{ $jadwal->hari }}';
+        const hariNamaEdit = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const hariValueEdit = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        const hariIndexEdit = hariValueEdit.indexOf('{{ $jadwal->hari }}');
+        if (hariIndexEdit >= 0) {
+            document.getElementById('selected-day-name').textContent = hariNamaEdit[hariIndexEdit];
+        }
+    @endif
     
     // Auto-generate jam selesai based on jam mulai
     const jamMulai = document.getElementById('jam_mulai');

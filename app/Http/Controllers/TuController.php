@@ -10,6 +10,8 @@ use App\Models\Guru;
 use App\Models\User;
 use App\Models\Notification;
 use App\Models\Siswa;
+use App\Models\Jadwal;
+use App\Models\Event;
 
 class TuController extends Controller
 {
@@ -366,7 +368,15 @@ class TuController extends Controller
     // Jadwal Management
     public function jadwalIndex()
     {
-        return view('tu.jadwal.index');
+        $jadwals = Jadwal::with(['guru.user'])
+            ->orderBy('hari')
+            ->orderBy('jam_mulai')
+            ->get();
+        
+        // Log untuk debugging
+        \Log::info('Jadwal Index - Total jadwals: ' . $jadwals->count());
+        
+        return view('tu.jadwal.index', compact('jadwals'));
     }
     
     public function jadwalCreate()
@@ -390,41 +400,61 @@ class TuController extends Controller
     
     public function jadwalStore(Request $request)
     {
-        $request->validate([
+        // Log request data for debugging
+        \Log::info('Jadwal Store Request:', $request->all());
+
+        $validated = $request->validate([
             'mata_pelajaran' => 'required|string',
             'guru' => 'required|string',
-            'kelas' => 'required|string|in:7,8,9',
-            'hari' => 'required|string|in:senin,selasa,rabu,kamis,jumat,sabtu',
+            'kelas' => 'required|string',
+            'hari' => 'required|string',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
             'semester' => 'required|string',
             'tahun_ajaran' => 'required|string',
             'status' => 'nullable|string',
             'keterangan' => 'nullable|string',
-            'is_berulang' => 'nullable|boolean',
-            'is_lab' => 'nullable|boolean'
+            'tanggal' => 'nullable|date',
+            'is_berulang' => 'nullable',
+            'is_lab' => 'nullable'
         ]);
 
-        // Simpan data jadwal (implementasi sesuai kebutuhan)
-        $jadwalData = [
-            'mata_pelajaran' => $request->mata_pelajaran,
-            'guru_id' => $request->guru,
-            'kelas' => $request->kelas,
-            'hari' => $request->hari,
-            'jam_mulai' => $request->jam_mulai,
-            'jam_selesai' => $request->jam_selesai,
-            'semester' => $request->semester,
-            'tahun_ajaran' => $request->tahun_ajaran,
-            'status' => $request->status ?? 'aktif',
-            'keterangan' => $request->keterangan,
-            'is_berulang' => $request->has('is_berulang'),
-            'is_lab' => $request->has('is_lab'),
-            'created_by' => Auth::id(),
-            'created_at' => now()
-        ];
+        // Generate ruang berdasarkan kelas dan is_lab
+        $ruang = $request->has('is_lab') 
+            ? 'Lab ' . ucfirst($request->mata_pelajaran)
+            : 'Ruang ' . $request->kelas;
 
-        // Simpan ke database (implementasi sesuai model yang ada)
-        // Jadwal::create($jadwalData);
+        try {
+            // Simpan data jadwal ke database
+            $jadwal = Jadwal::create([
+                'mata_pelajaran' => $request->mata_pelajaran,
+                'guru_id' => $request->guru,
+                'kelas' => $request->kelas,
+                'hari' => $request->hari,
+                'tanggal' => $request->tanggal ?? null,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
+                'semester' => $request->semester,
+                'tahun_ajaran' => $request->tahun_ajaran,
+                'status' => $request->status ?? 'aktif',
+                'keterangan' => $request->keterangan ?? null,
+                'is_berulang' => $request->has('is_berulang') ? true : false,
+                'is_lab' => $request->has('is_lab') ? true : false,
+                'ruang' => $ruang,
+                'created_by' => Auth::id()
+            ]);
+
+            if (!$jadwal) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Gagal menyimpan jadwal. Silakan coba lagi.');
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error saving jadwal: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan jadwal: ' . $e->getMessage());
+        }
 
         $mataPelajaranText = match($request->mata_pelajaran) {
             'matematika' => 'Matematika',
@@ -446,10 +476,427 @@ class TuController extends Controller
         );
     }
     
+    public function jadwalEdit($id)
+    {
+        $jadwal = Jadwal::with(['guru.user'])->findOrFail($id);
+        $gurus = Guru::with('user')->where('status', 'aktif')->orderBy('nip')->get();
+        
+        // Get all unique mata pelajaran from active gurus
+        $mataPelajaranList = collect();
+        foreach ($gurus as $guru) {
+            if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
+                $subjects = explode(', ', $guru->mata_pelajaran);
+                foreach ($subjects as $subject) {
+                    $mataPelajaranList->push(trim($subject));
+                }
+            }
+        }
+        $mataPelajaranList = $mataPelajaranList->unique()->sort()->values();
+        
+        return view('tu.jadwal.edit', compact('jadwal', 'gurus', 'mataPelajaranList'));
+    }
+    
+    public function jadwalUpdate(Request $request, $id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        
+        // Log request data for debugging
+        \Log::info('Jadwal Update Request:', $request->all());
+
+        $validated = $request->validate([
+            'mata_pelajaran' => 'required|string',
+            'guru' => 'required|string',
+            'kelas' => 'required|string',
+            'hari' => 'required|string',
+            'jam_mulai' => 'required|string',
+            'jam_selesai' => 'required|string',
+            'semester' => 'required|string',
+            'tahun_ajaran' => 'required|string',
+            'status' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+            'tanggal' => 'nullable|date',
+            'is_berulang' => 'nullable',
+            'is_lab' => 'nullable'
+        ]);
+
+        // Generate ruang berdasarkan kelas dan is_lab
+        $ruang = $request->has('is_lab') 
+            ? 'Lab ' . ucfirst($request->mata_pelajaran)
+            : 'Ruang ' . $request->kelas;
+
+        try {
+            // Update data jadwal
+            $jadwal->update([
+                'mata_pelajaran' => $request->mata_pelajaran,
+                'guru_id' => $request->guru,
+                'kelas' => $request->kelas,
+                'hari' => $request->hari,
+                'tanggal' => $request->tanggal ?? null,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
+                'semester' => $request->semester,
+                'tahun_ajaran' => $request->tahun_ajaran,
+                'status' => $request->status ?? 'aktif',
+                'keterangan' => $request->keterangan ?? null,
+                'is_berulang' => $request->has('is_berulang') ? true : false,
+                'is_lab' => $request->has('is_lab') ? true : false,
+                'ruang' => $ruang,
+            ]);
+
+            if (!$jadwal->wasChanged()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Tidak ada perubahan data.');
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error updating jadwal: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui jadwal: ' . $e->getMessage());
+        }
+
+        $mataPelajaranText = match($request->mata_pelajaran) {
+            'matematika' => 'Matematika',
+            'bahasa_indonesia' => 'Bahasa Indonesia',
+            'bahasa_inggris' => 'Bahasa Inggris',
+            'ipa' => 'IPA',
+            'ips' => 'IPS',
+            'pendidikan_agama' => 'Pendidikan Agama',
+            'pendidikan_kewarganegaraan' => 'Pendidikan Kewarganegaraan',
+            'pendidikan_jasmani' => 'Pendidikan Jasmani',
+            'seni_budaya' => 'Seni Budaya',
+            'teknologi_informasi' => 'Teknologi Informasi',
+            'lainnya' => 'Lainnya',
+            default => 'Mata Pelajaran'
+        };
+
+        return redirect()->route('tu.jadwal.index')->with('success', 
+            "Jadwal {$mataPelajaranText} untuk kelas " . strtoupper($request->kelas) . " berhasil diperbarui!"
+        );
+    }
+    
+    public function jadwalDestroy($id)
+    {
+        try {
+            $jadwal = Jadwal::findOrFail($id);
+            $mataPelajaranText = $jadwal->mata_pelajaran_nama;
+            $kelas = $jadwal->kelas;
+            
+            $jadwal->delete();
+            
+            return redirect()->route('tu.jadwal.index')->with('success', 
+                "Jadwal {$mataPelajaranText} untuk kelas " . strtoupper($kelas) . " berhasil dihapus!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error deleting jadwal: ' . $e->getMessage());
+            return redirect()->route('tu.jadwal.index')->with('error', 
+                'Terjadi kesalahan saat menghapus jadwal: ' . $e->getMessage()
+            );
+        }
+    }
+    
     // Kalender Management
     public function kalenderIndex()
     {
-        return view('tu.kalender.index');
+        // Get current year
+        $currentYear = now()->year;
+        $nextYear = $currentYear + 1;
+        
+        // Generate hari libur nasional dan internasional
+        $events = $this->generateHolidayEvents($currentYear);
+        
+        // Add events for next year (for December navigation)
+        $events = array_merge($events, $this->generateHolidayEvents($nextYear));
+        
+        // Get custom events from database
+        // Ambil SEMUA event yang relevan (public atau milik user yang login)
+        // Tidak ada filter tahun - ambil semua event untuk memastikan tidak ada yang terlewat
+        $prevYear = $currentYear - 1; // Definisikan $prevYear untuk logging
+        
+        // Ambil semua event tanpa filter apapun - pastikan semua event ditampilkan
+        $dbEvents = Event::where(function($query) {
+                // Tampilkan event public ATAU event milik user yang login
+                $query->where('is_public', true)
+                      ->orWhere('created_by', Auth::id());
+            })
+            ->orderBy('tanggal_mulai', 'asc')
+            ->get();
+        
+        // Pastikan semua event diambil - tidak ada filter kategori atau tahun
+        // Semua kategori event harus ditampilkan: ujian, akademik, libur, rapat, pelatihan, kegiatan, pengumuman, lainnya
+        
+        // Log semua event yang ditemukan
+        \Log::info('=== CALENDAR EVENTS DEBUG ===');
+        \Log::info('Current Year: ' . $currentYear);
+        \Log::info('Next Year: ' . $nextYear);
+        \Log::info('Previous Year: ' . $prevYear);
+        \Log::info('Total Events Found: ' . $dbEvents->count());
+        \Log::info('Auth User ID: ' . Auth::id());
+        
+        // Log untuk debugging
+        \Log::info('Events found in database: ' . $dbEvents->count());
+        foreach ($dbEvents as $event) {
+            \Log::info('Event: ' . $event->judul_event . ' - Kategori: ' . $event->kategori_event . ' - Tanggal: ' . $event->tanggal_mulai . ' - Warna: ' . ($event->warna ?? 'NULL') . ' - is_public: ' . ($event->is_public ? 'true' : 'false'));
+        }
+        
+        // Convert database events to calendar format
+        // Pastikan SEMUA event ditampilkan tanpa exception
+        foreach ($dbEvents as $dbEvent) {
+            try {
+                // Gunakan warna yang sudah dipilih user saat membuat event
+                // Jika tidak ada warna, baru gunakan default berdasarkan kategori
+                $defaultColorMap = [
+                    'libur' => '#ffc107',      // Kuning untuk libur
+                    'ujian' => '#dc3545',      // Merah untuk ujian
+                    'akademik' => '#007bff',   // Biru untuk akademik
+                    'rapat' => '#17a2b8',      // Cyan untuk rapat
+                    'pelatihan' => '#9c27b0',  // Ungu untuk pelatihan
+                    'kegiatan' => '#fd7e14',   // Orange untuk kegiatan
+                    'pengumuman' => '#D2B48C', // Cokelat muda untuk pengumuman
+                    'lainnya' => '#6c757d',    // Abu-abu untuk lainnya
+                ];
+                
+                // SELALU gunakan warna berdasarkan kategori untuk memastikan konsistensi
+                // Ini memastikan event yang sudah ada juga menggunakan warna yang benar sesuai kategori
+                $kategoriLower = strtolower($dbEvent->kategori_event ?? 'lainnya');
+                $eventWarna = $defaultColorMap[$kategoriLower] ?? '#6c757d';
+                
+                // Log untuk debugging
+                \Log::info('Event warna - Kategori: ' . $kategoriLower . ' - Warna yang digunakan: ' . $eventWarna . ' - Warna di DB: ' . ($dbEvent->warna ?? 'NULL'));
+                
+                // Pastikan format tanggal benar
+                $tanggalMulai = $dbEvent->tanggal_mulai instanceof \Carbon\Carbon 
+                    ? $dbEvent->tanggal_mulai->format('Y-m-d')
+                    : date('Y-m-d', strtotime($dbEvent->tanggal_mulai));
+                
+                $tanggalSelesai = null;
+                if ($dbEvent->tanggal_selesai) {
+                    $tanggalSelesai = $dbEvent->tanggal_selesai instanceof \Carbon\Carbon
+                        ? $dbEvent->tanggal_selesai->format('Y-m-d')
+                        : date('Y-m-d', strtotime($dbEvent->tanggal_selesai));
+                }
+                
+                // Pastikan semua field ada dan valid
+                $events[] = [
+                    'id' => $dbEvent->id ?? 0,
+                    'judul' => $dbEvent->judul_event ?? 'Event',
+                    'tanggal' => $tanggalMulai,
+                    'tanggal_selesai' => $tanggalSelesai,
+                    'kategori' => ucfirst($dbEvent->kategori_event ?? 'lainnya'),
+                    'warna' => $eventWarna, // Gunakan warna yang dipilih user saat membuat event
+                    'deskripsi' => $dbEvent->deskripsi ?? null,
+                    'lokasi' => $dbEvent->lokasi ?? null,
+                    'waktu_mulai' => $dbEvent->waktu_mulai ? $dbEvent->waktu_mulai : null,
+                    'waktu_selesai' => $dbEvent->waktu_selesai ? $dbEvent->waktu_selesai : null,
+                    'is_all_day' => $dbEvent->is_all_day ?? false,
+                ];
+                
+                // Log setiap event yang ditambahkan
+                \Log::info('Event added to calendar: ' . ($dbEvent->judul_event ?? 'Unknown') . ' - Kategori: ' . ($dbEvent->kategori_event ?? 'Unknown') . ' - Tanggal: ' . $tanggalMulai . ' - Warna: ' . $eventWarna);
+            } catch (\Exception $e) {
+                // Jika ada error pada event tertentu, log dan lanjutkan ke event berikutnya
+                \Log::error('Error processing event ID ' . ($dbEvent->id ?? 'unknown') . ': ' . $e->getMessage());
+                continue;
+            }
+        }
+        
+        // Log total events yang akan dikirim ke view
+        \Log::info('Total events to display: ' . count($events));
+        \Log::info('Holiday events: ' . (count($events) - $dbEvents->count()));
+        \Log::info('Database events: ' . $dbEvents->count());
+        
+        return view('tu.kalender.index', compact('events'));
+    }
+    
+    /**
+     * Generate holiday events for a given year
+     */
+    private function generateHolidayEvents($year)
+    {
+        $events = [];
+        
+        // Fixed date holidays - Libur Nasional Indonesia & Internasional
+        $fixedHolidays = [
+            // ========== JANUARI ==========
+            ['tanggal' => "$year-01-01", 'judul' => 'Tahun Baru Masehi', 'kategori' => 'Libur'],
+            
+            // ========== FEBRUARI ==========
+            ['tanggal' => "$year-02-14", 'judul' => 'Valentine Day', 'kategori' => 'Libur'],
+            
+            // ========== MARET ==========
+            ['tanggal' => "$year-03-17", 'judul' => 'Hari Raya Nyepi (Tahun Baru Saka)', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-03-08", 'judul' => 'Hari Perempuan Internasional', 'kategori' => 'Libur'],
+            
+            // ========== APRIL ==========
+            ['tanggal' => "$year-04-21", 'judul' => 'Hari Kartini', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-04-22", 'judul' => 'Hari Bumi Internasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-04-25", 'judul' => 'Hari Otonomi Daerah', 'kategori' => 'Libur'],
+            
+            // ========== MEI ==========
+            ['tanggal' => "$year-05-01", 'judul' => 'Hari Buruh Internasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-05-02", 'judul' => 'Hari Pendidikan Nasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-05-20", 'judul' => 'Hari Kebangkitan Nasional', 'kategori' => 'Libur'],
+            
+            // ========== JUNI ==========
+            ['tanggal' => "$year-06-01", 'judul' => 'Hari Lahir Pancasila & Hari Anak Internasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-06-05", 'judul' => 'Hari Lingkungan Hidup Sedunia', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-06-26", 'judul' => 'Hari Anti Narkoba Internasional', 'kategori' => 'Libur'],
+            
+            // ========== JULI ==========
+            ['tanggal' => "$year-07-17", 'judul' => 'Hari Anak Nasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-07-04", 'judul' => 'Hari Kemerdekaan Amerika', 'kategori' => 'Libur'],
+            
+            // ========== AGUSTUS ==========
+            ['tanggal' => "$year-08-17", 'judul' => 'Hari Kemerdekaan Republik Indonesia', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-08-14", 'judul' => 'Hari Pramuka', 'kategori' => 'Libur'],
+            
+            // ========== SEPTEMBER ==========
+            ['tanggal' => "$year-09-09", 'judul' => 'Hari Olahraga Nasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-09-21", 'judul' => 'Hari Perdamaian Internasional', 'kategori' => 'Libur'],
+            
+            // ========== OKTOBER ==========
+            ['tanggal' => "$year-10-01", 'judul' => 'Hari Kesaktian Pancasila', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-10-02", 'judul' => 'Hari Batik Nasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-10-05", 'judul' => 'Hari Guru Sedunia', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-10-28", 'judul' => 'Hari Sumpah Pemuda', 'kategori' => 'Libur'],
+            
+            // ========== NOVEMBER ==========
+            ['tanggal' => "$year-11-10", 'judul' => 'Hari Pahlawan', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-11-11", 'judul' => 'Hari Pahlawan Internasional', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-11-25", 'judul' => 'Hari Guru Nasional', 'kategori' => 'Libur'],
+            
+            // ========== DESEMBER ==========
+            ['tanggal' => "$year-12-10", 'judul' => 'Hari Hak Asasi Manusia', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-12-22", 'judul' => 'Hari Ibu', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-12-24", 'judul' => 'Malam Natal', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-12-25", 'judul' => 'Hari Natal', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-12-26", 'judul' => 'Libur Natal', 'kategori' => 'Libur'],
+            ['tanggal' => "$year-12-31", 'judul' => 'Malam Tahun Baru', 'kategori' => 'Libur'],
+        ];
+        
+        // Add Chinese New Year (Imlek) - approximate dates
+        $imlekDates = $this->getChineseNewYear($year);
+        if ($imlekDates) {
+            $fixedHolidays = array_merge($fixedHolidays, $imlekDates);
+        }
+        
+        // Add Waisak (Buddha) - approximate dates
+        $waisakDates = $this->getWaisak($year);
+        if ($waisakDates) {
+            $fixedHolidays = array_merge($fixedHolidays, $waisakDates);
+        }
+        
+        // Calculate Islamic holidays (approximate, as they follow lunar calendar)
+        // These dates are approximate for 2024-2025
+        $islamicHolidays = $this->getIslamicHolidays($year);
+        
+        // Combine all holidays
+        $allHolidays = array_merge($fixedHolidays, $islamicHolidays);
+        
+        // Color mapping based on category
+        $colorMap = [
+            'Libur' => '#2E7D32',      // Hijau tua untuk libur nasional/internasional
+            'Ujian' => '#dc3545',      // Merah untuk ujian
+            'Akademik' => '#007bff',   // Biru untuk akademik
+            'Rapat' => '#17a2b8',      // Cyan untuk rapat
+            'Pelatihan' => '#ffc107',  // Kuning untuk pelatihan
+            'Kegiatan' => '#fd7e14',   // Orange untuk kegiatan
+            'Pengumuman' => '#17a2b8', // Cyan untuk pengumuman
+        ];
+        
+        // Convert to events format
+        foreach ($allHolidays as $index => $holiday) {
+            $events[] = [
+                'id' => $index + 1000, // Use high ID to avoid conflict with custom events
+                'judul' => $holiday['judul'],
+                'tanggal' => $holiday['tanggal'],
+                'kategori' => $holiday['kategori'],
+                'warna' => $colorMap[$holiday['kategori']] ?? '#6c757d' // Default abu-abu
+            ];
+        }
+        
+        return $events;
+    }
+    
+    /**
+     * Get Islamic holidays (approximate dates)
+     */
+    private function getIslamicHolidays($year)
+    {
+        $holidays = [];
+        
+        // Approximate dates for Islamic holidays (these vary each year)
+        // For 2024-2025, these are approximate
+        if ($year == 2024) {
+            $holidays = [
+                ['tanggal' => "$year-03-11", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-03-12", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-06-16", 'judul' => 'Hari Raya Idul Adha', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-07-07", 'judul' => 'Tahun Baru Islam', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-09-15", 'judul' => 'Maulid Nabi Muhammad SAW', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-03-10", 'judul' => 'Isra Miraj', 'kategori' => 'Libur'],
+            ];
+        } elseif ($year == 2025) {
+            $holidays = [
+                ['tanggal' => "$year-03-01", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-03-02", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-06-06", 'judul' => 'Hari Raya Idul Adha', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-06-27", 'judul' => 'Tahun Baru Islam', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-09-05", 'judul' => 'Maulid Nabi Muhammad SAW', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-02-28", 'judul' => 'Isra Miraj', 'kategori' => 'Libur'],
+            ];
+        } else {
+            // Default approximate dates for other years
+            $holidays = [
+                ['tanggal' => "$year-03-10", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-03-11", 'judul' => 'Hari Raya Idul Fitri', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-06-16", 'judul' => 'Hari Raya Idul Adha', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-07-07", 'judul' => 'Tahun Baru Islam', 'kategori' => 'Libur'],
+                ['tanggal' => "$year-09-15", 'judul' => 'Maulid Nabi Muhammad SAW', 'kategori' => 'Libur'],
+            ];
+        }
+        
+        return $holidays;
+    }
+    
+    /**
+     * Get Chinese New Year (Imlek) dates - approximate
+     */
+    private function getChineseNewYear($year)
+    {
+        // Approximate dates for Chinese New Year (varies each year)
+        $imlekDates = [
+            2024 => ['tanggal' => '2024-02-10', 'judul' => 'Hari Raya Imlek (Tahun Baru Cina)', 'kategori' => 'Libur'],
+            2025 => ['tanggal' => '2025-01-29', 'judul' => 'Hari Raya Imlek (Tahun Baru Cina)', 'kategori' => 'Libur'],
+            2026 => ['tanggal' => '2026-02-17', 'judul' => 'Hari Raya Imlek (Tahun Baru Cina)', 'kategori' => 'Libur'],
+        ];
+        
+        if (isset($imlekDates[$year])) {
+            return [$imlekDates[$year]];
+        }
+        
+        // Default approximate date (late January to mid February)
+        return [['tanggal' => "$year-02-01", 'judul' => 'Hari Raya Imlek (Tahun Baru Cina)', 'kategori' => 'Libur']];
+    }
+    
+    /**
+     * Get Waisak (Buddha) dates - approximate
+     */
+    private function getWaisak($year)
+    {
+        // Approximate dates for Waisak (varies each year, usually in May)
+        $waisakDates = [
+            2024 => ['tanggal' => '2024-05-23', 'judul' => 'Hari Raya Waisak', 'kategori' => 'Libur'],
+            2025 => ['tanggal' => '2025-05-12', 'judul' => 'Hari Raya Waisak', 'kategori' => 'Libur'],
+            2026 => ['tanggal' => '2026-05-01', 'judul' => 'Hari Raya Waisak', 'kategori' => 'Libur'],
+        ];
+        
+        if (isset($waisakDates[$year])) {
+            return [$waisakDates[$year]];
+        }
+        
+        // Default approximate date (usually in May)
+        return [['tanggal' => "$year-05-15", 'judul' => 'Hari Raya Waisak', 'kategori' => 'Libur']];
     }
     
     public function kalenderCreate()
@@ -469,7 +916,6 @@ class TuController extends Controller
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
-            'prioritas' => 'nullable|string',
             'warna' => 'nullable|string',
             'is_all_day' => 'nullable|boolean',
             'is_public' => 'nullable|boolean',
@@ -477,29 +923,73 @@ class TuController extends Controller
             'is_recurring' => 'nullable|boolean'
         ]);
 
-        // Simpan data event (implementasi sesuai kebutuhan)
-        $eventData = [
-            'judul_event' => $request->judul_event,
-            'kategori_event' => $request->kategori_event,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_selesai' => $request->tanggal_selesai ?? $request->tanggal_mulai,
-            'waktu_mulai' => $request->waktu_mulai,
-            'waktu_selesai' => $request->waktu_selesai,
-            'deskripsi' => $request->deskripsi,
-            'lokasi' => $request->lokasi,
-            'penanggung_jawab' => $request->penanggung_jawab,
-            'prioritas' => $request->prioritas ?? 'sedang',
-            'warna' => $request->warna ?? '#007bff',
-            'is_all_day' => $request->has('is_all_day'),
-            'is_public' => $request->has('is_public'),
-            'is_important' => $request->has('is_important'),
-            'is_recurring' => $request->has('is_recurring'),
-            'created_by' => Auth::id(),
-            'created_at' => now()
-        ];
+        try {
+            // Log request data untuk debugging
+            \Log::info('Creating event with data:', [
+                'judul_event' => $request->judul_event,
+                'kategori_event' => $request->kategori_event,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'warna' => $request->warna,
+                'is_public' => $request->input('is_public', 0),
+            ]);
+            
+            // Tentukan warna berdasarkan kategori jika tidak ada
+            $colorMap = [
+                'libur' => '#ffc107',      // Kuning untuk libur
+                'ujian' => '#dc3545',      // Merah untuk ujian
+                'akademik' => '#007bff',   // Biru untuk akademik
+                'rapat' => '#17a2b8',      // Cyan untuk rapat
+                'pelatihan' => '#9c27b0',  // Ungu untuk pelatihan
+                'kegiatan' => '#fd7e14',   // Orange untuk kegiatan
+                'pengumuman' => '#D2B48C', // Cokelat muda untuk pengumuman
+                'lainnya' => '#6c757d',    // Abu-abu untuk lainnya
+            ];
+            
+            $warnaEvent = $request->warna;
+            if (empty($warnaEvent) || $warnaEvent == '#6c757d' || $warnaEvent == null) {
+                $warnaEvent = $colorMap[strtolower($request->kategori_event)] ?? '#6c757d';
+            }
+            
+            // Simpan data event ke database
+            $event = Event::create([
+                'judul_event' => $request->judul_event,
+                'kategori_event' => $request->kategori_event,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai ?? $request->tanggal_mulai,
+                'waktu_mulai' => $request->waktu_mulai,
+                'waktu_selesai' => $request->waktu_selesai,
+                'deskripsi' => $request->deskripsi,
+                'lokasi' => $request->lokasi,
+                'penanggung_jawab' => $request->penanggung_jawab,
+                'warna' => $warnaEvent, // Gunakan warna yang sudah ditentukan
+                'is_all_day' => $request->input('is_all_day', 0) == 1,
+                'is_public' => $request->input('is_public', 0) == 1,
+                'is_important' => $request->input('is_important', 0) == 1,
+                'is_recurring' => $request->input('is_recurring', 0) == 1,
+                'created_by' => Auth::id()
+            ]);
 
-        // Simpan ke database (implementasi sesuai model yang ada)
-        // Event::create($eventData);
+            \Log::info('Event created successfully:', [
+                'id' => $event->id,
+                'judul_event' => $event->judul_event,
+                'kategori_event' => $event->kategori_event,
+                'tanggal_mulai' => $event->tanggal_mulai,
+                'warna' => $event->warna,
+                'is_public' => $event->is_public,
+            ]);
+
+            if (!$event) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Gagal menyimpan event. Silakan coba lagi.');
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error saving event: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan event: ' . $e->getMessage());
+        }
 
         $kategoriText = match($request->kategori_event) {
             'akademik' => 'Akademik',

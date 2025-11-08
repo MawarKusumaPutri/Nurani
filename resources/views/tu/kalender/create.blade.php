@@ -30,6 +30,32 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            @if(session('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle"></i> {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+
+                            @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+
+                            @if($errors->any())
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <ul class="mb-0">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+
                             <form method="POST" action="{{ route('tu.kalender.store') }}">
                                 @csrf
                                 
@@ -109,30 +135,19 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="prioritas" class="form-label">Prioritas</label>
-                                            <select class="form-select" id="prioritas" name="prioritas">
-                                                <option value="rendah">Rendah</option>
-                                                <option value="sedang" selected>Sedang</option>
-                                                <option value="tinggi">Tinggi</option>
-                                                <option value="sangat_tinggi">Sangat Tinggi</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="warna" class="form-label">Warna Event</label>
-                                            <select class="form-select" id="warna" name="warna">
-                                                <option value="#007bff">Biru</option>
-                                                <option value="#28a745">Hijau</option>
-                                                <option value="#ffc107">Kuning</option>
-                                                <option value="#dc3545">Merah</option>
-                                                <option value="#6f42c1">Ungu</option>
-                                                <option value="#17a2b8">Cyan</option>
-                                                <option value="#fd7e14">Orange</option>
-                                                <option value="#6c757d">Abu-abu</option>
-                                            </select>
+                                            <label for="warna" class="form-label">
+                                                Warna Event 
+                                                <span class="text-muted small">(Untuk membedakan kategori event di kalender)</span>
+                                            </label>
+                                            <input type="hidden" id="warna" name="warna" value="#6c757d">
+                                            <div class="form-control" id="warna-display" style="background-color: #6c757d; color: white; text-align: center; padding: 8px; border-radius: 4px; cursor: not-allowed;">
+                                                <i class="fas fa-palette"></i> Warna akan otomatis disesuaikan dengan kategori event
+                                            </div>
+                                            <small class="form-text text-muted">
+                                                <i class="fas fa-info-circle"></i> Warna event akan otomatis disesuaikan berdasarkan kategori yang Anda pilih untuk memudahkan identifikasi di kalender.
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +156,8 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_all_day" name="is_all_day">
+                                                <input type="hidden" name="is_all_day" value="0">
+                                                <input class="form-check-input" type="checkbox" id="is_all_day" name="is_all_day" value="1">
                                                 <label class="form-check-label" for="is_all_day">
                                                     Event Sepanjang Hari
                                                 </label>
@@ -151,7 +167,8 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" checked>
+                                                <input type="hidden" name="is_public" value="0">
+                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1" checked>
                                                 <label class="form-check-label" for="is_public">
                                                     Event Publik (terlihat semua user)
                                                 </label>
@@ -164,7 +181,8 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important">
+                                                <input type="hidden" name="is_important" value="0">
+                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important" value="1">
                                                 <label class="form-check-label" for="is_important">
                                                     Event Penting
                                                 </label>
@@ -174,7 +192,8 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_recurring" name="is_recurring">
+                                                <input type="hidden" name="is_recurring" value="0">
+                                                <input class="form-check-input" type="checkbox" id="is_recurring" name="is_recurring" value="1">
                                                 <label class="form-check-label" for="is_recurring">
                                                     Event Berulang
                                                 </label>
@@ -188,7 +207,7 @@
                                         <i class="fas fa-times"></i> Batal
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-calendar-plus"></i> Tambah Event
+                                        <i class="fas fa-save"></i> Simpan
                                     </button>
                                 </div>
                             </form>
@@ -304,24 +323,54 @@ document.addEventListener('DOMContentLoaded', function() {
     isAllDay.addEventListener('change', toggleTimeFields);
     toggleTimeFields(); // Initial call
     
-    // Color preview
-    const warnaSelect = document.getElementById('warna');
-    const colorPreview = document.getElementById('color-preview');
+    // Color mapping berdasarkan kategori
+    const colorMap = {
+        'akademik': { color: '#007bff', name: 'Biru' },
+        'ujian': { color: '#dc3545', name: 'Merah' },
+        'libur': { color: '#ffc107', name: 'Kuning' },
+        'rapat': { color: '#17a2b8', name: 'Cyan' },
+        'pelatihan': { color: '#9c27b0', name: 'Ungu' },
+        'kegiatan': { color: '#fd7e14', name: 'Orange' },
+        'pengumuman': { color: '#D2B48C', name: 'Cokelat Muda' },
+        'lainnya': { color: '#6c757d', name: 'Abu-abu' }
+    };
     
-    warnaSelect.addEventListener('change', function() {
-        colorPreview.style.backgroundColor = this.value;
-    });
-    
-    // Auto-generate judul based on kategori
+    // Auto-set warna berdasarkan kategori
     const kategoriSelect = document.getElementById('kategori_event');
+    const warnaInput = document.getElementById('warna');
+    const warnaDisplay = document.getElementById('warna-display');
+    const colorPreview = document.getElementById('color-preview');
     const judulInput = document.getElementById('judul_event');
     
+    function updateWarnaByKategori() {
+        const kategori = kategoriSelect.value;
+        if (kategori && colorMap[kategori]) {
+            const warnaData = colorMap[kategori];
+            warnaInput.value = warnaData.color;
+            warnaDisplay.style.backgroundColor = warnaData.color;
+            warnaDisplay.innerHTML = `<i class="fas fa-palette"></i> ${warnaData.name} (${kategoriSelect.options[kategoriSelect.selectedIndex].text})`;
+            colorPreview.style.backgroundColor = warnaData.color;
+        } else {
+            // Default jika belum pilih kategori
+            warnaInput.value = '#6c757d';
+            warnaDisplay.style.backgroundColor = '#6c757d';
+            warnaDisplay.innerHTML = '<i class="fas fa-palette"></i> Pilih kategori event untuk melihat warna';
+            colorPreview.style.backgroundColor = '#6c757d';
+        }
+    }
+    
     kategoriSelect.addEventListener('change', function() {
+        updateWarnaByKategori();
+        
+        // Auto-generate judul placeholder
         if (!judulInput.value) {
             const kategoriText = this.options[this.selectedIndex].text;
             judulInput.placeholder = `Masukkan judul ${kategoriText.toLowerCase()}`;
         }
     });
+    
+    // Initialize warna on page load
+    updateWarnaByKategori();
 });
 </script>
 @endsection

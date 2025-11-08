@@ -173,6 +173,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'jadwalIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'jadwalCreate'])->name('create');
             Route::post('/store', [App\Http\Controllers\TuController::class, 'jadwalStore'])->name('store');
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'jadwalEdit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'jadwalUpdate'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'jadwalDestroy'])->name('destroy');
         });
         
         // Kalender Management

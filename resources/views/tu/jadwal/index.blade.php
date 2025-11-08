@@ -85,6 +85,13 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            <!-- Debug Info (Hapus setelah testing) -->
+                            @if(config('app.debug'))
+                                <div class="alert alert-info mb-3">
+                                    <small>Debug: Total jadwal = {{ isset($jadwals) ? $jadwals->count() : 0 }}</small>
+                                </div>
+                            @endif
+                            
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
@@ -101,121 +108,85 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Sample Data -->
-                                        <tr>
-                                            <td>1</td>
-                                            <td><i class="fas fa-calculator text-primary"></i> Matematika</td>
-                                            <td>Budi Santoso, S.Pd</td>
-                                            <td><span class="badge bg-primary">7A</span></td>
-                                            <td>Senin</td>
-                                            <td>07:00 - 07:45</td>
-                                            <td>Ruang 7A</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td><i class="fas fa-book text-success"></i> Bahasa Indonesia</td>
-                                            <td>Siti Aminah, S.Pd</td>
-                                            <td><span class="badge bg-success">7B</span></td>
-                                            <td>Senin</td>
-                                            <td>07:45 - 08:30</td>
-                                            <td>Ruang 7B</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td><i class="fas fa-flask text-warning"></i> IPA</td>
-                                            <td>Joko Susilo, M.Pd</td>
-                                            <td><span class="badge bg-warning">8A</span></td>
-                                            <td>Selasa</td>
-                                            <td>08:30 - 09:15</td>
-                                            <td>Lab IPA</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td><i class="fas fa-globe text-info"></i> Bahasa Inggris</td>
-                                            <td>Rina Wulandari, S.Pd</td>
-                                            <td><span class="badge bg-info">9A</span></td>
-                                            <td>Rabu</td>
-                                            <td>09:15 - 10:00</td>
-                                            <td>Ruang 9A</td>
-                                            <td><span class="badge bg-warning">Sementara</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td><i class="fas fa-chart-line text-danger"></i> IPS</td>
-                                            <td>Ahmad Fauzi, S.Pd</td>
-                                            <td><span class="badge bg-danger">8B</span></td>
-                                            <td>Kamis</td>
-                                            <td>10:00 - 10:45</td>
-                                            <td>Ruang 8B</td>
-                                            <td><span class="badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @if(isset($jadwals) && $jadwals->count() > 0)
+                                            @php
+                                                $no = 1;
+                                                $iconMap = [
+                                                    'matematika' => ['icon' => 'fa-calculator', 'color' => 'text-primary'],
+                                                    'bahasa_indonesia' => ['icon' => 'fa-book', 'color' => 'text-success'],
+                                                    'bahasa_inggris' => ['icon' => 'fa-globe', 'color' => 'text-info'],
+                                                    'ipa' => ['icon' => 'fa-flask', 'color' => 'text-warning'],
+                                                    'ips' => ['icon' => 'fa-chart-line', 'color' => 'text-danger'],
+                                                    'pendidikan_agama' => ['icon' => 'fa-mosque', 'color' => 'text-secondary'],
+                                                    'pendidikan_kewarganegaraan' => ['icon' => 'fa-flag', 'color' => 'text-primary'],
+                                                    'pendidikan_jasmani' => ['icon' => 'fa-running', 'color' => 'text-success'],
+                                                    'seni_budaya' => ['icon' => 'fa-palette', 'color' => 'text-warning'],
+                                                    'teknologi_informasi' => ['icon' => 'fa-laptop', 'color' => 'text-info'],
+                                                ];
+                                                
+                                                $kelasColorMap = [
+                                                    '7' => 'bg-primary',
+                                                    '8' => 'bg-warning',
+                                                    '9' => 'bg-info',
+                                                ];
+                                                
+                                                $statusColorMap = [
+                                                    'aktif' => 'bg-success',
+                                                    'nonaktif' => 'bg-danger',
+                                                    'sementara' => 'bg-warning',
+                                                ];
+                                            @endphp
+                                            @foreach($jadwals as $jadwal)
+                                                @php
+                                                    $icon = $iconMap[$jadwal->mata_pelajaran]['icon'] ?? 'fa-book';
+                                                    $iconColor = $iconMap[$jadwal->mata_pelajaran]['color'] ?? 'text-secondary';
+                                                    $kelasColor = $kelasColorMap[substr($jadwal->kelas, 0, 1)] ?? 'bg-secondary';
+                                                    $statusColor = $statusColorMap[$jadwal->status] ?? 'bg-secondary';
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $no++ }}</td>
+                                                    <td>
+                                                        <i class="fas {{ $icon }} {{ $iconColor }}"></i> 
+                                                        {{ $jadwal->mata_pelajaran_nama }}
+                                                    </td>
+                                                    <td>{{ $jadwal->guru->user->name ?? 'N/A' }}</td>
+                                                    <td>
+                                                        <span class="badge {{ $kelasColor }}">{{ $jadwal->kelas }}</span>
+                                                    </td>
+                                                    <td>{{ $jadwal->hari_nama }}</td>
+                                                    <td>{{ date('H:i', strtotime($jadwal->jam_mulai)) }} - {{ date('H:i', strtotime($jadwal->jam_selesai)) }}</td>
+                                                    <td>{{ $jadwal->ruang ?? 'Ruang ' . $jadwal->kelas }}</td>
+                                                    <td>
+                                                        <span class="badge {{ $statusColor }}">{{ ucfirst($jadwal->status) }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('tu.jadwal.edit', $jadwal->id) }}" class="btn btn-sm btn-primary me-1">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('tu.jadwal.destroy', $jadwal->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash"></i> Hapus
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="9" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                                                        <p class="mb-0">Belum ada jadwal pelajaran. Silakan tambah jadwal baru.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
                             
-                            <!-- Pagination -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>

@@ -38,9 +38,9 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-12">
                                     <label class="form-label">Kategori Event</label>
-                                    <select class="form-select">
+                                    <select class="form-select" id="filter-kategori">
                                         <option value="">Semua Kategori</option>
                                         <option value="akademik">Akademik</option>
                                         <option value="ujian">Ujian</option>
@@ -48,27 +48,9 @@
                                         <option value="rapat">Rapat</option>
                                         <option value="pelatihan">Pelatihan</option>
                                         <option value="kegiatan">Kegiatan</option>
+                                        <option value="pengumuman">Pengumuman</option>
+                                        <option value="lainnya">Lainnya</option>
                                     </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Bulan</label>
-                                    <select class="form-select">
-                                        <option value="10">Oktober 2024</option>
-                                        <option value="11">November 2024</option>
-                                        <option value="12">Desember 2024</option>
-                                        <option value="1">Januari 2025</option>
-                                        <option value="2">Februari 2025</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Cari Event</label>
-                                    <input type="text" class="form-control" placeholder="Judul atau deskripsi event">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button class="btn btn-primary d-block w-100">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -79,75 +61,35 @@
             <!-- Calendar View -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-calendar-alt"></i> Kalender Akademik - Oktober 2024
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <!-- Calendar Grid -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered calendar-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Minggu</th>
-                                            <th class="text-center">Senin</th>
-                                            <th class="text-center">Selasa</th>
-                                            <th class="text-center">Rabu</th>
-                                            <th class="text-center">Kamis</th>
-                                            <th class="text-center">Jumat</th>
-                                            <th class="text-center">Sabtu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-center text-muted">29</td>
-                                            <td class="text-center text-muted">30</td>
-                                            <td class="text-center">1</td>
-                                            <td class="text-center">2</td>
-                                            <td class="text-center">3</td>
-                                            <td class="text-center">4</td>
-                                            <td class="text-center">5</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">6</td>
-                                            <td class="text-center">7</td>
-                                            <td class="text-center">8</td>
-                                            <td class="text-center">9</td>
-                                            <td class="text-center">10</td>
-                                            <td class="text-center">11</td>
-                                            <td class="text-center">12</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">13</td>
-                                            <td class="text-center">14</td>
-                                            <td class="text-center">15</td>
-                                            <td class="text-center">16</td>
-                                            <td class="text-center">17</td>
-                                            <td class="text-center">18</td>
-                                            <td class="text-center">19</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">20</td>
-                                            <td class="text-center">21</td>
-                                            <td class="text-center">22</td>
-                                            <td class="text-center">23</td>
-                                            <td class="text-center">24</td>
-                                            <td class="text-center">25</td>
-                                            <td class="text-center">26</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">27</td>
-                                            <td class="text-center">28</td>
-                                            <td class="text-center">29</td>
-                                            <td class="text-center">30</td>
-                                            <td class="text-center">31</td>
-                                            <td class="text-center text-muted">1</td>
-                                            <td class="text-center text-muted">2</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="card" style="background: transparent; border: none; box-shadow: none;">
+                        <div class="card-body p-0">
+                            <!-- Dark Theme Calendar Widget -->
+                            <div id="calendar-widget" class="calendar-widget-dark">
+                                <div class="calendar-header-dark">
+                                    <div class="selected-date-display-dark">
+                                        <button type="button" class="nav-btn-dark prev-month-btn" id="prev-month-btn">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <span id="selected-date-text">Pilih Tanggal</span>
+                                        <button type="button" class="nav-btn-dark next-month-btn" id="next-month-btn">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="calendar-body-dark">
+                                    <div class="calendar-weekdays-dark">
+                                        <div class="weekday-dark">Minggu</div>
+                                        <div class="weekday-dark">Senin</div>
+                                        <div class="weekday-dark">Selasa</div>
+                                        <div class="weekday-dark">Rabu</div>
+                                        <div class="weekday-dark">Kamis</div>
+                                        <div class="weekday-dark">Jumat</div>
+                                        <div class="weekday-dark">Sabtu</div>
+                                    </div>
+                                    <div class="calendar-days-dark" id="calendar-days-dark">
+                                        <!-- Days will be generated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -221,4 +163,498 @@
         </main>
     </div>
 </div>
+
+<style>
+    /* Attractive Calendar Widget Styles */
+    .calendar-widget-dark {
+        background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .calendar-header-dark {
+        padding: 20px 24px;
+        background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .selected-date-display-dark {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #selected-date-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        flex: 1;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-btn-dark {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-btn-dark:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: scale(1.05);
+    }
+
+    .calendar-body-dark {
+        padding: 24px;
+        background: #F0F4F0;
+        backdrop-filter: blur(10px);
+    }
+
+    .calendar-weekdays-dark {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .weekday-dark {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #2E7D32;
+        padding: 10px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .calendar-days-dark {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+    }
+
+    .calendar-day-dark {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s;
+        background: #F0F4F0;
+        color: #2E7D32;
+        border: 2px solid transparent;
+        padding: 0;
+        position: relative;
+        min-height: 60px;
+    }
+
+    .calendar-day-dark:hover {
+        background: #E8F5E9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    }
+
+    .calendar-day-dark.other-month {
+        color: rgba(46, 125, 50, 0.4);
+        background: #F0F4F0;
+    }
+
+    .calendar-day-dark.selected {
+        background: #4CAF50;
+        color: white;
+        font-weight: 700;
+        border: 2px solid #2E7D32;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+
+    .calendar-day-dark.today {
+        border: 2px solid #4CAF50;
+        background: #E8F5E9;
+        font-weight: 700;
+        color: #2E7D32;
+    }
+
+    .calendar-day-dark.today.selected {
+        border: 2px solid #2E7D32;
+        background: #4CAF50;
+        color: white;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    }
+
+    .calendar-day-dark.has-event {
+        /* Background will be set dynamically via inline style */
+        color: white !important;
+        font-weight: 600;
+        padding: 4px;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .calendar-day-dark.has-event .day-number {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        width: 100%;
+    }
+
+    .calendar-day-dark.has-event .event-text {
+        font-size: 10px;
+        line-height: 1.2;
+        text-align: left;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        padding: 0 3px;
+        font-weight: 500;
+    }
+
+    .calendar-day-dark.has-event:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        opacity: 0.9;
+    }
+
+    .calendar-day-dark.has-event.selected {
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calendar functionality
+    let currentDate = new Date();
+    let selectedDate = null;
+    
+    // Events data from server
+    const allEvents = @json($events ?? []);
+    let filteredEvents = [...allEvents]; // Copy untuk filtering
+    
+    // Debug: Log events to console
+    console.log('Total events loaded:', allEvents.length);
+    console.log('Events data:', allEvents);
+    
+    // Log events by category untuk debugging
+    const eventsByCategory = {};
+    allEvents.forEach(event => {
+        const kategori = event.kategori || 'Unknown';
+        if (!eventsByCategory[kategori]) {
+            eventsByCategory[kategori] = [];
+        }
+        eventsByCategory[kategori].push(event);
+    });
+    console.log('Events by category:', eventsByCategory);
+    
+    // Filter events berdasarkan kategori
+    function filterEventsByKategori() {
+        const filterKategori = document.getElementById('filter-kategori');
+        const selectedKategori = filterKategori ? filterKategori.value : '';
+        
+        if (selectedKategori === '') {
+            filteredEvents = [...allEvents];
+        } else {
+            filteredEvents = allEvents.filter(event => {
+                const eventKategori = event.kategori ? event.kategori.toLowerCase() : '';
+                return eventKategori === selectedKategori.toLowerCase();
+            });
+        }
+        
+        console.log('Filtered events:', filteredEvents.length, 'for kategori:', selectedKategori || 'All');
+        renderCalendar();
+    }
+    
+    // Setup filter event listener
+    const filterKategoriSelect = document.getElementById('filter-kategori');
+    if (filterKategoriSelect) {
+        filterKategoriSelect.addEventListener('change', filterEventsByKategori);
+    }
+    
+    const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const bulanNama = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    
+    // Function to darken color for gradient
+    function darkenColor(color, percent) {
+        // Convert hex to RGB
+        const num = parseInt(color.replace("#", ""), 16);
+        const r = Math.max(0, Math.floor((num >> 16) * (100 - percent) / 100));
+        const g = Math.max(0, Math.floor(((num >> 8) & 0x00FF) * (100 - percent) / 100));
+        const b = Math.max(0, Math.floor((num & 0x0000FF) * (100 - percent) / 100));
+        return "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+    }
+    
+    // Function to get events for a specific date
+    function getEventsForDate(date) {
+        const dateStr = date.toISOString().split('T')[0];
+        
+        return filteredEvents.filter(event => {
+            if (!event.tanggal) {
+                console.warn('Event missing tanggal:', event);
+                return false;
+            }
+            
+            // Parse tanggal event (handle both string and date formats)
+            let eventDateStr;
+            if (event.tanggal instanceof Date) {
+                eventDateStr = event.tanggal.toISOString().split('T')[0];
+            } else if (typeof event.tanggal === 'string') {
+                // Handle Y-m-d format
+                eventDateStr = event.tanggal.split(' ')[0]; // Remove time if present
+            } else {
+                eventDateStr = new Date(event.tanggal).toISOString().split('T')[0];
+            }
+            
+            // Check if event is on this date
+            if (eventDateStr === dateStr) {
+                return true;
+            }
+            
+            // Check if event has tanggal_selesai (multi-day event)
+            if (event.tanggal_selesai) {
+                let startDate, endDate;
+                
+                if (event.tanggal instanceof Date) {
+                    startDate = event.tanggal;
+                } else {
+                    startDate = new Date(event.tanggal);
+                }
+                
+                if (event.tanggal_selesai instanceof Date) {
+                    endDate = event.tanggal_selesai;
+                } else {
+                    endDate = new Date(event.tanggal_selesai);
+                }
+                
+                const checkDate = new Date(dateStr);
+                
+                // Check if date is between start and end date
+                if (checkDate >= startDate && checkDate <= endDate) {
+                    return true;
+                }
+            }
+            
+            return false;
+        });
+    }
+    
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        // Update selected date display
+        document.getElementById('selected-date-text').textContent = 
+            `${bulanNama[month]} ${year}`;
+        
+        // Get first day of month and number of days
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+        
+        // Clear calendar days
+        const calendarDays = document.getElementById('calendar-days-dark');
+        calendarDays.innerHTML = '';
+        
+        // Add empty cells for days before month starts
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate();
+        
+        for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+            const day = daysInPrevMonth - i;
+            const dayElement = document.createElement('button');
+            dayElement.className = 'calendar-day-dark other-month';
+            dayElement.textContent = day;
+            dayElement.type = 'button';
+            calendarDays.appendChild(dayElement);
+        }
+        
+        // Add days of current month
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayDate = new Date(year, month, day);
+            const dayElement = document.createElement('button');
+            dayElement.className = 'calendar-day-dark';
+            dayElement.type = 'button';
+            dayElement.dataset.date = dayDate.toISOString().split('T')[0];
+            
+            // Check if has event
+            const dayEvents = getEventsForDate(dayDate);
+            
+            if (dayEvents.length > 0) {
+                dayElement.classList.add('has-event');
+                
+                // SELALU gunakan warna berdasarkan kategori untuk konsistensi
+                // Ini memastikan event "kegiatan" selalu menggunakan warna orange
+                const kategoriColorMap = {
+                    'libur': '#ffc107',
+                    'ujian': '#dc3545',
+                    'akademik': '#007bff',
+                    'rapat': '#17a2b8',
+                    'pelatihan': '#9c27b0',
+                    'kegiatan': '#fd7e14',  // Orange untuk kegiatan
+                    'pengumuman': '#D2B48C',
+                    'lainnya': '#6c757d'
+                };
+                
+                // Gunakan kategori untuk menentukan warna
+                const kategori = dayEvents[0].kategori ? dayEvents[0].kategori.toLowerCase() : 'lainnya';
+                let eventColor = kategoriColorMap[kategori] || dayEvents[0].warna || '#dc3545';
+                
+                // Pastikan warna valid
+                if (!eventColor || !eventColor.startsWith('#')) {
+                    eventColor = kategoriColorMap[kategori] || '#dc3545';
+                }
+                
+                // Debug log untuk event yang ditemukan
+                if (dayEvents[0].judul && (dayEvents[0].judul.toLowerCase().includes('ujian') || dayEvents[0].kategori && dayEvents[0].kategori.toLowerCase() === 'ujian')) {
+                    console.log('Ujian event found:', dayEvents[0]);
+                    console.log('Event color:', eventColor);
+                }
+                
+                // Debug log untuk event kegiatan
+                if (dayEvents[0].kategori && dayEvents[0].kategori.toLowerCase() === 'kegiatan') {
+                    console.log('=== KEGIATAN EVENT FOUND ===');
+                    console.log('Event data:', dayEvents[0]);
+                    console.log('Event color:', eventColor);
+                    console.log('Event warna from data:', dayEvents[0].warna);
+                    console.log('Event kategori:', dayEvents[0].kategori);
+                    console.log('Date:', dayDate.toISOString().split('T')[0]);
+                }
+                
+                // Log semua event untuk debugging
+                if (dayEvents.length > 0) {
+                    console.log('Event on date ' + dayDate.toISOString().split('T')[0] + ':', {
+                        judul: dayEvents[0].judul,
+                        kategori: dayEvents[0].kategori,
+                        warna: eventColor,
+                        tanggal: dayEvents[0].tanggal
+                    });
+                }
+                
+                // Pastikan warna valid
+                const validColor = eventColor && eventColor.startsWith('#') ? eventColor : '#dc3545';
+                dayElement.style.background = `linear-gradient(135deg, ${validColor} 0%, ${darkenColor(validColor, 20)} 100%)`;
+                
+                // Create structure for event display
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                
+                const eventText = document.createElement('div');
+                eventText.className = 'event-text';
+                // Show first event title, or multiple if short
+                if (dayEvents.length === 1) {
+                    eventText.textContent = dayEvents[0].judul || 'Event';
+                } else {
+                    eventText.textContent = (dayEvents[0].judul || 'Event') + ' (+' + (dayEvents.length - 1) + ')';
+                }
+                
+                dayElement.appendChild(dayNumber);
+                dayElement.appendChild(eventText);
+            } else {
+                dayElement.textContent = day;
+            }
+            
+            // Check if today
+            if (dayDate.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+            
+            // Check if selected
+            if (selectedDate && dayDate.toDateString() === selectedDate.toDateString()) {
+                dayElement.classList.add('selected');
+            }
+            
+            // Add click event
+            dayElement.addEventListener('click', function() {
+                selectDate(dayDate);
+            });
+            
+            calendarDays.appendChild(dayElement);
+        }
+        
+        // Add empty cells for days after month ends
+        const totalCells = calendarDays.children.length;
+        const remainingCells = 42 - totalCells; // 6 weeks * 7 days
+        for (let day = 1; day <= remainingCells && day <= 14; day++) {
+            const dayElement = document.createElement('button');
+            dayElement.className = 'calendar-day-dark other-month';
+            dayElement.textContent = day;
+            dayElement.type = 'button';
+            calendarDays.appendChild(dayElement);
+        }
+    }
+    
+    function selectDate(date) {
+        selectedDate = new Date(date);
+        
+        // Update selected date display
+        const dayName = hariNama[selectedDate.getDay()];
+        const dayNumber = selectedDate.getDate();
+        const monthName = bulanNama[selectedDate.getMonth()];
+        const year = selectedDate.getFullYear();
+        
+        // Get events for selected date
+        const dayEvents = getEventsForDate(selectedDate);
+        
+        if (dayEvents.length > 0) {
+            const firstEvent = dayEvents[0].judul;
+            const eventCount = dayEvents.length > 1 ? ` (+${dayEvents.length - 1} event)` : '';
+            document.getElementById('selected-date-text').textContent = 
+                `${dayName}, ${dayNumber.toString().padStart(2, '0')} ${monthName} - ${firstEvent}${eventCount}`;
+        } else {
+            document.getElementById('selected-date-text').textContent = 
+                `${dayName}, ${dayNumber.toString().padStart(2, '0')} ${monthName}`;
+        }
+        
+        // Re-render calendar to update selected state
+        renderCalendar();
+        
+        // You can add logic here to show events for selected date
+        console.log('Selected date:', selectedDate.toISOString().split('T')[0]);
+        console.log('Events:', dayEvents);
+    }
+    
+    // Navigation buttons
+    document.getElementById('prev-month-btn').addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+    
+    document.getElementById('next-month-btn').addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+    
+    // Initialize calendar
+    renderCalendar();
+});
+</script>
 @endsection
