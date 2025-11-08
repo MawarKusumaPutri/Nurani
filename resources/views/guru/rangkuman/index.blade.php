@@ -146,6 +146,16 @@
                     </div>
                 @endif
 
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <a href="{{ route('guru.rangkuman.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Tambah Rangkuman
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="btn btn-danger">
+                        <i class="fab fa-youtube me-2"></i>YouTube
+                    </a>
+                </div>
+
                 <!-- Rangkuman List -->
                 @if($rangkuman->count() > 0)
                     <div class="row">
@@ -199,15 +209,6 @@
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center">
                         {{ $rangkuman->links() }}
-                    </div>
-                @else
-                    <div class="text-center py-5">
-                        <i class="fas fa-clipboard-list fa-4x text-muted mb-4"></i>
-                        <h4 class="text-muted mb-3">Belum Ada Rangkuman</h4>
-                        <p class="text-muted mb-4">Mulai buat rangkuman materi pertama Anda</p>
-                        <a href="{{ route('guru.rangkuman.create') }}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus me-2"></i>Buat Rangkuman Pertama
-                        </a>
                     </div>
                 @endif
             </div>

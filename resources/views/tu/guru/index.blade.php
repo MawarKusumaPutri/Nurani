@@ -13,9 +13,9 @@
                 <h1 class="h2">Data Guru</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-primary">
+                        <a href="{{ route('tu.guru.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Guru
-                        </button>
+                        </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>

@@ -39,17 +39,9 @@
                                             <label for="mata_pelajaran" class="form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                                             <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required>
                                                 <option value="">Pilih Mata Pelajaran</option>
-                                                <option value="matematika">Matematika</option>
-                                                <option value="bahasa_indonesia">Bahasa Indonesia</option>
-                                                <option value="bahasa_inggris">Bahasa Inggris</option>
-                                                <option value="ipa">IPA (Ilmu Pengetahuan Alam)</option>
-                                                <option value="ips">IPS (Ilmu Pengetahuan Sosial)</option>
-                                                <option value="pendidikan_agama">Pendidikan Agama</option>
-                                                <option value="pendidikan_kewarganegaraan">Pendidikan Kewarganegaraan</option>
-                                                <option value="pendidikan_jasmani">Pendidikan Jasmani</option>
-                                                <option value="seni_budaya">Seni Budaya</option>
-                                                <option value="teknologi_informasi">Teknologi Informasi</option>
-                                                <option value="lainnya">Lainnya</option>
+                                                @foreach($mataPelajaranList as $mataPelajaran)
+                                                    <option value="{{ $mataPelajaran }}">{{ $mataPelajaran }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -58,12 +50,9 @@
                                             <label for="guru" class="form-label">Guru Pengajar <span class="text-danger">*</span></label>
                                             <select class="form-select" id="guru" name="guru" required>
                                                 <option value="">Pilih Guru</option>
-                                                <option value="1">Budi Santoso, S.Pd</option>
-                                                <option value="2">Siti Aminah, S.Pd</option>
-                                                <option value="3">Joko Susilo, M.Pd</option>
-                                                <option value="4">Rina Wulandari, S.Pd</option>
-                                                <option value="5">Ahmad Fauzi, S.Pd</option>
-                                                <option value="6">Dewi Kartika, M.Pd</option>
+                                                @foreach($gurus as $guru)
+                                                    <option value="{{ $guru->id }}">{{ $guru->user->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -75,36 +64,21 @@
                                             <label for="kelas" class="form-label">Kelas <span class="text-danger">*</span></label>
                                             <select class="form-select" id="kelas" name="kelas" required>
                                                 <option value="">Pilih Kelas</option>
-                                                <option value="7a">7A</option>
-                                                <option value="7b">7B</option>
-                                                <option value="7c">7C</option>
-                                                <option value="8a">8A</option>
-                                                <option value="8b">8B</option>
-                                                <option value="8c">8C</option>
-                                                <option value="9a">9A</option>
-                                                <option value="9b">9B</option>
-                                                <option value="9c">9C</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="ruang" class="form-label">Ruang Kelas</label>
-                                            <select class="form-select" id="ruang" name="ruang">
-                                                <option value="">Pilih Ruang</option>
-                                                <option value="ruang_7a">Ruang 7A</option>
-                                                <option value="ruang_7b">Ruang 7B</option>
-                                                <option value="ruang_7c">Ruang 7C</option>
-                                                <option value="ruang_8a">Ruang 8A</option>
-                                                <option value="ruang_8b">Ruang 8B</option>
-                                                <option value="ruang_8c">Ruang 8C</option>
-                                                <option value="ruang_9a">Ruang 9A</option>
-                                                <option value="ruang_9b">Ruang 9B</option>
-                                                <option value="ruang_9c">Ruang 9C</option>
-                                                <option value="lab_komputer">Lab Komputer</option>
-                                                <option value="lab_ipa">Lab IPA</option>
-                                                <option value="perpustakaan">Perpustakaan</option>
-                                            </select>
+                                            <label class="form-label">Info Kelas</label>
+                                            <div class="alert alert-info mb-0 py-2">
+                                                <small>
+                                                    <i class="fas fa-info-circle me-1"></i>
+                                                    Pilih kelas yang sesuai dengan jadwal pelajaran
+                                                </small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -274,9 +248,9 @@
                             <h6 class="mt-3">Tips Jadwal:</h6>
                             <ul class="small text-muted">
                                 <li>Pastikan tidak ada konflik waktu</li>
-                                <li>Perhatikan kapasitas ruang</li>
                                 <li>Gunakan lab untuk praktikum</li>
                                 <li>Set jadwal berulang jika perlu</li>
+                                <li>Pilih guru yang sesuai dengan mata pelajaran</li>
                             </ul>
                         </div>
                     </div>
@@ -359,37 +333,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const hari = document.getElementById('hari').value;
         const jamMulai = document.getElementById('jam_mulai').value;
         const jamSelesai = document.getElementById('jam_selesai').value;
-        const ruang = document.getElementById('ruang').value;
         
         if (mataPelajaran && guru && kelas && hari && jamMulai && jamSelesai) {
             const preview = document.getElementById('jadwal-preview');
+            const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const hariIndex = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'].indexOf(hari);
+            const hariDisplay = hariIndex >= 0 ? hariNama[hariIndex] : hari.charAt(0).toUpperCase() + hari.slice(1);
+            
             preview.innerHTML = `
                 <div class="text-center">
-                    <h6 class="mb-2">${mataPelajaran.replace('_', ' ').toUpperCase()}</h6>
+                    <h6 class="mb-2">${mataPelajaran}</h6>
                     <p class="mb-1"><strong>Guru:</strong> ${guru}</p>
-                    <p class="mb-1"><strong>Kelas:</strong> ${kelas.toUpperCase()}</p>
-                    <p class="mb-1"><strong>Hari:</strong> ${hari.charAt(0).toUpperCase() + hari.slice(1)}</p>
-                    <p class="mb-1"><strong>Waktu:</strong> ${jamMulai} - ${jamSelesai}</p>
-                    <p class="mb-0"><strong>Ruang:</strong> ${ruang ? ruang.replace('_', ' ').toUpperCase() : 'Belum dipilih'}</p>
+                    <p class="mb-1"><strong>Kelas:</strong> ${kelas}</p>
+                    <p class="mb-1"><strong>Hari:</strong> ${hariDisplay}</p>
+                    <p class="mb-0"><strong>Waktu:</strong> ${jamMulai} - ${jamSelesai}</p>
                 </div>
             `;
         }
     }
     
     // Add event listeners for preview updates
-    ['mata_pelajaran', 'guru', 'kelas', 'hari', 'jam_mulai', 'jam_selesai', 'ruang'].forEach(id => {
-        document.getElementById(id).addEventListener('change', updatePreview);
-    });
-    
-    // Auto-select ruang based on kelas
-    const kelasSelect = document.getElementById('kelas');
-    const ruangSelect = document.getElementById('ruang');
-    
-    kelasSelect.addEventListener('change', function() {
-        if (this.value) {
-            const ruangValue = 'ruang_' + this.value;
-            ruangSelect.value = ruangValue;
-            updatePreview();
+    ['mata_pelajaran', 'guru', 'kelas', 'hari', 'jam_mulai', 'jam_selesai'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', updatePreview);
         }
     });
 });

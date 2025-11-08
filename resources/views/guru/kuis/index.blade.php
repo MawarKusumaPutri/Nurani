@@ -129,6 +129,16 @@
                     </div>
                 @endif
 
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <a href="{{ route('guru.kuis.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Tambah Kuis
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="btn btn-danger">
+                        <i class="fab fa-youtube me-2"></i>YouTube
+                    </a>
+                </div>
+
                 <!-- Kuis List -->
                 @if($kuis->count() > 0)
                     <div class="row">
@@ -172,15 +182,6 @@
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center">
                         {{ $kuis->links() }}
-                    </div>
-                @else
-                    <div class="text-center py-5">
-                        <i class="fas fa-question-circle fa-4x text-muted mb-4"></i>
-                        <h4 class="text-muted mb-3">Belum Ada Kuis</h4>
-                        <p class="text-muted mb-4">Mulai buat kuis pertama Anda</p>
-                        <a href="{{ route('guru.kuis.create') }}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus me-2"></i>Buat Kuis Pertama
-                        </a>
                     </div>
                 @endif
             </div>

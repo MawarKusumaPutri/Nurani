@@ -19,7 +19,7 @@ class TuController extends Controller
         
         // Get statistics
         $totalGuru = Guru::count();
-        $totalSiswa = 180; // Static for now
+        $totalSiswa = Siswa::count(); // Dynamic from database
         $pendingIzin = 5; // Static for now
         $totalDokumen = 24; // Static for now
         
@@ -40,7 +40,42 @@ class TuController extends Controller
     
     public function guruStore(Request $request)
     {
-        // Implementation for creating new guru
+        $request->validate([
+            'nip' => 'required|string|max:255|unique:gurus,nip',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'mata_pelajaran' => 'required|string|max:255',
+            'jenis_kelamin' => 'nullable|string|in:Laki-laki,Perempuan',
+            'no_telp' => 'nullable|string|max:20',
+            'status' => 'required|string|in:aktif,tidak_aktif',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Create user account
+        $user = User::create([
+            'name' => $request->nama,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'guru',
+            'phone' => $request->no_telp,
+        ]);
+
+        // Handle foto upload
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('guru/foto', 'public');
+        }
+
+        // Create guru record
+        $guru = Guru::create([
+            'user_id' => $user->id,
+            'nip' => $request->nip,
+            'mata_pelajaran' => $request->mata_pelajaran,
+            'status' => $request->status,
+            'foto' => $fotoPath,
+        ]);
+
         return redirect()->route('tu.guru.index')->with('success', 'Data guru berhasil ditambahkan');
     }
     
@@ -336,7 +371,21 @@ class TuController extends Controller
     
     public function jadwalCreate()
     {
-        return view('tu.jadwal.create');
+        $gurus = Guru::with('user')->where('status', 'aktif')->orderBy('nip')->get();
+        
+        // Get all unique mata pelajaran from active gurus
+        $mataPelajaranList = collect();
+        foreach ($gurus as $guru) {
+            if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
+                $subjects = explode(', ', $guru->mata_pelajaran);
+                foreach ($subjects as $subject) {
+                    $mataPelajaranList->push(trim($subject));
+                }
+            }
+        }
+        $mataPelajaranList = $mataPelajaranList->unique()->sort()->values();
+        
+        return view('tu.jadwal.create', compact('gurus', 'mataPelajaranList'));
     }
     
     public function jadwalStore(Request $request)
@@ -344,9 +393,8 @@ class TuController extends Controller
         $request->validate([
             'mata_pelajaran' => 'required|string',
             'guru' => 'required|string',
-            'kelas' => 'required|string',
-            'ruang' => 'nullable|string',
-            'hari' => 'required|string',
+            'kelas' => 'required|string|in:7,8,9',
+            'hari' => 'required|string|in:senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
             'semester' => 'required|string',
@@ -362,7 +410,6 @@ class TuController extends Controller
             'mata_pelajaran' => $request->mata_pelajaran,
             'guru_id' => $request->guru,
             'kelas' => $request->kelas,
-            'ruang' => $request->ruang,
             'hari' => $request->hari,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,

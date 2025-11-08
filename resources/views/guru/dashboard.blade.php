@@ -270,14 +270,6 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                @else
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
-                                        <p class="text-muted">Belum ada materi</p>
-                                        <a href="{{ route('guru.materi.create') }}" class="btn btn-primary">
-                                            <i class="fas fa-plus me-2"></i>Tambah Materi
-                                        </a>
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -313,11 +305,6 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                @else
-                                    <div class="text-center py-3">
-                                        <i class="fas fa-question-circle fa-2x text-muted mb-2"></i>
-                                        <p class="text-muted small">Tidak ada kuis aktif</p>
-                                    </div>
                                 @endif
                             </div>
                         </div>

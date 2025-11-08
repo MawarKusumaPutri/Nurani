@@ -332,20 +332,6 @@
                     <div class="d-flex justify-content-center">
                         {{ $materi->links() }}
                     </div>
-                @else
-                    <div class="text-center py-5">
-                        <i class="fas fa-book fa-4x text-muted mb-4"></i>
-                        <h4 class="text-muted mb-3">Belum Ada Materi</h4>
-                        <p class="text-muted mb-4">Mulai buat materi pembelajaran pertama Anda</p>
-                        <a href="{{ route('guru.materi.create') }}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus me-2"></i>Tambah Materi Pertama
-                        </a>
-                        <div class="mt-3">
-                            <a href="https://www.youtube.com" target="_blank" class="btn btn-danger btn-lg">
-                                <i class="fab fa-youtube me-2"></i>YouTube
-                            </a>
-                        </div>
-                    </div>
                 @endif
             </div>
         </div>

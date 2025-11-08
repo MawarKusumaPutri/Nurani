@@ -42,7 +42,7 @@
                                     <i class="fas fa-users fa-2x"></i>
                                 </div>
                             </div>
-                            <h3 class="card-title text-success">180</h3>
+                            <h3 class="card-title text-success">{{ $totalSiswa }}</h3>
                             <p class="card-text text-muted">Total Siswa</p>
                         </div>
                     </div>
