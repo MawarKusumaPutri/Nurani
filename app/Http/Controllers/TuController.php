@@ -12,6 +12,8 @@ use App\Models\Notification;
 use App\Models\Siswa;
 use App\Models\Jadwal;
 use App\Models\Event;
+use App\Models\Arsip;
+use App\Models\Surat;
 
 class TuController extends Controller
 {
@@ -427,16 +429,16 @@ class TuController extends Controller
         try {
             // Simpan data jadwal ke database
             $jadwal = Jadwal::create([
-                'mata_pelajaran' => $request->mata_pelajaran,
-                'guru_id' => $request->guru,
-                'kelas' => $request->kelas,
-                'hari' => $request->hari,
+            'mata_pelajaran' => $request->mata_pelajaran,
+            'guru_id' => $request->guru,
+            'kelas' => $request->kelas,
+            'hari' => $request->hari,
                 'tanggal' => $request->tanggal ?? null,
-                'jam_mulai' => $request->jam_mulai,
-                'jam_selesai' => $request->jam_selesai,
-                'semester' => $request->semester,
-                'tahun_ajaran' => $request->tahun_ajaran,
-                'status' => $request->status ?? 'aktif',
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'semester' => $request->semester,
+            'tahun_ajaran' => $request->tahun_ajaran,
+            'status' => $request->status ?? 'aktif',
                 'keterangan' => $request->keterangan ?? null,
                 'is_berulang' => $request->has('is_berulang') ? true : false,
                 'is_lab' => $request->has('is_lab') ? true : false,
@@ -633,6 +635,19 @@ class TuController extends Controller
         \Log::info('Total Events Found: ' . $dbEvents->count());
         \Log::info('Auth User ID: ' . Auth::id());
         
+        // Get events for current month (for "Daftar Event Bulan Ini")
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        $eventsThisMonth = Event::where(function($query) {
+                $query->where('is_public', true)
+                      ->orWhere('created_by', Auth::id());
+            })
+            ->whereYear('tanggal_mulai', $currentYear)
+            ->whereMonth('tanggal_mulai', $currentMonth)
+            ->orderBy('tanggal_mulai', 'asc')
+            ->orderBy('waktu_mulai', 'asc')
+            ->get();
+        
         // Log untuk debugging
         \Log::info('Events found in database: ' . $dbEvents->count());
         foreach ($dbEvents as $event) {
@@ -645,8 +660,10 @@ class TuController extends Controller
             try {
                 // Gunakan warna yang sudah dipilih user saat membuat event
                 // Jika tidak ada warna, baru gunakan default berdasarkan kategori
+                // CATATAN: Libur nasional/internasional dari generateHolidayEvents sudah menggunakan #2E7D32
+                // dan tidak akan di-override di sini karena mereka memiliki ID >= 1000
                 $defaultColorMap = [
-                    'libur' => '#ffc107',      // Kuning untuk libur
+                    'libur' => '#ffc107',      // Kuning untuk libur custom (bukan nasional/internasional)
                     'ujian' => '#dc3545',      // Merah untuk ujian
                     'akademik' => '#007bff',   // Biru untuk akademik
                     'rapat' => '#17a2b8',      // Cyan untuk rapat
@@ -705,7 +722,7 @@ class TuController extends Controller
         \Log::info('Holiday events: ' . (count($events) - $dbEvents->count()));
         \Log::info('Database events: ' . $dbEvents->count());
         
-        return view('tu.kalender.index', compact('events'));
+        return view('tu.kalender.index', compact('events', 'eventsThisMonth'));
     }
     
     /**
@@ -899,9 +916,11 @@ class TuController extends Controller
         return [['tanggal' => "$year-05-15", 'judul' => 'Hari Raya Waisak', 'kategori' => 'Libur']];
     }
     
-    public function kalenderCreate()
+    public function kalenderCreate(Request $request)
     {
-        return view('tu.kalender.create');
+        // Jika ada parameter kategori, kirim ke view
+        $kategori = $request->get('kategori', '');
+        return view('tu.kalender.create', compact('kategori'));
     }
     
     public function kalenderStore(Request $request)
@@ -952,15 +971,15 @@ class TuController extends Controller
             
             // Simpan data event ke database
             $event = Event::create([
-                'judul_event' => $request->judul_event,
-                'kategori_event' => $request->kategori_event,
-                'tanggal_mulai' => $request->tanggal_mulai,
-                'tanggal_selesai' => $request->tanggal_selesai ?? $request->tanggal_mulai,
-                'waktu_mulai' => $request->waktu_mulai,
-                'waktu_selesai' => $request->waktu_selesai,
-                'deskripsi' => $request->deskripsi,
-                'lokasi' => $request->lokasi,
-                'penanggung_jawab' => $request->penanggung_jawab,
+            'judul_event' => $request->judul_event,
+            'kategori_event' => $request->kategori_event,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai ?? $request->tanggal_mulai,
+            'waktu_mulai' => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'deskripsi' => $request->deskripsi,
+            'lokasi' => $request->lokasi,
+            'penanggung_jawab' => $request->penanggung_jawab,
                 'warna' => $warnaEvent, // Gunakan warna yang sudah ditentukan
                 'is_all_day' => $request->input('is_all_day', 0) == 1,
                 'is_public' => $request->input('is_public', 0) == 1,
@@ -1003,15 +1022,194 @@ class TuController extends Controller
             default => 'Event'
         };
 
-        return redirect()->route('tu.kalender.index')->with('success', 
+        // Semua event yang dibuat akan muncul di halaman pengumuman
+        // Redirect ke halaman pengumuman untuk semua kategori
+        return redirect()->route('tu.pengumuman.index')->with('success', 
             "Event '{$request->judul_event}' berhasil ditambahkan ke kategori {$kategoriText}!"
         );
+    }
+    
+    public function kalenderEdit($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            
+            // Pastikan user hanya bisa edit event miliknya atau event public
+            if ($event->created_by != Auth::id() && !$event->is_public) {
+                return redirect()->route('tu.kalender.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengedit event ini.');
+            }
+            
+            return view('tu.kalender.edit', compact('event'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading event for edit: ' . $e->getMessage());
+            return redirect()->route('tu.kalender.index')
+                ->with('error', 'Event tidak ditemukan.');
+        }
+    }
+    
+    public function kalenderUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'judul_event' => 'required|string|max:255',
+            'kategori_event' => 'required|string',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
+            'waktu_mulai' => 'nullable|date_format:H:i',
+            'waktu_selesai' => [
+                'nullable',
+                'date_format:H:i',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value && $request->waktu_mulai && $value <= $request->waktu_mulai) {
+                        $fail('Waktu selesai harus setelah waktu mulai.');
+                    }
+                }
+            ],
+            'deskripsi' => 'nullable|string',
+            'lokasi' => 'nullable|string|max:255',
+            'penanggung_jawab' => 'required|string|max:255',
+            'warna' => 'nullable|string',
+            'is_all_day' => 'nullable|boolean',
+            'is_public' => 'nullable|boolean',
+            'is_important' => 'nullable|boolean',
+            'is_recurring' => 'nullable|boolean'
+        ]);
+
+        try {
+            $event = Event::findOrFail($id);
+            
+            // Pastikan user hanya bisa update event miliknya atau event public
+            if ($event->created_by != Auth::id() && !$event->is_public) {
+                return redirect()->route('tu.kalender.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengupdate event ini.');
+            }
+            
+            // Tentukan warna berdasarkan kategori jika tidak ada
+            $colorMap = [
+                'libur' => '#ffc107',
+                'ujian' => '#dc3545',
+                'akademik' => '#007bff',
+                'rapat' => '#17a2b8',
+                'pelatihan' => '#9c27b0',
+                'kegiatan' => '#fd7e14',
+                'pengumuman' => '#D2B48C',
+                'lainnya' => '#6c757d',
+            ];
+            
+            $warnaEvent = $request->warna;
+            if (empty($warnaEvent) || $warnaEvent == '#6c757d' || $warnaEvent == null) {
+                $warnaEvent = $colorMap[strtolower($request->kategori_event)] ?? '#6c757d';
+            }
+            
+            $event->update([
+                'judul_event' => $request->judul_event,
+                'kategori_event' => $request->kategori_event,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai ?? $request->tanggal_mulai,
+                'waktu_mulai' => $request->waktu_mulai,
+                'waktu_selesai' => $request->waktu_selesai,
+                'deskripsi' => $request->deskripsi,
+                'lokasi' => $request->lokasi,
+                'penanggung_jawab' => $request->penanggung_jawab,
+                'warna' => $warnaEvent,
+                'is_all_day' => $request->input('is_all_day', 0) == 1,
+                'is_public' => $request->input('is_public', 0) == 1,
+                'is_important' => $request->input('is_important', 0) == 1,
+                'is_recurring' => $request->input('is_recurring', 0) == 1,
+            ]);
+
+            $kategoriText = match($request->kategori_event) {
+                'akademik' => 'Akademik',
+                'ujian' => 'Ujian',
+                'libur' => 'Libur',
+                'rapat' => 'Rapat',
+                'pelatihan' => 'Pelatihan',
+                'kegiatan' => 'Kegiatan',
+                'pengumuman' => 'Pengumuman',
+                'lainnya' => 'Lainnya',
+                default => 'Event'
+            };
+
+            return redirect()->route('tu.kalender.list')->with('success', 
+                "Event '{$request->judul_event}' berhasil diperbarui!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error updating event: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui event: ' . $e->getMessage());
+        }
+    }
+    
+    public function kalenderDestroy($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            
+            // Pastikan user hanya bisa delete event miliknya atau event public
+            if ($event->created_by != Auth::id() && !$event->is_public) {
+                return redirect()->route('tu.kalender.list')
+                    ->with('error', 'Anda tidak memiliki akses untuk menghapus event ini.');
+            }
+            
+            $judulEvent = $event->judul_event;
+            $event->delete();
+
+            return redirect()->route('tu.kalender.list')->with('success', 
+                "Event '{$judulEvent}' berhasil dihapus!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error deleting event: ' . $e->getMessage());
+            return redirect()->route('tu.kalender.list')->with('error', 
+                'Terjadi kesalahan saat menghapus event: ' . $e->getMessage()
+            );
+        }
+    }
+    
+    public function kalenderList()
+    {
+        try {
+            // Ambil semua event yang bisa diakses user (public atau milik user)
+            $events = Event::where(function($query) {
+                $query->where('is_public', true)
+                      ->orWhere('created_by', Auth::id());
+            })
+            ->with('creator')
+            ->orderBy('tanggal_mulai', 'desc')
+            ->orderBy('waktu_mulai', 'asc')
+            ->get();
+            
+            return view('tu.kalender.list', compact('events'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading event list: ' . $e->getMessage());
+            return redirect()->route('tu.kalender.index')
+                ->with('error', 'Terjadi kesalahan saat memuat daftar event.');
+        }
     }
     
     // Arsip Management
     public function arsipIndex()
     {
-        return view('tu.arsip.index');
+        try {
+            // Ambil semua arsip yang bisa diakses user (public atau milik user)
+            $arsips = Arsip::where(function($query) {
+                    $query->where('is_public', true)
+                          ->orWhere('created_by', Auth::id());
+                })
+                ->with('creator')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            \Log::info('Arsip loaded:', [
+                'count' => $arsips->count(),
+                'user_id' => Auth::id()
+            ]);
+            
+            return view('tu.arsip.index', compact('arsips'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading arsip: ' . $e->getMessage());
+            return view('tu.arsip.index', ['arsips' => collect()]);
+        }
     }
     
     public function arsipCreate()
@@ -1041,10 +1239,9 @@ class TuController extends Controller
             'tanggal_dokumen' => $request->tanggal_dokumen ?? now()->toDateString(),
             'pembuat' => $request->pembuat,
             'prioritas' => $request->prioritas ?? 'sedang',
-            'is_public' => $request->has('is_public'),
-            'is_important' => $request->has('is_important'),
-            'created_by' => Auth::id(),
-            'created_at' => now()
+            'is_public' => $request->input('is_public', 0) == 1,
+            'is_important' => $request->input('is_important', 0) == 1,
+            'created_by' => Auth::id()
         ];
 
         // Handle file upload
@@ -1057,8 +1254,23 @@ class TuController extends Controller
             $arsipData['tipe_file'] = $file->getClientOriginalExtension();
         }
 
-        // Simpan ke database (implementasi sesuai model yang ada)
-        // Arsip::create($arsipData);
+        try {
+            // Simpan ke database
+            $arsip = Arsip::create($arsipData);
+            
+            \Log::info('Arsip created successfully:', [
+                'id' => $arsip->id,
+                'judul_dokumen' => $arsip->judul_dokumen,
+                'kategori' => $arsip->kategori,
+                'file_dokumen' => $arsip->file_dokumen,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error saving arsip: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan dokumen: ' . $e->getMessage());
+        }
 
         $kategoriText = match($request->kategori) {
             'akademik' => 'Akademik',
@@ -1074,14 +1286,160 @@ class TuController extends Controller
         };
 
         return redirect()->route('tu.arsip.index')->with('success', 
-            "Dokumen '{$request->judul_dokumen}' berhasil diupload ke kategori {$kategoriText}!"
+            "Dokumen '{$request->judul_dokumen}' berhasil disimpan ke kategori {$kategoriText}!"
         );
+    }
+    
+    public function arsipEdit($id)
+    {
+        try {
+            $arsip = Arsip::findOrFail($id);
+            
+            // Pastikan user hanya bisa edit arsip miliknya atau arsip public
+            if ($arsip->created_by != Auth::id() && !$arsip->is_public) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengedit dokumen ini.');
+            }
+            
+            return view('tu.arsip.edit', compact('arsip'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading arsip for edit: ' . $e->getMessage());
+            return redirect()->route('tu.arsip.index')
+                ->with('error', 'Dokumen tidak ditemukan.');
+        }
+    }
+    
+    public function arsipUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'kategori' => 'required|string',
+            'judul_dokumen' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'tanggal_dokumen' => 'nullable|date',
+            'pembuat' => 'required|string|max:255',
+            'prioritas' => 'nullable|string',
+            'file_dokumen' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,txt|max:51200',
+            'is_public' => 'nullable|boolean',
+            'is_important' => 'nullable|boolean'
+        ]);
+
+        try {
+            $arsip = Arsip::findOrFail($id);
+            
+            // Pastikan user hanya bisa update arsip miliknya atau arsip public
+            if ($arsip->created_by != Auth::id() && !$arsip->is_public) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengupdate dokumen ini.');
+            }
+            
+            $arsipData = [
+                'kategori' => $request->kategori,
+                'judul_dokumen' => $request->judul_dokumen,
+                'deskripsi' => $request->deskripsi,
+                'tanggal_dokumen' => $request->tanggal_dokumen ?? $arsip->tanggal_dokumen,
+                'pembuat' => $request->pembuat,
+                'prioritas' => $request->prioritas ?? 'sedang',
+                'is_public' => $request->input('is_public', 0) == 1,
+                'is_important' => $request->input('is_important', 0) == 1,
+            ];
+            
+            // Handle file upload jika ada file baru
+            if ($request->hasFile('file_dokumen')) {
+                // Hapus file lama jika ada
+                if ($arsip->file_dokumen && Storage::exists('public/arsip/' . $arsip->file_dokumen)) {
+                    Storage::delete('public/arsip/' . $arsip->file_dokumen);
+                }
+                
+                $file = $request->file('file_dokumen');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('public/arsip', $filename);
+                $arsipData['file_dokumen'] = $filename;
+                $arsipData['ukuran_file'] = $file->getSize();
+                $arsipData['tipe_file'] = $file->getClientOriginalExtension();
+            }
+            
+            $arsip->update($arsipData);
+            
+            \Log::info('Arsip updated successfully:', [
+                'id' => $arsip->id,
+                'judul_dokumen' => $arsip->judul_dokumen,
+                'kategori' => $arsip->kategori,
+            ]);
+            
+            $kategoriText = match($request->kategori) {
+                'akademik' => 'Akademik',
+                'administrasi' => 'Administrasi',
+                'keuangan' => 'Keuangan',
+                'sdm' => 'SDM',
+                'fasilitas' => 'Fasilitas',
+                'keputusan' => 'Keputusan',
+                'surat_masuk' => 'Surat Masuk',
+                'surat_keluar' => 'Surat Keluar',
+                'lainnya' => 'Lainnya',
+                default => 'Dokumen'
+            };
+
+            return redirect()->route('tu.arsip.index')->with('success', 
+                "Dokumen '{$request->judul_dokumen}' berhasil diperbarui!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error updating arsip: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui dokumen: ' . $e->getMessage());
+        }
+    }
+    
+    public function arsipDestroy($id)
+    {
+        try {
+            $arsip = Arsip::findOrFail($id);
+            
+            // Pastikan user hanya bisa delete arsip miliknya atau arsip public
+            if ($arsip->created_by != Auth::id() && !$arsip->is_public) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk menghapus dokumen ini.');
+            }
+            
+            // Hapus file dari storage
+            if ($arsip->file_dokumen && Storage::exists('public/arsip/' . $arsip->file_dokumen)) {
+                Storage::delete('public/arsip/' . $arsip->file_dokumen);
+            }
+            
+            $judulDokumen = $arsip->judul_dokumen;
+            $arsip->delete();
+
+            return redirect()->route('tu.arsip.index')->with('success', 
+                "Dokumen '{$judulDokumen}' berhasil dihapus!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error deleting arsip: ' . $e->getMessage());
+            return redirect()->route('tu.arsip.index')->with('error', 
+                'Terjadi kesalahan saat menghapus dokumen: ' . $e->getMessage()
+            );
+        }
     }
     
     // Surat Management
     public function suratIndex()
     {
-        return view('tu.surat.index');
+        try {
+            $surats = Surat::where(function($query) {
+                    $query->where('created_by', Auth::id())
+                          ->orWhere('arsipkan', true);
+                })
+                ->with('creator')
+                ->orderBy('tanggal_surat', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            \Log::info('Surats fetched:', ['count' => $surats->count()]);
+            
+            return view('tu.surat.index', compact('surats'));
+        } catch (\Exception $e) {
+            \Log::error('Error fetching surats: ' . $e->getMessage());
+            return view('tu.surat.index', ['surats' => collect()]);
+        }
     }
     
     public function suratCreate()
@@ -1089,6 +1447,108 @@ class TuController extends Controller
         return view('tu.surat.create');
     }
     
+    public function suratEdit($id)
+    {
+        try {
+            $surat = Surat::findOrFail($id);
+            
+            // Pastikan user hanya bisa edit surat miliknya
+            if ($surat->created_by != Auth::id()) {
+                return redirect()->route('tu.surat.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengedit surat ini.');
+            }
+            
+            return view('tu.surat.edit', compact('surat'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading surat for edit: ' . $e->getMessage());
+            return redirect()->route('tu.surat.index')
+                ->with('error', 'Surat tidak ditemukan.');
+        }
+    }
+    
+    public function suratUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'jenis_surat' => 'required|string',
+            'nomor_surat' => 'required|string|max:255',
+            'tanggal_surat' => 'required|date',
+            'perihal' => 'required|string|max:255',
+            'penerima' => 'required|string',
+            'penerima_lainnya' => 'nullable|string|max:255',
+            'isi_surat' => 'required|string',
+            'pembuat_surat' => 'required|string',
+            'jabatan_pembuat' => 'nullable|string|max:255',
+            'prioritas' => 'nullable|string',
+            'lampiran' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+            'arsipkan' => 'nullable|boolean'
+        ]);
+
+        try {
+            $surat = Surat::findOrFail($id);
+            
+            // Pastikan user hanya bisa update surat miliknya
+            if ($surat->created_by != Auth::id()) {
+                return redirect()->route('tu.surat.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengupdate surat ini.');
+            }
+            
+            $suratData = [
+                'jenis_surat' => $request->jenis_surat,
+                'nomor_surat' => $request->nomor_surat,
+                'tanggal_surat' => $request->tanggal_surat,
+                'perihal' => $request->perihal,
+                'penerima' => $request->penerima,
+                'penerima_lainnya' => $request->penerima_lainnya,
+                'isi_surat' => $request->isi_surat,
+                'pembuat_surat' => $request->pembuat_surat,
+                'jabatan_pembuat' => $request->jabatan_pembuat ?? 'Tenaga Usaha',
+                'prioritas' => $request->prioritas ?? 'biasa',
+                'arsipkan' => $request->input('arsipkan', 0) == 1,
+            ];
+            
+            // Handle file upload jika ada file baru
+            if ($request->hasFile('lampiran')) {
+                // Hapus file lama jika ada
+                if ($surat->lampiran && Storage::exists('public/surat/' . $surat->lampiran)) {
+                    Storage::delete('public/surat/' . $surat->lampiran);
+                }
+                
+                $file = $request->file('lampiran');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('public/surat', $filename);
+                $suratData['lampiran'] = $filename;
+            }
+            
+            $surat->update($suratData);
+            
+            \Log::info('Surat updated successfully:', [
+                'id' => $surat->id,
+                'nomor_surat' => $surat->nomor_surat,
+                'jenis_surat' => $surat->jenis_surat,
+            ]);
+
+            $jenisText = match($request->jenis_surat) {
+                'surat_keputusan' => 'Surat Keputusan',
+                'surat_edaran' => 'Surat Edaran',
+                'surat_undangan' => 'Surat Undangan',
+                'surat_tugas' => 'Surat Tugas',
+                'surat_izin' => 'Surat Izin',
+                'surat_pengumuman' => 'Surat Pengumuman',
+                'surat_permohonan' => 'Surat Permohonan',
+                'surat_balasan' => 'Surat Balasan',
+                default => 'Surat'
+            };
+
+            return redirect()->route('tu.surat.index')->with('success', 
+                "{$jenisText} '{$request->nomor_surat}' berhasil diperbarui!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('Error updating surat: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui surat: ' . $e->getMessage());
+        }
+    }
     
     // Surat Management
     public function suratSend(Request $request)
@@ -1105,11 +1565,11 @@ class TuController extends Controller
             'jabatan_pembuat' => 'nullable|string|max:255',
             'prioritas' => 'nullable|string',
             'lampiran' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
-            'cc_email' => 'nullable|boolean',
             'arsipkan' => 'nullable|boolean'
         ]);
 
-        // Simpan data surat (implementasi sesuai kebutuhan)
+        try {
+            // Simpan data surat
         $suratData = [
             'jenis_surat' => $request->jenis_surat,
             'nomor_surat' => $request->nomor_surat,
@@ -1121,8 +1581,10 @@ class TuController extends Controller
             'pembuat_surat' => $request->pembuat_surat,
             'jabatan_pembuat' => $request->jabatan_pembuat ?? 'Tenaga Usaha',
             'prioritas' => $request->prioritas ?? 'biasa',
+                'cc_email' => false, // Default false, tidak lagi digunakan
+                'arsipkan' => $request->input('arsipkan', 0) == 1,
+                'status' => 'draft', // Default status saat pertama kali disimpan
             'created_by' => Auth::id(),
-            'created_at' => now()
         ];
 
         // Handle file upload jika ada
@@ -1133,10 +1595,78 @@ class TuController extends Controller
             $suratData['lampiran'] = $filename;
         }
 
-        // Simpan ke database (implementasi sesuai model yang ada)
-        // Surat::create($suratData);
+            // Simpan ke database
+            $surat = Surat::create($suratData);
+            
+            \Log::info('Surat created successfully:', [
+                'id' => $surat->id,
+                'nomor_surat' => $surat->nomor_surat,
+                'jenis_surat' => $surat->jenis_surat,
+            ]);
+            
+            // Kirim notifikasi ke penerima
+            $jenisText = match($request->jenis_surat) {
+                'surat_keputusan' => 'Surat Keputusan',
+                'surat_edaran' => 'Surat Edaran',
+                'surat_undangan' => 'Surat Undangan',
+                'surat_tugas' => 'Surat Tugas',
+                'surat_izin' => 'Surat Izin',
+                'surat_pengumuman' => 'Surat Pengumuman',
+                'surat_permohonan' => 'Surat Permohonan',
+                'surat_balasan' => 'Surat Balasan',
+                default => 'Surat'
+            };
+            
+            // Notifikasi untuk Kepala Sekolah
+            if ($request->penerima == 'kepala_sekolah') {
+                $kepalaSekolah = User::where('role', 'kepala_sekolah')->first();
+                if ($kepalaSekolah) {
+                    Notification::create([
+                        'user_id' => $kepalaSekolah->id,
+                        'type' => 'surat_baru',
+                        'title' => $jenisText . ' Baru',
+                        'message' => "Anda menerima {$jenisText} dengan nomor {$surat->nomor_surat} - {$surat->perihal}",
+                        'data' => [
+                            'surat_id' => $surat->id,
+                            'nomor_surat' => $surat->nomor_surat,
+                            'jenis_surat' => $surat->jenis_surat,
+                            'perihal' => $surat->perihal,
+                            'pembuat' => $surat->pembuat_surat,
+                            'tanggal_surat' => $surat->tanggal_surat->format('Y-m-d'),
+                        ]
+                    ]);
+                }
+            }
+            
+            // Notifikasi untuk Semua Guru
+            if ($request->penerima == 'guru') {
+                $gurus = Guru::with('user')->get();
+                foreach ($gurus as $guru) {
+                    if ($guru->user) {
+                        Notification::create([
+                            'user_id' => $guru->user->id,
+                            'type' => 'surat_baru',
+                            'title' => $jenisText . ' Baru',
+                            'message' => "Anda menerima {$jenisText} dengan nomor {$surat->nomor_surat} - {$surat->perihal}",
+                            'data' => [
+                                'surat_id' => $surat->id,
+                                'nomor_surat' => $surat->nomor_surat,
+                                'jenis_surat' => $surat->jenis_surat,
+                                'perihal' => $surat->perihal,
+                                'pembuat' => $surat->pembuat_surat,
+                                'tanggal_surat' => $surat->tanggal_surat->format('Y-m-d'),
+                            ]
+                        ]);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error creating surat: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan surat: ' . $e->getMessage());
+        }
 
-        // Kirim notifikasi ke penerima (implementasi sesuai kebutuhan)
         $penerimaText = match($request->penerima) {
             'kepala_sekolah' => 'Kepala Sekolah',
             'guru' => 'Semua Guru',
@@ -1161,14 +1691,45 @@ class TuController extends Controller
         };
 
         return redirect()->route('tu.surat.index')->with('success', 
-            "{$jenisText} '{$request->nomor_surat}' berhasil dikirim ke {$penerimaText}!"
+            "{$jenisText} '{$request->nomor_surat}' berhasil disimpan dan notifikasi telah dikirim ke {$penerimaText}!"
         );
     }
     
     // Pengumuman Management
     public function pengumumanIndex()
     {
-        return view('tu.pengumuman.index');
+        try {
+            // Ambil SEMUA event yang terdaftar di kalender (semua kategori)
+            // Tidak ada filter kategori - semua event akan ditampilkan: pengumuman, kegiatan, ujian, libur, rapat, pelatihan, akademik, lainnya
+            $pengumumanEvents = Event::where(function($query) {
+                    $query->where('is_public', true)
+                          ->orWhere('created_by', Auth::id());
+                })
+                ->with('creator')
+                ->orderBy('tanggal_mulai', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            \Log::info('=== PENGUMUMAN EVENTS LOADED (ALL CATEGORIES) ===');
+            \Log::info('Total events found: ' . $pengumumanEvents->count());
+            \Log::info('Auth User ID: ' . Auth::id());
+            
+            // Log setiap event dengan detail lengkap
+            foreach ($pengumumanEvents as $event) {
+                \Log::info('Event ID: ' . $event->id . 
+                    ' - Judul: ' . $event->judul_event . 
+                    ' - Kategori: ' . $event->kategori_event . 
+                    ' - Tanggal: ' . $event->tanggal_mulai . 
+                    ' - is_public: ' . ($event->is_public ? 'true' : 'false') .
+                    ' - created_by: ' . $event->created_by);
+            }
+            
+            return view('tu.pengumuman.index', compact('pengumumanEvents'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading pengumuman: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return view('tu.pengumuman.index', ['pengumumanEvents' => collect()]);
+        }
     }
     
     public function pengumumanCreate()

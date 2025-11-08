@@ -98,75 +98,100 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Sample Data -->
-                                        <tr>
-                                            <td>1</td>
-                                            <td>001/SK/MTs-NA/2024</td>
-                                            <td><span class="badge bg-primary">Surat Keputusan</span></td>
-                                            <td>Penetapan Jadwal Ujian Semester</td>
-                                            <td>Semua Guru</td>
-                                            <td>25 Okt 2024</td>
-                                            <td><span class="badge bg-success">Terkirim</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>002/SE/MTs-NA/2024</td>
-                                            <td><span class="badge bg-info">Surat Edaran</span></td>
-                                            <td>Panduan Pembelajaran Daring</td>
-                                            <td>Semua Guru</td>
-                                            <td>20 Okt 2024</td>
-                                            <td><span class="badge bg-success">Terkirim</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>003/SU/MTs-NA/2024</td>
-                                            <td><span class="badge bg-warning">Surat Undangan</span></td>
-                                            <td>Rapat Koordinasi Bulanan</td>
-                                            <td>Kepala Sekolah</td>
-                                            <td>27 Okt 2024</td>
-                                            <td><span class="badge bg-warning">Draft</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning me-1">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>004/ST/MTs-NA/2024</td>
-                                            <td><span class="badge bg-secondary">Surat Tugas</span></td>
-                                            <td>Penugasan Guru Piket</td>
-                                            <td>Guru Piket</td>
-                                            <td>22 Okt 2024</td>
-                                            <td><span class="badge bg-success">Diterima</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @if($surats->count() > 0)
+                                            @foreach($surats as $index => $surat)
+                                                @php
+                                                    $jenisBadge = match($surat->jenis_surat) {
+                                                        'surat_keputusan' => 'bg-primary',
+                                                        'surat_edaran' => 'bg-info',
+                                                        'surat_undangan' => 'bg-warning',
+                                                        'surat_tugas' => 'bg-secondary',
+                                                        'surat_izin' => 'bg-success',
+                                                        'surat_pengumuman' => 'bg-primary',
+                                                        'surat_permohonan' => 'bg-info',
+                                                        'surat_balasan' => 'bg-secondary',
+                                                        default => 'bg-secondary'
+                                                    };
+                                                    
+                                                    $jenisLabel = match($surat->jenis_surat) {
+                                                        'surat_keputusan' => 'Surat Keputusan',
+                                                        'surat_edaran' => 'Surat Edaran',
+                                                        'surat_undangan' => 'Surat Undangan',
+                                                        'surat_tugas' => 'Surat Tugas',
+                                                        'surat_izin' => 'Surat Izin',
+                                                        'surat_pengumuman' => 'Surat Pengumuman',
+                                                        'surat_permohonan' => 'Surat Permohonan',
+                                                        'surat_balasan' => 'Surat Balasan',
+                                                        default => 'Surat'
+                                                    };
+                                                    
+                                                    $statusBadge = match($surat->status) {
+                                                        'draft' => 'bg-warning',
+                                                        'terkirim' => 'bg-success',
+                                                        'diterima' => 'bg-info',
+                                                        default => 'bg-secondary'
+                                                    };
+                                                    
+                                                    $statusLabel = match($surat->status) {
+                                                        'draft' => 'Draft',
+                                                        'terkirim' => 'Terkirim',
+                                                        'diterima' => 'Diterima',
+                                                        default => ucfirst($surat->status)
+                                                    };
+                                                    
+                                                    $penerimaText = match($surat->penerima) {
+                                                        'kepala_sekolah' => 'Kepala Sekolah',
+                                                        'guru' => 'Semua Guru',
+                                                        'siswa' => 'Semua Siswa',
+                                                        'orang_tua' => 'Orang Tua Siswa',
+                                                        'yayasan' => 'Yayasan',
+                                                        'dinas_pendidikan' => 'Dinas Pendidikan',
+                                                        'lainnya' => $surat->penerima_lainnya ?? 'Lainnya',
+                                                        default => 'Penerima'
+                                                    };
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $surat->nomor_surat }}</td>
+                                                    <td><span class="badge {{ $jenisBadge }}">{{ $jenisLabel }}</span></td>
+                                                    <td>{{ $surat->perihal }}</td>
+                                                    <td>{{ $penerimaText }}</td>
+                                                    <td>{{ $surat->tanggal_surat->format('d M Y') }}</td>
+                                                    <td><span class="badge {{ $statusBadge }}">{{ $statusLabel }}</span></td>
+                                                    <td>
+                                                        @if($surat->status == 'draft')
+                                                            <a href="{{ route('tu.surat.edit', $surat->id) }}" class="btn btn-sm btn-warning me-1">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                            <button class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash"></i> Hapus
+                                                            </button>
+                                                        @else
+                                                            <button class="btn btn-sm btn-primary me-1">
+                                                                <i class="fas fa-eye"></i> Lihat
+                                                            </button>
+                                                            @if($surat->lampiran)
+                                                                <a href="{{ asset('storage/surat/' . $surat->lampiran) }}" download class="btn btn-sm btn-outline-secondary">
+                                                                    <i class="fas fa-download"></i> Download
+                                                                </a>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="8" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                                                        <p class="mb-0">Belum ada surat yang tersimpan.</p>
+                                                        <a href="{{ route('tu.surat.create') }}" class="btn btn-primary mt-3">
+                                                            <i class="fas fa-plus"></i> Buat Surat Pertama
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>

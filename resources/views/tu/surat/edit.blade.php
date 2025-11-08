@@ -1,6 +1,6 @@
 @extends('layouts.tu')
 
-@section('title', 'Buat Surat - TU Dashboard')
+@section('title', 'Edit Surat - TU Dashboard')
 
 @section('content')
 <div class="container-fluid">
@@ -10,7 +10,7 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Buat Surat</h1>
+                <h1 class="h2">Edit Surat</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <a href="{{ route('tu.surat.index') }}" class="btn btn-sm btn-outline-secondary">
@@ -56,12 +56,13 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-envelope"></i> Form Surat Menyurat
+                                <i class="fas fa-edit"></i> Form Edit Surat Menyurat
                             </h5>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('tu.surat.send') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('tu.surat.update', $surat->id) }}" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -69,21 +70,21 @@
                                             <label for="jenis_surat" class="form-label">Jenis Surat <span class="text-danger">*</span></label>
                                             <select class="form-select" id="jenis_surat" name="jenis_surat" required>
                                                 <option value="">Pilih Jenis Surat</option>
-                                                <option value="surat_keputusan">Surat Keputusan</option>
-                                                <option value="surat_edaran">Surat Edaran</option>
-                                                <option value="surat_undangan">Surat Undangan</option>
-                                                <option value="surat_tugas">Surat Tugas</option>
-                                                <option value="surat_izin">Surat Izin</option>
-                                                <option value="surat_pengumuman">Surat Pengumuman</option>
-                                                <option value="surat_permohonan">Surat Permohonan</option>
-                                                <option value="surat_balasan">Surat Balasan</option>
+                                                <option value="surat_keputusan" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_keputusan' ? 'selected' : '' }}>Surat Keputusan</option>
+                                                <option value="surat_edaran" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_edaran' ? 'selected' : '' }}>Surat Edaran</option>
+                                                <option value="surat_undangan" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_undangan' ? 'selected' : '' }}>Surat Undangan</option>
+                                                <option value="surat_tugas" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_tugas' ? 'selected' : '' }}>Surat Tugas</option>
+                                                <option value="surat_izin" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_izin' ? 'selected' : '' }}>Surat Izin</option>
+                                                <option value="surat_pengumuman" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_pengumuman' ? 'selected' : '' }}>Surat Pengumuman</option>
+                                                <option value="surat_permohonan" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_permohonan' ? 'selected' : '' }}>Surat Permohonan</option>
+                                                <option value="surat_balasan" {{ old('jenis_surat', $surat->jenis_surat) == 'surat_balasan' ? 'selected' : '' }}>Surat Balasan</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="nomor_surat" class="form-label">Nomor Surat <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" placeholder="Contoh: 001/SK/MTs-NA/2024" required>
+                                            <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" placeholder="Contoh: 001/SK/MTs-NA/2024" value="{{ old('nomor_surat', $surat->nomor_surat) }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -92,17 +93,17 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="tanggal_surat" class="form-label">Tanggal Surat <span class="text-danger">*</span></label>
-                                            <input type="date" class="form-control" id="tanggal_surat" name="tanggal_surat" required>
+                                            <input type="date" class="form-control" id="tanggal_surat" name="tanggal_surat" value="{{ old('tanggal_surat', $surat->tanggal_surat->format('Y-m-d')) }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="prioritas" class="form-label">Prioritas</label>
                                             <select class="form-select" id="prioritas" name="prioritas">
-                                                <option value="biasa">Biasa</option>
-                                                <option value="penting">Penting</option>
-                                                <option value="sangat_penting">Sangat Penting</option>
-                                                <option value="segera">Segera</option>
+                                                <option value="biasa" {{ old('prioritas', $surat->prioritas) == 'biasa' ? 'selected' : '' }}>Biasa</option>
+                                                <option value="penting" {{ old('prioritas', $surat->prioritas) == 'penting' ? 'selected' : '' }}>Penting</option>
+                                                <option value="sangat_penting" {{ old('prioritas', $surat->prioritas) == 'sangat_penting' ? 'selected' : '' }}>Sangat Penting</option>
+                                                <option value="segera" {{ old('prioritas', $surat->prioritas) == 'segera' ? 'selected' : '' }}>Segera</option>
                                             </select>
                                         </div>
                                     </div>
@@ -110,42 +111,56 @@
 
                                 <div class="mb-3">
                                     <label for="perihal" class="form-label">Perihal <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="perihal" name="perihal" placeholder="Masukkan perihal surat" required>
+                                    <input type="text" class="form-control" id="perihal" name="perihal" placeholder="Masukkan perihal surat" value="{{ old('perihal', $surat->perihal) }}" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="penerima" class="form-label">Kepada <span class="text-danger">*</span></label>
                                     <select class="form-select" id="penerima" name="penerima" required>
                                         <option value="">Pilih Penerima</option>
-                                        <option value="kepala_sekolah">Kepala Sekolah</option>
-                                        <option value="guru">Semua Guru</option>
+                                        <option value="kepala_sekolah" {{ old('penerima', $surat->penerima) == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                                        <option value="guru" {{ old('penerima', $surat->penerima) == 'guru' ? 'selected' : '' }}>Semua Guru</option>
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="isi_surat" class="form-label">Isi Surat <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="isi_surat" name="isi_surat" rows="8" placeholder="Tuliskan isi surat di sini..." required></textarea>
+                                    <textarea class="form-control" id="isi_surat" name="isi_surat" rows="8" placeholder="Tuliskan isi surat di sini..." required>{{ old('isi_surat', $surat->isi_surat) }}</textarea>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="pembuat_surat" class="form-label">Pembuat Surat <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="pembuat_surat" name="pembuat_surat" value="{{ Auth::user()->name }}" readonly>
+                                            <input type="text" class="form-control" id="pembuat_surat" name="pembuat_surat" value="{{ old('pembuat_surat', $surat->pembuat_surat) }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="jabatan_pembuat" class="form-label">Jabatan Pembuat</label>
-                                            <input type="text" class="form-control" id="jabatan_pembuat" name="jabatan_pembuat" value="Tenaga Usaha" readonly>
+                                            <input type="text" class="form-control" id="jabatan_pembuat" name="jabatan_pembuat" value="{{ old('jabatan_pembuat', $surat->jabatan_pembuat) }}" readonly>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="lampiran" class="form-label">Lampiran (Opsional)</label>
+                                    @if($surat->lampiran)
+                                        <div class="mb-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-file"></i> File saat ini: 
+                                                <a href="{{ asset('storage/surat/' . $surat->lampiran) }}" target="_blank">
+                                                    {{ $surat->lampiran }}
+                                                </a>
+                                            </small>
+                                        </div>
+                                    @endif
                                     <input type="file" class="form-control" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                                    <div class="form-text">Format yang didukung: PDF, DOC, DOCX, JPG, PNG (Max: 5MB)</div>
+                                    <div class="form-text">Format yang didukung: PDF, DOC, DOCX, JPG, PNG (Max: 5MB)
+                                        @if($surat->lampiran)
+                                            <br><small class="text-info">Kosongkan jika tidak ingin mengganti file.</small>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -153,7 +168,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="arsipkan" value="0">
-                                                <input class="form-check-input" type="checkbox" id="arsipkan" name="arsipkan" value="1" checked>
+                                                <input class="form-check-input" type="checkbox" id="arsipkan" name="arsipkan" value="1" {{ old('arsipkan', $surat->arsipkan) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="arsipkan">
                                                     Arsipkan surat
                                                 </label>

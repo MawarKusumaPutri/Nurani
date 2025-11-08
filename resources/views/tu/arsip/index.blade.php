@@ -101,79 +101,129 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Sample Data -->
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Surat Keputusan No. 001/2024</td>
-                                            <td><span class="badge bg-primary">Keputusan</span></td>
-                                            <td><i class="fas fa-file-pdf text-danger"></i> sk_001_2024.pdf</td>
-                                            <td>1.2 MB</td>
-                                            <td><span class="badge bg-warning">Sedang</span></td>
-                                            <td>25 Okt 2024</td>
-                                            <td>Tenaga Usaha</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
+                                        @if($arsips->count() > 0)
+                                            @foreach($arsips as $index => $arsip)
+                                                @php
+                                                    // Mapping warna badge kategori
+                                                    $kategoriBadge = [
+                                                        'akademik' => 'bg-success',
+                                                        'administrasi' => 'bg-warning',
+                                                        'keuangan' => 'bg-info',
+                                                        'sdm' => 'bg-secondary',
+                                                        'fasilitas' => 'bg-primary',
+                                                        'keputusan' => 'bg-danger',
+                                                        'surat_masuk' => 'bg-primary',
+                                                        'surat_keluar' => 'bg-info',
+                                                        'lainnya' => 'bg-dark'
+                                                    ];
+                                                    
+                                                    // Mapping warna badge prioritas
+                                                    $prioritasBadge = [
+                                                        'rendah' => 'bg-success',
+                                                        'sedang' => 'bg-warning',
+                                                        'tinggi' => 'bg-danger',
+                                                        'sangat_tinggi' => 'bg-danger'
+                                                    ];
+                                                    
+                                                    // Mapping icon file
+                                                    $fileIcon = [
+                                                        'pdf' => 'fa-file-pdf text-danger',
+                                                        'doc' => 'fa-file-word text-primary',
+                                                        'docx' => 'fa-file-word text-primary',
+                                                        'xls' => 'fa-file-excel text-success',
+                                                        'xlsx' => 'fa-file-excel text-success',
+                                                        'ppt' => 'fa-file-powerpoint text-warning',
+                                                        'pptx' => 'fa-file-powerpoint text-warning',
+                                                        'jpg' => 'fa-file-image text-info',
+                                                        'jpeg' => 'fa-file-image text-info',
+                                                        'png' => 'fa-file-image text-info',
+                                                        'txt' => 'fa-file-alt text-secondary'
+                                                    ];
+                                                    
+                                                    $kategori = strtolower($arsip->kategori);
+                                                    $prioritas = strtolower($arsip->prioritas ?? 'sedang');
+                                                    $tipeFile = strtolower($arsip->tipe_file ?? '');
+                                                    $badgeKategori = $kategoriBadge[$kategori] ?? 'bg-secondary';
+                                                    $badgePrioritas = $prioritasBadge[$prioritas] ?? 'bg-warning';
+                                                    $iconFile = $fileIcon[$tipeFile] ?? 'fa-file text-secondary';
+                                                    
+                                                    // Format ukuran file
+                                                    $ukuranFile = $arsip->ukuran_file ?? 0;
+                                                    if ($ukuranFile >= 1048576) {
+                                                        $ukuranFormat = number_format($ukuranFile / 1048576, 2) . ' MB';
+                                                    } else {
+                                                        $ukuranFormat = number_format($ukuranFile / 1024, 2) . ' KB';
+                                                    }
+                                                    
+                                                    // Format label kategori
+                                                    $kategoriLabel = [
+                                                        'akademik' => 'Akademik',
+                                                        'administrasi' => 'Administrasi',
+                                                        'keuangan' => 'Keuangan',
+                                                        'sdm' => 'SDM',
+                                                        'fasilitas' => 'Fasilitas',
+                                                        'keputusan' => 'Keputusan',
+                                                        'surat_masuk' => 'Surat Masuk',
+                                                        'surat_keluar' => 'Surat Keluar',
+                                                        'lainnya' => 'Lainnya'
+                                                    ];
+                                                    
+                                                    $prioritasLabel = [
+                                                        'rendah' => 'Rendah',
+                                                        'sedang' => 'Sedang',
+                                                        'tinggi' => 'Tinggi',
+                                                        'sangat_tinggi' => 'Sangat Tinggi'
+                                                    ];
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>
+                                                        <strong>{{ $arsip->judul_dokumen }}</strong>
+                                                        @if($arsip->is_important)
+                                                            <span class="badge bg-danger ms-1">
+                                                                <i class="fas fa-star"></i> Penting
+                                                            </span>
+                                                        @endif
+                                            </td>
+                                                    <td><span class="badge {{ $badgeKategori }}">{{ $kategoriLabel[$kategori] ?? ucfirst($kategori) }}</span></td>
+                                                    <td>
+                                                        <i class="fas {{ $iconFile }}"></i> 
+                                                        {{ Str::limit($arsip->file_dokumen, 30) }}
+                                            </td>
+                                                    <td>{{ $ukuranFormat }}</td>
+                                                    <td><span class="badge {{ $badgePrioritas }}">{{ $prioritasLabel[$prioritas] ?? ucfirst($prioritas) }}</span></td>
+                                                    <td>{{ $arsip->created_at->format('d M Y') }}</td>
+                                                    <td>{{ $arsip->pembuat }}</td>
+                                                    <td>
+                                                        <a href="{{ asset('storage/arsip/' . $arsip->file_dokumen) }}" target="_blank" class="btn btn-sm btn-primary me-1">
                                                     <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
+                                                        </a>
+                                                        <a href="{{ asset('storage/arsip/' . $arsip->file_dokumen) }}" download class="btn btn-sm btn-outline-secondary me-1">
                                                     <i class="fas fa-download"></i> Download
+                                                        </a>
+                                                        <a href="{{ route('tu.arsip.edit', $arsip->id) }}" class="btn btn-sm btn-warning me-1">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('tu.arsip.destroy', $arsip->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash"></i> Hapus
                                                 </button>
+                                                        </form>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Surat Keputusan Kepala Sekolah</td>
-                                            <td><span class="badge bg-info">Keputusan</span></td>
-                                            <td><i class="fas fa-file-word text-primary"></i> sk_kepsek_2024.docx</td>
-                                            <td>1.2 MB</td>
-                                            <td><span class="badge bg-danger">Tinggi</span></td>
-                                            <td>20 Okt 2024</td>
-                                            <td>Tenaga Usaha</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="9" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <i class="fas fa-archive fa-3x mb-3"></i>
+                                                        <p class="mb-0">Belum ada dokumen yang diarsipkan. Silakan upload dokumen baru.</p>
+                                                    </div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Data Siswa Kelas 7A</td>
-                                            <td><span class="badge bg-success">Akademik</span></td>
-                                            <td><i class="fas fa-file-excel text-success"></i> data_siswa_7a.xlsx</td>
-                                            <td>850 KB</td>
-                                            <td><span class="badge bg-success">Rendah</span></td>
-                                            <td>18 Okt 2024</td>
-                                            <td>Tenaga Usaha</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Presentasi Rapat Koordinasi</td>
-                                            <td><span class="badge bg-warning">Administrasi</span></td>
-                                            <td><i class="fas fa-file-powerpoint text-warning"></i> rapat_koordinasi.pptx</td>
-                                            <td>5.8 MB</td>
-                                            <td><span class="badge bg-warning">Sedang</span></td>
-                                            <td>15 Okt 2024</td>
-                                            <td>Tenaga Usaha</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>

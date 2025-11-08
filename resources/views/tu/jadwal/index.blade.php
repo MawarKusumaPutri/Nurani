@@ -85,13 +85,6 @@
                             </h5>
                         </div>
                         <div class="card-body">
-                            <!-- Debug Info (Hapus setelah testing) -->
-                            @if(config('app.debug'))
-                                <div class="alert alert-info mb-3">
-                                    <small>Debug: Total jadwal = {{ isset($jadwals) ? $jadwals->count() : 0 }}</small>
-                                </div>
-                            @endif
-                            
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>

@@ -181,8 +181,12 @@ Route::middleware('auth')->group(function () {
         // Kalender Management
         Route::prefix('kalender')->name('kalender.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'kalenderIndex'])->name('index');
+            Route::get('/list', [App\Http\Controllers\TuController::class, 'kalenderList'])->name('list');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'kalenderCreate'])->name('create');
             Route::post('/store', [App\Http\Controllers\TuController::class, 'kalenderStore'])->name('store');
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'kalenderEdit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'kalenderUpdate'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'kalenderDestroy'])->name('destroy');
         });
         
         // Arsip Management
@@ -190,6 +194,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'arsipIndex'])->name('index');
             Route::get('/upload', [App\Http\Controllers\TuController::class, 'arsipCreate'])->name('create');
             Route::post('/upload', [App\Http\Controllers\TuController::class, 'arsipUpload'])->name('upload');
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'arsipEdit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'arsipUpdate'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'arsipDestroy'])->name('destroy');
         });
         
         // Surat Management
@@ -197,6 +204,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'suratIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'suratCreate'])->name('create');
             Route::post('/send', [App\Http\Controllers\TuController::class, 'suratSend'])->name('send');
+            Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'suratEdit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\TuController::class, 'suratUpdate'])->name('update');
         });
         
         

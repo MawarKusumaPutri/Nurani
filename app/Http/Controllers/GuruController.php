@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Materi;
 use App\Models\Kuis;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -64,6 +65,16 @@ class GuruController extends Controller
             ->orderBy('tanggal_mulai', 'asc')
             ->limit(3)
             ->get();
+        
+        // Get recent notifications
+        $notifications = Notification::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+        
+        $unreadNotifications = Notification::where('user_id', Auth::id())
+            ->where('is_read', false)
+            ->count();
 
         return view('guru.dashboard', compact(
             'guru',
@@ -73,7 +84,9 @@ class GuruController extends Controller
             'materiPublished',
             'totalKuis',
             'materiTerbaru',
-            'kuisAktif'
+            'kuisAktif',
+            'notifications',
+            'unreadNotifications'
         ));
     }
 

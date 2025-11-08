@@ -50,7 +50,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('tu.presensi.*') ? 'active' : '' }}" href="{{ route('tu.presensi.index') }}">
-                    <i class="fas fa-calendar-check"></i> Presensi
+                    <i class="fas fa-calendar-check"></i> Presensi Guru
                 </a>
             </li>
             <li class="nav-item">

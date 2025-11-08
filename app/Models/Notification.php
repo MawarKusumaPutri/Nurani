@@ -36,7 +36,8 @@ class Notification extends Model
             'guru_activity' => 'fas fa-bell',
             'guru_create_materi' => 'fas fa-book',
             'guru_create_kuis' => 'fas fa-question-circle',
-            'guru_create_rangkuman' => 'fas fa-clipboard-list'
+            'guru_create_rangkuman' => 'fas fa-clipboard-list',
+            'surat_baru' => 'fas fa-envelope'
         ];
 
         return $icons[$this->type] ?? 'fas fa-bell';
@@ -50,7 +51,8 @@ class Notification extends Model
             'guru_activity' => 'info',
             'guru_create_materi' => 'primary',
             'guru_create_kuis' => 'info',
-            'guru_create_rangkuman' => 'secondary'
+            'guru_create_rangkuman' => 'secondary',
+            'surat_baru' => 'primary'
         ];
 
         return $colors[$this->type] ?? 'info';

@@ -16,6 +16,9 @@
                         <a href="{{ route('tu.kalender.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Event
                         </a>
+                        <a href="{{ route('tu.kalender.list') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list"></i> Daftar Event
+                        </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>
@@ -106,56 +109,63 @@
                             </h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="event-item mb-3 p-3 border rounded" style="border-left: 4px solid #007bff;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="mb-1">Ujian Tengah Semester</h6>
-                                                <p class="text-muted mb-1">15-20 Oktober 2024</p>
-                                                <small class="text-muted">Kategori: Ujian</small>
+                            @if(isset($eventsThisMonth) && $eventsThisMonth->count() > 0)
+                                <div class="row">
+                                    @foreach($eventsThisMonth as $event)
+                                        @php
+                                            $kategori = strtolower($event->kategori_event ?? 'lainnya');
+                                            
+                                            // Mapping warna border dan badge berdasarkan kategori
+                                            $kategoriConfig = [
+                                                'ujian' => ['border' => '#dc3545', 'badge' => 'bg-danger', 'label' => 'Ujian'],
+                                                'akademik' => ['border' => '#007bff', 'badge' => 'bg-primary', 'label' => 'Akademik'],
+                                                'libur' => ['border' => '#ffc107', 'badge' => 'bg-warning', 'label' => 'Libur'],
+                                                'rapat' => ['border' => '#17a2b8', 'badge' => 'bg-info', 'label' => 'Rapat'],
+                                                'pelatihan' => ['border' => '#9c27b0', 'badge' => 'bg-secondary', 'label' => 'Pelatihan'],
+                                                'kegiatan' => ['border' => '#fd7e14', 'badge' => 'bg-warning', 'label' => 'Kegiatan'],
+                                                'pengumuman' => ['border' => '#D2B48C', 'badge' => 'bg-secondary', 'label' => 'Pengumuman'],
+                                                'lainnya' => ['border' => '#6c757d', 'badge' => 'bg-secondary', 'label' => 'Lainnya'],
+                                            ];
+                                            
+                                            $config = $kategoriConfig[$kategori] ?? $kategoriConfig['lainnya'];
+                                            
+                                            // Format tanggal
+                                            $tanggalMulai = \Carbon\Carbon::parse($event->tanggal_mulai);
+                                            $tanggalSelesai = $event->tanggal_selesai ? \Carbon\Carbon::parse($event->tanggal_selesai) : null;
+                                            
+                                            // Format tanggal display
+                                            if ($tanggalSelesai && $tanggalSelesai->format('Y-m-d') != $tanggalMulai->format('Y-m-d')) {
+                                                $tanggalDisplay = $tanggalMulai->format('d') . '-' . $tanggalSelesai->format('d M Y');
+                                            } else {
+                                                $tanggalDisplay = $tanggalMulai->format('d M Y');
+                                            }
+                                            
+                                            // Tambahkan waktu jika ada
+                                            if ($event->waktu_mulai) {
+                                                $waktu = \Carbon\Carbon::parse($event->waktu_mulai)->format('H:i');
+                                                $tanggalDisplay .= ', ' . $waktu;
+                                            }
+                                        @endphp
+                                        <div class="col-md-6">
+                                            <div class="event-item mb-3 p-3 border rounded" style="border-left: 4px solid {{ $config['border'] }};">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <h6 class="mb-1">{{ $event->judul_event }}</h6>
+                                                        <p class="text-muted mb-1">{{ $tanggalDisplay }}</p>
+                                                        <small class="text-muted">Kategori: {{ ucfirst($kategori) }}</small>
+                                                    </div>
+                                                    <span class="badge {{ $config['badge'] }}">{{ $config['label'] }}</span>
+                                                </div>
                                             </div>
-                                            <span class="badge bg-primary">Akademik</span>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="event-item mb-3 p-3 border rounded" style="border-left: 4px solid #28a745;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="mb-1">Rapat Koordinasi Guru</h6>
-                                                <p class="text-muted mb-1">25 Oktober 2024, 08:00</p>
-                                                <small class="text-muted">Kategori: Rapat</small>
-                                            </div>
-                                            <span class="badge bg-success">Rapat</span>
-                                        </div>
-                                    </div>
+                            @else
+                                <div class="text-center py-4">
+                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0">Belum ada event untuk bulan ini.</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="event-item mb-3 p-3 border rounded" style="border-left: 4px solid #ffc107;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="mb-1">Libur Hari Raya</h6>
-                                                <p class="text-muted mb-1">1-3 November 2024</p>
-                                                <small class="text-muted">Kategori: Libur</small>
-                                            </div>
-                                            <span class="badge bg-warning">Libur</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="event-item mb-3 p-3 border rounded" style="border-left: 4px solid #dc3545;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="mb-1">Pelatihan Guru</h6>
-                                                <p class="text-muted mb-1">28 Oktober 2024, 09:00</p>
-                                                <small class="text-muted">Kategori: Pelatihan</small>
-                                            </div>
-                                            <span class="badge bg-danger">Pelatihan</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -523,12 +533,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     'lainnya': '#6c757d'
                 };
                 
-                // Gunakan kategori untuk menentukan warna
-                const kategori = dayEvents[0].kategori ? dayEvents[0].kategori.toLowerCase() : 'lainnya';
-                let eventColor = kategoriColorMap[kategori] || dayEvents[0].warna || '#dc3545';
+                // PRIORITAS: Gunakan warna dari data event jika tersedia
+                // Khusus untuk libur nasional/internasional (ID >= 1000 atau warna #2E7D32), 
+                // SELALU gunakan warna hijau tua #2E7D32 dan jangan di-override
+                let eventColor = dayEvents[0].warna;
+                
+                // Jika event adalah libur nasional/internasional (ID >= 1000 atau warna #2E7D32)
+                if ((dayEvents[0].id && dayEvents[0].id >= 1000) || eventColor === '#2E7D32') {
+                    eventColor = '#2E7D32'; // PERMANEN: Hijau tua untuk libur nasional/internasional
+                } else if (!eventColor || !eventColor.startsWith('#')) {
+                    // Jika tidak ada warna dari data, gunakan kategoriColorMap
+                    const kategori = dayEvents[0].kategori ? dayEvents[0].kategori.toLowerCase() : 'lainnya';
+                    eventColor = kategoriColorMap[kategori] || '#dc3545';
+                }
                 
                 // Pastikan warna valid
                 if (!eventColor || !eventColor.startsWith('#')) {
+                    const kategori = dayEvents[0].kategori ? dayEvents[0].kategori.toLowerCase() : 'lainnya';
                     eventColor = kategoriColorMap[kategori] || '#dc3545';
                 }
                 
@@ -559,7 +580,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Pastikan warna valid
-                const validColor = eventColor && eventColor.startsWith('#') ? eventColor : '#dc3545';
+                // Khusus untuk libur nasional/internasional (ID >= 1000 atau warna #2E7D32), 
+                // SELALU gunakan warna hijau tua #2E7D32
+                let validColor = eventColor;
+                if ((dayEvents[0].id && dayEvents[0].id >= 1000) || eventColor === '#2E7D32') {
+                    validColor = '#2E7D32'; // PERMANEN: Hijau tua untuk libur nasional/internasional
+                } else if (!validColor || !validColor.startsWith('#')) {
+                    validColor = '#dc3545';
+                }
                 dayElement.style.background = `linear-gradient(135deg, ${validColor} 0%, ${darkenColor(validColor, 20)} 100%)`;
                 
                 // Create structure for event display

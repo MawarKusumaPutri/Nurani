@@ -1,6 +1,6 @@
 @extends('layouts.tu')
 
-@section('title', 'Upload Dokumen - TU Dashboard')
+@section('title', 'Edit Dokumen - TU Dashboard')
 
 @section('content')
 <div class="container-fluid">
@@ -10,7 +10,7 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Upload Dokumen</h1>
+                <h1 class="h2">Edit Dokumen</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <a href="{{ route('tu.arsip.index') }}" class="btn btn-sm btn-outline-secondary">
@@ -56,12 +56,13 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-upload"></i> Form Upload Dokumen
+                                <i class="fas fa-edit"></i> Form Edit Dokumen
                             </h5>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('tu.arsip.upload') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('tu.arsip.update', $arsip->id) }}" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -69,15 +70,15 @@
                                             <label for="kategori" class="form-label">Kategori Dokumen <span class="text-danger">*</span></label>
                                             <select class="form-select" id="kategori" name="kategori" required>
                                                 <option value="">Pilih Kategori</option>
-                                                <option value="akademik">Akademik</option>
-                                                <option value="administrasi">Administrasi</option>
-                                                <option value="keuangan">Keuangan</option>
-                                                <option value="sdm">SDM</option>
-                                                <option value="fasilitas">Fasilitas</option>
-                                                <option value="keputusan">Keputusan</option>
-                                                <option value="surat_masuk">Surat Masuk</option>
-                                                <option value="surat_keluar">Surat Keluar</option>
-                                                <option value="lainnya">Lainnya</option>
+                                                <option value="akademik" {{ old('kategori', $arsip->kategori) == 'akademik' ? 'selected' : '' }}>Akademik</option>
+                                                <option value="administrasi" {{ old('kategori', $arsip->kategori) == 'administrasi' ? 'selected' : '' }}>Administrasi</option>
+                                                <option value="keuangan" {{ old('kategori', $arsip->kategori) == 'keuangan' ? 'selected' : '' }}>Keuangan</option>
+                                                <option value="sdm" {{ old('kategori', $arsip->kategori) == 'sdm' ? 'selected' : '' }}>SDM</option>
+                                                <option value="fasilitas" {{ old('kategori', $arsip->kategori) == 'fasilitas' ? 'selected' : '' }}>Fasilitas</option>
+                                                <option value="keputusan" {{ old('kategori', $arsip->kategori) == 'keputusan' ? 'selected' : '' }}>Keputusan</option>
+                                                <option value="surat_masuk" {{ old('kategori', $arsip->kategori) == 'surat_masuk' ? 'selected' : '' }}>Surat Masuk</option>
+                                                <option value="surat_keluar" {{ old('kategori', $arsip->kategori) == 'surat_keluar' ? 'selected' : '' }}>Surat Keluar</option>
+                                                <option value="lainnya" {{ old('kategori', $arsip->kategori) == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                                             </select>
                                         </div>
                                     </div>
@@ -85,10 +86,10 @@
                                         <div class="mb-3">
                                             <label for="prioritas" class="form-label">Prioritas</label>
                                             <select class="form-select" id="prioritas" name="prioritas">
-                                                <option value="rendah">Rendah</option>
-                                                <option value="sedang" selected>Sedang</option>
-                                                <option value="tinggi">Tinggi</option>
-                                                <option value="sangat_tinggi">Sangat Tinggi</option>
+                                                <option value="rendah" {{ old('prioritas', $arsip->prioritas) == 'rendah' ? 'selected' : '' }}>Rendah</option>
+                                                <option value="sedang" {{ old('prioritas', $arsip->prioritas) == 'sedang' ? 'selected' : '' }}>Sedang</option>
+                                                <option value="tinggi" {{ old('prioritas', $arsip->prioritas) == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
+                                                <option value="sangat_tinggi" {{ old('prioritas', $arsip->prioritas) == 'sangat_tinggi' ? 'selected' : '' }}>Sangat Tinggi</option>
                                             </select>
                                         </div>
                                     </div>
@@ -96,34 +97,50 @@
 
                                 <div class="mb-3">
                                     <label for="judul_dokumen" class="form-label">Judul Dokumen <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="judul_dokumen" name="judul_dokumen" placeholder="Masukkan judul dokumen" required>
+                                    <input type="text" class="form-control" id="judul_dokumen" name="judul_dokumen" placeholder="Masukkan judul dokumen" value="{{ old('judul_dokumen', $arsip->judul_dokumen) }}" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="deskripsi" class="form-label">Deskripsi Dokumen</label>
-                                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Jelaskan isi atau tujuan dokumen ini"></textarea>
+                                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Jelaskan isi atau tujuan dokumen ini">{{ old('deskripsi', $arsip->deskripsi) }}</textarea>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="tanggal_dokumen" class="form-label">Tanggal Dokumen</label>
-                                            <input type="date" class="form-control" id="tanggal_dokumen" name="tanggal_dokumen">
+                                            <input type="date" class="form-control" id="tanggal_dokumen" name="tanggal_dokumen" value="{{ old('tanggal_dokumen', $arsip->tanggal_dokumen ? $arsip->tanggal_dokumen->format('Y-m-d') : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="pembuat" class="form-label">Pembuat Dokumen</label>
-                                            <input type="text" class="form-control" id="pembuat" name="pembuat" value="{{ Auth::user()->name }}" readonly>
+                                            <input type="text" class="form-control" id="pembuat" name="pembuat" value="{{ old('pembuat', $arsip->pembuat) }}" readonly>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="file_dokumen" class="form-label">File Dokumen <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" id="file_dokumen" name="file_dokumen" required accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.txt">
+                                    <label for="file_dokumen" class="form-label">File Dokumen</label>
+                                    @if($arsip->file_dokumen)
+                                        <div class="mb-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-file"></i> File saat ini: 
+                                                <a href="{{ asset('storage/arsip/' . $arsip->file_dokumen) }}" target="_blank">
+                                                    {{ $arsip->file_dokumen }}
+                                                </a>
+                                                @if($arsip->ukuran_file)
+                                                    ({{ number_format($arsip->ukuran_file / 1024 / 1024, 2) }} MB)
+                                                @endif
+                                            </small>
+                                        </div>
+                                    @endif
+                                    <input type="file" class="form-control" id="file_dokumen" name="file_dokumen" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.txt">
                                     <div class="form-text">
                                         Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, TXT (Max: 50MB)
+                                        @if($arsip->file_dokumen)
+                                            <br><small class="text-info">Kosongkan jika tidak ingin mengganti file.</small>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -132,7 +149,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_public" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1">
+                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1" {{ old('is_public', $arsip->is_public) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_public">
                                                     Dokumen Publik (dapat diakses semua user)
                                                 </label>
@@ -143,7 +160,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_important" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important" value="1">
+                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important" value="1" {{ old('is_important', $arsip->is_important) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_important">
                                                     Dokumen Penting
                                                 </label>
@@ -225,9 +242,7 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Set default tanggal dokumen to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tanggal_dokumen').value = today;
+    // Tidak perlu set default tanggal untuk edit, gunakan nilai yang sudah ada
     
     // File size validation
     const fileInput = document.getElementById('file_dokumen');
@@ -258,15 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             fileInfo.className += ' file-info';
             this.parentNode.appendChild(fileInfo);
-        }
-    });
-    
-    // Auto-generate judul based on file name
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file && !document.getElementById('judul_dokumen').value) {
-            const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
-            document.getElementById('judul_dokumen').value = fileName;
         }
     });
 });

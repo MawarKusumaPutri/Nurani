@@ -1,6 +1,6 @@
 @extends('layouts.tu')
 
-@section('title', 'Tambah Event - TU Dashboard')
+@section('title', 'Edit Event - TU Dashboard')
 
 @section('content')
 <div class="container-fluid">
@@ -10,7 +10,7 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Tambah Event Kalender</h1>
+                <h1 class="h2">Edit Event Kalender</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <a href="{{ route('tu.kalender.index') }}" class="btn btn-sm btn-outline-secondary">
@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-calendar-plus"></i> Form Event Kalender Akademik
+                                <i class="fas fa-edit"></i> Edit Event Kalender Akademik
                             </h5>
                         </div>
                         <div class="card-body">
@@ -56,14 +56,15 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="{{ route('tu.kalender.store') }}">
+                            <form method="POST" action="{{ route('tu.kalender.update', $event->id) }}">
                                 @csrf
+                                @method('PUT')
                                 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="judul_event" class="form-label">Judul Event <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="judul_event" name="judul_event" placeholder="Masukkan judul event" required>
+                                            <input type="text" class="form-control" id="judul_event" name="judul_event" placeholder="Masukkan judul event" value="{{ old('judul_event', $event->judul_event) }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -71,14 +72,14 @@
                                             <label for="kategori_event" class="form-label">Kategori Event <span class="text-danger">*</span></label>
                                             <select class="form-select" id="kategori_event" name="kategori_event" required>
                                                 <option value="">Pilih Kategori</option>
-                                                <option value="akademik" {{ (isset($kategori) && $kategori == 'akademik') ? 'selected' : '' }}>Akademik</option>
-                                                <option value="ujian" {{ (isset($kategori) && $kategori == 'ujian') ? 'selected' : '' }}>Ujian</option>
-                                                <option value="libur" {{ (isset($kategori) && $kategori == 'libur') ? 'selected' : '' }}>Libur</option>
-                                                <option value="rapat" {{ (isset($kategori) && $kategori == 'rapat') ? 'selected' : '' }}>Rapat</option>
-                                                <option value="pelatihan" {{ (isset($kategori) && $kategori == 'pelatihan') ? 'selected' : '' }}>Pelatihan</option>
-                                                <option value="kegiatan" {{ (isset($kategori) && $kategori == 'kegiatan') ? 'selected' : '' }}>Kegiatan</option>
-                                                <option value="pengumuman" {{ (isset($kategori) && $kategori == 'pengumuman') ? 'selected' : '' }}>Pengumuman</option>
-                                                <option value="lainnya" {{ (isset($kategori) && $kategori == 'lainnya') ? 'selected' : '' }}>Lainnya</option>
+                                                <option value="akademik" {{ old('kategori_event', $event->kategori_event) == 'akademik' ? 'selected' : '' }}>Akademik</option>
+                                                <option value="ujian" {{ old('kategori_event', $event->kategori_event) == 'ujian' ? 'selected' : '' }}>Ujian</option>
+                                                <option value="libur" {{ old('kategori_event', $event->kategori_event) == 'libur' ? 'selected' : '' }}>Libur</option>
+                                                <option value="rapat" {{ old('kategori_event', $event->kategori_event) == 'rapat' ? 'selected' : '' }}>Rapat</option>
+                                                <option value="pelatihan" {{ old('kategori_event', $event->kategori_event) == 'pelatihan' ? 'selected' : '' }}>Pelatihan</option>
+                                                <option value="kegiatan" {{ old('kategori_event', $event->kategori_event) == 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+                                                <option value="pengumuman" {{ old('kategori_event', $event->kategori_event) == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
+                                                <option value="lainnya" {{ old('kategori_event', $event->kategori_event) == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                                             </select>
                                         </div>
                                     </div>
@@ -88,13 +89,13 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="tanggal_mulai" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
+                                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $event->tanggal_mulai->format('Y-m-d')) }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                                            <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
+                                            <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai', $event->tanggal_selesai ? $event->tanggal_selesai->format('Y-m-d') : '') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -103,33 +104,67 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
-                                            <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai">
+                                            @php
+                                                $waktuMulai = '';
+                                                if ($event->waktu_mulai) {
+                                                    try {
+                                                        // Coba parse berbagai format waktu
+                                                        $time = str_replace('.', ':', $event->waktu_mulai);
+                                                        $time = preg_replace('/:\d{2}$/', '', $time); // Hapus detik jika ada
+                                                        if (preg_match('/^\d{2}:\d{2}$/', $time)) {
+                                                            $waktuMulai = $time;
+                                                        } else {
+                                                            $waktuMulai = \Carbon\Carbon::parse($event->waktu_mulai)->format('H:i');
+                                                        }
+                                                    } catch (\Exception $e) {
+                                                        $waktuMulai = '';
+                                                    }
+                                                }
+                                            @endphp
+                                            <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai" value="{{ old('waktu_mulai', $waktuMulai) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="waktu_selesai" class="form-label">Waktu Selesai</label>
-                                            <input type="time" class="form-control" id="waktu_selesai" name="waktu_selesai">
+                                            @php
+                                                $waktuSelesai = '';
+                                                if ($event->waktu_selesai) {
+                                                    try {
+                                                        // Coba parse berbagai format waktu
+                                                        $time = str_replace('.', ':', $event->waktu_selesai);
+                                                        $time = preg_replace('/:\d{2}$/', '', $time); // Hapus detik jika ada
+                                                        if (preg_match('/^\d{2}:\d{2}$/', $time)) {
+                                                            $waktuSelesai = $time;
+                                                        } else {
+                                                            $waktuSelesai = \Carbon\Carbon::parse($event->waktu_selesai)->format('H:i');
+                                                        }
+                                                    } catch (\Exception $e) {
+                                                        $waktuSelesai = '';
+                                                    }
+                                                }
+                                            @endphp
+                                            <input type="time" class="form-control" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai', $waktuSelesai) }}">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="deskripsi" class="form-label">Deskripsi Event</label>
-                                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" placeholder="Jelaskan detail event ini"></textarea>
+                                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" placeholder="Jelaskan detail event ini">{{ old('deskripsi', $event->deskripsi) }}</textarea>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="lokasi" class="form-label">Lokasi</label>
-                                            <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Tempat pelaksanaan event">
+                                            <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Tempat pelaksanaan event" value="{{ old('lokasi', $event->lokasi) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="penanggung_jawab" class="form-label">Penanggung Jawab</label>
-                                            <input type="text" class="form-control" id="penanggung_jawab" name="penanggung_jawab" value="{{ Auth::user()->name }}" readonly>
+                                            <input type="text" class="form-control" id="penanggung_jawab" name="penanggung_jawab" value="{{ old('penanggung_jawab', $event->penanggung_jawab) }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -141,8 +176,8 @@
                                                 Warna Event 
                                                 <span class="text-muted small">(Untuk membedakan kategori event di kalender)</span>
                                             </label>
-                                            <input type="hidden" id="warna" name="warna" value="#6c757d">
-                                            <div class="form-control" id="warna-display" style="background-color: #6c757d; color: white; text-align: center; padding: 8px; border-radius: 4px; cursor: not-allowed;">
+                                            <input type="hidden" id="warna" name="warna" value="{{ old('warna', $event->warna) }}">
+                                            <div class="form-control" id="warna-display" style="background-color: {{ old('warna', $event->warna) }}; color: white; text-align: center; padding: 8px; border-radius: 4px; cursor: not-allowed;">
                                                 <i class="fas fa-palette"></i> Warna akan otomatis disesuaikan dengan kategori event
                                             </div>
                                             <small class="form-text text-muted">
@@ -157,7 +192,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_all_day" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_all_day" name="is_all_day" value="1">
+                                                <input class="form-check-input" type="checkbox" id="is_all_day" name="is_all_day" value="1" {{ old('is_all_day', $event->is_all_day) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_all_day">
                                                     Event Sepanjang Hari
                                                 </label>
@@ -168,7 +203,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_public" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1" checked>
+                                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1" {{ old('is_public', $event->is_public) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_public">
                                                     Event Publik (terlihat semua user)
                                                 </label>
@@ -182,7 +217,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_important" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important" value="1">
+                                                <input class="form-check-input" type="checkbox" id="is_important" name="is_important" value="1" {{ old('is_important', $event->is_important) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_important">
                                                     Event Penting
                                                 </label>
@@ -193,7 +228,7 @@
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input type="hidden" name="is_recurring" value="0">
-                                                <input class="form-check-input" type="checkbox" id="is_recurring" name="is_recurring" value="1">
+                                                <input class="form-check-input" type="checkbox" id="is_recurring" name="is_recurring" value="1" {{ old('is_recurring', $event->is_recurring) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="is_recurring">
                                                     Event Berulang
                                                 </label>
@@ -289,11 +324,7 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Set default tanggal mulai to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tanggal_mulai').value = today;
-    
-    // Auto-set tanggal selesai sama dengan tanggal mulai
+    // Auto-set tanggal selesai sama dengan tanggal mulai jika kosong
     const tanggalMulai = document.getElementById('tanggal_mulai');
     const tanggalSelesai = document.getElementById('tanggal_selesai');
     
@@ -349,35 +380,27 @@ document.addEventListener('DOMContentLoaded', function() {
             warnaInput.value = warnaData.color;
             warnaDisplay.style.backgroundColor = warnaData.color;
             warnaDisplay.innerHTML = `<i class="fas fa-palette"></i> ${warnaData.name} (${kategoriSelect.options[kategoriSelect.selectedIndex].text})`;
-            colorPreview.style.backgroundColor = warnaData.color;
+            if (colorPreview) {
+                colorPreview.style.backgroundColor = warnaData.color;
+            }
         } else {
-            // Default jika belum pilih kategori
-            warnaInput.value = '#6c757d';
-            warnaDisplay.style.backgroundColor = '#6c757d';
-            warnaDisplay.innerHTML = '<i class="fas fa-palette"></i> Pilih kategori event untuk melihat warna';
-            colorPreview.style.backgroundColor = '#6c757d';
+            // Gunakan warna yang sudah ada jika kategori tidak ditemukan
+            const currentWarna = warnaInput.value || '#6c757d';
+            warnaInput.value = currentWarna;
+            warnaDisplay.style.backgroundColor = currentWarna;
+            warnaDisplay.innerHTML = '<i class="fas fa-palette"></i> Warna akan otomatis disesuaikan dengan kategori event';
+            if (colorPreview) {
+                colorPreview.style.backgroundColor = currentWarna;
+            }
         }
     }
     
     kategoriSelect.addEventListener('change', function() {
         updateWarnaByKategori();
-        
-        // Auto-generate judul placeholder
-        if (!judulInput.value) {
-            const kategoriText = this.options[this.selectedIndex].text;
-            judulInput.placeholder = `Masukkan judul ${kategoriText.toLowerCase()}`;
-        }
     });
     
-    // Initialize warna on page load
+    // Initialize warna on page load berdasarkan kategori yang sudah ada
     updateWarnaByKategori();
-    
-    // Jika ada kategori dari parameter URL, trigger change event untuk update warna
-    @if(isset($kategori) && $kategori)
-        if (kategoriSelect.value === '{{ $kategori }}') {
-            updateWarnaByKategori();
-        }
-    @endif
 });
 </script>
 @endsection
