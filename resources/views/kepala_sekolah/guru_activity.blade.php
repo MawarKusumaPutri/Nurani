@@ -109,6 +109,143 @@
         .shadow-lg {
             box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
         }
+        /* Custom Pagination Styles */
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .pagination .page-link {
+            border-radius: 8px;
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        /* Previous Button - Light Gray Background */
+        .pagination .page-item:first-child .page-link,
+        .pagination .page-link[rel="prev"] {
+            background-color: #f8f9fa !important;
+            color: #6c757d !important;
+            border-color: #dee2e6 !important;
+        }
+        .pagination .page-item:first-child .page-link:hover:not(.disabled),
+        .pagination .page-link[rel="prev"]:hover:not(.disabled) {
+            background-color: #e9ecef !important;
+            color: #495057 !important;
+        }
+        /* Next Button - Green Background */
+        .pagination .page-item:last-child .page-link,
+        .pagination .page-link[rel="next"] {
+            background-color: #2E7D32 !important;
+            color: white !important;
+            border-color: #2E7D32 !important;
+        }
+        .pagination .page-item:last-child .page-link:hover:not(.disabled),
+        .pagination .page-link[rel="next"]:hover:not(.disabled) {
+            background-color: #1B5E20 !important;
+            color: white !important;
+        }
+        /* Disabled State */
+        .pagination .page-item.disabled .page-link {
+            background-color: #f8f9fa !important;
+            color: #adb5bd !important;
+            border-color: #dee2e6 !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        /* Active Page Number */
+        .pagination .page-item.active .page-link {
+            background-color: #2E7D32 !important;
+            color: white !important;
+            border-color: #2E7D32 !important;
+        }
+        /* Page Numbers */
+        .pagination .page-item:not(:first-child):not(:last-child) .page-link {
+            background-color: white;
+            color: #495057;
+        }
+        .pagination .page-item:not(:first-child):not(:last-child) .page-link:hover {
+            background-color: #e9ecef;
+        }
+        .pagination-info {
+            text-align: center;
+            margin: 10px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        /* Top Pagination Buttons */
+        .pagination-top-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .btn-pagination-prev {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 6px 16px;
+            font-weight: 400;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            min-width: 100px;
+            text-align: center;
+        }
+        .btn-pagination-prev:hover:not(:disabled) {
+            background-color: #e9ecef;
+            color: #495057;
+            border-color: #ced4da;
+            text-decoration: none;
+        }
+        .btn-pagination-prev:disabled {
+            background-color: #f8f9fa;
+            color: #adb5bd;
+            border-color: #dee2e6;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-pagination-next {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 6px 16px;
+            font-weight: 400;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            min-width: 100px;
+            text-align: center;
+        }
+        .btn-pagination-next:hover:not(:disabled) {
+            background-color: #bbdefb;
+            color: #1565c0;
+            border-color: #90caf9;
+            text-decoration: none;
+        }
+        .btn-pagination-next:disabled {
+            background-color: #e3f2fd;
+            color: #90caf9;
+            border-color: #dee2e6;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-pagination-prev:focus,
+        .btn-pagination-next:focus {
+            outline: 2px solid #4CAF50;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -165,7 +302,7 @@
                                                 <div class="mb-2">
                                                     <i class="fas fa-users me-2"></i>
                                                     <span class="text-white-50">Total Guru:</span>
-                                                    <span class="text-white fw-bold">{{ $gurus->count() ?? 0 }}</span>
+                                                    <span class="text-white fw-bold">{{ isset($gurus) ? $gurus->count() : 0 }}</span>
                                                 </div>
                                                 @endif
                                             </div>
@@ -176,7 +313,23 @@
                                             </span>
                                                 </div>
                                                 <div class="text-white-50">
-                                                    <small>Total Aktivitas: <strong class="text-white">{{ $activities->total() }}</strong></small>
+                                                    <small>Total Aktivitas: <strong class="text-white">
+                                                        @if(isset($activitiesByDay))
+                                                            @php
+                                                                $totalActivities = 0;
+                                                                foreach($activitiesByDay as $dayActivities) {
+                                                                    foreach($dayActivities as $guruActivity) {
+                                                                        $totalActivities += $guruActivity['login_count'] + $guruActivity['logout_count'];
+                                                                    }
+                                                                }
+                                                            @endphp
+                                                            {{ $totalActivities }}
+                                                        @elseif(isset($activities))
+                                                            {{ $activities->total() }}
+                                                        @else
+                                                            0
+                                                        @endif
+                                                    </strong></small>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,16 +346,93 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-white border-bottom">
                                 <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
+                                    <h5 class="mb-0">
                                         <i class="fas fa-history me-2 text-primary"></i>
-                                    Riwayat Aktivitas
-                                </h5>
-                                    <span class="badge bg-primary">{{ $activities->total() }} Aktivitas</span>
+                                        Aktivitas Login & Logout per Hari
+                                    </h5>
+                                    <span class="badge bg-primary">Minggu Ini</span>
                                 </div>
                             </div>
                             <div class="card-body p-4">
-                                @if($activities->count() > 0)
-                                    <div class="timeline">
+                                @if(isset($activitiesByDay))
+                                    @foreach($dayNames as $dayName)
+                                        @if(isset($activitiesByDay[$dayName]) && count($activitiesByDay[$dayName]) > 0)
+                                            <div class="mb-4">
+                                                <h6 class="fw-bold text-primary mb-3">
+                                                    <i class="fas fa-calendar-day me-2"></i>
+                                                    {{ $dayName }}
+                                                    @if(isset($activitiesByDay[$dayName][array_key_first($activitiesByDay[$dayName])]['date_formatted']))
+                                                        <span class="text-muted fw-normal">({{ $activitiesByDay[$dayName][array_key_first($activitiesByDay[$dayName])]['date_formatted'] }})</span>
+                                                    @endif
+                                                </h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th style="width: 5%;">No</th>
+                                                                <th style="width: 30%;">Nama Guru</th>
+                                                                <th style="width: 20%;" class="text-center">
+                                                                    <i class="fas fa-sign-in-alt text-success me-1"></i>Login
+                                                                </th>
+                                                                <th style="width: 20%;" class="text-center">
+                                                                    <i class="fas fa-sign-out-alt text-danger me-1"></i>Logout
+                                                                </th>
+                                                                <th style="width: 25%;" class="text-center">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @php $no = 1; @endphp
+                                                            @foreach($activitiesByDay[$dayName] as $guruActivity)
+                                                                <tr>
+                                                                    <td>{{ $no++ }}</td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                                                                <i class="fas fa-user"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <strong>{{ $guruActivity['guru']->user->name }}</strong>
+                                                                                <br>
+                                                                                <small class="text-muted">{{ $guruActivity['guru']->nip }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <span class="badge bg-success fs-6 px-3 py-2">{{ $guruActivity['login_count'] }}x</span>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <span class="badge bg-danger fs-6 px-3 py-2">{{ $guruActivity['logout_count'] }}x</span>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        @if($guruActivity['login_count'] > 0 && $guruActivity['logout_count'] > 0)
+                                                                            <span class="badge bg-info">Aktif</span>
+                                                                        @elseif($guruActivity['login_count'] > 0 && $guruActivity['logout_count'] == 0)
+                                                                            <span class="badge bg-warning">Masih Login</span>
+                                                                        @else
+                                                                            <span class="badge bg-secondary">Tidak Aktif</span>
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="mb-4">
+                                                <h6 class="fw-bold text-muted mb-3">
+                                                    <i class="fas fa-calendar-day me-2"></i>
+                                                    {{ $dayName }}
+                                                </h6>
+                                                <div class="alert alert-light text-center py-3">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    Tidak ada aktivitas pada hari ini
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @elseif(isset($activities) && $activities->count() > 0)
+                                    <!-- Fallback untuk tampilan lama jika masih ada $activities -->
                                     @foreach($activities as $activity)
                                             <div class="timeline-item mb-4">
                                                 <div class="d-flex">
@@ -307,16 +537,11 @@
                                         </div>
                                     @endforeach
                                     </div>
-
-                                    <!-- Pagination -->
-                                    <div class="d-flex justify-content-center mt-4">
-                                        {{ $activities->links() }}
-                                    </div>
                                 @else
                                     <div class="text-center py-5">
                                         <i class="fas fa-history fa-4x text-muted mb-3 opacity-50"></i>
                                         <h5 class="text-muted">Belum ada aktivitas</h5>
-                                        <p class="text-muted">Aktivitas guru akan muncul di sini setelah guru melakukan aktivitas</p>
+                                        <p class="text-muted">Aktivitas login dan logout guru akan muncul di sini setelah guru melakukan aktivitas pada minggu ini</p>
                                     </div>
                                 @endif
                             </div>
@@ -432,6 +657,15 @@
             
             // Update every minute to keep times synchronized
             setInterval(updateActivityTimes, 60000);
+            
+            // Auto-refresh page every 2 minutes to sync with latest activities
+            // This ensures new login/logout activities appear automatically
+            setInterval(function() {
+                // Only refresh if user is still on this page
+                if (document.visibilityState === 'visible') {
+                    window.location.reload();
+                }
+            }, 120000); // Refresh every 2 minutes (120000 ms)
         });
     </script>
 </body>

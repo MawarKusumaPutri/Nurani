@@ -226,6 +226,9 @@ class KepalaSekolahController extends Controller
                 ->orderBy('activity_time', 'desc')
                 ->paginate(20);
             
+            // Set pagination path to use route name
+            $activities->setPath(route('kepala_sekolah.guru.activity', ['guru' => $guru->id]));
+            
             // Get mata pelajaran list for this guru
             $mataPelajaranList = [];
             if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
@@ -288,13 +291,101 @@ class KepalaSekolahController extends Controller
             
             return view('kepala_sekolah.guru_activity', compact('guru', 'activities', 'mataPelajaranList'));
         } else {
-            // Show all guru activities
-            $gurus = Guru::with(['user', 'activities'])->get();
-            $activities = GuruActivity::with(['guru.user'])
-                ->orderBy('activity_time', 'desc')
-                ->paginate(20);
+            // Show all guru activities grouped by day and guru
+            $gurus = Guru::with(['user'])->get();
             
-            return view('kepala_sekolah.guru_activity', compact('gurus', 'activities'));
+            // Get activities from Monday of this week to today (including today)
+            $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY); // Monday
+            $today = Carbon::now();
+            
+            // Always include today's activities, but limit to Friday if today is after Friday
+            $endDate = min($today, $startOfWeek->copy()->addDays(4)); // Today or Friday, whichever comes first
+            
+            // Get all login and logout activities from Monday to today (or Friday)
+            // Use whereDate to ensure we capture all activities for the day regardless of time
+            $activities = GuruActivity::with(['guru.user'])
+                ->whereIn('activity_type', ['login', 'logout'])
+                ->whereDate('activity_time', '>=', $startOfWeek->format('Y-m-d'))
+                ->whereDate('activity_time', '<=', $today->format('Y-m-d'))
+                ->orderBy('activity_time', 'desc') // Latest activities first
+                ->get();
+            
+            // Group activities by day and guru
+            $activitiesByDay = [];
+            $dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+            $todayDayOfWeek = $today->dayOfWeek;
+            
+            // Process Monday to Friday
+            for ($i = 0; $i < 5; $i++) {
+                $dayDate = $startOfWeek->copy()->addDays($i);
+                $dayName = $dayNames[$i];
+                $dayStart = $dayDate->copy()->startOfDay();
+                $dayEnd = $dayDate->copy()->endOfDay();
+                
+                $activitiesByDay[$dayName] = [];
+                
+                foreach ($gurus as $guru) {
+                    $dayActivities = $activities->filter(function($activity) use ($guru, $dayDate) {
+                        $activityTime = Carbon::parse($activity->activity_time);
+                        return $activity->guru_id == $guru->id && 
+                               $activityTime->format('Y-m-d') == $dayDate->format('Y-m-d');
+                    });
+                    
+                    $loginCount = $dayActivities->where('activity_type', 'login')->count();
+                    $logoutCount = $dayActivities->where('activity_type', 'logout')->count();
+                    
+                    if ($loginCount > 0 || $logoutCount > 0) {
+                        $activitiesByDay[$dayName][$guru->id] = [
+                            'guru' => $guru,
+                            'login_count' => $loginCount,
+                            'logout_count' => $logoutCount,
+                            'date' => $dayDate->format('Y-m-d'),
+                            'date_formatted' => $dayDate->format('d M Y')
+                        ];
+                    }
+                }
+            }
+            
+            // If today is Saturday or Sunday, also show today's activities
+            if ($todayDayOfWeek >= Carbon::SATURDAY) {
+                $todayName = $todayDayOfWeek == Carbon::SATURDAY ? 'Sabtu' : 'Minggu';
+                $todayStart = $today->copy()->startOfDay();
+                $todayEnd = $today->copy()->endOfDay();
+                
+                // Get today's activities (already included in $activities, but let's process them separately)
+                $todayActivities = $activities->filter(function($activity) use ($today) {
+                    $activityTime = Carbon::parse($activity->activity_time);
+                    return $activityTime->format('Y-m-d') == $today->format('Y-m-d');
+                });
+                
+                if ($todayActivities->count() > 0) {
+                    $activitiesByDay[$todayName] = [];
+                    
+                    foreach ($gurus as $guru) {
+                        $guruTodayActivities = $todayActivities->filter(function($activity) use ($guru) {
+                            return $activity->guru_id == $guru->id;
+                        });
+                        
+                        $loginCount = $guruTodayActivities->where('activity_type', 'login')->count();
+                        $logoutCount = $guruTodayActivities->where('activity_type', 'logout')->count();
+                        
+                        if ($loginCount > 0 || $logoutCount > 0) {
+                            $activitiesByDay[$todayName][$guru->id] = [
+                                'guru' => $guru,
+                                'login_count' => $loginCount,
+                                'logout_count' => $logoutCount,
+                                'date' => $today->format('Y-m-d'),
+                                'date_formatted' => $today->format('d M Y')
+                            ];
+                        }
+                    }
+                    
+                    // Add today to dayNames
+                    $dayNames[] = $todayName;
+                }
+            }
+            
+            return view('kepala_sekolah.guru_activity', compact('gurus', 'activitiesByDay', 'dayNames'));
         }
     }
     

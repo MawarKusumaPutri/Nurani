@@ -13,24 +13,26 @@ class ActivityTracker
 {
     public static function trackLogin(Guru $guru, Request $request)
     {
-        // Get timezone based on IP address
+        // Use server time (UTC) for activity_time to ensure consistency
+        // Store timezone info in metadata for display purposes
         $timezone = TimezoneHelper::getTimezoneFromIP($request->ip());
-        $loginTime = now()->setTimezone($timezone);
+        $loginTime = now(); // Use server time (UTC)
+        $loginTimeLocal = $loginTime->copy()->setTimezone($timezone);
         
-        // Track activity
+        // Track activity - use server time for activity_time
         GuruActivity::create([
             'guru_id' => $guru->id,
             'activity_type' => 'login',
             'description' => 'Guru login ke sistem',
             'metadata' => [
-                'login_time' => $loginTime,
+                'login_time' => $loginTimeLocal,
                 'timezone' => $timezone,
                 'timezone_abbr' => TimezoneHelper::getTimezoneAbbreviation($timezone),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'location' => TimezoneHelper::getLocationFromIP($request->ip())
             ],
-            'activity_time' => $loginTime,
+            'activity_time' => $loginTime, // Store in UTC for consistency
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent()
         ]);
@@ -39,7 +41,7 @@ class ActivityTracker
         $kepalaSekolah = User::where('role', 'kepala_sekolah')->first();
         if ($kepalaSekolah) {
             $timezoneAbbr = TimezoneHelper::getTimezoneAbbreviation($timezone);
-            $formattedTime = $loginTime->format('d M Y, H:i') . ' ' . $timezoneAbbr;
+            $formattedTime = $loginTimeLocal->format('d M Y, H:i') . ' ' . $timezoneAbbr;
             
             Notification::create([
                 'user_id' => $kepalaSekolah->id,
@@ -49,7 +51,7 @@ class ActivityTracker
                 'data' => [
                     'guru_id' => $guru->id,
                     'guru_name' => $guru->user->name,
-                    'login_time' => $loginTime,
+                    'login_time' => $loginTimeLocal,
                     'timezone' => $timezone,
                     'timezone_abbr' => $timezoneAbbr,
                     'formatted_time' => $formattedTime,
@@ -61,24 +63,26 @@ class ActivityTracker
 
     public static function trackLogout(Guru $guru, Request $request)
     {
-        // Get timezone based on IP address
+        // Use server time (UTC) for activity_time to ensure consistency
+        // Store timezone info in metadata for display purposes
         $timezone = TimezoneHelper::getTimezoneFromIP($request->ip());
-        $logoutTime = now()->setTimezone($timezone);
+        $logoutTime = now(); // Use server time (UTC)
+        $logoutTimeLocal = $logoutTime->copy()->setTimezone($timezone);
         
-        // Track activity
+        // Track activity - use server time for activity_time
         GuruActivity::create([
             'guru_id' => $guru->id,
             'activity_type' => 'logout',
             'description' => 'Guru logout dari sistem',
             'metadata' => [
-                'logout_time' => $logoutTime,
+                'logout_time' => $logoutTimeLocal,
                 'timezone' => $timezone,
                 'timezone_abbr' => TimezoneHelper::getTimezoneAbbreviation($timezone),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'location' => TimezoneHelper::getLocationFromIP($request->ip())
             ],
-            'activity_time' => $logoutTime,
+            'activity_time' => $logoutTime, // Store in UTC for consistency
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent()
         ]);
@@ -87,7 +91,7 @@ class ActivityTracker
         $kepalaSekolah = User::where('role', 'kepala_sekolah')->first();
         if ($kepalaSekolah) {
             $timezoneAbbr = TimezoneHelper::getTimezoneAbbreviation($timezone);
-            $formattedTime = $logoutTime->format('d M Y, H:i') . ' ' . $timezoneAbbr;
+            $formattedTime = $logoutTimeLocal->format('d M Y, H:i') . ' ' . $timezoneAbbr;
             
             Notification::create([
                 'user_id' => $kepalaSekolah->id,
@@ -97,7 +101,7 @@ class ActivityTracker
                 'data' => [
                     'guru_id' => $guru->id,
                     'guru_name' => $guru->user->name,
-                    'logout_time' => $logoutTime,
+                    'logout_time' => $logoutTimeLocal,
                     'timezone' => $timezone,
                     'timezone_abbr' => $timezoneAbbr,
                     'formatted_time' => $formattedTime,
