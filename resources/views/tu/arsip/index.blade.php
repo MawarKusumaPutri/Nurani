@@ -195,12 +195,16 @@
                                                     <td>{{ $arsip->created_at->format('d M Y') }}</td>
                                                     <td>{{ $arsip->pembuat }}</td>
                                                     <td>
-                                                        <a href="{{ asset('storage/arsip/' . $arsip->file_dokumen) }}" target="_blank" class="btn btn-sm btn-primary me-1">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                        </a>
-                                                        <a href="{{ asset('storage/arsip/' . $arsip->file_dokumen) }}" download class="btn btn-sm btn-outline-secondary me-1">
-                                                    <i class="fas fa-download"></i> Download
-                                                        </a>
+                                                        @if($arsip->file_dokumen)
+                                                            <a href="{{ route('tu.arsip.view', $arsip->id) }}" target="_blank" class="btn btn-sm btn-primary me-1" title="Lihat Dokumen">
+                                                                <i class="fas fa-eye"></i> Lihat
+                                                            </a>
+                                                            <a href="{{ route('tu.arsip.download', $arsip->id) }}" class="btn btn-sm btn-outline-secondary me-1" title="Download Dokumen">
+                                                                <i class="fas fa-download"></i> Download
+                                                            </a>
+                                                        @else
+                                                            <span class="text-muted">File tidak tersedia</span>
+                                                        @endif
                                                         <a href="{{ route('tu.arsip.edit', $arsip->id) }}" class="btn btn-sm btn-warning me-1">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>

@@ -159,6 +159,9 @@
                                                     <td>{{ $surat->tanggal_surat->format('d M Y') }}</td>
                                                     <td><span class="badge {{ $statusBadge }}">{{ $statusLabel }}</span></td>
                                                     <td>
+                                                        <a href="{{ route('tu.surat.show', $surat->id) }}" class="btn btn-sm btn-primary me-1" title="Lihat Detail Surat">
+                                                            <i class="fas fa-eye"></i> Lihat
+                                                        </a>
                                                         @if($surat->status == 'draft')
                                                             <a href="{{ route('tu.surat.edit', $surat->id) }}" class="btn btn-sm btn-warning me-1">
                                                                 <i class="fas fa-edit"></i> Edit
@@ -166,15 +169,11 @@
                                                             <button class="btn btn-sm btn-danger">
                                                                 <i class="fas fa-trash"></i> Hapus
                                                             </button>
-                                                        @else
-                                                            <button class="btn btn-sm btn-primary me-1">
-                                                                <i class="fas fa-eye"></i> Lihat
-                                                            </button>
-                                                            @if($surat->lampiran)
-                                                                <a href="{{ asset('storage/surat/' . $surat->lampiran) }}" download class="btn btn-sm btn-outline-secondary">
-                                                                    <i class="fas fa-download"></i> Download
-                                                                </a>
-                                                            @endif
+                                                        @endif
+                                                        @if($surat->lampiran)
+                                                            <a href="{{ route('tu.surat.lampiran.download', $surat->id) }}" class="btn btn-sm btn-outline-secondary" title="Download Lampiran">
+                                                                <i class="fas fa-download"></i> Download
+                                                            </a>
                                                         @endif
                                                     </td>
                                                 </tr>

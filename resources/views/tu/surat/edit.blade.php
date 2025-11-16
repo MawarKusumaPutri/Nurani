@@ -149,7 +149,7 @@
                                         <div class="mb-2">
                                             <small class="text-muted">
                                                 <i class="fas fa-file"></i> File saat ini: 
-                                                <a href="{{ asset('storage/surat/' . $surat->lampiran) }}" target="_blank">
+                                                <a href="{{ route('tu.surat.lampiran.view', $surat->id) }}" target="_blank">
                                                     {{ $surat->lampiran }}
                                                 </a>
                                             </small>

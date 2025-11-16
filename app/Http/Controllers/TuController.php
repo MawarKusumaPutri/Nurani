@@ -1390,6 +1390,103 @@ class TuController extends Controller
         }
     }
     
+    public function arsipView($id)
+    {
+        try {
+            $arsip = Arsip::findOrFail($id);
+            
+            // Pastikan user hanya bisa view arsip yang bisa diakses
+            if ($arsip->created_by != Auth::id() && !$arsip->is_public) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk melihat dokumen ini.');
+            }
+            
+            // Cek apakah file ada
+            if (!$arsip->file_dokumen) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'File dokumen tidak ditemukan.');
+            }
+            
+            // Gunakan Storage facade untuk mendapatkan path file
+            $storagePath = 'public/arsip/' . $arsip->file_dokumen;
+            
+            // Cek apakah file ada di storage
+            if (!Storage::exists($storagePath)) {
+                \Log::error('File not found in storage: ' . $storagePath);
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'File tidak ditemukan di server.');
+            }
+            
+            // Ambil path lengkap file
+            $filePath = Storage::path($storagePath);
+            
+            // Ambil mime type file
+            $mimeType = Storage::mimeType($storagePath);
+            
+            // Return file untuk ditampilkan di browser
+            return response()->file($filePath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . $arsip->file_dokumen . '"',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error viewing arsip: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->route('tu.arsip.index')
+                ->with('error', 'Terjadi kesalahan saat melihat dokumen: ' . $e->getMessage());
+        }
+    }
+    
+    public function arsipDownload($id)
+    {
+        try {
+            $arsip = Arsip::findOrFail($id);
+            
+            // Pastikan user hanya bisa download arsip yang bisa diakses
+            if ($arsip->created_by != Auth::id() && !$arsip->is_public) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengunduh dokumen ini.');
+            }
+            
+            // Cek apakah file ada
+            if (!$arsip->file_dokumen) {
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'File dokumen tidak ditemukan.');
+            }
+            
+            // Gunakan Storage facade untuk mendapatkan path file
+            $storagePath = 'public/arsip/' . $arsip->file_dokumen;
+            
+            // Cek apakah file ada di storage
+            if (!Storage::exists($storagePath)) {
+                \Log::error('File not found in storage: ' . $storagePath);
+                return redirect()->route('tu.arsip.index')
+                    ->with('error', 'File tidak ditemukan di server.');
+            }
+            
+            // Ambil path lengkap file
+            $filePath = Storage::path($storagePath);
+            
+            // Ambil extension file untuk menentukan nama file download
+            $extension = $arsip->tipe_file ?? pathinfo($arsip->file_dokumen, PATHINFO_EXTENSION);
+            
+            // Buat nama file download yang bersih
+            $downloadName = $arsip->judul_dokumen;
+            // Clean nama file dari karakter yang tidak valid untuk nama file
+            $downloadName = preg_replace('/[^a-zA-Z0-9\s._-]/', '', $downloadName);
+            $downloadName = str_replace(' ', '_', $downloadName);
+            $downloadName = $downloadName . '.' . $extension;
+            
+            return response()->download($filePath, $downloadName, [
+                'Content-Type' => Storage::mimeType($storagePath),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error downloading arsip: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->route('tu.arsip.index')
+                ->with('error', 'Terjadi kesalahan saat mengunduh dokumen: ' . $e->getMessage());
+        }
+    }
+    
     public function arsipDestroy($id)
     {
         try {
@@ -1445,6 +1542,25 @@ class TuController extends Controller
     public function suratCreate()
     {
         return view('tu.surat.create');
+    }
+    
+    public function suratShow($id)
+    {
+        try {
+            $surat = Surat::findOrFail($id);
+            
+            // Pastikan user hanya bisa melihat surat yang bisa diakses
+            if ($surat->created_by != Auth::id() && !$surat->arsipkan) {
+                return redirect()->route('tu.surat.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk melihat surat ini.');
+            }
+            
+            return view('tu.surat.show', compact('surat'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading surat for view: ' . $e->getMessage());
+            return redirect()->route('tu.surat.index')
+                ->with('error', 'Surat tidak ditemukan.');
+        }
     }
     
     public function suratEdit($id)
@@ -1521,10 +1637,14 @@ class TuController extends Controller
             
             $surat->update($suratData);
             
+            // Refresh model untuk mendapatkan data terbaru
+            $surat->refresh();
+            
             \Log::info('Surat updated successfully:', [
                 'id' => $surat->id,
                 'nomor_surat' => $surat->nomor_surat,
                 'jenis_surat' => $surat->jenis_surat,
+                'lampiran' => $surat->lampiran,
             ]);
 
             $jenisText = match($request->jenis_surat) {
@@ -1539,7 +1659,7 @@ class TuController extends Controller
                 default => 'Surat'
             };
 
-            return redirect()->route('tu.surat.index')->with('success', 
+            return redirect()->route('tu.surat.show', $surat->id)->with('success', 
                 "{$jenisText} '{$request->nomor_surat}' berhasil diperbarui!"
             );
         } catch (\Exception $e) {
@@ -1547,6 +1667,109 @@ class TuController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat memperbarui surat: ' . $e->getMessage());
+        }
+    }
+    
+    public function suratViewLampiran($id)
+    {
+        try {
+            $surat = Surat::findOrFail($id);
+            
+            // Pastikan user hanya bisa melihat surat yang bisa diakses
+            if ($surat->created_by != Auth::id() && !$surat->arsipkan) {
+                return redirect()->route('tu.surat.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk melihat lampiran surat ini.');
+            }
+            
+            // Cek apakah file ada
+            if (!$surat->lampiran) {
+                return redirect()->route('tu.surat.show', $surat->id)
+                    ->with('error', 'File lampiran tidak ditemukan.');
+            }
+            
+            // Gunakan Storage facade untuk mendapatkan path file
+            $storagePath = 'public/surat/' . $surat->lampiran;
+            
+            // Cek apakah file ada di storage
+            if (!Storage::exists($storagePath)) {
+                \Log::error('File not found in storage: ' . $storagePath);
+                return redirect()->route('tu.surat.show', $surat->id)
+                    ->with('error', 'File tidak ditemukan di server.');
+            }
+            
+            // Ambil path lengkap file
+            $filePath = Storage::path($storagePath);
+            
+            // Ambil mime type file
+            $mimeType = Storage::mimeType($storagePath);
+            
+            // Return file untuk ditampilkan di browser dengan header untuk mencegah cache
+            return response()->file($filePath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . $surat->lampiran . '"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error viewing surat lampiran: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->route('tu.surat.show', $id)
+                ->with('error', 'Terjadi kesalahan saat melihat lampiran: ' . $e->getMessage());
+        }
+    }
+    
+    public function suratDownloadLampiran($id)
+    {
+        try {
+            $surat = Surat::findOrFail($id);
+            
+            // Pastikan user hanya bisa download surat yang bisa diakses
+            if ($surat->created_by != Auth::id() && !$surat->arsipkan) {
+                return redirect()->route('tu.surat.index')
+                    ->with('error', 'Anda tidak memiliki akses untuk mengunduh lampiran surat ini.');
+            }
+            
+            // Cek apakah file ada
+            if (!$surat->lampiran) {
+                return redirect()->route('tu.surat.show', $surat->id)
+                    ->with('error', 'File lampiran tidak ditemukan.');
+            }
+            
+            // Gunakan Storage facade untuk mendapatkan path file
+            $storagePath = 'public/surat/' . $surat->lampiran;
+            
+            // Cek apakah file ada di storage
+            if (!Storage::exists($storagePath)) {
+                \Log::error('File not found in storage: ' . $storagePath);
+                return redirect()->route('tu.surat.show', $surat->id)
+                    ->with('error', 'File tidak ditemukan di server.');
+            }
+            
+            // Ambil path lengkap file
+            $filePath = Storage::path($storagePath);
+            
+            // Ambil extension file untuk menentukan nama file download
+            $extension = pathinfo($surat->lampiran, PATHINFO_EXTENSION);
+            
+            // Buat nama file download yang bersih
+            $downloadName = $surat->nomor_surat . '_lampiran';
+            // Clean nama file dari karakter yang tidak valid untuk nama file
+            $downloadName = preg_replace('/[^a-zA-Z0-9\s._-]/', '', $downloadName);
+            $downloadName = str_replace(' ', '_', $downloadName);
+            $downloadName = $downloadName . '.' . $extension;
+            
+            return response()->download($filePath, $downloadName, [
+                'Content-Type' => Storage::mimeType($storagePath),
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error downloading surat lampiran: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->route('tu.surat.show', $id)
+                ->with('error', 'Terjadi kesalahan saat mengunduh lampiran: ' . $e->getMessage());
         }
     }
     

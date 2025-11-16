@@ -194,6 +194,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'arsipIndex'])->name('index');
             Route::get('/upload', [App\Http\Controllers\TuController::class, 'arsipCreate'])->name('create');
             Route::post('/upload', [App\Http\Controllers\TuController::class, 'arsipUpload'])->name('upload');
+            Route::get('/{id}/view', [App\Http\Controllers\TuController::class, 'arsipView'])->name('view');
+            Route::get('/{id}/download', [App\Http\Controllers\TuController::class, 'arsipDownload'])->name('download');
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'arsipEdit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'arsipUpdate'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'arsipDestroy'])->name('destroy');
@@ -204,6 +206,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'suratIndex'])->name('index');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'suratCreate'])->name('create');
             Route::post('/send', [App\Http\Controllers\TuController::class, 'suratSend'])->name('send');
+            Route::get('/{id}/show', [App\Http\Controllers\TuController::class, 'suratShow'])->name('show');
+            Route::get('/{id}/lampiran/view', [App\Http\Controllers\TuController::class, 'suratViewLampiran'])->name('lampiran.view');
+            Route::get('/{id}/lampiran/download', [App\Http\Controllers\TuController::class, 'suratDownloadLampiran'])->name('lampiran.download');
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'suratEdit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'suratUpdate'])->name('update');
         });
