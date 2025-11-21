@@ -15,7 +15,7 @@ class ValidVideoKuisSeeder extends Seeder
     {
         // Find Siti Mundari's guru record
         $guru = Guru::whereHas('user', function($query) {
-            $query->where('email', 'siti.mundari@mtssnuraiman.sch.id');
+            $query->where('email', 'sitimundari54@gmail.com');
         })->first();
 
         if (!$guru) {

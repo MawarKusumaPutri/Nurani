@@ -1,22 +1,34 @@
 # 🔐 LOGIN CREDENTIALS - TMS NURANI
 
-## 📋 **Data Login untuk Sistem TMS NURANI**
+## ⚠️ **PENTING: Setup SMTP untuk Notifikasi Email**
 
-### 👨‍🏫 **GURU (Teacher)**
-```
-Email: guru@mtssnuraiman.sch.id
-Password: Guru123!
-```
+**Sebelum login, pastikan SMTP sudah dikonfigurasi!**
+
+Saat ini Mail Driver masih menggunakan `log`, sehingga email tidak terkirim ke Gmail. 
+
+**Cara perbaiki:**
+1. Buka file `.env` di root project
+2. Ubah `MAIL_MAILER=log` menjadi `MAIL_MAILER=smtp`
+3. Tambahkan konfigurasi SMTP Gmail (lihat bagian Setup SMTP)
+4. Jalankan: `php artisan config:clear`
+5. Test: `php artisan email:test mawarkusuma694@gmail.com`
+
+**Lihat file `PERBAIKAN_EMAIL.md` untuk panduan lengkap!**
+
+---
+
+## 📋 **Data Login untuk Sistem TMS NURANI**
 
 ### 👨‍💼 **KEPALA SEKOLAH (Principal)**
 ```
-Email: maman.suparman@mtssnuraiman.scl
+Nama: Maman Suparman, A.KS - Kepala Madrasah
+Email: mamansuparmanaks07@gmail.com
 Password: AdminKS@2024
 ```
 
 ### 👩‍💼 **TENAGA USAHA (Administrative Staff)**
 ```
-Email: tu@mtssnuraiman.sch.id
+Email: internal.nurulaiman@gmail.com
 Password: AdminTU@2024
 ```
 
@@ -26,30 +38,30 @@ Password: AdminTU@2024
 
 ### **1. Nurhadi, S.Pd (Matematika)**
 ```
-Email: nurhadi@mtssnuraiman.sch.id
+Email: mundarinurhadi@gmail.com
 Password: Nurhadi2024!
 Mata Pelajaran: Matematika (1 mata pelajaran)
 ```
 
-### **2. Keysha (Bahasa Inggris)**
+### **2. Keysa Anjani (Bahasa Inggris)**
 ```
-Email: keysha@mtssnuraiman.sch.id
+Email: keysa8406@gmail.com
 Password: Keysha2024!
 Mata Pelajaran: Bahasa Inggris (1 mata pelajaran)
 ```
 
 ### **3. Fadli (Bahasa Arab)**
 ```
-Email: fadli@mtssnuraiman.sch.id
+Email: fadliziyad123@gmail.com
 Password: Fadli2024!
 Mata Pelajaran: Bahasa Arab (1 mata pelajaran)
 ```
 
-### **4. Siti Mundari, S.Ag (IPA, Prakarya, Basa Sunda)**
+### **4. Siti Mundari, S.Ag (IPA, Prakarya)**
 ```
-Email: siti.mundari@mtssnuraiman.sch.id
+Email: sitimundari54@gmail.com
 Password: SitiMundari2024!
-Mata Pelajaran: IPA, Prakarya, Basa Sunda (3 mata pelajaran)
+Mata Pelajaran: IPA, Prakarya (2 mata pelajaran)
 ```
 
 ### **5. Lola Nurlaela, S.Pd.I. (SKI, Akidah Akhlak)**
@@ -59,62 +71,149 @@ Password: LolaNurlaela2024!
 Mata Pelajaran: SKI, Akidah Akhlak (2 mata pelajaran)
 ```
 
-### **6. Desy Nurfalah (Bahasa Indonesia)**
+### **6. Desi Nurfalah (Bahasa Indonesia)**
 ```
-Email: desy.nurfalah@mtssnuraiman.sch.id
+Email: desinurfalah24@gmail.com
 Password: DesyNurfalah2024!
 Mata Pelajaran: Bahasa Indonesia (1 mata pelajaran)
 ```
 
-### **7. M. Rizmal Maulana (Fiqih, Al-Qur'an Hadist)**
+### **7. M. Rizmal Maulana (QH, FIQIH)**
 ```
-Email: m.rizmal.maulana@mtssnuraiman.sch.id
+Email: rizmalmaulana25@gmail.com
 Password: RizmalMaulana2024!
-Mata Pelajaran: Fiqih, Al-Qur'an Hadist (2 mata pelajaran)
+Mata Pelajaran: QH, FIQIH (2 mata pelajaran)
 ```
 
-### **8. Hamzah Nazmudin (Penjaskes, IPS)**
+### **8. Hamzah Najmudin (PJOK, IPS)**
 ```
-Email: hamzah.nazmudin@mtssnuraiman.sch.id
+Email: zahnajmudin10@gmail.com
 Password: HamzahNazmudin2024!
-Mata Pelajaran: Penjaskes, IPS (2 mata pelajaran)
+Mata Pelajaran: PJOK, IPS (2 mata pelajaran)
 ```
 
 ### **9. Sopyan (PKN)**
 ```
-Email: sopyan@mtssnuraiman.sch.id
+Email: sopyanikhsananda@gmail.com
 Password: Sopyan2024!
 Mata Pelajaran: PKN (1 mata pelajaran)
 ```
 
-### **10. Syifa Restu Rahayu (Seni Budaya)**
+### **10. Syifa Restu R (Seni Budaya)**
 ```
-Email: syifa.restu.rahayu@mtssnuraiman.sch.id
+Email: syifarestu81@gmail.com
 Password: SyifaRestu2024!
 Mata Pelajaran: Seni Budaya (1 mata pelajaran)
 ```
 
-### **11. Weny (Tahsin)**
+### **11. Weni Azmi (Tahsin)**
 ```
-Email: weny@mtssnuraiman.sch.id
+Email: wenibustamin27@gmail.com
 Password: Weny2024!
 Mata Pelajaran: Tahsin (1 mata pelajaran)
 ```
 
-### **12. Tintin Martini (BTQ, Tahsin)**
+### **12. Tintin Martini (BTQ)**
 ```
-Email: tintin.martini@mtssnuraiman.sch.id
+Email: tintinmartini184@gmail.com
 Password: TintinMartini2024!
-Mata Pelajaran: BTQ, Tahsin (2 mata pelajaran)
+Mata Pelajaran: BTQ (1 mata pelajaran)
 ```
+
+### **13. Mawar**
+```
+Email: mawarkusuma694@gmail.com
+Password: Mawar2024!
+Mata Pelajaran: Belum ditentukan
+```
+
+---
+
+## 📧 **Daftar Email Gmail yang Terdaftar (Sinkron untuk Notifikasi)**
+
+Semua email berikut sudah terdaftar dan tersinkron dengan sistem untuk menerima notifikasi:
+
+### **Guru:**
+1. `mundarinurhadi@gmail.com` - Nurhadi, S.Pd
+2. `keysa8406@gmail.com` - Keysa Anjani
+3. `fadliziyad123@gmail.com` - Fadli
+4. `sitimundari54@gmail.com` - Siti Mundari, S.Ag
+5. `desinurfalah24@gmail.com` - Desi Nurfalah
+6. `rizmalmaulana25@gmail.com` - M. Rizmal Maulana
+7. `zahnajmudin10@gmail.com` - Hamzah Najmudin
+8. `sopyanikhsananda@gmail.com` - Sopyan
+9. `syifarestu81@gmail.com` - Syifa Restu R
+10. `wenibustamin27@gmail.com` - Weni Azmi
+11. `tintinmartini184@gmail.com` - Tintin Martini
+12. `mawarkusuma694@gmail.com` - Mawar
+13. `lola.nurlaela@mtssnuraiman.sch.id` - Lola Nurlaela, S.Pd.I.
+
+### **Kepala Sekolah:**
+- `mamansuparmanaks07@gmail.com` - Maman Suparman, A.KS
+
+### **Tenaga Usaha:**
+- `internal.nurulaiman@gmail.com` - Tenaga Usaha MTs Nurul Aiman
 
 ---
 
 ## 🔑 **Informasi Tambahan**
 
 ### **Format Email:**
-- Semua email menggunakan domain: `@mtssnuraiman.sch.id`
-- Format: `[role]@mtssnuraiman.sch.id`
+- Email guru, kepala sekolah, dan tenaga usaha menggunakan Gmail individual sesuai dengan data yang telah ditentukan
+- Semua email Gmail sudah tersinkron dan siap menerima notifikasi dari sistem
+
+### **Sinkronisasi Gmail untuk Notifikasi:**
+
+✅ **Sistem notifikasi email sudah aktif!** Setiap kali ada aktivitas login/logout, notifikasi otomatis akan dikirim ke email Gmail yang terdaftar.
+
+#### **Setup Konfigurasi SMTP Gmail:**
+
+Untuk mengaktifkan notifikasi email Gmail, pastikan konfigurasi SMTP sudah diatur di file `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="MTs Nurul Aiman"
+```
+
+#### **Cara Membuat Gmail App Password:**
+
+1. Buka [Google Account Settings](https://myaccount.google.com/)
+2. Pilih **Security** → **2-Step Verification** (harus aktif dulu)
+3. Scroll ke bawah, pilih **App passwords**
+4. Pilih **Mail** dan **Other (Custom name)**
+5. Masukkan nama: "MTs Nurul Aiman System"
+6. Klik **Generate**
+7. **Copy password yang dihasilkan** (16 karakter tanpa spasi)
+8. Paste password tersebut di `MAIL_PASSWORD` di file `.env`
+
+#### **Jenis Notifikasi yang Dikirim:**
+
+✅ **Notifikasi Login:**
+- Dikirim otomatis saat user berhasil login
+- **SINKRON OTOMATIS:** Email notifikasi = Email yang digunakan untuk login
+- Contoh: Login dengan `mawarkusuma694@gmail.com` → Notifikasi masuk ke `mawarkusuma694@gmail.com`
+- Berisi informasi: nama, email, waktu login, IP address, device
+- Mengingatkan keamanan akun jika login tidak dikenal
+
+✅ **Notifikasi Logout:**
+- Dikirim otomatis saat user logout
+- **SINKRON OTOMATIS:** Email notifikasi = Email yang digunakan untuk login
+- Berisi informasi: nama, email, waktu logout, IP address
+
+#### **Testing Notifikasi:**
+
+Setelah setup SMTP, test dengan login menggunakan:
+- **Email:** `mawarkusuma694@gmail.com`
+- **Password:** `Mawar2024!`
+- **Role:** `guru`
+
+Notifikasi akan otomatis masuk ke Gmail dalam beberapa detik setelah login berhasil.
 
 ### **Format Password:**
 - Minimal 8 karakter

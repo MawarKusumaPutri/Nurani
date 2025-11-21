@@ -18,16 +18,7 @@ class UserSeeder extends Seeder
         // Create Guru Users with individual emails
         $guruData = [
             [
-                'email' => 'guru@mtssnuraiman.sch.id',
-                'name' => 'Guru MTs Nurul Aiman',
-                'password' => Hash::make('Guru123!'),
-                'role' => 'guru',
-                'nip' => 'GRU001',
-                'phone' => '081234567890',
-                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
-            ],
-            [
-                'email' => 'nurhadi@mtssnuraiman.sch.id',
+                'email' => 'mundarinurhadi@gmail.com',
                 'name' => 'Nurhadi, S.Pd',
                 'password' => Hash::make('Nurhadi2024!'),
                 'role' => 'guru',
@@ -36,8 +27,8 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'keysha@mtssnuraiman.sch.id',
-                'name' => 'Keysha',
+                'email' => 'keysa8406@gmail.com',
+                'name' => 'Keysa Anjani',
                 'password' => Hash::make('Keysha2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU003',
@@ -45,7 +36,7 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'fadli@mtssnuraiman.sch.id',
+                'email' => 'fadliziyad123@gmail.com',
                 'name' => 'Fadli',
                 'password' => Hash::make('Fadli2024!'),
                 'role' => 'guru',
@@ -54,7 +45,7 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'siti.mundari@mtssnuraiman.sch.id',
+                'email' => 'sitimundari54@gmail.com',
                 'name' => 'Siti Mundari, S.Ag',
                 'password' => Hash::make('SitiMundari2024!'),
                 'role' => 'guru',
@@ -72,8 +63,8 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'desy.nurfalah@mtssnuraiman.sch.id',
-                'name' => 'Desy Nurfalah',
+                'email' => 'desinurfalah24@gmail.com',
+                'name' => 'Desi Nurfalah',
                 'password' => Hash::make('DesyNurfalah2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU007',
@@ -81,7 +72,7 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'm.rizmal.maulana@mtssnuraiman.sch.id',
+                'email' => 'rizmalmaulana25@gmail.com',
                 'name' => 'M. Rizmal Maulana',
                 'password' => Hash::make('RizmalMaulana2024!'),
                 'role' => 'guru',
@@ -90,8 +81,8 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'hamzah.nazmudin@mtssnuraiman.sch.id',
-                'name' => 'Hamzah Nazmudin',
+                'email' => 'zahnajmudin10@gmail.com',
+                'name' => 'Hamzah Najmudin',
                 'password' => Hash::make('HamzahNazmudin2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU009',
@@ -99,7 +90,7 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'sopyan@mtssnuraiman.sch.id',
+                'email' => 'sopyanikhsananda@gmail.com',
                 'name' => 'Sopyan',
                 'password' => Hash::make('Sopyan2024!'),
                 'role' => 'guru',
@@ -108,8 +99,8 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'syifa.restu.rahayu@mtssnuraiman.sch.id',
-                'name' => 'Syifa Restu Rahayu',
+                'email' => 'syifarestu81@gmail.com',
+                'name' => 'Syifa Restu R',
                 'password' => Hash::make('SyifaRestu2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU011',
@@ -117,8 +108,8 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'weny@mtssnuraiman.sch.id',
-                'name' => 'Weny',
+                'email' => 'wenibustamin27@gmail.com',
+                'name' => 'Weni Azmi',
                 'password' => Hash::make('Weny2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU012',
@@ -126,12 +117,21 @@ class UserSeeder extends Seeder
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ],
             [
-                'email' => 'tintin.martini@mtssnuraiman.sch.id',
+                'email' => 'tintinmartini184@gmail.com',
                 'name' => 'Tintin Martini',
                 'password' => Hash::make('TintinMartini2024!'),
                 'role' => 'guru',
                 'nip' => 'GRU013',
                 'phone' => '081234567902',
+                'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
+            ],
+            [
+                'email' => 'mawarkusuma694@gmail.com',
+                'name' => 'Mawar',
+                'password' => Hash::make('Mawar2024!'),
+                'role' => 'guru',
+                'nip' => 'GRU014',
+                'phone' => '081234567903',
                 'address' => 'Jl. Simpang-Parakanmuncang Km 1.2, Cikondang, Gunungmanik, Kec. Tanjungsari Kabupaten Sumedang, Jawa Barat 45363'
             ]
         ];
@@ -149,41 +149,44 @@ class UserSeeder extends Seeder
                 
                 // Set mata pelajaran berdasarkan email guru
                 switch ($guru['email']) {
-                    case 'nurhadi@mtssnuraiman.sch.id':
+                    case 'mundarinurhadi@gmail.com':
                         $mataPelajaran = 'Matematika';
                         break;
-                    case 'keysha@mtssnuraiman.sch.id':
+                    case 'keysa8406@gmail.com':
                         $mataPelajaran = 'Bahasa Inggris';
                         break;
-                    case 'fadli@mtssnuraiman.sch.id':
+                    case 'fadliziyad123@gmail.com':
                         $mataPelajaran = 'Bahasa Arab';
                         break;
-                    case 'siti.mundari@mtssnuraiman.sch.id':
-                        $mataPelajaran = 'IPA, Prakarya, Basa Sunda';
+                    case 'sitimundari54@gmail.com':
+                        $mataPelajaran = 'IPA, Prakarya';
                         break;
                     case 'lola.nurlaela@mtssnuraiman.sch.id':
                         $mataPelajaran = 'SKI, Akidah Akhlak';
                         break;
-                    case 'desy.nurfalah@mtssnuraiman.sch.id':
+                    case 'desinurfalah24@gmail.com':
                         $mataPelajaran = 'Bahasa Indonesia';
                         break;
-                    case 'm.rizmal.maulana@mtssnuraiman.sch.id':
-                        $mataPelajaran = 'Fiqih, Al-Qur\'an Hadist';
+                    case 'rizmalmaulana25@gmail.com':
+                        $mataPelajaran = 'QH, FIQIH';
                         break;
-                    case 'hamzah.nazmudin@mtssnuraiman.sch.id':
-                        $mataPelajaran = 'Penjaskes, IPS';
+                    case 'zahnajmudin10@gmail.com':
+                        $mataPelajaran = 'PJOK, IPS';
                         break;
-                    case 'sopyan@mtssnuraiman.sch.id':
+                    case 'sopyanikhsananda@gmail.com':
                         $mataPelajaran = 'PKN';
                         break;
-                    case 'syifa.restu.rahayu@mtssnuraiman.sch.id':
+                    case 'syifarestu81@gmail.com':
                         $mataPelajaran = 'Seni Budaya';
                         break;
-                    case 'weny@mtssnuraiman.sch.id':
+                    case 'wenibustamin27@gmail.com':
                         $mataPelajaran = 'Tahsin';
                         break;
-                    case 'tintin.martini@mtssnuraiman.sch.id':
-                        $mataPelajaran = 'BTQ, Tahsin';
+                    case 'tintinmartini184@gmail.com':
+                        $mataPelajaran = 'BTQ';
+                        break;
+                    case 'mawarkusuma694@gmail.com':
+                        $mataPelajaran = 'Belum ditentukan';
                         break;
                     default:
                         $mataPelajaran = 'Belum ditentukan';
@@ -203,9 +206,9 @@ class UserSeeder extends Seeder
 
         // Create Kepala Sekolah User
         User::updateOrCreate(
-            ['email' => 'maman.suparman@mtssnuraiman.scl'],
+            ['email' => 'mamansuparmanaks07@gmail.com'],
             [
-                'name' => 'Maman Suparman, A.KS',
+                'name' => 'Maman Suparman, A.KS - Kepala Madrasah',
                 'password' => Hash::make('AdminKS@2024'),
                 'role' => 'kepala_sekolah',
                 'nip' => '9661750652200022',
@@ -216,7 +219,7 @@ class UserSeeder extends Seeder
 
         // Create Tenaga Usaha User
         User::updateOrCreate(
-            ['email' => 'tu@mtssnuraiman.sch.id'],
+            ['email' => 'internal.nurulaiman@gmail.com'],
             [
                 'name' => 'Tenaga Usaha MTs Nurul Aiman',
                 'password' => Hash::make('AdminTU@2024'),

@@ -15,7 +15,7 @@ class VideoKuisSeeder extends Seeder
     {
         // Ambil guru Siti Mundari
         $guru = Guru::whereHas('user', function($query) {
-            $query->where('email', 'siti.mundari@mtssnuraiman.sch.id');
+            $query->where('email', 'sitimundari54@gmail.com');
         })->first();
 
         if (!$guru) {
