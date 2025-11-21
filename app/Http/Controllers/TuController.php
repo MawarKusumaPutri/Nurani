@@ -33,7 +33,7 @@ class TuController extends Controller
     // Data Guru Management
     public function guruIndex()
     {
-        $gurus = Guru::with('user')->paginate(20);
+        $gurus = Guru::with('user')->orderBy('nip')->paginate(20);
         return view('tu.guru.index', compact('gurus'));
     }
     
@@ -91,14 +91,76 @@ class TuController extends Controller
     
     public function guruUpdate(Request $request, $id)
     {
-        // Implementation for updating guru
+        $guru = Guru::with('user')->findOrFail($id);
+        
+        $request->validate([
+            'nip' => 'required|string|max:255|unique:gurus,nip,' . $id,
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $guru->user_id,
+            'password' => 'nullable|string|min:6',
+            'mata_pelajaran' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'status' => 'required|in:aktif,tidak_aktif',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        // Prepare user data
+        $userData = [
+            'name' => $request->nama,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ];
+        
+        // Update password if provided
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+        
+        // Update user
+        $guru->user->update($userData);
+        
+        // Handle foto upload
+        $fotoPath = $guru->foto; // Keep existing foto
+        if ($request->hasFile('foto')) {
+            // Delete old foto if exists
+            if ($guru->foto && Storage::disk('public')->exists($guru->foto)) {
+                Storage::disk('public')->delete($guru->foto);
+            }
+            // Store new foto
+            $fotoPath = $request->file('foto')->store('guru/foto', 'public');
+        }
+        
+        // Update guru
+        $guru->update([
+            'nip' => $request->nip,
+            'mata_pelajaran' => $request->mata_pelajaran ?? 'Belum ditentukan',
+            'status' => $request->status,
+            'foto' => $fotoPath,
+        ]);
+        
         return redirect()->route('tu.guru.index')->with('success', 'Data guru berhasil diperbarui');
     }
     
     public function guruDestroy($id)
     {
-        // Implementation for deleting guru
-        return redirect()->route('tu.guru.index')->with('success', 'Data guru berhasil dihapus');
+        try {
+            $guru = Guru::findOrFail($id);
+            $user = $guru->user;
+            $namaGuru = $user->name;
+            
+            // Delete guru (will cascade delete user if foreign key is set)
+            $guru->delete();
+            
+            // Also delete user if not cascade
+            if ($user) {
+                $user->delete();
+            }
+            
+            return redirect()->route('tu.guru.index')->with('success', 'Data guru ' . $namaGuru . ' berhasil dihapus');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting guru: ' . $e->getMessage());
+            return redirect()->route('tu.guru.index')->with('error', 'Gagal menghapus data guru: ' . $e->getMessage());
+        }
     }
     
     // Data Siswa Management
@@ -398,6 +460,45 @@ class TuController extends Controller
         $mataPelajaranList = $mataPelajaranList->unique()->sort()->values();
         
         return view('tu.jadwal.create', compact('gurus', 'mataPelajaranList'));
+    }
+    
+    public function getMataPelajaranByGuru($guruId)
+    {
+        try {
+            $guru = Guru::findOrFail($guruId);
+            
+            $mataPelajaranList = [];
+            
+            if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
+                $subjects = explode(', ', $guru->mata_pelajaran);
+                foreach ($subjects as $subject) {
+                    $mataPelajaranList[] = trim($subject);
+                }
+            }
+            
+            // Juga cek dari tabel guru_mata_pelajaran jika ada
+            $guruMataPelajaran = \App\Models\GuruMataPelajaran::where('guru_id', $guruId)
+                ->where('is_active', true)
+                ->orderBy('urutan')
+                ->get();
+            
+            foreach ($guruMataPelajaran as $gmp) {
+                if (!in_array($gmp->mata_pelajaran, $mataPelajaranList)) {
+                    $mataPelajaranList[] = $gmp->mata_pelajaran;
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'mata_pelajaran' => array_values(array_unique($mataPelajaranList))
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Guru tidak ditemukan',
+                'mata_pelajaran' => []
+            ], 404);
+        }
     }
     
     public function jadwalStore(Request $request)

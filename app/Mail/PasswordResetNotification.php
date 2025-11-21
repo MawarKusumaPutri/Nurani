@@ -3,29 +3,26 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
-class LogoutNotification extends Mailable
+class PasswordResetNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
-    public $logoutTime;
-    public $ipAddress;
+    public $resetUrl;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, $ipAddress = null)
+    public function __construct(User $user, $resetUrl)
     {
         $this->user = $user;
-        $this->logoutTime = now();
-        $this->ipAddress = $ipAddress ?? request()->ip();
+        $this->resetUrl = $resetUrl;
     }
 
     /**
@@ -33,25 +30,13 @@ class LogoutNotification extends Mailable
      */
     public function envelope(): Envelope
     {
-        // Gunakan email penerima sebagai From address untuk semua email
-        // Ini membuat Gmail melihatnya sebagai email dari diri sendiri (self-send)
-        // Lebih kecil kemungkinan masuk ke Spam dan lebih mudah dipahami guru
-        $fromAddress = $this->user->email; // Gunakan email penerima sebagai pengirim
+        $fromAddress = $this->user->email;
         $fromName = config('mail.from.name', env('MAIL_FROM_NAME', 'MTs Nurul Aiman'));
 
-        // Pastikan subject tidak terlalu panjang dan jelas
-        $subject = 'Notifikasi Logout - ' . config('app.name');
-        
         return new Envelope(
             from: new \Illuminate\Mail\Mailables\Address($fromAddress, $fromName),
-            subject: $subject,
+            subject: 'Reset Password - ' . config('app.name'),
             replyTo: [new \Illuminate\Mail\Mailables\Address($fromAddress, $fromName)],
-            tags: ['logout-notification', 'tms-nurani'],
-            metadata: [
-                'user_id' => (string) $this->user->id,
-                'user_email' => $this->user->email,
-                'logout_time' => $this->logoutTime->toIso8601String(),
-            ],
         );
     }
 
@@ -61,7 +46,7 @@ class LogoutNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.logout-notification',
+            markdown: 'emails.password-reset',
         );
     }
 
@@ -81,7 +66,7 @@ class LogoutNotification extends Mailable
      */
     public function headers(): \Illuminate\Mail\Mailables\Headers
     {
-        $fromAddress = config('mail.from.address', env('MAIL_FROM_ADDRESS', 'noreply@example.com'));
+        $fromAddress = $this->user->email;
         
         return new \Illuminate\Mail\Mailables\Headers(
             text: [
@@ -90,10 +75,10 @@ class LogoutNotification extends Mailable
                 'X-MSMail-Priority' => 'High',
                 'Importance' => 'high',
                 'Precedence' => 'bulk',
-                'List-Unsubscribe' => '<' . route('welcome') . '>',
-                'Message-ID' => '<' . time() . '.' . md5($this->user->email . $this->logoutTime) . '@' . parse_url(config('app.url'), PHP_URL_HOST) . '>',
+                'Message-ID' => '<' . time() . '.' . md5($this->user->email . $this->resetUrl) . '@' . parse_url(config('app.url'), PHP_URL_HOST) . '>',
                 'Return-Path' => $fromAddress,
             ],
         );
     }
 }
+

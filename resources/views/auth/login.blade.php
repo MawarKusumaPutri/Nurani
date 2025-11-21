@@ -131,9 +131,37 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #666;
+            color: #2E7D32;
             cursor: pointer;
+            padding: 5px 8px;
+            z-index: 10;
             font-size: 18px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-toggle:hover {
+            color: #1B5E20;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .password-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
+        .password-toggle:focus {
+            outline: none;
+            color: #1B5E20;
+        }
+        
+        .input-group .form-control {
+            padding-right: 50px;
+        }
+        
+        .input-group .form-control:focus {
+            padding-right: 50px;
         }
         
         .btn-login {
@@ -156,16 +184,39 @@
         
         .form-links {
             text-align: center;
+            margin-top: 20px;
         }
         
         .form-links a {
-            color: #666;
+            color: #2E7D32;
             text-decoration: none;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(46, 125, 50, 0.1);
+            border: 2px solid rgba(46, 125, 50, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .form-links a::before {
+            content: '🔑 ';
+            margin-right: 5px;
         }
         
         .form-links a:hover {
-            color: #2E7D32;
+            color: #1B5E20;
+            background: rgba(46, 125, 50, 0.2);
+            border-color: rgba(46, 125, 50, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            text-decoration: none;
+        }
+        
+        .form-links a:active {
+            transform: translateY(0);
         }
         
         .register-link {
@@ -284,10 +335,7 @@
             </form>
             
             <div class="form-links">
-                <a href="#" class="d-block mb-2">Lupa password?</a>
-                <div class="register-link">
-                    Belum punya akun? <a href="#" class="highlight">Hubungi Admin</a>
-                </div>
+                <a href="{{ route('password.request') }}" class="d-block mb-2">Lupa password?</a>
             </div>
             
             <div class="features">
@@ -312,6 +360,8 @@
             const passwordField = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
             
+            if (!passwordField || !toggleIcon) return;
+            
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleIcon.classList.remove('fa-eye');
@@ -321,7 +371,32 @@
                 toggleIcon.classList.remove('fa-eye-slash');
                 toggleIcon.classList.add('fa-eye');
             }
+            
+            // Pastikan icon tetap terlihat
+            toggleIcon.style.display = 'block';
+            toggleIcon.style.visibility = 'visible';
+            toggleIcon.style.opacity = '1';
         }
+        
+        // Pastikan icon tetap terlihat saat input field focus
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordField && toggleIcon) {
+                passwordField.addEventListener('focus', function() {
+                    toggleIcon.style.display = 'block';
+                    toggleIcon.style.visibility = 'visible';
+                    toggleIcon.style.opacity = '1';
+                });
+                
+                passwordField.addEventListener('blur', function() {
+                    toggleIcon.style.display = 'block';
+                    toggleIcon.style.visibility = 'visible';
+                    toggleIcon.style.opacity = '1';
+                });
+            }
+        });
     </script>
 </body>
 </html>

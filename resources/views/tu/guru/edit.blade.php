@@ -1,0 +1,236 @@
+@extends('layouts.tu')
+
+@section('title', 'Edit Guru - TU Dashboard')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        @include('partials.tu-sidebar')
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="fas fa-user-edit me-2"></i>
+                    Edit Data Guru
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{{ route('tu.guru.index') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
+            </div>
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Terjadi kesalahan:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            <!-- Form Section -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chalkboard-teacher me-2"></i>
+                                Form Edit Data Guru
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('tu.guru.update', $guru->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nip" class="form-label">
+                                            NIP <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="nip" name="nip" 
+                                               placeholder="Masukkan NIP" value="{{ old('nip', $guru->nip) }}" required>
+                                        @error('nip')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nama" class="form-label">
+                                            Nama Lengkap <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="nama" name="nama" 
+                                               placeholder="Masukkan nama lengkap" value="{{ old('nama', $guru->user->name) }}" required>
+                                        @error('nama')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">
+                                            Email <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="email" class="form-control" id="email" name="email" 
+                                               placeholder="Masukkan email" value="{{ old('email', $guru->user->email) }}" required>
+                                        @error('email')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">
+                                            Password <span class="text-muted">(Opsional)</span>
+                                        </label>
+                                        <input type="password" class="form-control" id="password" name="password" 
+                                               placeholder="Kosongkan jika tidak ingin mengubah">
+                                        @error('password')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                        <small class="text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="mata_pelajaran" class="form-label">
+                                            Mata Pelajaran
+                                        </label>
+                                        <input type="text" class="form-control" id="mata_pelajaran" name="mata_pelajaran" 
+                                               placeholder="Contoh: Matematika, IPA" value="{{ old('mata_pelajaran', $guru->mata_pelajaran) }}">
+                                        <small class="text-muted">Pisahkan dengan koma jika lebih dari satu</small>
+                                        @error('mata_pelajaran')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="jenis_kelamin" class="form-label">
+                                            Jenis Kelamin
+                                        </label>
+                                        <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
+                                            <option value="">Pilih Jenis Kelamin</option>
+                                            <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                            <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                        </select>
+                                        <small class="text-muted">Field ini tidak tersimpan di database saat ini</small>
+                                        @error('jenis_kelamin')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="no_telp" class="form-label">No. Telepon</label>
+                                        <input type="text" class="form-control" id="no_telp" name="phone" 
+                                               placeholder="Masukkan nomor telepon" value="{{ old('phone', $guru->user->phone) }}">
+                                        @error('phone')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="status" class="form-label">
+                                            Status <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select" id="status" name="status" required>
+                                            <option value="aktif" {{ old('status', $guru->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                            <option value="tidak_aktif" {{ old('status', $guru->status) == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                        </select>
+                                        @error('status')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="foto" class="form-label">Foto Profil</label>
+                                        @if($guru->foto)
+                                            <div class="mb-2">
+                                                <img src="{{ asset('storage/' . $guru->foto) }}" alt="Foto Profil" 
+                                                     class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                                <p class="text-muted small mb-0">Foto saat ini</p>
+                                            </div>
+                                        @endif
+                                        <input type="file" class="form-control" id="foto" name="foto" 
+                                               accept="image/jpeg,image/png,image/jpg">
+                                        <small class="text-muted">Format: JPG, PNG. Maksimal 2MB. Kosongkan jika tidak ingin mengubah</small>
+                                        @error('foto')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <a href="{{ route('tu.guru.index') }}" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i> Batal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i> Simpan Perubahan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Informasi
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">
+                                <strong>Catatan:</strong>
+                            </p>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Field dengan tanda <span class="text-danger">*</span> wajib diisi
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    NIP harus unik dan tidak boleh duplikat
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Email akan digunakan untuk login
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Password bisa dikosongkan jika tidak ingin mengubah
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Mata pelajaran bisa lebih dari satu, pisahkan dengan koma
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Foto bisa dikosongkan jika tidak ingin mengubah
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+@endsection
+

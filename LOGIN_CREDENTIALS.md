@@ -1,19 +1,27 @@
 # 🔐 LOGIN CREDENTIALS - TMS NURANI
 
-## ⚠️ **PENTING: Setup SMTP untuk Notifikasi Email**
+## 📧 **Email Notifikasi - Sederhana dan Otomatis!**
 
-**Sebelum login, pastikan SMTP sudah dikonfigurasi!**
+### ✅ **Untuk Guru:**
+**TIDAK PERLU SETUP APAPUN!** Sistem sudah otomatis bekerja.
 
-Saat ini Mail Driver masih menggunakan `log`, sehingga email tidak terkirim ke Gmail. 
+**Cara menggunakan:**
+1. Login ke sistem dengan email Gmail Anda
+2. Buka Gmail Anda
+3. Cek **Kotak Masuk** - Notifikasi akan muncul!
 
-**Cara perbaiki:**
-1. Buka file `.env` di root project
-2. Ubah `MAIL_MAILER=log` menjadi `MAIL_MAILER=smtp`
-3. Tambahkan konfigurasi SMTP Gmail (lihat bagian Setup SMTP)
-4. Jalankan: `php artisan config:clear`
-5. Test: `php artisan email:test mawarkusuma694@gmail.com`
+**📖 Lihat `PANDUAN_SEDERHANA_UNTUK_GURU.md` untuk panduan lengkap (sangat mudah!)**
 
-**Lihat file `PERBAIKAN_EMAIL.md` untuk panduan lengkap!**
+### ⚙️ **Untuk Admin (Setup Sekali Saja):**
+Jika email notifikasi belum aktif, admin perlu setup sekali:
+
+1. Buat Gmail App Password (lihat panduan di bawah)
+2. Jalankan command:
+   ```bash
+   php artisan gmail:setup email@gmail.com "app-password"
+   ```
+
+**📖 Lihat `SETUP_ADMIN_SEDERHANA.md` untuk panduan setup (5 menit sekali saja)**
 
 ---
 
@@ -125,7 +133,14 @@ Mata Pelajaran: BTQ (1 mata pelajaran)
 Email: mawarkusuma694@gmail.com
 Password: Mawar2024!
 Mata Pelajaran: Belum ditentukan
+Role: guru
 ```
+
+**✅ Sinkronisasi Gmail Aktif:**
+- Email login: `mawarkusuma694@gmail.com`
+- Email notifikasi: `mawarkusuma694@gmail.com` (sinkron otomatis)
+- Setiap login/logout, notifikasi otomatis masuk ke Gmail ini
+- Tidak perlu konfigurasi tambahan, sistem sudah tersinkron
 
 ---
 
@@ -164,7 +179,14 @@ Semua email berikut sudah terdaftar dan tersinkron dengan sistem untuk menerima 
 
 ### **Sinkronisasi Gmail untuk Notifikasi:**
 
-✅ **Sistem notifikasi email sudah aktif!** Setiap kali ada aktivitas login/logout, notifikasi otomatis akan dikirim ke email Gmail yang terdaftar.
+✅ **Sistem notifikasi email sudah aktif dan tersinkron otomatis!** Setiap kali ada aktivitas login/logout, notifikasi otomatis akan dikirim ke email Gmail yang terdaftar.
+
+**🔄 Prinsip Sinkronisasi:**
+- **Email Login = Email Notifikasi** (100% sinkron)
+- Login dengan `mawarkusuma694@gmail.com` → Notifikasi masuk ke `mawarkusuma694@gmail.com`
+- Login dengan `keysa8406@gmail.com` → Notifikasi masuk ke `keysa8406@gmail.com`
+- Setiap user mendapat notifikasi di email Gmail mereka sendiri
+- **TIDAK PERLU** konfigurasi manual per user, sistem otomatis sinkron
 
 #### **Setup Konfigurasi SMTP Gmail:**
 
@@ -213,7 +235,44 @@ Setelah setup SMTP, test dengan login menggunakan:
 - **Password:** `Mawar2024!`
 - **Role:** `guru`
 
-Notifikasi akan otomatis masuk ke Gmail dalam beberapa detik setelah login berhasil.
+**Hasil yang Diharapkan:**
+- ✅ Login berhasil → Redirect ke dashboard guru
+- ✅ Notifikasi email otomatis terkirim ke `mawarkusuma694@gmail.com`
+- ✅ Email masuk ke Gmail dalam 5-30 detik
+- ✅ Subject email: "🔔 Notifikasi Login - Guru MTs Nurul Aiman"
+- ✅ Email berisi: nama, waktu login, IP address, device
+
+**Cara Cek Notifikasi di Gmail:**
+1. Buka Gmail: https://mail.google.com
+2. Login dengan: `mawarkusuma694@gmail.com`
+3. Cek folder **Inbox** (atau **Spam** jika tidak ada)
+4. Notifikasi akan muncul dengan subject "🔔 Notifikasi Login - Guru MTs Nurul Aiman"
+
+**⚠️ Jika Email Masuk ke Spam - SOLUSI LENGKAP:**
+
+**Cara 1: Tandai "Bukan Spam" (Cepat)**
+- Buka folder **Spam** di Gmail
+- Klik email notifikasi → Klik **"Bukan spam"** (Not spam)
+- Email akan dipindahkan ke Inbox
+
+**Cara 2: Buat Filter Gmail (Permanen - DISARANKAN!)**
+1. Gmail → Settings (⚙️) → "Lihat semua pengaturan"
+2. "Filter dan Alamat yang Diblokir" → "Buat filter baru"
+3. **Dari (From):** `mawarkusuma694@gmail.com`
+4. "Buat filter" → Centang:
+   - ✅ **"Jangan pernah mengirim ke Spam"** (PENTING!)
+   - ✅ "Selalu tandai sebagai penting"
+5. "Buat filter"
+
+**Hasil:** Email akan SELALU masuk ke Kotak Masuk (Inbox)!
+
+**📖 Lihat file `SOLUSI_EMAIL_MASUK_INBOX.md` untuk panduan lengkap!**
+
+**Catatan Penting:**
+- ✅ Email notifikasi = Email login (100% sinkron)
+- ✅ Tidak perlu konfigurasi per user
+- ✅ Sistem otomatis mengirim ke email yang sama dengan email login
+- ✅ Jika login dengan `mawarkusuma694@gmail.com`, notifikasi pasti masuk ke `mawarkusuma694@gmail.com`
 
 ### **Format Password:**
 - Minimal 8 karakter

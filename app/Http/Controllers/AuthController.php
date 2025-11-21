@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Guru;
 use App\Services\ActivityTracker;
 use App\Mail\LoginNotification;
 use App\Mail\LogoutNotification;
+use App\Mail\PasswordResetNotification;
 
 class AuthController extends Controller
 {
@@ -169,5 +173,157 @@ class AuthController extends Controller
             // If logout fails, just redirect to welcome page
             return redirect()->route('welcome');
         }
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'role' => 'required|in:guru,tu,kepala_sekolah'
+        ]);
+
+        $user = User::where('email', $request->email)
+                   ->where('role', $request->role)
+                   ->first();
+
+        if (!$user) {
+            $roleText = match($request->role) {
+                'guru' => 'guru',
+                'tu' => 'tenaga usaha',
+                'kepala_sekolah' => 'kepala sekolah',
+                default => 'pengguna'
+            };
+
+            return back()->withErrors([
+                'email' => 'Email tidak ditemukan untuk ' . $roleText . ' yang terdaftar.',
+            ])->withInput();
+        }
+
+        // Generate reset token
+        $token = Str::random(64);
+        
+        // Simpan token ke database
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // Generate reset URL
+        $resetUrl = route('password.reset', ['token' => $token, 'email' => $user->email]);
+        
+        // Coba kirim email jika SMTP sudah dikonfigurasi (opsional, tidak menghalangi proses)
+        $mailDriver = config('mail.default');
+        $mailUsername = env('MAIL_USERNAME');
+        
+        if ($mailDriver !== 'log' && !empty($mailUsername)) {
+            try {
+                // Kirim email reset password - SINKRON OTOMATIS
+                // Email dikirim ke email yang sama dengan email yang digunakan untuk request reset
+                Mail::to($user->email)->send(new PasswordResetNotification($user, $resetUrl));
+                
+                \Log::info('✅ Password reset link sent successfully:', [
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'role' => $user->role,
+                    'mail_driver' => config('mail.default'),
+                    'mail_host' => config('mail.mailers.smtp.host'),
+                    'reset_url' => $resetUrl,
+                    'timestamp' => now()->toDateTimeString()
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('❌ Failed to send password reset email (continuing anyway):', [
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'error' => $e->getMessage(),
+                    'mail_driver' => config('mail.default'),
+                    'mail_host' => config('mail.mailers.smtp.host'),
+                    'timestamp' => now()->toDateTimeString()
+                ]);
+                // Email gagal terkirim, tapi tetap lanjutkan ke halaman reset password
+            }
+        }
+        
+        // Langsung redirect ke halaman reset password - MEMPERMUDAH GURU
+        // Tidak perlu menampilkan link, langsung ke form reset password
+        return redirect()->route('password.reset', ['token' => $token, 'email' => $user->email])
+                         ->with('status', 'Silakan masukkan password baru Anda.');
+    }
+
+    public function showResetForm(Request $request, $token)
+    {
+        $email = $request->email;
+        
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $email
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        // Cek token valid
+        $passwordReset = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$passwordReset) {
+            return back()->withErrors(['email' => 'Token reset password tidak valid atau sudah kadaluarsa.'])->withInput();
+        }
+
+        // Cek token cocok
+        if (!Hash::check($request->token, $passwordReset->token)) {
+            return back()->withErrors(['email' => 'Token reset password tidak valid.'])->withInput();
+        }
+
+        // Cek token belum kadaluarsa (60 menit)
+        if (now()->diffInMinutes($passwordReset->created_at) > 60) {
+            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            return back()->withErrors(['email' => 'Token reset password sudah kadaluarsa. Silakan request ulang.'])->withInput();
+        }
+
+        // Update password
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            // Hapus token
+            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+            \Log::info('✅ Password reset successful:', [
+                'email' => $user->email,
+                'name' => $user->name,
+                'role' => $user->role,
+                'timestamp' => now()->toDateTimeString()
+            ]);
+
+            // Redirect berdasarkan role untuk mempermudah
+            $roleText = match($user->role) {
+                'guru' => 'Guru',
+                'tu' => 'Tenaga Usaha',
+                'kepala_sekolah' => 'Kepala Sekolah',
+                default => 'Pengguna'
+            };
+
+            return redirect()->route('login')
+                         ->with('status', 'Password berhasil direset! Silakan login dengan password baru sebagai ' . $roleText . '.');
+        }
+
+        return back()->withErrors(['email' => 'User tidak ditemukan.'])->withInput();
     }
 }

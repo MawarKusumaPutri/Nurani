@@ -371,16 +371,38 @@
         }
 
         .sidebar-body .forgot-password {
-            color: rgba(255, 255, 255, 0.8);
+            color: #ffffff;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 600;
             text-align: center;
             display: block;
-            transition: color 0.3s ease;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar-body .forgot-password::before {
+            content: '🔑';
+            margin-right: 8px;
+            font-size: 16px;
         }
 
         .sidebar-body .forgot-password:hover {
-            color: white;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-body .forgot-password:active {
+            transform: translateY(0);
         }
 
         .password-toggle-btn {
@@ -1038,7 +1060,7 @@
                     <button type="submit" class="btn-login">Login</button>
                 </form>
                 
-                <a href="#" class="forgot-password">Forgot password?</a>
+                <a href="{{ route('password.request') }}" class="forgot-password">Lupa password?</a>
                 <div style="text-align: center; margin-top: 15px;">
                     <small style="color: rgba(255,255,255,0.7);">Akun sudah tersedia, silakan login dengan kredensial yang diberikan</small>
                 </div>

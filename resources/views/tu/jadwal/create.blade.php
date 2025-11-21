@@ -59,24 +59,27 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="mata_pelajaran" class="form-label">Mata Pelajaran <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required>
-                                                <option value="">Pilih Mata Pelajaran</option>
-                                                @foreach($mataPelajaranList as $mataPelajaran)
-                                                    <option value="{{ $mataPelajaran }}">{{ $mataPelajaran }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
                                             <label for="guru" class="form-label">Guru Pengajar <span class="text-danger">*</span></label>
                                             <select class="form-select" id="guru" name="guru" required>
                                                 <option value="">Pilih Guru</option>
                                                 @foreach($gurus as $guru)
-                                                    <option value="{{ $guru->id }}">{{ $guru->user->name }}</option>
+                                                    <option value="{{ $guru->id }}" data-mata-pelajaran="{{ $guru->mata_pelajaran ?? '' }}">{{ $guru->user->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle"></i> Pilih guru terlebih dahulu untuk melihat mata pelajaran yang tersedia
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="mata_pelajaran" class="form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="mata_pelajaran" name="mata_pelajaran" required disabled>
+                                                <option value="">Pilih Guru terlebih dahulu</option>
+                                            </select>
+                                            <small class="text-muted" id="mata-pelajaran-hint">
+                                                <i class="fas fa-info-circle"></i> Mata pelajaran akan muncul setelah memilih guru
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -524,6 +527,90 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Store all mata pelajaran for filtering
+    const allMataPelajaran = @json($mataPelajaranList);
+    const mataPelajaranSelect = document.getElementById('mata_pelajaran');
+    const guruSelect = document.getElementById('guru');
+    
+    // Function to filter mata pelajaran based on selected guru
+    async function filterMataPelajaranByGuru(guruId) {
+        const mataPelajaranHint = document.getElementById('mata-pelajaran-hint');
+        
+        if (!guruId) {
+            // If no guru selected, disable mata pelajaran select
+            mataPelajaranSelect.disabled = true;
+            mataPelajaranSelect.innerHTML = '<option value="">Pilih Guru terlebih dahulu</option>';
+            if (mataPelajaranHint) {
+                mataPelajaranHint.innerHTML = '<i class="fas fa-info-circle"></i> Mata pelajaran akan muncul setelah memilih guru';
+            }
+            return;
+        }
+        
+        try {
+            // Show loading state
+            mataPelajaranSelect.disabled = true;
+            mataPelajaranSelect.innerHTML = '<option value="">Memuat mata pelajaran...</option>';
+            if (mataPelajaranHint) {
+                mataPelajaranHint.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat mata pelajaran...';
+            }
+            
+            // Fetch mata pelajaran from API
+            const apiUrl = '{{ url("/tu/jadwal/api/mata-pelajaran") }}/' + guruId;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            
+            if (data.success && data.mata_pelajaran.length > 0) {
+                updateMataPelajaranOptions(data.mata_pelajaran);
+                if (mataPelajaranHint) {
+                    mataPelajaranHint.innerHTML = '<i class="fas fa-check-circle text-success"></i> ' + data.mata_pelajaran.length + ' mata pelajaran tersedia';
+                }
+            } else {
+                // If no mata pelajaran found, show message
+                mataPelajaranSelect.innerHTML = '<option value="">Guru ini belum memiliki mata pelajaran</option>';
+                if (mataPelajaranHint) {
+                    mataPelajaranHint.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Guru ini belum memiliki mata pelajaran yang ditetapkan';
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching mata pelajaran:', error);
+            mataPelajaranSelect.innerHTML = '<option value="">Error memuat mata pelajaran</option>';
+            if (mataPelajaranHint) {
+                mataPelajaranHint.innerHTML = '<i class="fas fa-exclamation-circle text-danger"></i> Error memuat mata pelajaran';
+            }
+        } finally {
+            mataPelajaranSelect.disabled = false;
+        }
+    }
+    
+    // Function to update mata pelajaran options
+    function updateMataPelajaranOptions(mataPelajaranList) {
+        mataPelajaranSelect.innerHTML = '<option value="">Pilih Mata Pelajaran</option>';
+        
+        mataPelajaranList.forEach(function(mataPelajaran) {
+            const option = document.createElement('option');
+            option.value = mataPelajaran;
+            option.textContent = mataPelajaran;
+            mataPelajaranSelect.appendChild(option);
+        });
+        
+        // Reset selected value
+        mataPelajaranSelect.value = '';
+    }
+    
+    // Event listener for guru selection change
+    guruSelect.addEventListener('change', function() {
+        const selectedGuruId = this.value;
+        
+        // Reset mata pelajaran selection
+        mataPelajaranSelect.value = '';
+        
+        // Filter mata pelajaran based on selected guru
+        filterMataPelajaranByGuru(selectedGuruId);
+        
+        // Update preview
+        updatePreview();
+    });
+    
     // Calendar functionality
     let currentDate = new Date();
     let selectedDate = null;

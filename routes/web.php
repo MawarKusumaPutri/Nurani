@@ -35,6 +35,12 @@ Route::post('/login-modal', [AuthController::class, 'login'])->name('login.modal
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 
+// Password Reset Routes
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
 // Protected Routes
 Route::middleware('auth')->group(function () {
     // Guru Routes
@@ -176,6 +182,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'jadwalEdit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'jadwalUpdate'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'jadwalDestroy'])->name('destroy');
+            Route::get('/api/mata-pelajaran/{guruId}', [App\Http\Controllers\TuController::class, 'getMataPelajaranByGuru'])->name('api.mata-pelajaran');
         });
         
         // Kalender Management
