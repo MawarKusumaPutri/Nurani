@@ -14,6 +14,8 @@ use App\Models\Jadwal;
 use App\Models\Event;
 use App\Models\Arsip;
 use App\Models\Surat;
+use App\Models\PresensiSiswa;
+use Carbon\Carbon;
 
 class TuController extends Controller
 {
@@ -326,6 +328,188 @@ class TuController extends Controller
         
         return redirect()->route('tu.presensi.index')
             ->with('success', $message);
+    }
+    
+    // Presensi Siswa Management
+    public function presensiSiswaIndex(Request $request)
+    {
+        $selectedKelas = $request->get('kelas', '');
+        $selectedTanggal = $request->get('tanggal', '');
+        $selectedStatus = $request->get('status', '');
+        $searchNama = $request->get('search', '');
+
+        // Base query
+        $query = PresensiSiswa::with(['siswa', 'guru.user'])
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc');
+
+        // Apply filters
+        if ($selectedKelas) {
+            $query->whereHas('siswa', function($q) use ($selectedKelas) {
+                $q->where('kelas', $selectedKelas);
+            });
+        }
+
+        if ($selectedTanggal) {
+            $query->whereDate('tanggal', $selectedTanggal);
+        }
+
+        if ($selectedStatus) {
+            $query->where('status', $selectedStatus);
+        }
+
+        if ($searchNama) {
+            $query->whereHas('siswa', function($q) use ($searchNama) {
+                $q->where('nama', 'like', '%' . $searchNama . '%')
+                  ->orWhere('nis', 'like', '%' . $searchNama . '%');
+            });
+        }
+
+        $presensiSiswa = $query->paginate(50);
+
+        // Get statistics
+        $totalPresensi = PresensiSiswa::count();
+        $presensiHadir = PresensiSiswa::where('status', 'hadir')->count();
+        $presensiSakit = PresensiSiswa::where('status', 'sakit')->count();
+        $presensiIzin = PresensiSiswa::where('status', 'izin')->count();
+        $presensiAlfa = PresensiSiswa::where('status', 'alfa')->count();
+
+        // Get presensi by kelas
+        $presensiByKelas = [
+            '7' => PresensiSiswa::whereHas('siswa', function($q) {
+                $q->where('kelas', '7');
+            })->count(),
+            '8' => PresensiSiswa::whereHas('siswa', function($q) {
+                $q->where('kelas', '8');
+            })->count(),
+            '9' => PresensiSiswa::whereHas('siswa', function($q) {
+                $q->where('kelas', '9');
+            })->count(),
+        ];
+
+        return view('tu.presensi-siswa.index', compact(
+            'presensiSiswa',
+            'selectedKelas',
+            'selectedTanggal',
+            'selectedStatus',
+            'searchNama',
+            'totalPresensi',
+            'presensiHadir',
+            'presensiSakit',
+            'presensiIzin',
+            'presensiAlfa',
+            'presensiByKelas'
+        ));
+    }
+
+    public function presensiSiswaRekap(Request $request)
+    {
+        $selectedKelas = $request->get('kelas', '');
+        $selectedBulan = $request->get('bulan', Carbon::now()->format('Y-m'));
+        $selectedSiswa = $request->get('siswa_id', '');
+
+        $bulan = Carbon::parse($selectedBulan . '-01');
+        $startDate = $bulan->startOfMonth()->format('Y-m-d');
+        $endDate = $bulan->endOfMonth()->format('Y-m-d');
+
+        // Base query
+        $query = PresensiSiswa::with(['siswa', 'guru.user'])
+            ->whereBetween('tanggal', [$startDate, $endDate]);
+
+        if ($selectedKelas) {
+            $query->whereHas('siswa', function($q) use ($selectedKelas) {
+                $q->where('kelas', $selectedKelas);
+            });
+        }
+
+        if ($selectedSiswa) {
+            $query->where('siswa_id', $selectedSiswa);
+        }
+
+        $presensiSiswa = $query->get();
+
+        // Group by siswa for rekap
+        $rekapBySiswa = $presensiSiswa->groupBy('siswa_id')->map(function($presensi) {
+            $siswa = $presensi->first()->siswa;
+            return [
+                'siswa' => $siswa,
+                'total' => $presensi->count(),
+                'hadir' => $presensi->where('status', 'hadir')->count(),
+                'sakit' => $presensi->where('status', 'sakit')->count(),
+                'izin' => $presensi->where('status', 'izin')->count(),
+                'alfa' => $presensi->where('status', 'alfa')->count(),
+                'presensi' => $presensi,
+            ];
+        });
+
+        // Get all siswa for filter
+        $siswas = Siswa::when($selectedKelas, function($q) use ($selectedKelas) {
+            $q->where('kelas', $selectedKelas);
+        })->orderBy('nama')->get();
+
+        return view('tu.presensi-siswa.rekap', compact(
+            'rekapBySiswa',
+            'selectedKelas',
+            'selectedBulan',
+            'selectedSiswa',
+            'siswas',
+            'bulan'
+        ));
+    }
+
+    public function presensiSiswaExport(Request $request)
+    {
+        $selectedKelas = $request->get('kelas', '');
+        $selectedBulan = $request->get('bulan', Carbon::now()->format('Y-m'));
+        $type = $request->get('type', 'bulanan'); // bulanan, kelas, siswa
+
+        $bulan = Carbon::parse($selectedBulan . '-01');
+        $startDate = $bulan->startOfMonth()->format('Y-m-d');
+        $endDate = $bulan->endOfMonth()->format('Y-m-d');
+
+        // Base query
+        $query = PresensiSiswa::with(['siswa', 'guru.user'])
+            ->whereBetween('tanggal', [$startDate, $endDate]);
+
+        if ($selectedKelas) {
+            $query->whereHas('siswa', function($q) use ($selectedKelas) {
+                $q->where('kelas', $selectedKelas);
+            });
+        }
+
+        $presensiSiswa = $query->get();
+
+        // Generate CSV content
+        $filename = 'rekap_presensi_siswa_' . $selectedBulan . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($presensiSiswa) {
+            $file = fopen('php://output', 'w');
+            
+            // Header
+            fputcsv($file, ['NIS', 'Nama Siswa', 'Kelas', 'Tanggal', 'Status', 'Keterangan', 'Guru', 'Waktu Input']);
+            
+            // Data
+            foreach ($presensiSiswa as $presensi) {
+                fputcsv($file, [
+                    $presensi->siswa->nis,
+                    $presensi->siswa->nama,
+                    $presensi->siswa->kelas,
+                    $presensi->tanggal->format('d/m/Y'),
+                    $presensi->status_label,
+                    $presensi->keterangan ?? '-',
+                    $presensi->guru->user->name,
+                    $presensi->created_at->format('d/m/Y H:i'),
+                ]);
+            }
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
     
     // Izin Management

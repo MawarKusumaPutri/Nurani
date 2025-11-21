@@ -101,6 +101,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\PresensiController::class, 'index'])->name('index');
             Route::post('/', [App\Http\Controllers\PresensiController::class, 'store'])->name('store');
         });
+        
+        // Presensi Siswa Routes
+        Route::prefix('presensi-siswa')->name('presensi-siswa.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'index'])->name('index');
+            Route::post('/', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'store'])->name('store');
+            Route::put('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'update'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'destroy'])->name('destroy');
+        });
     });
     
     
@@ -158,6 +166,13 @@ Route::middleware('auth')->group(function () {
         Route::prefix('presensi')->name('presensi.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'presensiIndex'])->name('index');
             Route::post('/{id}/verify', [App\Http\Controllers\TuController::class, 'presensiVerify'])->name('verify');
+        });
+        
+        // Presensi Siswa Management
+        Route::prefix('presensi-siswa')->name('presensi-siswa.')->group(function () {
+            Route::get('/', [App\Http\Controllers\TuController::class, 'presensiSiswaIndex'])->name('index');
+            Route::get('/rekap', [App\Http\Controllers\TuController::class, 'presensiSiswaRekap'])->name('rekap');
+            Route::get('/export', [App\Http\Controllers\TuController::class, 'presensiSiswaExport'])->name('export');
         });
         
         // Izin Management

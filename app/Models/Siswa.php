@@ -26,4 +26,12 @@ class Siswa extends Model
     protected $casts = [
         'tanggal_lahir' => 'date',
     ];
+
+    /**
+     * Get the presensi records for the siswa.
+     */
+    public function presensi()
+    {
+        return $this->hasMany(PresensiSiswa::class);
+    }
 }

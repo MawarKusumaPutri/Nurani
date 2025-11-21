@@ -66,6 +66,9 @@
         <a href="{{ route('tu.presensi.index') }}" class="nav-link {{ request()->routeIs('tu.presensi.*') ? 'active' : '' }}">
             <i class="fas fa-calendar-check me-2"></i> Presensi Guru
         </a>
+        <a href="{{ route('tu.presensi-siswa.index') }}" class="nav-link {{ request()->routeIs('tu.presensi-siswa.*') ? 'active' : '' }}">
+            <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
+        </a>
         <a href="{{ route('tu.jadwal.index') }}" class="nav-link {{ request()->routeIs('tu.jadwal.*') ? 'active' : '' }}">
             <i class="fas fa-calendar me-2"></i> Jadwal
         </a>
