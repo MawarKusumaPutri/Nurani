@@ -336,7 +336,13 @@ class TuController extends Controller
         $selectedKelas = $request->get('kelas', '');
         $selectedTanggal = $request->get('tanggal', '');
         $selectedStatus = $request->get('status', '');
+        $selectedGuru = $request->get('guru', '');
         $searchNama = $request->get('search', '');
+
+        // Get all gurus from database
+        $gurus = Guru::with('user')
+            ->orderBy('nip')
+            ->get();
 
         // Base query
         $query = PresensiSiswa::with(['siswa', 'guru.user'])
@@ -344,21 +350,27 @@ class TuController extends Controller
             ->orderBy('created_at', 'desc');
 
         // Apply filters
-        if ($selectedKelas) {
-            $query->whereHas('siswa', function($q) use ($selectedKelas) {
-                $q->where('kelas', $selectedKelas);
+        if ($selectedKelas && $selectedKelas !== '') {
+            // Ensure kelas is treated as string for comparison
+            $kelasFilter = (string) $selectedKelas;
+            $query->whereHas('siswa', function($q) use ($kelasFilter) {
+                $q->where('kelas', $kelasFilter);
             });
         }
 
-        if ($selectedTanggal) {
+        if ($selectedTanggal && $selectedTanggal !== '') {
             $query->whereDate('tanggal', $selectedTanggal);
         }
 
-        if ($selectedStatus) {
+        if ($selectedStatus && $selectedStatus !== '') {
             $query->where('status', $selectedStatus);
         }
 
-        if ($searchNama) {
+        if ($selectedGuru && $selectedGuru !== '') {
+            $query->where('guru_id', $selectedGuru);
+        }
+
+        if ($searchNama && $searchNama !== '') {
             $query->whereHas('siswa', function($q) use ($searchNama) {
                 $q->where('nama', 'like', '%' . $searchNama . '%')
                   ->orWhere('nis', 'like', '%' . $searchNama . '%');
@@ -367,12 +379,29 @@ class TuController extends Controller
 
         $presensiSiswa = $query->paginate(50);
 
-        // Get statistics
-        $totalPresensi = PresensiSiswa::count();
-        $presensiHadir = PresensiSiswa::where('status', 'hadir')->count();
-        $presensiSakit = PresensiSiswa::where('status', 'sakit')->count();
-        $presensiIzin = PresensiSiswa::where('status', 'izin')->count();
-        $presensiAlfa = PresensiSiswa::where('status', 'alfa')->count();
+        // Get statistics - apply same filters
+        $statsQuery = PresensiSiswa::query();
+        if ($selectedKelas && $selectedKelas !== '') {
+            $kelasFilter = (string) $selectedKelas;
+            $statsQuery->whereHas('siswa', function($q) use ($kelasFilter) {
+                $q->where('kelas', $kelasFilter);
+            });
+        }
+        if ($selectedTanggal && $selectedTanggal !== '') {
+            $statsQuery->whereDate('tanggal', $selectedTanggal);
+        }
+        if ($selectedStatus && $selectedStatus !== '') {
+            $statsQuery->where('status', $selectedStatus);
+        }
+        if ($selectedGuru && $selectedGuru !== '') {
+            $statsQuery->where('guru_id', $selectedGuru);
+        }
+        
+        $totalPresensi = $statsQuery->count();
+        $presensiHadir = (clone $statsQuery)->where('status', 'hadir')->count();
+        $presensiSakit = (clone $statsQuery)->where('status', 'sakit')->count();
+        $presensiIzin = (clone $statsQuery)->where('status', 'izin')->count();
+        $presensiAlfa = (clone $statsQuery)->where('status', 'alfa')->count();
 
         // Get presensi by kelas
         $presensiByKelas = [
@@ -392,7 +421,9 @@ class TuController extends Controller
             'selectedKelas',
             'selectedTanggal',
             'selectedStatus',
+            'selectedGuru',
             'searchNama',
+            'gurus',
             'totalPresensi',
             'presensiHadir',
             'presensiSakit',

@@ -78,27 +78,38 @@
                 </div>
                 <div class="card-body">
                     <form method="GET" action="{{ route('tu.presensi-siswa.index') }}" class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Kelas</label>
-                            <select name="kelas" class="form-select">
+                            <select name="kelas" class="form-select" id="kelasFilter" onchange="this.form.submit()">
                                 <option value="">Semua Kelas</option>
-                                <option value="7" {{ $selectedKelas == '7' ? 'selected' : '' }}>Kelas 7</option>
-                                <option value="8" {{ $selectedKelas == '8' ? 'selected' : '' }}>Kelas 8</option>
-                                <option value="9" {{ $selectedKelas == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                <option value="7" {{ $selectedKelas == '7' || $selectedKelas === 7 ? 'selected' : '' }}>Kelas 7</option>
+                                <option value="8" {{ $selectedKelas == '8' || $selectedKelas === 8 ? 'selected' : '' }}>Kelas 8</option>
+                                <option value="9" {{ $selectedKelas == '9' || $selectedKelas === 9 ? 'selected' : '' }}>Kelas 9</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Tanggal</label>
                             <input type="date" name="tanggal" class="form-control" value="{{ $selectedTanggal }}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Status</label>
-                            <select name="status" class="form-select">
+                            <select name="status" class="form-select" id="statusFilter" onchange="this.form.submit()">
                                 <option value="">Semua Status</option>
                                 <option value="hadir" {{ $selectedStatus == 'hadir' ? 'selected' : '' }}>Hadir</option>
                                 <option value="sakit" {{ $selectedStatus == 'sakit' ? 'selected' : '' }}>Sakit</option>
                                 <option value="izin" {{ $selectedStatus == 'izin' ? 'selected' : '' }}>Izin</option>
                                 <option value="alfa" {{ $selectedStatus == 'alfa' ? 'selected' : '' }}>Alfa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Guru</label>
+                            <select name="guru" class="form-select" id="guruFilter" onchange="this.form.submit()">
+                                <option value="">Semua Guru</option>
+                                @foreach($gurus as $guru)
+                                    <option value="{{ $guru->id }}" {{ $selectedGuru == $guru->id || $selectedGuru === $guru->id ? 'selected' : '' }}>
+                                        {{ $guru->user->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-3">

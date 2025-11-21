@@ -97,4 +97,12 @@ class Guru extends Model
     {
         return $this->hasMany(Presensi::class);
     }
+
+    /**
+     * Get the presensi siswa for the guru.
+     */
+    public function presensiSiswa(): HasMany
+    {
+        return $this->hasMany(PresensiSiswa::class);
+    }
 }
