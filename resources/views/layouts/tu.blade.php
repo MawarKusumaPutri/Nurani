@@ -14,28 +14,22 @@
         }
         
         .sidebar {
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             min-height: 100vh;
-            padding: 0;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             padding: 12px 20px;
             border-radius: 8px;
-            margin: 2px 10px;
+            margin: 4px 0;
             transition: all 0.3s ease;
         }
         
-        .sidebar .nav-link:hover {
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
             color: white;
             background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            font-weight: 600;
+            transform: translateX(5px);
         }
         
         .profile-circle {

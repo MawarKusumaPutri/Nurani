@@ -265,11 +265,20 @@
             margin-bottom: 20px;
         }
         
-        /* Pagination */
-        .pagination-wrapper {
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
+        /* Pagination - Simple Top Pagination */
+        .pagination-top {
+            padding: 15px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .pagination-top .btn {
+            min-width: 100px;
+            font-weight: 500;
+        }
+        
+        .pagination-top .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         /* Checkbox Styles */
@@ -425,6 +434,47 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Pagination Controls - Moved to Top -->
+                    @if($notifications->count() > 0 && ($notifications->hasPages()))
+                    <div class="mt-3 pt-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div class="text-muted small">
+                                @if($notifications->total() > 0)
+                                    Menampilkan {{ $notifications->firstItem() }} sampai {{ $notifications->lastItem() }} dari {{ $notifications->total() }} hasil
+                                    <span class="badge bg-primary ms-2">Halaman {{ $notifications->currentPage() }} dari {{ $notifications->lastPage() }}</span>
+                                @else
+                                    Tidak ada hasil
+                                @endif
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                @if($notifications->onFirstPage())
+                                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </button>
+                                @else
+                                    <a href="{{ $notifications->previousPageUrl() }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </a>
+                                @endif
+                                
+                                <span class="text-muted small px-2">
+                                    Halaman {{ $notifications->currentPage() }} / {{ $notifications->lastPage() }}
+                                </span>
+                                
+                                @if($notifications->hasMorePages())
+                                    <a href="{{ $notifications->nextPageUrl() }}" class="btn btn-outline-primary btn-sm">
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </a>
+                                @else
+                                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Select All & Bulk Actions -->
@@ -529,11 +579,6 @@
                                     </div>
                                 </div>
                             @endforeach
-
-                            <!-- Pagination -->
-                            <div class="pagination-wrapper">
-                                {{ $notifications->links() }}
-                            </div>
                         @else
                             <div class="empty-state">
                                 <i class="fas fa-bell-slash"></i>
