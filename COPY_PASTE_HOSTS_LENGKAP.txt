@@ -1,0 +1,37 @@
+# ============================================
+# COPY-PASTE INI KE FILE HOSTS WINDOWS
+# Mendukung semua variasi domain
+# ============================================
+# 
+# LOKASI FILE: C:\Windows\System32\drivers\etc\hosts
+# 
+# CARA:
+# 1. Tekan Windows + R
+# 2. Ketik: notepad
+# 3. Tekan Ctrl + Shift + Enter (run as admin)
+# 4. File → Open → C:\Windows\System32\drivers\etc\hosts
+# 5. Hapus semua baris yang terkait nurani (jika ada)
+# 6. Scroll ke bagian bawah
+# 7. Copy 4 baris di bawah ini
+# 8. Paste di akhir file
+# 9. Simpan (Ctrl + S)
+# 10. Buka CMD sebagai admin, jalankan: ipconfig /flushdns
+#
+# ============================================
+
+127.0.0.1    nuraniTMS.test
+127.0.0.1    www.nuraniTMS.test
+127.0.0.1    nuranitms.test
+127.0.0.1    www.nuranitms.test
+
+# ============================================
+# CATATAN:
+# ============================================
+# 
+# - Semua variasi domain sudah ditambahkan
+# - Mendukung huruf besar (nuraniTMS) dan kecil (nuranitms)
+# - Setelah save, WAJIB flush DNS: ipconfig /flushdns
+# - Jika tidak bisa save, pastikan Notepad dibuka sebagai Administrator
+#
+# ============================================
+

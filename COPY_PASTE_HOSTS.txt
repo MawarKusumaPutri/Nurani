@@ -1,0 +1,26 @@
+# ============================================
+# COPY-PASTE INI KE FILE HOSTS WINDOWS
+# ============================================
+# 
+# LOKASI FILE: C:\Windows\System32\drivers\etc\hosts
+# 
+# CARA:
+# 1. Tekan Windows + R
+# 2. Ketik: notepad
+# 3. Tekan Ctrl + Shift + Enter (run as admin)
+# 4. File → Open → C:\Windows\System32\drivers\etc\hosts
+# 5. Scroll ke bagian bawah
+# 6. Copy 2 baris di bawah ini
+# 7. Paste di akhir file
+# 8. Simpan (Ctrl + S)
+# 9. Buka CMD sebagai admin, jalankan: ipconfig /flushdns
+#
+# ============================================
+
+127.0.0.1    nurani.test
+127.0.0.1    www.nurani.test
+
+# ============================================
+# SELESAI! Jangan lupa flush DNS!
+# ============================================
+

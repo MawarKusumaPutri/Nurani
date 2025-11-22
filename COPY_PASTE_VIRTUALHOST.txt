@@ -1,0 +1,37 @@
+# ============================================
+# COPY-PASTE INI KE httpd-vhosts.conf
+# ============================================
+# 
+# LOKASI FILE: C:\xampp\apache\conf\extra\httpd-vhosts.conf
+# 
+# CARA:
+# 1. Buka XAMPP Control Panel
+# 2. Klik "Config" pada Apache
+# 3. Pilih "httpd-vhosts.conf"
+# 4. Scroll ke bagian bawah
+# 5. Copy seluruh isi di bawah ini
+# 6. Paste di akhir file
+# 7. Simpan (Ctrl + S)
+# 8. Restart Apache
+#
+# ============================================
+
+<VirtualHost *:80>
+    ServerName nurani.test
+    ServerAlias www.nurani.test
+    DocumentRoot "C:/xampp/htdocs/nurani/public"
+    
+    <Directory "C:/xampp/htdocs/nurani/public">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    ErrorLog "C:/xampp/apache/logs/nurani_error.log"
+    CustomLog "C:/xampp/apache/logs/nurani_access.log" common
+</VirtualHost>
+
+# ============================================
+# SELESAI! Jangan lupa restart Apache!
+# ============================================
+

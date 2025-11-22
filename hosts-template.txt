@@ -1,0 +1,29 @@
+# ============================================
+# TEMPLATE FILE HOSTS WINDOWS
+# ============================================
+# 
+# INSTRUKSI:
+# 1. Buka Notepad sebagai Administrator
+# 2. Buka file: C:\Windows\System32\drivers\etc\hosts
+# 3. Tambahkan baris di bawah ini di akhir file
+# 4. Simpan file
+# 5. Flush DNS: ipconfig /flushdns
+#
+# ============================================
+
+# Tambahkan baris berikut di akhir file hosts:
+
+127.0.0.1    nurani.test
+127.0.0.1    www.nurani.test
+
+# ============================================
+# CATATAN:
+# ============================================
+# 
+# - Ganti "nurani.test" dengan domain yang Anda inginkan
+# - Pastikan ada spasi antara IP (127.0.0.1) dan domain
+# - Setelah menyimpan, flush DNS cache dengan: ipconfig /flushdns
+# - Jika tidak bisa save, pastikan Notepad dibuka sebagai Administrator
+#
+# ============================================
+

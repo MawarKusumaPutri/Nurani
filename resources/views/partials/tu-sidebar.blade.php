@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div class="col-md-3 col-lg-2 sidebar p-0">
+<div class="col-md-3 col-lg-2 sidebar p-0" id="tu-sidebar">
     <div class="p-4">
         <h4 class="text-white mb-4">
             <i class="fas fa-user-tie me-2"></i>

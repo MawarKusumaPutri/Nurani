@@ -1,0 +1,39 @@
+# ============================================
+# KONFIGURASI VIRTUALHOST APACHE UNTUK LARAVEL NURANI
+# ============================================
+# 
+# CARA MENGGUNAKAN:
+# 1. Copy seluruh isi file ini
+# 2. Buka: C:\xampp\apache\conf\extra\httpd-vhosts.conf
+# 3. Paste di akhir file
+# 4. Simpan file
+# 5. Restart Apache di XAMPP Control Panel
+#
+# ============================================
+
+<VirtualHost *:80>
+    ServerName nurani.test
+    ServerAlias www.nurani.test
+    DocumentRoot "C:/xampp/htdocs/nurani/public"
+    
+    <Directory "C:/xampp/htdocs/nurani/public">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    ErrorLog "C:/xampp/apache/logs/nurani_error.log"
+    CustomLog "C:/xampp/apache/logs/nurani_access.log" common
+</VirtualHost>
+
+# ============================================
+# CATATAN PENTING:
+# ============================================
+# 
+# 1. PASTIKAN project sudah di folder: C:\xampp\htdocs\nurani\
+# 2. PASTIKAN DocumentRoot mengarah ke folder PUBLIC!
+# 3. Gunakan forward slash (/) bukan backslash (\)
+# 4. Setelah paste, RESTART Apache!
+#
+# ============================================
+

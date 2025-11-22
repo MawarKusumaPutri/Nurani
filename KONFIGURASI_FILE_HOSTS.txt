@@ -1,0 +1,28 @@
+# ============================================
+# KONFIGURASI FILE HOSTS WINDOWS
+# ============================================
+# 
+# CARA MENGGUNAKAN:
+# 1. Tekan Windows + R
+# 2. Ketik: notepad
+# 3. Tekan Ctrl + Shift + Enter (run as admin)
+# 4. File → Open → C:\Windows\System32\drivers\etc\hosts
+# 5. Tambahkan 2 baris di bawah ini di akhir file
+# 6. Simpan
+# 7. Buka CMD sebagai admin, jalankan: ipconfig /flushdns
+#
+# ============================================
+
+127.0.0.1    nurani.test
+127.0.0.1    www.nurani.test
+
+# ============================================
+# CATATAN:
+# ============================================
+# 
+# - Pastikan ada spasi antara 127.0.0.1 dan domain
+# - Setelah save, WAJIB flush DNS dengan: ipconfig /flushdns
+# - Jika tidak bisa save, pastikan Notepad dibuka sebagai Administrator
+#
+# ============================================
+

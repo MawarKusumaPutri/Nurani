@@ -123,9 +123,144 @@
                 transform: scale(1);
             }
         }
+        
+        /* Responsive Styles */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1050;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 80%;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .col-md-3 {
+                margin-bottom: 15px;
+            }
+            
+            .col-md-6 {
+                margin-bottom: 20px;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+            
+            .chart-container {
+                padding: 1rem;
+                height: auto !important;
+                min-height: 250px;
+            }
+            
+            .chart-container canvas {
+                max-height: 300px;
+            }
+            
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card .card-body {
+                padding: 1.5rem;
+            }
+            
+            .col-md-3 {
+                width: 100%;
+            }
+            
+            .col-md-6 {
+                width: 100%;
+            }
+            
+            .table {
+                font-size: 0.85rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+            }
+            
+            .badge {
+                font-size: 0.75rem;
+            }
+            
+            .h2 {
+                font-size: 1.5rem;
+            }
+            
+            .mb-4 {
+                margin-bottom: 1.5rem !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
     <div class="container-fluid">
         <div class="row">
             @include('partials.kepala-sekolah-sidebar')
@@ -280,7 +415,7 @@
                     <div class="row">
                         <!-- Pie Chart -->
                         <div class="col-md-6 mb-4">
-                            <div class="chart-container" style="position: relative; height: 280px;">
+                            <div class="chart-container" style="position: relative; height: 280px; min-height: 250px;">
                                 <canvas id="presensiPieChart"></canvas>
                             </div>
                         </div>
@@ -335,6 +470,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) {
+                sidebar.classList.toggle('show');
+            }
+            if (overlay) {
+                overlay.classList.toggle('show');
+            }
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            if (window.innerWidth <= 991) {
+                if (sidebar && !sidebar.contains(event.target) && 
+                    toggleBtn && !toggleBtn.contains(event.target) && 
+                    sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                    if (overlay) overlay.classList.remove('show');
+                }
+            }
+        });
+        
         // Pie Chart untuk Presensi Guru
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('presensiPieChart');
@@ -398,7 +560,8 @@
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: false,
+                        maintainAspectRatio: true,
+                        aspectRatio: window.innerWidth <= 768 ? 1.2 : 1,
                         animation: {
                             animateRotate: true,
                             animateScale: true,
@@ -482,6 +645,20 @@
                             ctx.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
                         }
                     }
+                });
+                
+                // Handle window resize for responsive chart
+                let resizeTimer;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function() {
+                        if (chart) {
+                            // Update aspect ratio based on screen size
+                            const isMobile = window.innerWidth <= 768;
+                            chart.options.aspectRatio = isMobile ? 1.2 : 1;
+                            chart.update('none'); // Update without animation for better performance
+                        }
+                    }, 250);
                 });
             }
         });

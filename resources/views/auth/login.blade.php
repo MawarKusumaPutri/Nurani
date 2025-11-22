@@ -260,9 +260,99 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+            
+            .login-container {
+                padding: 20px;
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+            
             .login-card {
-                margin: 20px;
-                padding: 30px;
+                margin: 0;
+                padding: 30px 20px;
+                max-width: 100%;
+                border-radius: 15px;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo i {
+                font-size: 30px;
+            }
+            
+            .brand-name {
+                font-size: 24px;
+            }
+            
+            .brand-subtitle {
+                font-size: 14px;
+            }
+            
+            .form-title {
+                font-size: 20px;
+            }
+            
+            .form-subtitle {
+                font-size: 13px;
+            }
+            
+            .form-control {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+            
+            .btn-login {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+            
+            .features {
+                margin-top: 20px;
+                padding-top: 20px;
+            }
+            
+            .feature-item {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 15px;
+                padding-top: 30px;
+            }
+            
+            .login-card {
+                padding: 25px 15px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo i {
+                font-size: 25px;
+            }
+            
+            .brand-name {
+                font-size: 20px;
+            }
+            
+            .form-title {
+                font-size: 18px;
+            }
+            
+            .form-links a {
+                font-size: 14px;
+                padding: 8px 15px;
             }
         }
     </style>
