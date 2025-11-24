@@ -15,6 +15,7 @@ use App\Models\Rangkuman;
 use App\Models\Presensi;
 use App\Models\Siswa;
 use App\Models\User;
+use App\Helpers\PhotoHelper;
 use App\Services\ActivityTracker;
 use Carbon\Carbon;
 
@@ -615,36 +616,41 @@ class KepalaSekolahController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         
-        // Handle photo upload
+        // Handle photo upload - FLEKSIBEL: bisa simpan di mana saja
         if ($request->hasFile('photo')) {
             try {
                 // Delete old photo if exists
-                if ($user->photo && Storage::disk('public')->exists('photos/' . $user->photo)) {
-                    Storage::disk('public')->delete('photos/' . $user->photo);
+                if ($user->photo) {
+                    // Hapus foto lama dari berbagai kemungkinan lokasi
+                    PhotoHelper::deletePhoto($user->photo);
+                    // Coba hapus dengan berbagai format path lama
+                    $oldFilename = basename($user->photo);
+                    if ($oldFilename && $oldFilename !== $user->photo) {
+                        PhotoHelper::deletePhoto('profiles/kepala_sekolah/' . $oldFilename);
+                        PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                        PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
+                    }
                 }
                 
                 $file = $request->file('photo');
-                $filename = time() . '_' . $user->id . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-                $path = $file->storeAs('photos', $filename, 'public');
                 
-                // Verify file was stored successfully
-                if ($path) {
-                    // Double check file exists
-                    $fullPath = 'photos/' . $filename;
-                    if (Storage::disk('public')->exists($fullPath)) {
-                        $user->photo = $filename;
-                    } else {
-                        // Try to get the actual stored filename
-                        $storedPath = $path;
-                        $actualFilename = basename($storedPath);
-                        if (Storage::disk('public')->exists('photos/' . $actualFilename)) {
-                            $user->photo = $actualFilename;
-                        } else {
-                            return back()->withErrors(['photo' => 'Gagal menyimpan foto. File tidak ditemukan setelah upload.'])->withInput();
-                        }
-                    }
+                // OTOMATIS SIMPAN dengan path yang benar
+                // Prioritas 1: simpan di storage/app/public/profiles/kepala_sekolah/
+                $photoPath = PhotoHelper::savePhoto($file, 'profiles/kepala_sekolah', true);
+                
+                if ($photoPath) {
+                    // Path sudah benar: profiles/kepala_sekolah/[nama-file]
+                    // Langsung simpan ke database tanpa perlu edit manual
+                    $user->photo = $photoPath;
                 } else {
-                    return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                    // Fallback: simpan di public/image/profiles
+                    $photoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
+                    if ($photoPath) {
+                        // Path: image/profiles/[nama-file]
+                        $user->photo = $photoPath;
+                    } else {
+                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                    }
                 }
             } catch (\Exception $e) {
                 return back()->withErrors(['photo' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();

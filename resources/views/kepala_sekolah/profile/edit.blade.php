@@ -77,11 +77,10 @@
                                         <div class="mb-2">
                                             @php
                                                 $freshUser = \App\Models\User::find($user->id);
-                                                $photoPath = 'photos/' . $freshUser->photo;
-                                                $hasPhoto = $freshUser->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-                                                $photoUrl = $hasPhoto ? asset('storage/' . $photoPath) . '?v=' . time() : '#';
+                                                $photoUrl = $freshUser->photo ? \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles') : '#';
+                                                $hasPhoto = $photoUrl !== null && $photoUrl !== '#';
                                             @endphp
-                                            <img id="photoPreview" src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                                            <img id="photoPreview" src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
                                             <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%;">
                                                 <i class="fas fa-user fa-3x text-muted"></i>
                                             </div>

@@ -102,17 +102,70 @@
                         </div>
                         <div class="card-body text-center">
                             @php
-                                $photoPath = 'photos/' . $user->photo;
-                                $hasPhoto = $user->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-                                $photoUrl = $hasPhoto ? asset('storage/' . $photoPath) : null;
+                                // SELALU ambil data fresh dari database untuk memastikan foto terbaru
+                                $freshUser = \App\Models\User::find($user->id);
+                                $photoPath = $freshUser->photo ?? null;
+                                $photoUrl = null;
+                                
+                                if ($photoPath) {
+                                    // OTOMATIS cari foto dengan default path yang benar
+                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'profiles/tu');
+                                    
+                                    // Jika masih null, coba dengan path lain
+                                    if (!$photoUrl) {
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'image/profiles');
+                                    }
+                                    
+                                    // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                    if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath)) {
+                                        $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    }
+                                    
+                                    // Jika masih null, coba dengan path absolut
+                                    if (!$photoUrl) {
+                                        $storagePath = storage_path('app/public/' . $photoPath);
+                                        if (file_exists($storagePath)) {
+                                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        }
+                                    }
+                                    
+                                    // Jika masih null, coba cari berdasarkan nama file saja
+                                    if (!$photoUrl) {
+                                        $filename = basename($photoPath);
+                                        if ($filename && $filename !== $photoPath) {
+                                            $possiblePaths = [
+                                                'profiles/tu/' . $filename,
+                                                'profiles/guru/' . $filename,
+                                                'profiles/kepala_sekolah/' . $filename,
+                                                'photos/' . $filename,
+                                                'guru/foto/' . $filename
+                                            ];
+                                            
+                                            foreach ($possiblePaths as $possiblePath) {
+                                                $fullPath = storage_path('app/public/' . $possiblePath);
+                                                if (file_exists($fullPath)) {
+                                                    $photoUrl = asset('storage/' . $possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                             @endphp
                             @if($hasPhoto && $photoUrl)
-                                <img src="{{ $photoUrl }}?v={{ time() }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex'; console.error('Error loading photo: {{ $photoUrl }}');">
+                                <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none;">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
                             @else
                                 <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32;">
                                     <i class="fas fa-user-tie"></i>
                                 </div>
                                 <p class="text-muted">Foto profil belum diatur</p>
+                                @if($photoPath)
+                                    <small class="text-danger">Path: {{ $photoPath }}</small>
+                                @endif
                             @endif
                             <a href="{{ route('tu.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
                                 <i class="fas fa-edit"></i> {{ $user->photo ? 'Ganti Foto' : 'Upload Foto' }}

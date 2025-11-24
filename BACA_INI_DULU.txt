@@ -1,0 +1,100 @@
+============================================
+CARA PAKAI - PERBAIKAN TOTAL
+============================================
+
+LANGKAH 1:
+----------
+Double-click: SALIN_DAN_FIX.bat
+
+Tunggu sampai selesai.
+Script akan:
+- Menyalin project ke htdocs
+- Memastikan semua file ada
+- Memperbaiki konfigurasi Apache
+- Update .env
+- Clear cache
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 10 DETIK (PENTING!)
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+TEST DENGAN LOCALHOST:
+
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+
+Website Laravel akan muncul!
+
+
+============================================
+JIKA MASIH "NOT FOUND":
+============================================
+
+1. VERIFIKASI MANUAL:
+   - Buka folder: D:\Praktikum DWBI\xampp\htdocs\nurani
+   - Pastikan ada folder: public
+   - Buka folder: public
+   - Pastikan ada file: index.php
+   - Pastikan ada file: .htaccess
+
+2. COBA AKSES LANGSUNG:
+   http://localhost/nurani/public/index.php
+
+3. RESTART APACHE LAGI:
+   - STOP → TUNGGU 10 DETIK → START
+
+4. CEK ERROR LOG:
+   - Buka: D:\Praktikum DWBI\xampp\apache\logs\error.log
+   - Lihat error terakhir
+
+5. SALIN MANUAL JIKA PERLU:
+   - Buka: D:\Capstone\nurani
+   - Copy semua (Ctrl + A, Ctrl + C)
+   - Paste ke: D:\Praktikum DWBI\xampp\htdocs\
+   - Rename menjadi: nurani
+
+
+============================================
+VERIFIKASI FILE:
+============================================
+
+Pastikan file-file ini ada:
+
+1. D:\Praktikum DWBI\xampp\htdocs\nurani\public\index.php
+   (Harus ada isinya - kode PHP)
+
+2. D:\Praktikum DWBI\xampp\htdocs\nurani\public\.htaccess
+   (Harus ada isinya - konfigurasi Apache)
+
+3. D:\Praktikum DWBI\xampp\htdocs\nurani\artisan
+   (File Laravel artisan)
+
+4. D:\Praktikum DWBI\xampp\htdocs\nurani\app
+   (Folder app Laravel)
+
+5. D:\Praktikum DWBI\xampp\htdocs\nurani\vendor
+   (Folder vendor - jika tidak ada, jalankan: composer install)
+
+
+============================================
+TIPS:
+============================================
+
+- Pastikan Apache RUNNING (hijau)
+- Tunggu 10 detik setelah STOP sebelum START
+- Cek file index.php benar-benar ada
+- Cek file .htaccess benar-benar ada
+- Restart Apache jika masih error
+
+============================================

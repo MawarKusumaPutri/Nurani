@@ -15,6 +15,7 @@ use App\Models\Event;
 use App\Models\Arsip;
 use App\Models\Surat;
 use App\Models\PresensiSiswa;
+use App\Helpers\PhotoHelper;
 use Carbon\Carbon;
 
 class TuController extends Controller
@@ -2315,17 +2316,45 @@ class TuController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         
-        // Handle photo upload
+        // Handle photo upload - OTOMATIS: path akan disimpan dengan benar
         if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($user->photo && Storage::disk('public')->exists('photos/' . $user->photo)) {
-                Storage::disk('public')->delete('photos/' . $user->photo);
+            try {
+                // Delete old photo if exists
+                if ($user->photo) {
+                    // Hapus foto lama dari berbagai kemungkinan lokasi
+                    PhotoHelper::deletePhoto($user->photo);
+                    // Coba hapus dengan berbagai format path lama
+                    $oldFilename = basename($user->photo);
+                    if ($oldFilename && $oldFilename !== $user->photo) {
+                        PhotoHelper::deletePhoto('profiles/tu/' . $oldFilename);
+                        PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                        PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
+                    }
+                }
+                
+                $file = $request->file('photo');
+                
+                // OTOMATIS SIMPAN dengan path yang benar
+                // Prioritas 1: simpan di storage/app/public/profiles/tu/
+                $photoPath = PhotoHelper::savePhoto($file, 'profiles/tu', true);
+                
+                if ($photoPath) {
+                    // Path sudah benar: profiles/tu/[nama-file]
+                    // Langsung simpan ke database tanpa perlu edit manual
+                    $user->photo = $photoPath;
+                } else {
+                    // Fallback: simpan di public/image/profiles
+                    $photoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
+                    if ($photoPath) {
+                        // Path: image/profiles/[nama-file]
+                        $user->photo = $photoPath;
+                    } else {
+                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                    }
+                }
+            } catch (\Exception $e) {
+                return back()->withErrors(['photo' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
             }
-            
-            $file = $request->file('photo');
-            $filename = time() . '_' . $user->id . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $path = $file->storeAs('photos', $filename, 'public');
-            $user->photo = $filename;
         }
         
         if ($request->filled('password')) {
@@ -2334,11 +2363,20 @@ class TuController extends Controller
         
         $user->save();
         
-        // Reload user from database to ensure fresh data
-        $user->refresh();
+        // Get fresh user data from database to ensure photo is loaded
+        $freshUser = User::find($user->id);
         
-        // Refresh user data in session
-        Auth::login($user);
+        // Refresh user data in session to update photo immediately
+        Auth::login($freshUser);
+        
+        // Clear all caches to ensure fresh data
+        try {
+            \Artisan::call('view:clear');
+            \Artisan::call('cache:clear');
+            \Artisan::call('config:clear');
+        } catch (\Exception $e) {
+            // Ignore cache errors
+        }
         
         return redirect()->route('tu.profile.index')->with('success', 'Profil berhasil diperbarui!');
     }

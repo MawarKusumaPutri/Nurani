@@ -1,0 +1,45 @@
+============================================
+CARA MUDAH FIX "NOT FOUND"
+============================================
+
+LANGKAH 1:
+----------
+Double-click: BUKA_INI_UNTUK_PERBAIKAN.bat
+
+Script akan menyalin project ke htdocs otomatis.
+Tunggu sampai selesai (beberapa menit).
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Pastikan Apache RUNNING (hijau)
+3. Jika tidak running, klik START
+
+
+LANGKAH 3:
+----------
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+
+
+HASIL:
+------
+Website Laravel akan muncul!
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. Pastikan project sudah di: C:\xampp\htdocs\nurani\
+2. Pastikan folder public ada: C:\xampp\htdocs\nurani\public\
+3. Pastikan file index.php ada: C:\xampp\htdocs\nurani\public\index.php
+4. Pastikan Apache RUNNING
+5. Restart Apache di XAMPP Control Panel
+
+============================================
+

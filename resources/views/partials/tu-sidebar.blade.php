@@ -8,28 +8,27 @@
         <div class="text-center mb-4">
             @php
                 $user = Auth::user();
-                $hasPhoto = false;
                 $photoUrl = null;
                 
                 if ($user) {
+                    // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                     $freshUser = \App\Models\User::find($user->id);
-                    
                     if ($freshUser && !empty($freshUser->photo)) {
-                        $storage = \Illuminate\Support\Facades\Storage::disk('public');
-                        $photoPath = 'photos/' . $freshUser->photo;
+                        // OTOMATIS cari foto dengan default path yang benar
+                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'profiles/tu');
                         
-                        if ($storage->exists($photoPath)) {
-                            $hasPhoto = true;
-                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&t=' . ($freshUser->updated_at ? $freshUser->updated_at->timestamp : time()) . '&r=' . rand(1000, 9999);
-                        } else {
-                            $directPath = $freshUser->photo;
-                            if ($storage->exists($directPath)) {
-                                $hasPhoto = true;
-                                $photoUrl = asset('storage/' . $directPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-                            }
+                        // Jika masih null, coba dengan path lain
+                        if (!$photoUrl) {
+                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                        }
+                        
+                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
+                            $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
                         }
                     }
                 }
+                $hasPhoto = $photoUrl !== null && $photoUrl !== '';
             @endphp
             <div class="mb-2" style="display: flex; justify-content: center;">
                 @if($hasPhoto && $photoUrl)

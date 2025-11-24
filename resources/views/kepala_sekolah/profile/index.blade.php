@@ -131,12 +131,14 @@
                             <div class="card-body text-center">
                                 @php
                                     $freshUser = \App\Models\User::find($user->id);
-                                    $photoPath = 'photos/' . $freshUser->photo;
-                                    $hasPhoto = $freshUser->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-                                    $photoUrl = $hasPhoto ? asset('storage/' . $photoPath) . '?v=' . time() : null;
+                                    $photoUrl = $freshUser->photo ? \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles') : null;
+                                    $hasPhoto = $photoUrl !== null;
                                 @endphp
                                 @if($hasPhoto && $photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;">
+                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
                                 @else
                                     <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32;">
                                         <i class="fas fa-user-tie"></i>

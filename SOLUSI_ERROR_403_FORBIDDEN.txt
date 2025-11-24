@@ -1,0 +1,189 @@
+============================================
+SOLUSI ERROR 403 FORBIDDEN - FOTO PROFIL
+============================================
+
+MASALAH:
+--------
+Error 403 Forbidden saat mengakses foto profil
+URL: http://localhost/nurani/public/storage/photos/1763804966_14_1.png
+Error: [HTTP/1.1 403 Forbidden 412ms]
+
+
+============================================
+PENYEBAB:
+============================================
+
+1. STORAGE SYMLINK TIDAK BENAR
+   - public/storage tidak link ke storage/app/public
+   - Atau symlink rusak
+
+2. PERMISSION FOLDER
+   - Folder storage/app/public/ tidak bisa diakses
+   - Permission tidak cukup
+
+3. PATH DI DATABASE MENGGUNAKAN FORMAT LAMA
+   - Path: photos/1763804966_14_1.png (format lama)
+   - Seharusnya: profiles/tu/1763804966_14_1.png (format baru)
+   - Atau: profiles/kepala_sekolah/1763804966_14_1.png
+
+4. .HTACCESS TIDAK ADA
+   - File .htaccess di public/storage/ tidak ada
+   - Apache tidak bisa mengakses file
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+--------------------------------------
+1. Double-click: FIX_ERROR_403_FORBIDDEN.bat
+2. Tunggu sampai selesai
+3. Script akan:
+   - Memperbarui PhotoHelper
+   - Membuat ulang storage symlink
+   - Set permission folder
+   - Verifikasi folder dan file
+   - Clear cache
+
+
+LANGKAH 2: Restart Apache
+--------------------------
+1. Buka XAMPP Control Panel
+2. STOP Apache
+3. TUNGGU 10 DETIK
+4. START Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3: Test Akses Foto Langsung
+------------------------------------
+1. Buka browser
+2. Akses URL foto langsung:
+   - Format lama: http://localhost/nurani/public/storage/photos/1763804966_14_1.png
+   - Format baru: http://localhost/nurani/public/storage/profiles/tu/1763804966_14_1.png
+
+3. Jika foto MUNCUL:
+   ✓ Symlink benar
+   ✓ Permission benar
+   → Masalahnya di PhotoHelper atau path di database
+   → Lanjut ke Langkah 4
+
+4. Jika masih 403 FORBIDDEN:
+   ✗ Masalah permission atau symlink
+   → Cek permission folder: storage/app/public/
+   → Cek .htaccess di public/storage/
+
+
+LANGKAH 4: Cek dan Perbaiki Path di Database
+---------------------------------------------
+1. Buka phpMyAdmin: http://localhost/phpmyadmin
+2. Database: nurani
+3. Tabel: users (untuk TU/Kepala Sekolah)
+4. Cari user yang login
+5. Lihat kolom: photo
+6. Path saat ini mungkin: photos/1763804966_14_1.png
+
+PERBAIKAN:
+- Jika user adalah TU:
+  UPDATE users 
+  SET photo = 'profiles/tu/1763804966_14_1.png' 
+  WHERE id = [id_user] AND role = 'tu';
+
+- Jika user adalah Kepala Sekolah:
+  UPDATE users 
+  SET photo = 'profiles/kepala_sekolah/1763804966_14_1.png' 
+  WHERE id = [id_user] AND role = 'kepala_sekolah';
+
+Ganti [nama-file] dengan nama file yang benar di folder
+Ganti [id_user] dengan ID user yang login
+
+
+LANGKAH 5: Hard Refresh Browser
+---------------------------------
+1. Tekan Ctrl + F5
+2. Atau:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+   - Refresh halaman
+
+
+============================================
+JIKA MASIH 403 FORBIDDEN:
+============================================
+
+1. CEK PERMISSION FOLDER:
+   - Buka File Explorer
+   - Klik kanan: storage/app/public/
+   - Properties → Security
+   - Pastikan "Everyone" atau "Users" punya akses "Full control"
+
+2. CEK .HTACCESS:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage\.htaccess
+   - Pastikan file ada dan berisi:
+     <IfModule mod_rewrite.c>
+         RewriteEngine On
+         RewriteCond %{REQUEST_FILENAME} !-f
+         RewriteCond %{REQUEST_FILENAME} !-d
+         RewriteRule ^ index.php [L]
+     </IfModule>
+
+3. CEK STORAGE SYMLINK:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+   - Jika tidak, jalankan: php artisan storage:link
+
+4. CEK APACHE MOD_REWRITE:
+   - Buka: D:\Praktikum DWBI\xampp\apache\conf\httpd.conf
+   - Pastikan: LoadModule rewrite_module modules/mod_rewrite.so tidak di-comment
+   - Restart Apache
+
+5. CEK FILE FOTO ADA:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\photos\
+   - Pastikan file foto ada
+   - Jika ada, cek permission file
+
+
+============================================
+CONTOH PERBAIKAN PATH:
+============================================
+
+CONTOH: Error 403 untuk photos/1763804966_14_1.png
+----------------------------------------------------
+1. Cek file ada di: storage/app/public/photos/1763804966_14_1.png
+2. Path di database: photos/1763804966_14_1.png
+3. User adalah TU
+
+PERBAIKAN:
+- Pindahkan file ke: storage/app/public/profiles/tu/1763804966_14_1.png
+- Update database:
+  UPDATE users 
+  SET photo = 'profiles/tu/1763804966_14_1.png' 
+  WHERE id = [id_user] AND role = 'tu';
+
+ATAU:
+- Biarkan file di: storage/app/public/photos/1763804966_14_1.png
+- Pastikan symlink benar
+- Pastikan permission benar
+- Path di database tetap: photos/1763804966_14_1.png
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Error 403 Forbidden biasanya disebabkan oleh:
+1. Storage symlink tidak benar
+2. Permission folder tidak cukup
+3. Path di database tidak sesuai
+4. .htaccess tidak ada
+
+Solusi:
+1. Jalankan script perbaikan
+2. Restart Apache
+3. Cek dan perbaiki path di database
+4. Hard refresh browser
+
+============================================
+

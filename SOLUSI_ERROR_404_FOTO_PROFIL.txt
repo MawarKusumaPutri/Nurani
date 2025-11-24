@@ -1,0 +1,161 @@
+============================================
+SOLUSI ERROR 404 FOTO PROFIL
+============================================
+
+MASALAH:
+--------
+Error 404 Not Found untuk foto profil
+URL yang dicoba: http://localhost/storage/profiles/tu/...
+Error: [HTTP/1.1 404 Not Found 1ms]
+
+
+============================================
+PENYEBAB:
+============================================
+
+1. URL TIDAK LENGKAP
+   - Storage::url() menghasilkan: /storage/... (path relatif)
+   - Seharusnya: http://localhost/nurani/public/storage/... (URL lengkap)
+   - Browser tidak bisa menemukan file karena URL tidak lengkap
+
+2. BASE URL TIDAK DITAMBAHKAN
+   - PhotoHelper menggunakan Storage::url() yang hanya menghasilkan path relatif
+   - Tidak menambahkan base URL (http://localhost/nurani/public)
+   - Browser mencoba akses: http://localhost/storage/... (salah)
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+--------------------------------------
+1. Double-click: FIX_ERROR_404_FOTO_PROFIL.bat
+2. Tunggu sampai selesai
+3. Script akan:
+   - Memperbarui PhotoHelper (menggunakan asset() untuk URL lengkap)
+   - Memperbarui semua view (menggunakan asset() untuk URL lengkap)
+   - Membuat ulang storage symlink
+   - Clear cache
+
+
+LANGKAH 2: Restart Apache
+--------------------------
+1. Buka XAMPP Control Panel
+2. STOP Apache
+3. TUNGGU 10 DETIK
+4. START Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3: Hard Refresh Browser
+--------------------------------
+1. Tekan Ctrl + F5
+2. Foto akan muncul OTOMATIS
+3. Tidak ada lagi error 404
+4. URL lengkap: http://localhost/nurani/public/storage/profiles/tu/...
+
+
+LANGKAH 4: Upload Foto Baru (Jika Perlu)
+------------------------------------------
+1. Login sebagai Guru/TU/Kepala Sekolah
+2. Buka Edit Profil
+3. Pilih foto (Format: JPG, PNG, GIF, Maksimal 2MB)
+4. Klik Simpan
+5. Foto akan muncul OTOMATIS dengan URL lengkap
+
+
+============================================
+PERBAIKAN YANG DILAKUKAN:
+============================================
+
+1. PHOTOHELPER:
+   - Sebelum: Storage::url($photoPath) → /storage/profiles/tu/... (path relatif)
+   - Sekarang: asset('storage/' . $photoPath) → http://localhost/nurani/public/storage/profiles/tu/... (URL lengkap)
+   - Semua return URL menggunakan asset() untuk memastikan URL lengkap
+
+2. SEMUA VIEW:
+   - View TU Profile → Menggunakan asset() untuk URL lengkap
+   - Sidebar TU → Menggunakan asset() untuk URL lengkap
+   - Sidebar Kepala Sekolah → Menggunakan asset() untuk URL lengkap
+   - Dashboard Guru → Menggunakan asset() untuk URL lengkap
+   - Profile Index Guru → Menggunakan asset() untuk URL lengkap
+
+3. STORAGE SYMLINK:
+   - Dibuat ulang untuk memastikan link benar
+   - public/storage → storage/app/public
+
+
+============================================
+PERBANDINGAN:
+============================================
+
+SEBELUM (SALAH):
+----------------
+Storage::url('profiles/tu/foto.jpg')
+→ /storage/profiles/tu/foto.jpg (path relatif)
+→ Browser coba: http://localhost/storage/profiles/tu/foto.jpg
+→ ERROR 404 Not Found
+
+
+SESUDAH (BENAR):
+----------------
+asset('storage/profiles/tu/foto.jpg')
+→ http://localhost/nurani/public/storage/profiles/tu/foto.jpg (URL lengkap)
+→ Browser akses: http://localhost/nurani/public/storage/profiles/tu/foto.jpg
+→ FOTO MUNCUL ✓
+
+
+============================================
+JIKA MASIH ERROR 404:
+============================================
+
+1. CEK STORAGE SYMLINK:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+   - Jika tidak, jalankan: php artisan storage:link
+
+2. CEK FILE FOTO ADA:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\tu\
+   - Pastikan file foto ada
+   - Jika tidak ada, upload lagi
+
+3. TEST AKSES FOTO LANGSUNG:
+   - Buka: http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+   - Jika foto muncul = symlink benar
+   - Jika tidak muncul = masalah symlink atau permission
+
+4. HARD REFRESH LAGI:
+   - Tekan Ctrl + F5
+   - Atau: Ctrl + Shift + Delete → Clear cache
+
+5. RESTART APACHE LAGI:
+   - STOP Apache
+   - TUNGGU 10 DETIK
+   - START Apache
+
+6. CEK CONSOLE BROWSER:
+   - Tekan F12
+   - Tab "Console" → lihat error
+   - Tab "Network" → filter "Images" → lihat request foto
+   - Pastikan URL lengkap: http://localhost/nurani/public/storage/...
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Masalah utama: URL tidak lengkap
+- Storage::url() hanya menghasilkan path relatif
+- Browser tidak bisa menemukan file
+
+Solusi: Menggunakan asset() untuk URL lengkap
+- asset('storage/...') menghasilkan URL lengkap dengan base URL
+- Browser bisa menemukan file dengan benar
+- Foto akan muncul OTOMATIS
+
+Jalankan script perbaikan, restart Apache, dan hard refresh browser.
+Foto akan PASTI MUNCUL tanpa error 404!
+
+============================================
+

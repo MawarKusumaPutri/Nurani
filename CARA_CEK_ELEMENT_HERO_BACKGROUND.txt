@@ -1,0 +1,115 @@
+============================================
+CARA CEK ELEMENT .hero-background DI ELEMENTS TAB
+============================================
+
+LANGKAH 1: BUKA DEVELOPER TOOLS
+--------------------------------
+1. Buka browser (Chrome/Firefox/Edge)
+2. Tekan F12 (atau klik kanan → Inspect)
+3. Pastikan tab "Elements" (Chrome) atau "Inspector" (Firefox) terbuka
+
+
+LANGKAH 2: CARI ELEMENT .hero-background
+-----------------------------------------
+CARA 1 - DENGAN SEARCH:
+1. Di Elements/Inspector tab, tekan Ctrl + F
+2. Ketik: hero-background
+3. Tekan Enter
+4. Element akan di-highlight jika ditemukan
+
+CARA 2 - DENGAN ID:
+1. Di Elements/Inspector tab, tekan Ctrl + F
+2. Ketik: hero-background (atau #hero-background)
+3. Tekan Enter
+4. Element akan di-highlight jika ditemukan
+
+CARA 3 - MANUAL:
+1. Di Elements/Inspector tab, cari tag: <section class="hero-section">
+2. Klik untuk expand
+3. Di dalamnya ada: <div class="hero-background" id="hero-background">
+4. Klik pada div tersebut
+
+
+LANGKAH 3: LIHAT COMPUTED STYLES
+---------------------------------
+Setelah menemukan element .hero-background:
+
+1. Klik pada element tersebut
+2. Di panel kanan, cari tab "Computed" (Chrome) atau "Computed" (Firefox)
+3. Scroll ke bawah, cari properti:
+   - background-image: harus ada URL gambar
+   - opacity: harus 1
+   - visibility: harus visible
+   - z-index: harus 1
+   - position: harus absolute
+   - display: harus block
+
+
+LANGKAH 4: LIHAT STYLES TAB
+----------------------------
+1. Di panel kanan, klik tab "Styles" (Chrome) atau "Rules" (Firefox)
+2. Cari rule: .hero-background
+3. Lihat apakah background-image ada
+4. Lihat apakah opacity = 1
+5. Lihat apakah visibility = visible
+
+
+LANGKAH 5: CEK INLINE STYLE
+----------------------------
+1. Di Elements tab, klik pada element .hero-background
+2. Di panel kanan, lihat bagian "element.style"
+3. Pastikan ada:
+   - background-image: url('...')
+   - opacity: 1
+   - visibility: visible
+   - display: block
+   - z-index: 1
+
+
+LANGKAH 6: CEK CONSOLE LOG
+---------------------------
+1. Buka tab "Console" di Developer Tools
+2. Lihat log yang dimulai dengan "=== DEBUG HERO BACKGROUND ==="
+3. Pastikan ada:
+   - "heroBackground element:" diikuti dengan [object HTMLDivElement]
+   - "Computed background-image:" diikuti dengan URL gambar
+   - "Computed opacity:" diikuti dengan 1
+   - "Computed visibility:" diikuti dengan visible
+   - "Computed z-index:" diikuti dengan 1
+
+
+============================================
+JIKA TIDAK DITEMUKAN:
+============================================
+
+1. Pastikan halaman sudah di-refresh (Ctrl + F5)
+2. Pastikan Developer Tools sudah dibuka sebelum refresh
+3. Cek Console tab untuk error
+4. Cek apakah element benar-benar ada di HTML:
+   - Di Elements tab, tekan Ctrl + F
+   - Ketik: hero-section
+   - Jika tidak ditemukan, berarti ada masalah dengan HTML
+
+
+============================================
+SCREENSHOT YANG DICARI:
+============================================
+
+Di Elements/Inspector tab, Anda harus melihat:
+
+<section class="hero-section" id="hero-section">
+  <div class="hero-background" id="hero-background" style="...">
+  </div>
+  <div class="hero-content">
+    ...
+  </div>
+</section>
+
+Dan di Computed styles:
+- background-image: url("http://localhost/nurani/public/image/foto_MTS/...")
+- opacity: 1
+- visibility: visible
+- z-index: 1
+
+============================================
+

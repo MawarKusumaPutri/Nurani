@@ -1,0 +1,175 @@
+============================================
+SOLUSI FOTO PROFIL PASTI MUNCUL
+============================================
+
+MASALAH:
+--------
+Status "Profil berhasil diperbarui!" muncul
+Tapi foto profil tidak muncul sama sekali
+
+
+============================================
+PENYEBAB:
+============================================
+
+1. DATA TIDAK DI-REFRESH SETELAH UPLOAD
+   - User data di session tidak di-update
+   - Cache tidak di-clear
+   - Foto sudah tersimpan tapi tidak muncul
+
+2. PHOTOHELPER TIDAK BISA MENEMUKAN FILE
+   - Path di database tidak sesuai
+   - File ada tapi tidak ditemukan
+   - PhotoHelper tidak mencari di semua lokasi
+
+3. VIEW TIDAK MENCARI FOTO DENGAN BENAR
+   - Hanya cari di satu lokasi
+   - Tidak ada fallback
+   - Tidak cari berdasarkan nama file
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+--------------------------------------
+1. Double-click: FIX_FOTO_PROFIL_PASTI_MUNCUL.bat
+2. Tunggu sampai selesai
+3. Script akan:
+   - Memperbarui TuController (PASTI refresh data)
+   - Memperbarui View TU Profile (PASTI cari foto)
+   - Memperbarui Sidebar TU
+   - Memperbarui PhotoHelper (PASTI temukan file)
+   - Membuat ulang storage symlink
+   - Verifikasi folder dan file
+   - Clear cache LENGKAP
+
+
+LANGKAH 2: Restart Apache
+--------------------------
+1. Buka XAMPP Control Panel
+2. STOP Apache
+3. TUNGGU 10 DETIK
+4. START Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3: Upload Foto Profil (PASTI MUNCUL)
+---------------------------------------------
+1. Login sebagai Guru/TU/Kepala Sekolah
+2. Buka Edit Profil
+3. Pilih foto (Format: JPG, PNG, GIF, Maksimal 2MB)
+4. Klik Simpan
+5. Sistem akan OTOMATIS:
+   - Simpan foto dengan path yang benar
+   - Refresh data dari database
+   - Clear cache
+   - Foto akan muncul OTOMATIS
+
+
+LANGKAH 4: Hard Refresh Browser
+--------------------------------
+1. Tekan Ctrl + F5
+2. Foto akan muncul di:
+   - Sidebar (lingkaran item) ✓
+   - Halaman Profil ✓
+   - Dashboard ✓
+   - Semua halaman ✓
+
+
+LANGKAH 5: Cek Console Browser (Jika Masih Tidak MuncuL)
+----------------------------------------------------------
+1. Buka browser
+2. Tekan F12 (Developer Tools)
+3. Tab "Console" → lihat error
+4. Tab "Network" → filter "Images" → lihat request foto
+5. Status code harus 200
+6. Jika 404 = path salah atau file tidak ada
+7. Jika 403 = masalah permission atau symlink
+
+
+============================================
+PERBAIKAN YANG DILAKUKAN:
+============================================
+
+1. TUCONTROLLER:
+   - PASTI refresh data dari database setelah save
+   - PASTI clear cache setelah save
+   - PASTI update session dengan data terbaru
+   - Foto akan langsung muncul setelah upload
+
+2. VIEW TU PROFILE:
+   - PASTI cari foto di semua lokasi
+   - Cari berdasarkan path lengkap
+   - Cari berdasarkan nama file saja
+   - Cari di storage dan public
+   - Fallback ke berbagai kemungkinan
+
+3. PHOTOHELPER:
+   - PASTI temukan file di semua lokasi
+   - Cari berdasarkan path lengkap
+   - Cari berdasarkan nama file
+   - Cari di storage dan public
+   - Mendukung berbagai format path
+
+4. SIDEBAR:
+   - OTOMATIS cari foto dengan path yang benar
+   - SINKRON dengan halaman profil
+   - Foto muncul OTOMATIS
+
+
+============================================
+JIKA MASIH TIDAK MUNCUL:
+============================================
+
+1. CEK FILE FOTO ADA:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\tu\
+   - Pastikan file foto ada
+   - Jika tidak ada, upload lagi
+
+2. CEK STORAGE SYMLINK:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+   - Jika tidak, jalankan: php artisan storage:link
+
+3. CEK PATH DI DATABASE:
+   - Buka phpMyAdmin
+   - Database: nurani
+   - Tabel: users
+   - Cari user yang login
+   - Lihat kolom: photo
+   - Path harus: profiles/tu/[nama-file]
+
+4. TEST AKSES FOTO LANGSUNG:
+   - Buka: http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+   - Jika foto muncul = symlink benar
+   - Jika tidak muncul = masalah symlink atau permission
+
+5. HARD REFRESH LAGI:
+   - Tekan Ctrl + F5
+   - Atau: Ctrl + Shift + Delete → Clear cache
+
+6. RESTART APACHE LAGI:
+   - STOP Apache
+   - TUNGGU 10 DETIK
+   - START Apache
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Sistem sekarang PASTI MUNCUL:
+✓ PASTI refresh data setelah upload
+✓ PASTI clear cache setelah upload
+✓ PASTI cari foto di semua lokasi
+✓ OTOMATIS muncul di sidebar dan halaman profil
+✓ SINKRON antara semua halaman
+✓ Tidak perlu update manual di database
+
+Jalankan script perbaikan, restart Apache, upload foto, dan hard refresh browser.
+Foto akan PASTI MUNCUL!
+
+============================================
+

@@ -125,11 +125,12 @@
                                         <label for="foto" class="form-label">Foto Profil</label>
                                         <div class="mb-2 position-relative d-inline-block">
                                             @php
-                                                $hasPhoto = $guru->foto && Storage::disk('public')->exists($guru->foto);
-                                                $photoUrl = $hasPhoto ? Storage::url($guru->foto) . '?v=' . time() : '#';
+                                                $freshGuru = \App\Models\Guru::find($guru->id);
+                                                $photoUrl = $freshGuru->foto ? \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles') : '#';
+                                                $hasPhoto = $photoUrl !== null && $photoUrl !== '#';
                                             @endphp
                                             <div class="position-relative d-inline-block" style="width: 150px; height: 150px;">
-                                                <img id="photoPreview" src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative;">
+                                                <img id="photoPreview" src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
                                                 <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%; position: absolute; top: 0; left: 0;">
                                                     <i class="fas fa-user fa-3x text-muted"></i>
                                                 </div>

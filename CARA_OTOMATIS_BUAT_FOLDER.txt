@@ -1,0 +1,195 @@
+============================================
+CARA OTOMATIS BUAT FOLDER SAAT UPLOAD FOTO
+============================================
+
+PENJELASAN:
+-----------
+Sistem sudah diperbaiki untuk OTOMATIS membuat folder saat upload foto.
+Tidak perlu membuat folder manual - sistem akan membuatnya otomatis.
+
+
+============================================
+BAGAIMANA SISTEM BEKERJA:
+============================================
+
+1. SAAT UPLOAD FOTO:
+   - User pilih foto dan klik "Simpan"
+   - Controller memanggil: PhotoHelper::savePhoto()
+   - PhotoHelper OTOMATIS:
+     * Cek folder: storage/app/public/profiles/guru/ (atau tu/ atau kepala_sekolah/)
+     * Jika folder BELUM ADA → BUAT FOLDER OTOMATIS
+     * Simpan foto di folder tersebut
+     * Simpan path di database
+
+2. KODE YANG MEMBUAT FOLDER OTOMATIS:
+   - File: app/Helpers/PhotoHelper.php
+   - Fungsi: savePhoto()
+   - Kode: mkdir($storagePath, 0755, true)
+   - Parameter 'true' = buat folder secara rekursif (termasuk parent folder)
+
+
+============================================
+CARA PAKAI (SANGAT MUDAH):
+============================================
+
+LANGKAH 1: Pastikan Script Sudah Dijalankan
+---------------------------------------------
+1. Double-click: FIX_FOTO_PASTI_MUNCUL_FINAL.bat
+2. Tunggu sampai selesai
+3. Restart Apache di XAMPP
+
+
+LANGKAH 2: Upload Foto (FOLDER AKAN DIBUAT OTOMATIS!)
+-------------------------------------------------------
+1. Login sebagai Guru/TU/Kepala Sekolah
+2. Klik "Edit Profil"
+3. Klik "Choose File" pada "Foto Profil"
+4. Pilih foto (Format: JPG, PNG, GIF, Maksimal 2MB)
+5. Klik "Simpan Perubahan"
+
+SISTEM AKAN OTOMATIS:
+✓ Cek folder: storage/app/public/profiles/guru/ (atau tu/ atau kepala_sekolah/)
+✓ Jika belum ada → BUAT FOLDER OTOMATIS
+✓ Simpan foto di folder tersebut
+✓ Tampilkan pesan: "Profil berhasil diperbarui"
+
+
+LANGKAH 3: Verifikasi Folder Dibuat
+------------------------------------
+1. Buka File Explorer
+2. Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\
+3. Lihat folder yang dibuat:
+   - guru\ (jika upload foto Guru)
+   - tu\ (jika upload foto TU)
+   - kepala_sekolah\ (jika upload foto Kepala Sekolah)
+4. Di dalam folder tersebut ada file foto yang baru diupload
+
+
+LANGKAH 4: Lihat Foto
+---------------------
+1. Tekan Ctrl + F5 (Hard Refresh)
+2. Foto akan muncul di:
+   - Sidebar (foto profil kecil)
+   - Dashboard (foto profil kecil)
+   - Halaman Profil (foto profil besar)
+
+
+============================================
+CONTOH ALUR KERJA OTOMATIS:
+============================================
+
+CONTOH 1: Upload Foto Guru (Folder Belum Ada)
+----------------------------------------------
+1. Login sebagai Guru
+2. Buka Edit Profil
+3. Pilih foto: foto_guru.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/guru/
+→ Folder BELUM ADA
+→ BUAT FOLDER OTOMATIS: mkdir(storage/app/public/profiles/guru/, 0755, true)
+→ Folder DIBUAT: storage/app/public/profiles/guru/
+→ Simpan foto: storage/app/public/profiles/guru/1234567890_abc123_foto_guru.jpg
+→ Simpan path di database: profiles/guru/1234567890_abc123_foto_guru.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Folder storage/app/public/profiles/guru/ DIBUAT OTOMATIS
+→ Foto tersimpan di dalamnya
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+CONTOH 2: Upload Foto TU (Folder Belum Ada)
+--------------------------------------------
+1. Login sebagai TU
+2. Buka Edit Profil
+3. Pilih foto: foto_tu.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/tu/
+→ Folder BELUM ADA
+→ BUAT FOLDER OTOMATIS: mkdir(storage/app/public/profiles/tu/, 0755, true)
+→ Folder DIBUAT: storage/app/public/profiles/tu/
+→ Simpan foto: storage/app/public/profiles/tu/1234567890_abc123_foto_tu.jpg
+→ Simpan path di database: profiles/tu/1234567890_abc123_foto_tu.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Folder storage/app/public/profiles/tu/ DIBUAT OTOMATIS
+→ Foto tersimpan di dalamnya
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+CONTOH 3: Upload Foto Kepala Sekolah (Folder Belum Ada)
+--------------------------------------------------------
+1. Login sebagai Kepala Sekolah
+2. Buka Edit Profil
+3. Pilih foto: foto_kepala_sekolah.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/kepala_sekolah/
+→ Folder BELUM ADA
+→ BUAT FOLDER OTOMATIS: mkdir(storage/app/public/profiles/kepala_sekolah/, 0755, true)
+→ Folder DIBUAT: storage/app/public/profiles/kepala_sekolah/
+→ Simpan foto: storage/app/public/profiles/kepala_sekolah/1234567890_abc123_foto_kepala_sekolah.jpg
+→ Simpan path di database: profiles/kepala_sekolah/1234567890_abc123_foto_kepala_sekolah.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Folder storage/app/public/profiles/kepala_sekolah/ DIBUAT OTOMATIS
+→ Foto tersimpan di dalamnya
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+============================================
+JIKA FOLDER TIDAK TERBUAT OTOMATIS:
+============================================
+
+1. Cek Permission Folder:
+   - Pastikan folder storage/app/public/ bisa ditulis
+   - Jika tidak, ubah permission folder tersebut
+
+2. Cek Log Laravel:
+   - Buka: storage/logs/laravel.log
+   - Cari error terkait pembuatan folder
+
+3. Test Manual:
+   - Jalankan: TEST_OTOMATIS_BUAT_FOLDER.bat
+   - Script akan test apakah folder bisa dibuat otomatis
+
+4. Cek Console Browser (F12):
+   - Tab "Console" → lihat error
+   - Tab "Network" → lihat request upload foto
+
+5. Pastikan Script Sudah Dijalankan:
+   - Jalankan: FIX_FOTO_PASTI_MUNCUL_FINAL.bat
+   - Restart Apache
+   - Coba upload foto lagi
+
+
+============================================
+KESIMPULAN:
+============================================
+
+✓ Sistem SUDAH OTOMATIS membuat folder saat upload foto
+✓ TIDAK PERLU membuat folder manual
+✓ CUKUP upload foto, sistem akan:
+  - Membuat folder jika belum ada
+  - Menyimpan foto di folder yang sesuai
+  - Menampilkan foto di semua halaman
+
+CARA PAKAI:
+1. Login
+2. Edit Profil
+3. Pilih foto
+4. Klik Simpan
+5. Folder akan dibuat OTOMATIS
+6. Hard Refresh (Ctrl + F5)
+7. Selesai!
+
+
+============================================
+

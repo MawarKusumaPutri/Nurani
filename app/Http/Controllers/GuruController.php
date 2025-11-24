@@ -9,6 +9,7 @@ use App\Models\Kuis;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\PhotoHelper;
 
 class GuruController extends Controller
 {
@@ -19,6 +20,9 @@ class GuruController extends Controller
         if (!$guru) {
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
+        
+        // Refresh guru data to ensure latest photo is loaded
+        $guru->refresh();
 
         // Get mata pelajaran yang dipilih (default: pertama)
         $selectedMataPelajaran = $request->get('mata_pelajaran');        
@@ -141,14 +145,45 @@ class GuruController extends Controller
             'name' => $request->nama
         ]);
 
-        // Handle foto upload
+        // Handle foto upload - FLEKSIBEL: bisa simpan di mana saja
         if ($request->hasFile('foto')) {
-            if ($guru->foto && Storage::disk('public')->exists($guru->foto)) {
-                Storage::disk('public')->delete($guru->foto);
+            try {
+                // Delete old photo if exists
+                if ($guru->foto) {
+                    // Hapus foto lama dari berbagai kemungkinan lokasi
+                    PhotoHelper::deletePhoto($guru->foto);
+                    // Coba hapus dengan berbagai format path lama
+                    $oldFilename = basename($guru->foto);
+                    if ($oldFilename && $oldFilename !== $guru->foto) {
+                        PhotoHelper::deletePhoto('profiles/guru/' . $oldFilename);
+                        PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
+                        PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                    }
+                }
+                
+                $file = $request->file('foto');
+                
+                // OTOMATIS SIMPAN dengan path yang benar
+                // Prioritas 1: simpan di storage/app/public/profiles/guru/
+                $fotoPath = PhotoHelper::savePhoto($file, 'profiles/guru', true);
+                
+                if ($fotoPath) {
+                    // Path sudah benar: profiles/guru/[nama-file]
+                    // Langsung simpan ke database tanpa perlu edit manual
+                    $guru->foto = $fotoPath;
+                } else {
+                    // Fallback: simpan di public/image/profiles
+                    $fotoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
+                    if ($fotoPath) {
+                        // Path: image/profiles/[nama-file]
+                        $guru->foto = $fotoPath;
+                    } else {
+                        return back()->withErrors(['foto' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                    }
+                }
+            } catch (\Exception $e) {
+                return back()->withErrors(['foto' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
             }
-            
-            $fotoPath = $request->file('foto')->store('guru/foto', 'public');
-            $guru->foto = $fotoPath;
         }
 
         // Update data guru
@@ -166,6 +201,9 @@ class GuruController extends Controller
         }
         
         $guru->update($updateData);
+        
+        // Refresh guru data to ensure latest photo is loaded
+        $guru->refresh();
 
         return redirect()->route('guru.profile.index')->with('success', 'Profil berhasil diperbarui');
     }

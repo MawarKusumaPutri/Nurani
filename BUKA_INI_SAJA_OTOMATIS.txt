@@ -1,0 +1,73 @@
+============================================
+CARA PAKAI - 100%% OTOMATIS!
+============================================
+
+LANGKAH 1:
+----------
+Double-click: JALANKAN_INI_OTOMATIS_100_PERSEN.bat
+
+Tunggu sampai selesai.
+SEMUA konfigurasi akan dilakukan otomatis.
+TIDAK PERLU SETTING MANUAL APAPUN!
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 5 DETIK
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+PILIH SALAH SATU:
+
+OPSI A - HTTPS (dengan domain):
+1. Buka browser
+2. Ketik: https://nuranitms.test
+3. Tekan Enter
+4. Klik "Advanced" - "Proceed to site"
+
+OPSI B - LOCALHOST (tanpa domain):
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+
+
+HASIL:
+------
+Website TMS NURANI akan muncul!
+
+
+============================================
+YANG DILAKUKAN OTOMATIS:
+============================================
+
+✓ Menyalin project ke htdocs
+✓ Membuat certificate SSL
+✓ Mengaktifkan mod_ssl
+✓ Mengaktifkan mod_rewrite
+✓ Membuat VirtualHost HTTPS
+✓ Update file hosts
+✓ Update .env
+✓ Clear cache
+✓ Flush DNS
+
+SEMUA OTOMATIS! TIDAK PERLU SETTING MANUAL!
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. Pastikan Apache RUNNING di XAMPP
+2. Restart Apache di XAMPP Control Panel
+3. Test dengan: http://localhost/nurani/public
+4. Jika localhost berhasil, lanjut test HTTPS
+
+============================================
+

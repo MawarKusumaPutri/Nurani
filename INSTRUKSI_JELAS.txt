@@ -1,0 +1,69 @@
+============================================
+INSTRUKSI JELAS - FIX "NOT FOUND"
+============================================
+
+LANGKAH 1: JALANKAN SCRIPT
+---------------------------
+Double-click: FIX_PASTI_BERFUNGSI.bat
+
+Tunggu sampai selesai (beberapa menit).
+Script akan menyalin project ke htdocs otomatis.
+
+
+LANGKAH 2: CEK APACHE
+----------------------
+1. Buka XAMPP Control Panel
+2. Pastikan Apache RUNNING (hijau)
+3. Jika tidak running, klik START
+
+
+LANGKAH 3: TEST
+---------------
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+   (TANPA slash di akhir!)
+3. Tekan Enter
+
+
+HASIL:
+------
+Website Laravel akan muncul!
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. Jalankan: TEST_LOCALHOST.bat
+   (untuk cek masalah)
+
+2. Jalankan: VERIFIKASI_PROJECT.bat
+   (untuk verifikasi project)
+
+3. Pastikan project sudah di:
+   C:\xampp\htdocs\nurani\
+
+4. Pastikan folder public ada:
+   C:\xampp\htdocs\nurani\public\
+
+5. Pastikan file index.php ada:
+   C:\xampp\htdocs\nurani\public\index.php
+
+6. Pastikan Apache RUNNING
+
+7. Restart Apache di XAMPP Control Panel
+
+
+============================================
+SALIN MANUAL (Jika script tidak bekerja):
+============================================
+
+1. Buka: D:\Capstone\nurani
+2. Copy seluruh folder (Ctrl + C)
+3. Paste ke: C:\xampp\htdocs\ (Ctrl + V)
+4. Pastikan nama folder: nurani
+5. Test: http://localhost/nurani/public
+
+
+============================================
+

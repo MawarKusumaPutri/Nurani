@@ -1,0 +1,127 @@
+============================================
+PENTING: PHP ARTISAN STORAGE:LINK
+============================================
+
+APAKAH PERLU?
+-------------
+YA, SANGAT PERLU!
+
+php artisan storage:link adalah PERLU untuk:
+- Membuat symlink dari public/storage ke storage/app/public
+- Memungkinkan file di storage bisa diakses via web
+- Tanpa symlink, foto tidak bisa diakses dan akan error 404
+
+
+============================================
+KENAPA PERLU?
+============================================
+
+1. LARAVEL STORAGE STRUCTURE:
+   - File disimpan di: storage/app/public/profiles/tu/
+   - Tapi file di storage/ tidak bisa diakses langsung via web
+   - Perlu symlink ke: public/storage/
+   - Browser akses: http://localhost/nurani/public/storage/profiles/tu/...
+
+2. TANPA SYMLINK:
+   - File ada di: storage/app/public/profiles/tu/foto.jpg
+   - Browser coba akses: http://localhost/nurani/public/storage/profiles/tu/foto.jpg
+   - ERROR 404 Not Found (karena public/storage tidak ada)
+
+3. DENGAN SYMLINK:
+   - Symlink dibuat: public/storage → storage/app/public
+   - File ada di: storage/app/public/profiles/tu/foto.jpg
+   - Browser akses: http://localhost/nurani/public/storage/profiles/tu/foto.jpg
+   - FOTO MUNCUL ✓ (karena public/storage link ke storage/app/public)
+
+
+============================================
+CARA CEK SYMLINK SUDAH ADA ATAU BELUM:
+============================================
+
+1. Buka File Explorer
+2. Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\
+3. Cek apakah ada folder "storage"
+4. Jika ada folder "storage" dengan icon shortcut = symlink sudah ada ✓
+5. Jika tidak ada folder "storage" = symlink belum ada, perlu dibuat
+
+
+============================================
+CARA BUAT SYMLINK:
+============================================
+
+LANGKAH 1: Buka Command Prompt atau Terminal
+---------------------------------------------
+1. Buka Command Prompt (Run as Administrator)
+2. Atau buka terminal di VS Code/Cursor
+
+LANGKAH 2: Masuk ke folder project
+-----------------------------------
+cd "D:\Praktikum DWBI\xampp\htdocs\nurani"
+
+LANGKAH 3: Jalankan perintah
+------------------------------
+php artisan storage:link
+
+LANGKAH 4: Verifikasi
+---------------------
+1. Cek apakah folder public/storage sudah ada
+2. Cek apakah folder public/storage link ke storage/app/public
+3. Test akses foto: http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+
+
+============================================
+JIKA SYMLINK SUDAH ADA:
+============================================
+
+Jika symlink sudah ada, perintah akan error:
+"ERROR The [path] link already exists."
+
+Ini NORMAL dan TIDAK MASALAH!
+- Symlink sudah ada, tidak perlu dibuat lagi
+- Foto seharusnya bisa diakses
+
+
+============================================
+JIKA SYMLINK TIDAK BISA DIBUAT:
+============================================
+
+1. Hapus folder public/storage jika ada (bukan symlink)
+   - Hapus manual di File Explorer
+   - Atau: rmdir /s /q "public\storage"
+
+2. Jalankan lagi: php artisan storage:link
+
+3. Jika masih error, cek permission folder:
+   - Pastikan folder public/ bisa ditulis
+   - Pastikan tidak ada file/folder yang menghalangi
+
+
+============================================
+CARA CEK SYMLINK BERFUNGSI:
+============================================
+
+1. Buka browser
+2. Akses: http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+3. Ganti [nama-file] dengan nama file yang ada di folder
+4. Jika foto muncul = symlink benar ✓
+5. Jika error 404 = symlink tidak benar atau file tidak ada
+
+
+============================================
+KESIMPULAN:
+============================================
+
+✓ YA, PERLU menjalankan php artisan storage:link
+✓ Symlink membuat file di storage bisa diakses via web
+✓ Tanpa symlink, foto akan error 404
+✓ Jalankan sekali saja (tidak perlu setiap kali)
+✓ Jika sudah ada, tidak perlu dibuat lagi
+
+CARA MUDAH:
+1. Buka terminal
+2. cd "D:\Praktikum DWBI\xampp\htdocs\nurani"
+3. php artisan storage:link
+4. Selesai!
+
+============================================
+

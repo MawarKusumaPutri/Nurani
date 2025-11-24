@@ -1,0 +1,66 @@
+============================================
+CARA PAKAI - SANGAT MUDAH!
+============================================
+
+LANGKAH 1:
+----------
+Double-click: JALANKAN_INI_SAJA.bat
+
+Tunggu sampai selesai.
+SEMUA konfigurasi otomatis!
+TIDAK PERLU SETTING MANUAL!
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 5 DETIK
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+TEST DENGAN LOCALHOST DULU:
+
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+
+Website Laravel akan muncul!
+
+
+LANGKAH 4 (OPSIONAL):
+---------------------
+Jika localhost sudah berfungsi, test HTTPS:
+
+1. Buka browser
+2. Ketik: https://nuranitms.test
+3. Tekan Enter
+4. Klik "Advanced" - "Proceed to site"
+
+Website TMS NURANI akan muncul!
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. Pastikan project sudah di:
+   C:\xampp\htdocs\nurani\
+   (atau D:\xampp\htdocs\nurani\ jika XAMPP di D:)
+
+2. Pastikan file ada:
+   [lokasi-xampp]\htdocs\nurani\public\index.php
+
+3. Pastikan Apache RUNNING
+
+4. Restart Apache di XAMPP Control Panel
+
+5. Test dengan: http://localhost/nurani/public
+
+============================================
+

@@ -1,0 +1,55 @@
+============================================
+CARA PAKAI - MUDAH BANGET!
+============================================
+
+LANGKAH 1 - SALIN PROJECT:
+---------------------------
+Double-click: SALIN_KE_HTDOCS.bat
+
+Tunggu sampai selesai.
+Script ini akan menyalin project ke htdocs.
+
+
+LANGKAH 2 - KONFIGURASI LENGKAP:
+---------------------------------
+Double-click: FIX_PASTI_MUNCUL.bat
+
+Tunggu sampai selesai.
+SEMUA konfigurasi otomatis!
+
+
+LANGKAH 3 - RESTART APACHE:
+----------------------------
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 5 DETIK
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 4 - TEST:
+-----------------
+Buka browser, ketik:
+
+http://localhost/nurani/public
+
+Website Laravel akan muncul!
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. Pastikan project sudah di:
+   C:\xampp\htdocs\nurani\
+
+2. Pastikan file ada:
+   C:\xampp\htdocs\nurani\public\index.php
+
+3. Pastikan Apache RUNNING
+
+4. Restart Apache di XAMPP Control Panel
+
+5. Test dengan: http://localhost/nurani/public
+
+============================================
