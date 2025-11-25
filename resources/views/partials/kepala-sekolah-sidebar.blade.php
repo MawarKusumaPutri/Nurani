@@ -8,32 +8,27 @@
         <div class="text-center mb-4">
             @php
                 $user = Auth::user();
-                $hasPhoto = false;
                 $photoUrl = null;
                 
                 if ($user) {
-                    // Always get fresh user data from database to ensure latest photo
+                    // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                     $freshUser = \App\Models\User::find($user->id);
-                    
                     if ($freshUser && !empty($freshUser->photo)) {
-                        $storage = \Illuminate\Support\Facades\Storage::disk('public');
-                        $photoPath = 'photos/' . $freshUser->photo;
+                        // OTOMATIS cari foto dengan default path yang benar
+                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'profiles/kepala_sekolah');
                         
-                        // Check if file exists in storage with photos/ prefix
-                        if ($storage->exists($photoPath)) {
-                            $hasPhoto = true;
-                            // Build URL with cache busting - force browser to reload
-                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&t=' . ($freshUser->updated_at ? $freshUser->updated_at->timestamp : time()) . '&r=' . rand(1000, 9999);
-                        } else {
-                            // Try direct path (without photos/ prefix) - in case file was stored differently
-                            $directPath = $freshUser->photo;
-                            if ($storage->exists($directPath)) {
-                                $hasPhoto = true;
-                                $photoUrl = asset('storage/' . $directPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-                            }
+                        // Jika masih null, coba dengan path lain
+                        if (!$photoUrl) {
+                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                        }
+                        
+                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
+                            $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
                         }
                     }
                 }
+                $hasPhoto = $photoUrl !== null && $photoUrl !== '';
             @endphp
             <div class="mb-2" style="display: flex; justify-content: center;">
                 @if($hasPhoto && $photoUrl)

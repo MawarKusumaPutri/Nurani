@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('guru')->name('guru.')->group(function () {
         Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('dashboard');
         Route::get('/profil', [GuruController::class, 'profil'])->name('profil'); // Backward compatibility
+        Route::get('/jadwal', [GuruController::class, 'jadwalIndex'])->name('jadwal.index');
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/', [GuruController::class, 'profileIndex'])->name('index');
             Route::get('/edit', [GuruController::class, 'profileEdit'])->name('edit');

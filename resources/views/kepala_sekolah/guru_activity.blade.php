@@ -404,10 +404,10 @@
                                                                         <span class="badge bg-danger fs-6 px-3 py-2">{{ $guruActivity['logout_count'] }}x</span>
                                                                     </td>
                                                                     <td class="text-center">
-                                                                        @if($guruActivity['login_count'] > 0 && $guruActivity['logout_count'] > 0)
-                                                                            <span class="badge bg-info">Aktif</span>
-                                                                        @elseif($guruActivity['login_count'] > 0 && $guruActivity['logout_count'] == 0)
-                                                                            <span class="badge bg-warning">Masih Login</span>
+                                                                        @if($guruActivity['login_count'] > 0 && $guruActivity['logout_count'] == 0)
+                                                                            <span class="badge bg-success">Mengajar</span>
+                                                                        @elseif($guruActivity['logout_count'] > 0)
+                                                                            <span class="badge bg-danger">Logout</span>
                                                                         @else
                                                                             <span class="badge bg-secondary">Tidak Aktif</span>
                                                                         @endif

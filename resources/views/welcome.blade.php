@@ -9,6 +9,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
             <style>
+        :root {
+            --hero-bg-image-1: url('{{ asset("image/foto_MTS/20251002_105433-fotor-20251022182659.png") }}');
+            --hero-bg-image-2: url('{{ asset("image/foto_MTS/20251002_111603-fotor-20251022164553.png") }}');
+        }
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +22,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.6;
-            background: linear-gradient(135deg, #F1F8E9 0%, #E8F5E8 100%);
+            background: #F1F8E9;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -431,24 +435,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: transparent !important;
         }
 
         .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('/image/foto_MTS/20251002_105433-fotor-20251022182659.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 1;
-            animation: backgroundSlide 20s ease-in-out infinite;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-image: url('{{ asset("image/foto_MTS/20251002_105433-fotor-20251022182659.png") }}') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            z-index: 1 !important;
             transform: scale(1.1);
-            transition: transform 0.3s ease;
-            opacity: 0;
-            animation: backgroundSlide 20s ease-in-out infinite, fadeIn 2s ease-in-out forwards;
+            transition: background-image 1s ease-in-out, opacity 1s ease-in-out;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+            animation: backgroundSlide 10s ease-in-out infinite;
         }
 
         @keyframes fadeIn {
@@ -463,10 +469,12 @@
 
         @keyframes backgroundSlide {
             0%, 50% {
-                background-image: url('/image/foto_MTS/20251002_105433-fotor-20251022182659.png');
+                background-image: url('{{ asset("image/foto_MTS/20251002_105433-fotor-20251022182659.png") }}') !important;
+                opacity: 1 !important;
             }
             25%, 75% {
-                background-image: url('/image/foto_MTS/20251002_111603-fotor-20251022164553.png');
+                background-image: url('{{ asset("image/foto_MTS/20251002_111603-fotor-20251022164553.png") }}') !important;
+                opacity: 1 !important;
             }
         }
 
@@ -477,8 +485,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
             z-index: 2;
+            pointer-events: none;
         }
 
         .hero-content {
@@ -493,6 +502,7 @@
             display: flex;
             align-items: center;
             height: 100%;
+            background: transparent;
         }
 
         .hero-text-container {
@@ -954,9 +964,19 @@
         </header>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-background"></div>
-        <div class="hero-content">
+    <section class="hero-section" id="hero-section" style="position: relative; overflow: hidden;">
+        <!-- Background Image dengan img tag sebagai fallback -->
+        <img src="{{ asset('image/foto_MTS/20251002_105433-fotor-20251022182659.png') }}" 
+             alt="Background MTs Nurul Aiman" 
+             id="hero-background-img"
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 1; display: block; visibility: visible;">
+        
+        <!-- Background Image dengan div untuk animasi -->
+        <div class="hero-background" 
+             id="hero-background" 
+             style="background-image: url('{{ asset('image/foto_MTS/20251002_105433-fotor-20251022182659.png') }}'); opacity: 1; visibility: visible; display: block; z-index: 1; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
+        
+        <div class="hero-content" style="position: relative; z-index: 3;">
             <div class="hero-text-container">
                 <p class="hero-subtitle">Madrasah Tsanawiyah Unggulan</p>
                 <h1 class="hero-title">MENCIPTAKAN MASA DEPAN</h1>
@@ -1215,6 +1235,137 @@
             });
         });
 
+        // Set background images directly using JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroBackground = document.querySelector('.hero-background') || document.getElementById('hero-background');
+            const heroBackgroundImg = document.getElementById('hero-background-img');
+            const heroSection = document.querySelector('.hero-section') || document.getElementById('hero-section');
+            
+            console.log('=== DEBUG HERO BACKGROUND ===');
+            console.log('heroBackground element:', heroBackground);
+            console.log('heroBackgroundImg element:', heroBackgroundImg);
+            console.log('heroSection element:', heroSection);
+            
+            // Set img tag sebagai fallback dengan animasi bergantian
+            if (heroBackgroundImg) {
+                const image1 = '{{ asset("image/foto_MTS/20251002_105433-fotor-20251022182659.png") }}';
+                const image2 = '{{ asset("image/foto_MTS/20251002_111603-fotor-20251022164553.png") }}';
+                
+                // Set initial image
+                heroBackgroundImg.src = image1;
+                heroBackgroundImg.style.opacity = '1';
+                heroBackgroundImg.style.visibility = 'visible';
+                heroBackgroundImg.style.display = 'block';
+                heroBackgroundImg.style.transition = 'opacity 1s ease-in-out';
+                console.log('IMG tag set to:', image1);
+                
+                // Preload kedua gambar
+                const preloadImg1 = new Image();
+                const preloadImg2 = new Image();
+                preloadImg1.src = image1;
+                preloadImg2.src = image2;
+                
+                // Animasi bergantian untuk img tag (setiap 5 detik)
+                let currentImg = 1;
+                setInterval(function() {
+                    if (currentImg === 1) {
+                        // Fade out
+                        heroBackgroundImg.style.opacity = '0';
+                        setTimeout(function() {
+                            heroBackgroundImg.src = image2;
+                            heroBackgroundImg.style.opacity = '1';
+                            currentImg = 2;
+                            console.log('Switched to image 2 (2 Anak)');
+                        }, 500);
+                    } else {
+                        // Fade out
+                        heroBackgroundImg.style.opacity = '0';
+                        setTimeout(function() {
+                            heroBackgroundImg.src = image1;
+                            heroBackgroundImg.style.opacity = '1';
+                            currentImg = 1;
+                            console.log('Switched to image 1 (Sekolah)');
+                        }, 500);
+                    }
+                }, 5000); // Ganti setiap 5 detik
+            }
+            
+            if (heroBackground) {
+                const image1 = '{{ asset("image/foto_MTS/20251002_105433-fotor-20251022182659.png") }}';
+                const image2 = '{{ asset("image/foto_MTS/20251002_111603-fotor-20251022164553.png") }}';
+                
+                console.log('Loading image 1:', image1);
+                console.log('Loading image 2:', image2);
+                
+                // Set initial background immediately
+                heroBackground.style.setProperty('background-image', `url('${image1}')`, 'important');
+                heroBackground.style.setProperty('background-size', 'cover', 'important');
+                heroBackground.style.setProperty('background-position', 'center', 'important');
+                heroBackground.style.setProperty('background-repeat', 'no-repeat', 'important');
+                heroBackground.style.setProperty('opacity', '1', 'important');
+                heroBackground.style.setProperty('display', 'block', 'important');
+                heroBackground.style.setProperty('visibility', 'visible', 'important');
+                heroBackground.style.setProperty('z-index', '1', 'important');
+                heroBackground.style.setProperty('position', 'absolute', 'important');
+                heroBackground.style.setProperty('top', '0', 'important');
+                heroBackground.style.setProperty('left', '0', 'important');
+                heroBackground.style.setProperty('width', '100%', 'important');
+                heroBackground.style.setProperty('height', '100%', 'important');
+                
+                console.log('Initial background set, opacity:', heroBackground.style.opacity);
+                console.log('Computed background-image:', window.getComputedStyle(heroBackground).backgroundImage);
+                console.log('Computed opacity:', window.getComputedStyle(heroBackground).opacity);
+                console.log('Computed visibility:', window.getComputedStyle(heroBackground).visibility);
+                console.log('Computed z-index:', window.getComputedStyle(heroBackground).zIndex);
+                console.log('=== END DEBUG ===');
+                
+                // Preload images to ensure they're available
+                const img1 = new Image();
+                const img2 = new Image();
+                
+                img1.onload = function() {
+                    console.log('Image 1 loaded successfully');
+                };
+                img1.onerror = function() {
+                    console.error('Gagal memuat gambar 1:', image1);
+                    console.error('Cek apakah file ada di: /image/foto_MTS/20251002_105433-fotor-20251022182659.png');
+                };
+                
+                img2.onload = function() {
+                    console.log('Image 2 loaded successfully');
+                    
+                    // Set animasi bergantian untuk background div
+                    let currentBg = 1;
+                    setInterval(function() {
+                        if (currentBg === 1) {
+                            heroBackground.style.setProperty('background-image', `url('${image2}')`, 'important');
+                            heroBackground.style.setProperty('opacity', '1', 'important');
+                            currentBg = 2;
+                            console.log('Background switched to image 2 (2 Anak)');
+                        } else {
+                            heroBackground.style.setProperty('background-image', `url('${image1}')`, 'important');
+                            heroBackground.style.setProperty('opacity', '1', 'important');
+                            currentBg = 1;
+                            console.log('Background switched to image 1 (Sekolah)');
+                        }
+                    }, 5000); // Ganti setiap 5 detik, sinkron dengan img tag
+                };
+                img2.onerror = function() {
+                    console.error('Gagal memuat gambar 2:', image2);
+                    console.error('Cek apakah file ada di: /image/foto_MTS/20251002_111603-fotor-20251022164553.png');
+                };
+                
+                img1.src = image1;
+                img2.src = image2;
+                
+                // Update CSS variables
+                document.documentElement.style.setProperty('--hero-bg-image-1', `url('${image1}')`);
+                document.documentElement.style.setProperty('--hero-bg-image-2', `url('${image2}')`);
+            } else {
+                console.error('Element .hero-background tidak ditemukan!');
+            }
+        });
+
         // Parallax effect for hero background
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
@@ -1225,5 +1376,4 @@
         });
     </script>
     </body>
-</html>
 </html>

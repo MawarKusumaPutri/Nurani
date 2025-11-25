@@ -59,39 +59,61 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="form-label">Kelas</label>
-                                        <select class="form-select">
-                                            <option value="">Semua Kelas</option>
-                                            <option value="7">Kelas 7</option>
-                                            <option value="8">Kelas 8</option>
-                                            <option value="9">Kelas 9</option>
-                                        </select>
+                                <form method="GET" action="{{ route('kepala_sekolah.siswa.index') }}" id="filterForm">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Kelas</label>
+                                            <select class="form-select" name="kelas" id="kelasFilter" onchange="document.getElementById('filterForm').submit();">
+                                                <option value="">Semua Kelas</option>
+                                                <option value="7" {{ $selectedKelas == '7' ? 'selected' : '' }}>Kelas 7</option>
+                                                <option value="8" {{ $selectedKelas == '8' ? 'selected' : '' }}>Kelas 8</option>
+                                                <option value="9" {{ $selectedKelas == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-select" name="status" id="statusFilter" onchange="document.getElementById('filterForm').submit();">
+                                                <option value="">Semua Status</option>
+                                                <option value="aktif" {{ $selectedStatus == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                <option value="tidak_aktif" {{ $selectedStatus == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Cari Siswa</label>
+                                            <input type="text" class="form-control" name="search" id="searchInput" 
+                                                   placeholder="Nama atau NIS" value="{{ $searchQuery ?? '' }}"
+                                                   onkeyup="if(event.key === 'Enter') document.getElementById('filterForm').submit();">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">&nbsp;</label>
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn btn-primary flex-fill">
+                                                    <i class="fas fa-search"></i> Filter
+                                                </button>
+                                                @if($selectedKelas || $selectedStatus || $searchQuery)
+                                                <a href="{{ route('kepala_sekolah.siswa.index') }}" class="btn btn-secondary" title="Reset Filter">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Status</label>
-                                        <select class="form-select">
-                                            <option value="">Semua Status</option>
-                                            <option value="aktif">Aktif</option>
-                                            <option value="tidak_aktif">Tidak Aktif</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Cari Siswa</label>
-                                        <input type="text" class="form-control" placeholder="Nama atau NIS">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">&nbsp;</label>
-                                        <button class="btn btn-primary d-block w-100">
-                                            <i class="fas fa-search"></i> Filter
-                                        </button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                @if($selectedKelas || $selectedStatus || $searchQuery)
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Menampilkan hasil filter:
+                    @if($selectedKelas) <strong>Kelas {{ $selectedKelas }}</strong> @endif
+                    @if($selectedStatus) <strong>Status {{ ucfirst($selectedStatus) }}</strong> @endif
+                    @if($searchQuery) <strong>Pencarian: "{{ $searchQuery }}"</strong> @endif
+                    <a href="{{ route('kepala_sekolah.siswa.index') }}" class="float-end">Reset Filter</a>
+                </div>
+                @endif
 
                 <!-- Siswa List by Class -->
                 <div class="row">
@@ -116,9 +138,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($siswaKelas7 as $index => $siswa)
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @forelse($siswaKelas7 as $siswa)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $no++ }}</td>
                                                 <td>{{ $siswa->nis }}</td>
                                                 <td>{{ $siswa->nama }}</td>
                                                 <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
@@ -130,7 +155,13 @@
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="5" class="text-center text-muted">Tidak ada data siswa</td>
+                                                <td colspan="5" class="text-center text-muted py-4">
+                                                    @if($selectedKelas && $selectedKelas != '7')
+                                                        Tidak ada siswa kelas 7
+                                                    @else
+                                                        Tidak ada data siswa
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @endforelse
                                         </tbody>
@@ -167,9 +198,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($siswaKelas8 as $index => $siswa)
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @forelse($siswaKelas8 as $siswa)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $no++ }}</td>
                                                 <td>{{ $siswa->nis }}</td>
                                                 <td>{{ $siswa->nama }}</td>
                                                 <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
@@ -181,7 +215,13 @@
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="5" class="text-center text-muted">Tidak ada data siswa</td>
+                                                <td colspan="5" class="text-center text-muted py-4">
+                                                    @if($selectedKelas && $selectedKelas != '8')
+                                                        Tidak ada siswa kelas 8
+                                                    @else
+                                                        Tidak ada data siswa
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @endforelse
                                         </tbody>
@@ -218,9 +258,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($siswaKelas9 as $index => $siswa)
+                                            @php
+                                                $no = 1;
+                                            @endphp
+                                            @forelse($siswaKelas9 as $siswa)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $no++ }}</td>
                                                 <td>{{ $siswa->nis }}</td>
                                                 <td>{{ $siswa->nama }}</td>
                                                 <td>{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
@@ -232,7 +275,13 @@
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="5" class="text-center text-muted">Tidak ada data siswa</td>
+                                                <td colspan="5" class="text-center text-muted py-4">
+                                                    @if($selectedKelas && $selectedKelas != '9')
+                                                        Tidak ada siswa kelas 9
+                                                    @else
+                                                        Tidak ada data siswa
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @endforelse
                                         </tbody>

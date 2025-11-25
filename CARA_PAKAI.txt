@@ -1,0 +1,36 @@
+============================================
+CARA PAKAI - SUPER MUDAH!
+============================================
+
+LANGKAH 1:
+----------
+Double-click file: JALANKAN_INI_SAJA.bat
+
+Script akan melakukan SEMUA konfigurasi otomatis.
+TIDAK PERLU SETTING MANUAL APAPUN!
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. Tunggu 5 detik
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+Buka browser, ketik: https://nuranitms.test
+
+Klik "Advanced" → "Proceed to site"
+
+Website TMS NURANI akan muncul!
+
+
+============================================
+ITU SAJA! TIDAK PERLU SETTING APAPUN!
+============================================
+

@@ -1,0 +1,88 @@
+============================================
+CARA PAKAI - PERBAIKAN TOTAL
+============================================
+
+LANGKAH 1:
+----------
+Double-click: PERBAIKAN_TOTAL.bat
+
+Tunggu sampai selesai.
+Script akan:
+- Menyalin project ke htdocs
+- Memastikan semua file ada
+- Mengaktifkan mod_rewrite
+- Membuat VirtualHost
+- Update .env
+- Clear cache
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 10 DETIK (PENTING!)
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+TEST DENGAN LOCALHOST:
+
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+
+Website Laravel akan muncul!
+
+
+============================================
+JIKA MASIH "NOT FOUND":
+============================================
+
+1. Pastikan Apache RUNNING (hijau di XAMPP)
+
+2. Cek file ada di:
+   C:\xampp\htdocs\nurani\public\index.php
+   (atau D:\xampp\htdocs\nurani\public\index.php)
+
+3. Coba akses langsung:
+   http://localhost/nurani/public/index.php
+
+4. Restart Apache lagi:
+   STOP → TUNGGU 10 DETIK → START
+
+5. Cek error log Apache:
+   C:\xampp\apache\logs\error.log
+
+6. Pastikan mod_rewrite aktif:
+   Buka: C:\xampp\apache\conf\httpd.conf
+   Cari: LoadModule rewrite_module
+   Pastikan TIDAK ada tanda # di depannya
+
+============================================
+VERIFIKASI MANUAL:
+============================================
+
+1. Buka folder:
+   C:\xampp\htdocs\nurani\
+
+2. Pastikan ada folder:
+   - public (ada file index.php di dalamnya)
+   - app
+   - config
+   - vendor
+   - artisan
+
+3. Buka file:
+   C:\xampp\htdocs\nurani\public\index.php
+   Harus ada isinya (kode PHP)
+
+4. Buka file:
+   C:\xampp\htdocs\nurani\public\.htaccess
+   Harus ada isinya (konfigurasi Apache)
+
+============================================
+

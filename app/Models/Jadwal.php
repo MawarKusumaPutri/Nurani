@@ -23,6 +23,7 @@ class Jadwal extends Model
         'keterangan',
         'is_berulang',
         'is_lab',
+        'is_lapangan',
         'ruang',
         'created_by'
     ];
@@ -30,7 +31,8 @@ class Jadwal extends Model
     protected $casts = [
         'tanggal' => 'date',
         'is_berulang' => 'boolean',
-        'is_lab' => 'boolean'
+        'is_lab' => 'boolean',
+        'is_lapangan' => 'boolean'
     ];
 
     /**

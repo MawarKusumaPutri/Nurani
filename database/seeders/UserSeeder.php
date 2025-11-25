@@ -186,7 +186,7 @@ class UserSeeder extends Seeder
                         $mataPelajaran = 'BTQ';
                         break;
                     case 'mawarkusuma694@gmail.com':
-                        $mataPelajaran = 'Belum ditentukan';
+                        $mataPelajaran = 'Basa Sunda';
                         break;
                     default:
                         $mataPelajaran = 'Belum ditentukan';

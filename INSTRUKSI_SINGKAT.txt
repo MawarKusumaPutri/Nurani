@@ -1,0 +1,53 @@
+============================================
+INSTRUKSI SINGKAT - PASTI BERFUNGSI!
+============================================
+
+LANGKAH 1:
+----------
+Double-click: PERBAIKAN_FINAL_100_PERSEN.bat
+
+Tunggu sampai selesai (akan ada banyak proses).
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 10 DETIK (PENTING!)
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+6. TUNGGU 5 DETIK LAGI
+
+
+LANGKAH 3:
+----------
+1. TUTUP SEMUA TAB BROWSER
+2. Buka browser baru (atau tekan Ctrl+Shift+N untuk Incognito)
+3. Ketik: https://nuranitms.test
+4. Tekan Enter
+5. Klik "Advanced" atau "Advanced settings"
+6. Klik "Proceed to nuranitms.test" atau "Continue to site"
+
+
+HASIL:
+------
+Website TMS NURANI akan muncul dengan:
+- Header hijau dengan logo
+- Background gambar siswa di kelas
+- Teks "MENCIPTAKAN MASA DEPAN"
+- Tombol LOGIN di kanan atas
+
+
+============================================
+JIKA MASIH ERROR:
+============================================
+
+1. RESTART KOMPUTER (sering menyelesaikan masalah)
+2. Pastikan Apache Running di XAMPP
+3. Cek error log: C:\xampp\apache\logs\error.log
+4. Test dengan browser lain (Chrome, Firefox, Edge)
+
+============================================
+

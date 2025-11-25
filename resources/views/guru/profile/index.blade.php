@@ -45,9 +45,55 @@
                         Dashboard Guru
                     </h4>
                     <div class="text-center mb-4">
-                        @if($guru->foto)
-                            <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" 
-                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        @php
+                            // SELALU ambil data fresh dari database untuk memastikan foto terbaru
+                            $freshGuru = \App\Models\Guru::find($guru->id);
+                            $photoUrl = null;
+                            
+                            if ($freshGuru && !empty($freshGuru->foto)) {
+                                // OTOMATIS cari foto dengan berbagai kemungkinan path
+                                $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
+                                
+                                // Jika masih null, coba dengan path lain
+                                if (!$photoUrl) {
+                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
+                                }
+                                
+                                // Jika masih null, coba dengan path lain lagi
+                                if (!$photoUrl) {
+                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
+                                }
+                                
+                                // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                    $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                }
+                                
+                                // Coba dengan path lengkap di storage
+                                if (!$photoUrl) {
+                                    $storagePath = storage_path('app/public/' . $freshGuru->foto);
+                                    if (file_exists($storagePath)) {
+                                        $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    }
+                                }
+                                
+                                // Coba dengan path di public
+                                if (!$photoUrl) {
+                                    $publicPath = public_path($freshGuru->foto);
+                                    if (file_exists($publicPath)) {
+                                        $photoUrl = asset($freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    }
+                                }
+                            }
+                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                        @endphp
+                        @if($hasPhoto && $photoUrl)
+                            <img src="{{ $photoUrl }}" alt="Foto Profil" 
+                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: none;">
+                                <i class="fas fa-user fa-2x text-primary"></i>
+                            </div>
                         @else
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                 <i class="fas fa-user fa-2x text-primary"></i>
@@ -153,7 +199,7 @@
                                         <strong>Kontak:</strong>
                                     </div>
                                     <div class="col-md-8">
-                                        {{ $guru->kontak ?? '-' }}
+                                        {{ $guru->kontak ?? $guru->user->phone ?? '-' }}
                                     </div>
                                 </div>
                                 @if($guru->biodata)
@@ -189,16 +235,61 @@
                                 </h5>
                             </div>
                             <div class="card-body text-center">
-                                @if($guru->foto)
-                                    <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;">
+                                @php
+                                    // SELALU ambil data fresh dari database untuk memastikan foto terbaru
+                                    $freshGuru = \App\Models\Guru::find($guru->id);
+                                    $photoUrl = null;
+                                    
+                                    if ($freshGuru && !empty($freshGuru->foto)) {
+                                        // OTOMATIS cari foto dengan berbagai kemungkinan path
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
+                                        
+                                        // Jika masih null, coba dengan path lain
+                                        if (!$photoUrl) {
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
+                                        }
+                                        
+                                        // Jika masih null, coba dengan path lain lagi
+                                        if (!$photoUrl) {
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
+                                        }
+                                        
+                                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                            $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        }
+                                        
+                                        // Coba dengan path lengkap di storage
+                                        if (!$photoUrl) {
+                                            $storagePath = storage_path('app/public/' . $freshGuru->foto);
+                                            if (file_exists($storagePath)) {
+                                                $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            }
+                                        }
+                                        
+                                        // Coba dengan path di public
+                                        if (!$photoUrl) {
+                                            $publicPath = public_path($freshGuru->foto);
+                                            if (file_exists($publicPath)) {
+                                                $photoUrl = asset($freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            }
+                                        }
+                                    }
+                                    $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                                @endphp
+                                @if($hasPhoto && $photoUrl)
+                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                        <i class="fas fa-user-tie text-secondary"></i>
+                                    </div>
                                 @else
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32;">
-                                        <i class="fas fa-user-tie"></i>
+                                    <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0;">
+                                        <i class="fas fa-user-tie text-secondary"></i>
                                     </div>
                                     <p class="text-muted">Foto profil belum diatur</p>
                                 @endif
                                 <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
-                                    <i class="fas fa-edit"></i> {{ $guru->foto ? 'Ganti Foto' : 'Upload Foto' }}
+                                    <i class="fas fa-edit"></i> {{ $freshGuru && $freshGuru->foto ? 'Ganti Foto' : 'Upload Foto' }}
                                 </a>
                             </div>
                         </div>

@@ -222,9 +222,34 @@
                         Dashboard Guru
                     </h4>
                     <div class="text-center mb-4">
-                        @if($guru->foto)
-                            <img src="{{ Storage::url($guru->foto) }}" alt="Foto Profil" 
-                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        @php
+                            // SELALU ambil data fresh dari database untuk memastikan foto terbaru
+                            $freshGuru = \App\Models\Guru::find($guru->id);
+                            $photoUrl = null;
+                            
+                            if ($freshGuru && !empty($freshGuru->foto)) {
+                                // OTOMATIS cari foto dengan default path yang benar
+                                $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
+                                
+                                // Jika masih null, coba dengan path lain
+                                if (!$photoUrl) {
+                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
+                                }
+                                
+                                // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                    $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                }
+                            }
+                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                        @endphp
+                        @if($hasPhoto && $photoUrl)
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru').style.display='flex';">
+                                <div id="profile-placeholder-guru" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
+                                    <i class="fas fa-user fa-2x text-primary"></i>
+                                </div>
+                            </div>
                         @else
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                 <i class="fas fa-user fa-2x text-primary"></i>
@@ -241,6 +266,9 @@
                 <nav class="nav flex-column px-3">
                     <a class="nav-link active" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                        <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
                     <a class="nav-link" href="{{ route('guru.presensi.index') }}">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
@@ -350,6 +378,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar fa-2x mb-3"></i>
+                                <div class="stat-number">{{ $totalJadwalHariIni ?? 0 }}</div>
+                                <div>Jadwal Hari Ini</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -426,6 +463,89 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jadwal Hari Ini -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card content-card">
+                            <div class="card-body text-center py-5">
+                                @if($jadwalHariIni && $jadwalHariIni->count() > 0)
+                                    <div class="row">
+                                        @foreach($jadwalHariIni as $jadwal)
+                                            <div class="col-md-6 mb-3">
+                                                <div class="p-3 border rounded">
+                                                    <h6 class="mb-2">{{ $jadwal->mata_pelajaran }}</h6>
+                                                    <p class="mb-1 text-muted small">{{ $jadwal->kelas }}</p>
+                                                    <p class="mb-0">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}
+                                                        @if($jadwal->ruang)
+                                                            <span class="ms-2">
+                                                                <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                            </span>
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <i class="fas fa-calendar-times fa-3x text-danger mb-3"></i>
+                                    <h5 class="text-muted">Tidak ada jadwal mengajar hari ini</h5>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jadwal Minggu Ini -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card content-card">
+                            <div class="card-header bg-white border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                                        Jadwal Mengajar Minggu Ini
+                                    </h5>
+                                    <a href="{{ route('guru.jadwal.index') }}" class="btn btn-sm btn-outline-primary">
+                                        Lihat Semua
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @if($jadwalMingguIni && $jadwalMingguIni->count() > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hari</th>
+                                                    <th>Mata Pelajaran</th>
+                                                    <th>Kelas</th>
+                                                    <th>Jam</th>
+                                                    <th>Ruang</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($jadwalMingguIni as $jadwal)
+                                                    <tr>
+                                                        <td><strong>{{ ucfirst($jadwal->hari) }}</strong></td>
+                                                        <td>{{ $jadwal->mata_pelajaran }}</td>
+                                                        <td>{{ $jadwal->kelas }}</td>
+                                                        <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
+                                                        <td>{{ $jadwal->ruang ?? '-' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="text-muted text-center py-3">Tidak ada jadwal mengajar minggu ini</p>
                                 @endif
                             </div>
                         </div>

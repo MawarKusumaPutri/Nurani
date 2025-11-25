@@ -89,6 +89,9 @@
                     <a class="nav-link" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                        <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
+                    </a>
                     <a class="nav-link active" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>

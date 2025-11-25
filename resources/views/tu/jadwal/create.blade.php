@@ -243,7 +243,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="is_berulang" name="is_berulang">
@@ -253,12 +253,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="is_lab" name="is_lab">
                                                 <label class="form-check-label" for="is_lab">
                                                     Menggunakan Laboratorium
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="is_lapangan" name="is_lapangan">
+                                                <label class="form-check-label" for="is_lapangan">
+                                                    Menggunakan Lapangan
                                                 </label>
                                             </div>
                                         </div>

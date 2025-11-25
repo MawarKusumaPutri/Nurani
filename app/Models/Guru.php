@@ -16,7 +16,10 @@ class Guru extends Model
         'nip',
         'mata_pelajaran',
         'status',
-        'foto'
+        'foto',
+        'kontak',
+        'biodata',
+        'keahlian'
     ];
 
     /**
@@ -104,5 +107,13 @@ class Guru extends Model
     public function presensiSiswa(): HasMany
     {
         return $this->hasMany(PresensiSiswa::class);
+    }
+
+    /**
+     * Get the jadwal for the guru.
+     */
+    public function jadwal(): HasMany
+    {
+        return $this->hasMany(Jadwal::class);
     }
 }

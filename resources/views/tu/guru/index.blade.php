@@ -84,11 +84,49 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-chalkboard-teacher"></i> Daftar Guru
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-chalkboard-teacher"></i> Daftar Guru
+                                </h5>
+                                @if($gurus->count() > 0)
+                                <!-- Pagination Controls - Moved to Top -->
+                                <div class="d-flex gap-2 align-items-center">
+                                    @if($gurus->onFirstPage())
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </button>
+                                    @else
+                                        <a href="{{ $gurus->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </a>
+                                    @endif
+                                    
+                                    <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
+                                        Halaman {{ $gurus->currentPage() }} / {{ $gurus->lastPage() }}
+                                    </span>
+                                    
+                                    @if($gurus->hasMorePages())
+                                        <a href="{{ $gurus->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
+                            @if($gurus->count() > 0)
+                            <!-- Pagination Info -->
+                            <div class="mb-3">
+                                <div class="text-muted small">
+                                    Menampilkan {{ $gurus->firstItem() }} sampai {{ $gurus->lastItem() }} dari {{ $gurus->total() }} guru
+                                </div>
+                            </div>
+                            @endif
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
@@ -139,38 +177,6 @@
                                         @endforelse
                                     </tbody>
                                 </table>
-                            </div>
-                            
-                            <!-- Pagination -->
-                            <div class="d-flex justify-content-between align-items-center mt-4 pagination-custom">
-                                <div class="text-muted small">
-                                    @if($gurus->total() > 0)
-                                        Menampilkan {{ $gurus->firstItem() }} sampai {{ $gurus->lastItem() }} dari {{ $gurus->total() }} guru
-                                    @else
-                                        Tidak ada data
-                                    @endif
-                                </div>
-                                <div class="d-flex">
-                                    @if($gurus->onFirstPage())
-                                        <button class="btn btn-outline-secondary btn-sm me-2" disabled>
-                                            <i class="fas fa-chevron-left me-1"></i> Previous
-                                        </button>
-                                    @else
-                                        <a href="{{ $gurus->previousPageUrl() }}" class="btn btn-outline-secondary btn-sm me-2">
-                                            <i class="fas fa-chevron-left me-1"></i> Previous
-                                        </a>
-                                    @endif
-                                    
-                                    @if($gurus->hasMorePages())
-                                        <a href="{{ $gurus->nextPageUrl() }}" class="btn btn-outline-secondary btn-sm">
-                                            Next <i class="fas fa-chevron-right ms-1"></i>
-                                        </a>
-                                    @else
-                                        <button class="btn btn-outline-secondary btn-sm" disabled>
-                                            Next <i class="fas fa-chevron-right ms-1"></i>
-                                        </button>
-                                    @endif
-                                </div>
                             </div>
                         </div>
                     </div>
