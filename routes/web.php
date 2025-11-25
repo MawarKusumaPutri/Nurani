@@ -54,6 +54,11 @@ Route::middleware('auth')->group(function () {
         });
         Route::put('/profil', [GuruController::class, 'updateProfil'])->name('profil.update'); // Backward compatibility
         
+        // Jadwal Mengajar Routes
+        Route::prefix('jadwal')->name('jadwal.')->group(function () {
+            Route::get('/', [GuruController::class, 'jadwalIndex'])->name('index');
+        });
+        
         // Materi Routes
         Route::prefix('materi')->name('materi.')->group(function () {
             Route::get('/', [MateriController::class, 'index'])->name('index');

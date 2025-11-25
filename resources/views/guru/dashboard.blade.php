@@ -267,6 +267,9 @@
                     <a class="nav-link active" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                        <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
+                    </a>
                     <a class="nav-link" href="{{ route('guru.presensi.index') }}">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
@@ -375,7 +378,85 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar-alt fa-2x mb-3"></i>
+                                <div class="stat-number">{{ $jadwalHariIni->count() }}</div>
+                                <div>Jadwal Hari Ini</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Jadwal Mengajar Hari Ini -->
+                @if($jadwalHariIni->count() > 0)
+                <div class="card mb-4 border-warning">
+                    <div class="card-header bg-warning bg-opacity-10 border-warning">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-clock me-2 text-warning"></i>
+                                Jadwal Mengajar Hari Ini ({{ \Carbon\Carbon::today()->format('d F Y') }})
+                            </h5>
+                            <span class="badge bg-warning text-dark">{{ $jadwalHariIni->count() }} Jadwal</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($jadwalHariIni as $jadwal)
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-primary h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="mb-0 text-primary">
+                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
+                                                </h6>
+                                                <span class="badge bg-primary">{{ $jadwal->kelas }}</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                                </small>
+                                            </div>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if($jadwal->is_lab)
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-flask me-1"></i>Laboratorium
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->is_lapangan)
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-running me-1"></i>Lapangan
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->ruang)
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            @if($jadwal->keterangan)
+                                                <p class="text-muted small mt-2 mb-0">
+                                                    <i class="fas fa-info-circle me-1"></i>{{ Str::limit($jadwal->keterangan, 50) }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="card mb-4 border-secondary">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-0">Tidak ada jadwal mengajar hari ini</p>
+                    </div>
+                </div>
+                @endif
 
                 <div class="row">
                     <!-- Materi Terbaru -->

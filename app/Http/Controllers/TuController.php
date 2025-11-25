@@ -821,13 +821,18 @@ class TuController extends Controller
             'keterangan' => 'nullable|string',
             'tanggal' => 'nullable|date',
             'is_berulang' => 'nullable',
-            'is_lab' => 'nullable'
+            'is_lab' => 'nullable',
+            'is_lapangan' => 'nullable'
         ]);
 
-        // Generate ruang berdasarkan kelas dan is_lab
-        $ruang = $request->has('is_lab') 
-            ? 'Lab ' . ucfirst($request->mata_pelajaran)
-            : 'Ruang ' . $request->kelas;
+        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
+        if ($request->has('is_lab')) {
+            $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
+        } elseif ($request->has('is_lapangan')) {
+            $ruang = 'Lapangan';
+        } else {
+            $ruang = 'Ruang ' . $request->kelas;
+        }
 
         try {
             // Simpan data jadwal ke database
@@ -845,6 +850,7 @@ class TuController extends Controller
                 'keterangan' => $request->keterangan ?? null,
                 'is_berulang' => $request->has('is_berulang') ? true : false,
                 'is_lab' => $request->has('is_lab') ? true : false,
+                'is_lapangan' => $request->has('is_lapangan') ? true : false,
                 'ruang' => $ruang,
                 'created_by' => Auth::id()
             ]);
@@ -921,13 +927,18 @@ class TuController extends Controller
             'keterangan' => 'nullable|string',
             'tanggal' => 'nullable|date',
             'is_berulang' => 'nullable',
-            'is_lab' => 'nullable'
+            'is_lab' => 'nullable',
+            'is_lapangan' => 'nullable'
         ]);
 
-        // Generate ruang berdasarkan kelas dan is_lab
-        $ruang = $request->has('is_lab') 
-            ? 'Lab ' . ucfirst($request->mata_pelajaran)
-            : 'Ruang ' . $request->kelas;
+        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
+        if ($request->has('is_lab')) {
+            $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
+        } elseif ($request->has('is_lapangan')) {
+            $ruang = 'Lapangan';
+        } else {
+            $ruang = 'Ruang ' . $request->kelas;
+        }
 
         try {
             // Update data jadwal
@@ -945,6 +956,7 @@ class TuController extends Controller
                 'keterangan' => $request->keterangan ?? null,
                 'is_berulang' => $request->has('is_berulang') ? true : false,
                 'is_lab' => $request->has('is_lab') ? true : false,
+                'is_lapangan' => $request->has('is_lapangan') ? true : false,
                 'ruang' => $ruang,
             ]);
 

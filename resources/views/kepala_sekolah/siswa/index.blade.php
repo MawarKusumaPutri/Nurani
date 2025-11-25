@@ -59,35 +59,55 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="form-label">Kelas</label>
-                                        <select class="form-select">
-                                            <option value="">Semua Kelas</option>
-                                            <option value="7">Kelas 7</option>
-                                            <option value="8">Kelas 8</option>
-                                            <option value="9">Kelas 9</option>
-                                        </select>
+                                <form method="GET" action="{{ route('kepala_sekolah.siswa.index') }}" id="filterFormKepalaSekolah">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Kelas</label>
+                                            <select name="kelas" class="form-select" id="kelasFilter" onchange="document.getElementById('filterFormKepalaSekolah').submit();">
+                                                <option value="">Semua Kelas</option>
+                                                <option value="7" {{ $kelasFilter == '7' ? 'selected' : '' }}>Kelas 7</option>
+                                                <option value="8" {{ $kelasFilter == '8' ? 'selected' : '' }}>Kelas 8</option>
+                                                <option value="9" {{ $kelasFilter == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Status</label>
+                                            <select name="status" class="form-select" id="statusFilter" onchange="document.getElementById('filterFormKepalaSekolah').submit();">
+                                                <option value="">Semua Status</option>
+                                                <option value="aktif" {{ $statusFilter == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                <option value="tidak_aktif" {{ $statusFilter == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Cari Siswa</label>
+                                            <input type="text" name="search" class="form-control" id="searchInput" placeholder="Nama atau NIS" value="{{ $search }}" onkeypress="if(event.key === 'Enter') { document.getElementById('filterFormKepalaSekolah').submit(); }">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">&nbsp;</label>
+                                            <button type="submit" class="btn btn-primary d-block w-100">
+                                                <i class="fas fa-search"></i> Filter
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Status</label>
-                                        <select class="form-select">
-                                            <option value="">Semua Status</option>
-                                            <option value="aktif">Aktif</option>
-                                            <option value="tidak_aktif">Tidak Aktif</option>
-                                        </select>
+                                    @if($kelasFilter || $statusFilter || $search)
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <a href="{{ route('kepala_sekolah.siswa.index') }}" class="btn btn-sm btn-outline-secondary">
+                                                <i class="fas fa-times"></i> Reset Filter
+                                            </a>
+                                            @if($kelasFilter)
+                                                <span class="badge bg-info ms-2">Kelas: {{ $kelasFilter }}</span>
+                                            @endif
+                                            @if($statusFilter)
+                                                <span class="badge bg-info ms-2">Status: {{ ucfirst($statusFilter) }}</span>
+                                            @endif
+                                            @if($search)
+                                                <span class="badge bg-info ms-2">Pencarian: {{ $search }}</span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Cari Siswa</label>
-                                        <input type="text" class="form-control" placeholder="Nama atau NIS">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">&nbsp;</label>
-                                        <button class="btn btn-primary d-block w-100">
-                                            <i class="fas fa-search"></i> Filter
-                                        </button>
-                                    </div>
-                                </div>
+                                    @endif
+                                </form>
                             </div>
                         </div>
                     </div>

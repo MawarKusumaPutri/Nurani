@@ -7,9 +7,11 @@ use App\Models\Guru;
 use App\Models\Materi;
 use App\Models\Kuis;
 use App\Models\Notification;
+use App\Models\Jadwal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\PhotoHelper;
+use Carbon\Carbon;
 
 class GuruController extends Controller
 {
@@ -80,6 +82,99 @@ class GuruController extends Controller
             ->where('is_read', false)
             ->count();
 
+        // Get jadwal mengajar untuk guru ini
+        $today = Carbon::today();
+        $startOfWeek = $today->copy()->startOfWeek();
+        $endOfWeek = $today->copy()->endOfWeek();
+        
+        // Map hari dalam bahasa Inggris ke Indonesia
+        $hariMap = [
+            'Monday' => 'senin',
+            'Tuesday' => 'selasa',
+            'Wednesday' => 'rabu',
+            'Thursday' => 'kamis',
+            'Friday' => 'jumat',
+            'Saturday' => 'sabtu',
+            'Sunday' => 'minggu'
+        ];
+        $hariIni = $hariMap[$today->format('l')] ?? 'senin';
+        
+        // Jadwal hari ini
+        $jadwalHariIni = Jadwal::where('guru_id', $guru->id)
+            ->where('status', 'aktif')
+            ->where(function($query) use ($today, $hariIni) {
+                // Jika jadwal berulang, cek berdasarkan hari
+                $query->where(function($q) use ($hariIni) {
+                    $q->where('is_berulang', true)
+                      ->where('hari', $hariIni);
+                })
+                // Atau jika ada tanggal spesifik, cek tanggal
+                ->orWhere(function($q) use ($today) {
+                    $q->where('is_berulang', false)
+                      ->whereDate('tanggal', $today);
+                })
+                // Atau jika tidak ada tanggal tapi hari sama
+                ->orWhere(function($q) use ($hariIni) {
+                    $q->where('is_berulang', true)
+                      ->whereNull('tanggal')
+                      ->where('hari', $hariIni);
+                });
+            })
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+        
+        // Jadwal minggu ini (semua jadwal berulang + jadwal dengan tanggal spesifik dalam minggu ini)
+        $jadwalMingguIni = Jadwal::where('guru_id', $guru->id)
+            ->where('status', 'aktif')
+            ->where(function($query) use ($startOfWeek, $endOfWeek) {
+                // Jadwal berulang (setiap minggu) - tampilkan semua
+                $query->where('is_berulang', true)
+                // Atau jadwal dengan tanggal spesifik dalam minggu ini
+                ->orWhere(function($q) use ($startOfWeek, $endOfWeek) {
+                    $q->where('is_berulang', false)
+                      ->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+                });
+            })
+            ->orderByRaw("CASE hari 
+                WHEN 'senin' THEN 1 
+                WHEN 'selasa' THEN 2 
+                WHEN 'rabu' THEN 3 
+                WHEN 'kamis' THEN 4 
+                WHEN 'jumat' THEN 5 
+                WHEN 'sabtu' THEN 6 
+                WHEN 'minggu' THEN 7 
+                ELSE 8 END")
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+        
+        // Jadwal mendatang (7 hari ke depan)
+        $jadwalMendatang = Jadwal::where('guru_id', $guru->id)
+            ->where('status', 'aktif')
+            ->where(function($query) use ($today) {
+                $endDate = $today->copy()->addDays(7);
+                // Jadwal berulang
+                $query->where(function($q) {
+                    $q->where('is_berulang', true);
+                })
+                // Atau jadwal dengan tanggal spesifik dalam 7 hari ke depan
+                ->orWhere(function($q) use ($today, $endDate) {
+                    $q->where('is_berulang', false)
+                      ->whereBetween('tanggal', [$today, $endDate]);
+                });
+            })
+            ->orderByRaw("CASE hari 
+                WHEN 'senin' THEN 1 
+                WHEN 'selasa' THEN 2 
+                WHEN 'rabu' THEN 3 
+                WHEN 'kamis' THEN 4 
+                WHEN 'jumat' THEN 5 
+                WHEN 'sabtu' THEN 6 
+                WHEN 'minggu' THEN 7 
+                ELSE 8 END")
+            ->orderBy('jam_mulai', 'asc')
+            ->limit(10)
+            ->get();
+
         return view('guru.dashboard', compact(
             'guru',
             'mataPelajaranList',
@@ -90,8 +185,83 @@ class GuruController extends Controller
             'materiTerbaru',
             'kuisAktif',
             'notifications',
-            'unreadNotifications'
+            'unreadNotifications',
+            'jadwalHariIni',
+            'jadwalMingguIni',
+            'jadwalMendatang'
         ));
+    }
+
+    public function jadwalIndex(Request $request)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru) {
+            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
+        }
+        
+        $today = Carbon::today();
+        $hariMap = [
+            'Monday' => 'senin',
+            'Tuesday' => 'selasa',
+            'Wednesday' => 'rabu',
+            'Thursday' => 'kamis',
+            'Friday' => 'jumat',
+            'Saturday' => 'sabtu',
+            'Sunday' => 'minggu'
+        ];
+        
+        // Get filter
+        $filter = $request->get('filter', 'semua'); // semua, hari_ini, minggu_ini, bulan_ini
+        
+        $query = Jadwal::where('guru_id', $guru->id)
+            ->where('status', 'aktif');
+        
+        if ($filter == 'hari_ini') {
+            $hariIni = $hariMap[$today->format('l')] ?? 'senin';
+            $query->where(function($q) use ($today, $hariIni) {
+                $q->where(function($subQ) use ($hariIni) {
+                    $subQ->where('is_berulang', true)->where('hari', $hariIni);
+                })
+                ->orWhere(function($subQ) use ($today) {
+                    $subQ->where('is_berulang', false)->whereDate('tanggal', $today);
+                });
+            });
+        } elseif ($filter == 'minggu_ini') {
+            $startOfWeek = $today->copy()->startOfWeek();
+            $endOfWeek = $today->copy()->endOfWeek();
+            $query->where(function($q) use ($startOfWeek, $endOfWeek) {
+                $q->where('is_berulang', true)
+                  ->orWhere(function($subQ) use ($startOfWeek, $endOfWeek) {
+                      $subQ->where('is_berulang', false)
+                           ->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+                  });
+            });
+        } elseif ($filter == 'bulan_ini') {
+            $startOfMonth = $today->copy()->startOfMonth();
+            $endOfMonth = $today->copy()->endOfMonth();
+            $query->where(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('is_berulang', true)
+                  ->orWhere(function($subQ) use ($startOfMonth, $endOfMonth) {
+                      $subQ->where('is_berulang', false)
+                           ->whereBetween('tanggal', [$startOfMonth, $endOfMonth]);
+                  });
+            });
+        }
+        
+        $jadwals = $query->orderByRaw("CASE hari 
+                WHEN 'senin' THEN 1 
+                WHEN 'selasa' THEN 2 
+                WHEN 'rabu' THEN 3 
+                WHEN 'kamis' THEN 4 
+                WHEN 'jumat' THEN 5 
+                WHEN 'sabtu' THEN 6 
+                WHEN 'minggu' THEN 7 
+                ELSE 8 END")
+            ->orderBy('jam_mulai', 'asc')
+            ->paginate(20);
+        
+        return view('guru.jadwal.index', compact('guru', 'jadwals', 'filter'));
     }
 
     public function profil()
