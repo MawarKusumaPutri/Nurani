@@ -866,7 +866,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 semester: semester,
                 tahun_ajaran: tahunAjaran,
                 is_berulang: document.getElementById('is_berulang').checked,
-                is_lab: document.getElementById('is_lab').checked
+                is_lab: document.getElementById('is_lab').checked,
+                is_lapangan: document.getElementById('is_lapangan').checked
             });
 
             // Show loading state

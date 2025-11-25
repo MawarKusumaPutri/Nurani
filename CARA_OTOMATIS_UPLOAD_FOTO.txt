@@ -1,0 +1,184 @@
+============================================
+CARA OTOMATIS UPLOAD FOTO PROFIL
+============================================
+
+PENJELASAN:
+-----------
+Sistem sudah dibuat OTOMATIS. Anda TIDAK perlu membuat folder manual.
+Saat upload foto, sistem akan OTOMATIS:
+1. Membuat folder jika belum ada
+2. Menyimpan foto di folder yang sesuai
+3. Menampilkan foto di semua halaman
+
+
+============================================
+CARA PAKAI (SANGAT MUDAH):
+============================================
+
+LANGKAH 1: Pastikan Script Sudah Dijalankan
+---------------------------------------------
+1. Double-click: FIX_FOTO_PASTI_MUNCUL_FINAL.bat
+2. Tunggu sampai selesai
+3. Restart Apache di XAMPP
+
+
+LANGKAH 2: Upload Foto (OTOMATIS!)
+-----------------------------------
+1. Login sebagai Guru/TU/Kepala Sekolah
+2. Klik "Edit Profil"
+3. Klik "Choose File" pada "Foto Profil"
+4. Pilih foto (Format: JPG, PNG, GIF, Maksimal 2MB)
+5. Klik "Simpan Perubahan"
+
+SISTEM AKAN OTOMATIS:
+✓ Membuat folder jika belum ada
+✓ Menyimpan foto di folder yang sesuai:
+  - Guru → storage/app/public/profiles/guru/
+  - TU → storage/app/public/profiles/tu/
+  - Kepala Sekolah → storage/app/public/profiles/kepala_sekolah/
+
+
+LANGKAH 3: Lihat Foto
+---------------------
+1. Setelah klik "Simpan", akan muncul pesan "Profil berhasil diperbarui"
+2. Tekan Ctrl + F5 (Hard Refresh)
+3. Foto akan muncul di:
+   - Sidebar (foto profil kecil)
+   - Dashboard (foto profil kecil)
+   - Halaman Profil (foto profil besar)
+
+
+============================================
+BAGAIMANA SISTEM BEKERJA OTOMATIS:
+============================================
+
+1. SAAT UPLOAD FOTO:
+   - User klik "Choose File" dan pilih foto
+   - User klik "Simpan Perubahan"
+   - Controller menerima file foto
+   - PhotoHelper.savePhoto() dipanggil
+   - PhotoHelper OTOMATIS membuat folder jika belum ada:
+     * storage/app/public/profiles/guru/ (untuk Guru)
+     * storage/app/public/profiles/tu/ (untuk TU)
+     * storage/app/public/profiles/kepala_sekolah/ (untuk Kepala Sekolah)
+   - Foto disimpan di folder yang sesuai
+   - Path foto disimpan di database
+
+2. SAAT MENAMPILKAN FOTO:
+   - View memanggil PhotoHelper.getPhotoUrl()
+   - PhotoHelper mencari foto di berbagai lokasi
+   - Mengembalikan URL foto yang ditemukan
+   - Foto ditampilkan di halaman
+
+3. TIDAK PERLU MEMBUAT FOLDER MANUAL:
+   - Folder dibuat OTOMATIS saat upload foto
+   - Sistem akan membuat folder jika belum ada
+   - Tidak perlu khawatir tentang struktur folder
+
+
+============================================
+CONTOH ALUR KERJA:
+============================================
+
+CONTOH 1: Upload Foto Guru
+---------------------------
+1. Login sebagai Guru
+2. Buka Edit Profil
+3. Pilih foto: foto_guru.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/guru/
+→ Jika belum ada, BUAT folder OTOMATIS
+→ Simpan foto: storage/app/public/profiles/guru/1234567890_abc123_foto_guru.jpg
+→ Simpan path di database: profiles/guru/1234567890_abc123_foto_guru.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+CONTOH 2: Upload Foto TU
+-------------------------
+1. Login sebagai TU
+2. Buka Edit Profil
+3. Pilih foto: foto_tu.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/tu/
+→ Jika belum ada, BUAT folder OTOMATIS
+→ Simpan foto: storage/app/public/profiles/tu/1234567890_abc123_foto_tu.jpg
+→ Simpan path di database: profiles/tu/1234567890_abc123_foto_tu.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+CONTOH 3: Upload Foto Kepala Sekolah
+-------------------------------------
+1. Login sebagai Kepala Sekolah
+2. Buka Edit Profil
+3. Pilih foto: foto_kepala_sekolah.jpg
+4. Klik Simpan
+
+SISTEM OTOMATIS:
+→ Cek folder: storage/app/public/profiles/kepala_sekolah/
+→ Jika belum ada, BUAT folder OTOMATIS
+→ Simpan foto: storage/app/public/profiles/kepala_sekolah/1234567890_abc123_foto_kepala_sekolah.jpg
+→ Simpan path di database: profiles/kepala_sekolah/1234567890_abc123_foto_kepala_sekolah.jpg
+→ Tampilkan pesan: "Profil berhasil diperbarui"
+
+HASIL:
+→ Foto muncul di sidebar, dashboard, dan halaman profil
+
+
+============================================
+JIKA FOTO TIDAK MUNCUL:
+============================================
+
+1. HARD REFRESH: Ctrl + F5 (PENTING!)
+
+2. Cek console browser (F12):
+   - Tab "Console" → lihat error
+   - Tab "Network" → filter "Images" → lihat request foto
+
+3. Cek file foto ada di:
+   - Guru: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\guru\
+   - TU: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\tu\
+   - Kepala Sekolah: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\kepala_sekolah\
+
+4. Cek storage symlink:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+   - Jika tidak ada, jalankan: php artisan storage:link
+
+5. Clear cache browser:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+
+
+============================================
+KESIMPULAN:
+============================================
+
+✓ TIDAK PERLU membuat folder manual
+✓ TIDAK PERLU khawatir tentang struktur folder
+✓ CUKUP upload foto, sistem akan OTOMATIS:
+  - Membuat folder jika belum ada
+  - Menyimpan foto di folder yang sesuai
+  - Menampilkan foto di semua halaman
+
+CARA PAKAI:
+1. Login
+2. Edit Profil
+3. Pilih foto
+4. Klik Simpan
+5. Hard Refresh (Ctrl + F5)
+6. Selesai!
+
+
+============================================
+

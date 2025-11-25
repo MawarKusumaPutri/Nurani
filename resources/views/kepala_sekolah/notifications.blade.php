@@ -783,6 +783,26 @@
             }
         }
         
+        // Function to show success message
+        function showSuccessMessage(message) {
+            // Create success alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+            alertDiv.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>${message}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
+
         // Bulk Delete
         if (bulkDelete) {
             bulkDelete.addEventListener('click', function() {
@@ -806,37 +826,56 @@
                         }).then(response => response.json());
                     }))
                     .then(results => {
-                        // Remove all deleted notifications with animation
-                        notificationIds.forEach((id, index) => {
-                            setTimeout(() => {
-                                const notificationItem = document.querySelector(`[data-notification-id="${id}"]`);
-                                if (notificationItem) {
-                                    notificationItem.style.transition = 'all 0.3s ease';
-                                    notificationItem.style.opacity = '0';
-                                    notificationItem.style.transform = 'translateX(-100px)';
-                                    
-                                    setTimeout(() => {
-                                        notificationItem.remove();
-                                        
-                        // Update badge count
-                        const badge = document.querySelector('.badge-notification');
-                        if (badge) {
-                            const currentText = badge.textContent.trim();
-                            const match = currentText.match(/\d+/);
-                            if (match) {
-                                const currentCount = parseInt(match[0]);
-                                badge.innerHTML = `<i class="fas fa-bell me-2"></i>${currentCount - 1} Notifikasi`;
-                            }
-                        }
+                        // Check if all deletions were successful
+                        const allSuccess = results.every(result => result.success);
                         
-                        // Update read/unread counts
-                        updateNotificationCounts();
+                        if (allSuccess) {
+                            // Show success message
+                            showSuccessMessage(`${notificationIds.length} notifikasi berhasil dihapus!`);
+                            
+                            // Remove all deleted notifications with animation
+                            notificationIds.forEach((id, index) => {
+                                setTimeout(() => {
+                                    const notificationItem = document.querySelector(`[data-notification-id="${id}"]`);
+                                    if (notificationItem) {
+                                        notificationItem.style.transition = 'all 0.3s ease';
+                                        notificationItem.style.opacity = '0';
+                                        notificationItem.style.transform = 'translateX(-100px)';
                                         
-                                        updateBulkActions();
-                                    }, 300);
-                                }
-                            }, index * 50); // Stagger animations
-                        });
+                                        setTimeout(() => {
+                                            notificationItem.remove();
+                                            
+                                            // Update badge count
+                                            const badge = document.querySelector('.badge-notification');
+                                            if (badge) {
+                                                const currentText = badge.textContent.trim();
+                                                const match = currentText.match(/\d+/);
+                                                if (match) {
+                                                    const currentCount = parseInt(match[0]);
+                                                    badge.innerHTML = `<i class="fas fa-bell me-2"></i>${currentCount - 1} Notifikasi`;
+                                                }
+                                            }
+                                            
+                                            // Update read/unread counts
+                                            updateNotificationCounts();
+                                            
+                                            // Check if this is the last notification
+                                            if (index === notificationIds.length - 1) {
+                                                updateBulkActions();
+                                                
+                                                // Check if no notifications left
+                                                const remainingNotifications = document.querySelectorAll('.notification-item').length;
+                                                if (remainingNotifications === 0) {
+                                                    setTimeout(() => location.reload(), 500);
+                                                }
+                                            }
+                                        }, 300);
+                                    }
+                                }, index * 50); // Stagger animations
+                            });
+                        } else {
+                            alert('Beberapa notifikasi gagal dihapus');
+                        }
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -859,21 +898,42 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        // Show success message
+                        showSuccessMessage('Notifikasi berhasil dihapus!');
+                        
                         // Remove notification from UI with animation
                         const notificationItem = document.querySelector(`[data-notification-id="${notificationId}"]`);
-                        notificationItem.style.transition = 'all 0.3s ease';
-                        notificationItem.style.opacity = '0';
-                        notificationItem.style.transform = 'translateX(-100px)';
-                        
-                        setTimeout(() => {
-                            notificationItem.remove();
+                        if (notificationItem) {
+                            notificationItem.style.transition = 'all 0.3s ease';
+                            notificationItem.style.opacity = '0';
+                            notificationItem.style.transform = 'translateX(-100px)';
                             
-                            // Update badge count
-                            const badge = document.querySelector('.badge-notification');
-                            const currentText = badge.textContent.trim();
-                            const currentCount = parseInt(currentText.match(/\d+/)[0]);
-                            badge.innerHTML = `<i class="fas fa-bell me-2"></i>${currentCount - 1} Notifikasi`;
-                        }, 300);
+                            setTimeout(() => {
+                                notificationItem.remove();
+                                
+                                // Update badge count
+                                const badge = document.querySelector('.badge-notification');
+                                if (badge) {
+                                    const currentText = badge.textContent.trim();
+                                    const match = currentText.match(/\d+/);
+                                    if (match) {
+                                        const currentCount = parseInt(match[0]);
+                                        badge.innerHTML = `<i class="fas fa-bell me-2"></i>${currentCount - 1} Notifikasi`;
+                                    }
+                                }
+                                
+                                // Update read/unread counts
+                                updateNotificationCounts();
+                                
+                                // Check if no notifications left
+                                const remainingNotifications = document.querySelectorAll('.notification-item').length;
+                                if (remainingNotifications === 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
+                    } else {
+                        alert('Gagal menghapus notifikasi');
                     }
                 })
                 .catch(error => {

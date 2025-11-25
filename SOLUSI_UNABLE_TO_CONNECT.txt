@@ -1,0 +1,186 @@
+============================================
+SOLUSI ERROR "UNABLE TO CONNECT"
+============================================
+
+MASALAH:
+--------
+Error "Unable to connect" saat mengakses:
+http://localhost/nurani/public/kepala-sekolah/profile/edit
+
+Firefox can't establish a connection to the server at localhost.
+
+
+============================================
+PENYEBAB:
+============================================
+
+1. APACHE TIDAK BERJALAN
+   - Apache di XAMPP tidak di-start
+   - Status Apache di XAMPP Control Panel = merah (tidak running)
+
+2. PORT 80 SUDAH DIGUNAKAN
+   - Port 80 digunakan aplikasi lain (IIS, Skype, dll)
+   - Apache tidak bisa start karena port sudah digunakan
+
+3. FIREWALL MEMBLOKIR
+   - Windows Firewall memblokir akses ke Apache
+   - Antivirus memblokir Apache
+
+4. XAMPP TIDAK TERINSTALL DENGAN BENAR
+   - File Apache tidak ada atau rusak
+   - Konfigurasi Apache salah
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+--------------------------------------
+1. Double-click: CEK_DAN_START_APACHE.bat
+2. Script akan:
+   - Cek status Apache
+   - Start Apache jika tidak berjalan
+   - Verifikasi Apache berjalan
+3. Tunggu sampai selesai
+
+
+LANGKAH 2: Start Apache Manual (Jika Script Gagal)
+--------------------------------------------------
+1. Buka XAMPP Control Panel
+   - Lokasi: D:\Praktikum DWBI\xampp\xampp-control.exe
+   - Atau: C:\xampp\xampp-control.exe
+
+2. Cari Apache di daftar
+   - Status harus "Running" (hijau)
+   - Jika merah, klik tombol "Start"
+
+3. Tunggu sampai status berubah menjadi "Running" (hijau)
+
+4. Jika ada error:
+   - Klik "Logs" untuk melihat error
+   - Atau buka: D:\Praktikum DWBI\xampp\apache\logs\error.log
+
+
+LANGKAH 3: Cek Port 80
+----------------------
+1. Buka Command Prompt (Run as Administrator)
+2. Jalankan: netstat -ano | findstr :80
+3. Jika ada proses yang menggunakan port 80:
+   - Catat PID (angka terakhir)
+   - Buka Task Manager (Ctrl + Shift + Esc)
+   - Tab "Details"
+   - Cari PID tersebut
+   - End Task proses tersebut
+   - Atau ubah port Apache (lihat Langkah 4)
+
+
+LANGKAH 4: Ubah Port Apache (Jika Port 80 Terpakai)
+----------------------------------------------------
+1. Buka file: D:\Praktikum DWBI\xampp\apache\conf\httpd.conf
+2. Cari baris: Listen 80
+3. Ubah menjadi: Listen 8080
+4. Simpan file
+5. Restart Apache di XAMPP Control Panel
+6. Akses: http://localhost:8080/nurani/public/
+
+
+LANGKAH 5: Cek Firewall
+------------------------
+1. Buka Windows Defender Firewall
+2. Klik "Allow an app or feature through Windows Firewall"
+3. Cari "Apache HTTP Server"
+4. Pastikan "Private" dan "Public" dicentang
+5. Jika tidak ada, klik "Change settings" → "Allow another app"
+6. Browse ke: D:\Praktikum DWBI\xampp\apache\bin\httpd.exe
+7. Add dan centang "Private" dan "Public"
+
+
+LANGKAH 6: Test Akses
+----------------------
+1. Buka browser
+2. Akses: http://localhost/nurani/public/
+3. Jika muncul halaman Laravel = Apache berjalan
+4. Jika masih "Unable to connect" = cek Langkah 2-5
+
+
+============================================
+TROUBLESHOOTING LANJUTAN:
+============================================
+
+JIKA APACHE TIDAK BISA START:
+-------------------------------
+1. Cek log error:
+   - Buka: D:\Praktikum DWBI\xampp\apache\logs\error.log
+   - Lihat error terakhir
+   - Cari solusi berdasarkan error
+
+2. Cek konfigurasi:
+   - Buka: D:\Praktikum DWBI\xampp\apache\conf\httpd.conf
+   - Pastikan tidak ada syntax error
+   - Pastikan DocumentRoot benar
+
+3. Cek modul:
+   - Pastikan mod_rewrite enabled
+   - Pastikan mod_ssl enabled (jika pakai HTTPS)
+
+
+JIKA PORT 80 TERPAKAI:
+----------------------
+1. Tutup aplikasi yang menggunakan port 80:
+   - IIS (Internet Information Services)
+   - Skype (Settings → Advanced → Connection → uncheck "Use port 80")
+   - World Wide Web Publishing Service
+   - Aplikasi lain yang menggunakan port 80
+
+2. Atau ubah port Apache ke 8080 (lihat Langkah 4)
+
+
+JIKA FIREWALL MEMBLOKIR:
+------------------------
+1. Tambahkan exception untuk Apache di Windows Firewall
+2. Atau matikan Windows Firewall sementara (untuk testing)
+3. Cek antivirus tidak memblokir Apache
+
+
+JIKA XAMPP TIDAK TERINSTALL:
+----------------------------
+1. Download XAMPP dari: https://www.apachefriends.org/
+2. Install XAMPP
+3. Pastikan lokasi install: D:\Praktikum DWBI\xampp
+4. Atau update path di script: CEK_DAN_START_APACHE.bat
+
+
+============================================
+CARA CEK STATUS APACHE:
+============================================
+
+1. Buka XAMPP Control Panel
+2. Lihat status Apache:
+   - Hijau "Running" = Apache berjalan
+   - Merah "Stopped" = Apache tidak berjalan
+   - Kuning "Starting" = Apache sedang start
+
+3. Atau cek via Command Prompt:
+   tasklist /FI "IMAGENAME eq httpd.exe"
+   - Jika ada output = Apache berjalan
+   - Jika tidak ada output = Apache tidak berjalan
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Error "Unable to connect" biasanya disebabkan oleh:
+1. Apache tidak berjalan
+2. Port 80 sudah digunakan
+3. Firewall memblokir
+
+Solusi:
+1. Jalankan script: CEK_DAN_START_APACHE.bat
+2. Atau start Apache manual di XAMPP Control Panel
+3. Cek port 80 tidak digunakan aplikasi lain
+4. Cek firewall tidak memblokir Apache
+
+============================================
+

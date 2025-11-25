@@ -575,6 +575,7 @@ class KepalaSekolahController extends Controller
     
     public function siswaIndex(Request $request)
     {
+<<<<<<< HEAD
         // Get filter parameters
         $selectedKelas = $request->get('kelas', '');
         $selectedStatus = $request->get('status', '');
@@ -632,6 +633,48 @@ class KepalaSekolahController extends Controller
             'selectedStatus',
             'searchQuery'
         ));
+=======
+        // Get filter parameters from request
+        $kelasFilter = $request->get('kelas', '');
+        $statusFilter = $request->get('status', '');
+        $search = $request->get('search', '');
+        
+        // Helper function to build query with filters
+        $buildQuery = function($kelas) use ($statusFilter, $search) {
+            $query = Siswa::where('kelas', $kelas);
+            
+            // Apply status filter
+            if (!empty($statusFilter)) {
+                $query->where('status', $statusFilter);
+            }
+            
+            // Apply search filter (nama atau NIS)
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nama', 'like', '%' . $search . '%')
+                      ->orWhere('nis', 'like', '%' . $search . '%');
+                });
+            }
+            
+            return $query->orderBy('nama')->get();
+        };
+        
+        // Get students grouped by class with filters
+        // If kelas filter is set, only show that class, otherwise show all
+        if (!empty($kelasFilter)) {
+            // Show only selected class
+            $siswaKelas7 = ($kelasFilter == '7') ? $buildQuery('7') : collect();
+            $siswaKelas8 = ($kelasFilter == '8') ? $buildQuery('8') : collect();
+            $siswaKelas9 = ($kelasFilter == '9') ? $buildQuery('9') : collect();
+        } else {
+            // Show all classes
+            $siswaKelas7 = $buildQuery('7');
+            $siswaKelas8 = $buildQuery('8');
+            $siswaKelas9 = $buildQuery('9');
+        }
+        
+        return view('kepala_sekolah.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9', 'kelasFilter', 'statusFilter', 'search'));
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
     }
     
     // Profile Management

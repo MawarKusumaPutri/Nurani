@@ -131,9 +131,14 @@
                             <div class="card-body text-center">
                                 @php
                                     $freshUser = \App\Models\User::find($user->id);
+<<<<<<< HEAD
                                     $photoPath = 'photos/' . $freshUser->photo;
                                     $hasPhoto = $freshUser->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
                                     $photoUrl = $hasPhoto ? asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999) : null;
+=======
+                                    $photoUrl = $freshUser->photo ? \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles') : null;
+                                    $hasPhoto = $photoUrl !== null;
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                 @endphp
                                 @if($hasPhoto && $photoUrl)
                                     <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">

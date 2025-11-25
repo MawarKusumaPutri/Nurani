@@ -1,0 +1,110 @@
+============================================
+CARA PAKAI - FIX FOTO FINAL
+============================================
+
+LANGKAH 1:
+----------
+Double-click: FIX_FOTO_FINAL.bat
+
+Tunggu sampai selesai.
+Script akan:
+- Memperbarui file welcome.blade.php
+- Verifikasi file gambar ada
+- Clear cache Laravel
+- Test akses gambar
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Buka XAMPP Control Panel
+2. Klik STOP pada Apache
+3. TUNGGU 10 DETIK (PENTING!)
+4. Klik START pada Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+TEST DENGAN BROWSER:
+
+1. Buka browser
+2. Ketik: http://localhost/nurani/public
+3. Tekan Enter
+4. HARD REFRESH: Ctrl + F5 (PENTING!)
+
+
+LANGKAH 4:
+----------
+VERIFIKASI DENGAN DEVELOPER TOOLS:
+
+1. Tekan F12 untuk buka Developer Tools
+2. Buka tab "Network"
+3. Refresh halaman (F5)
+4. Filter: "Images"
+5. Cari file gambar:
+   - 20251002_105433-fotor-20251022182659.png
+   - 20251002_111603-fotor-20251022164553.png
+6. Cek status code:
+   - Status 200 = Berhasil
+   - Status 404 = File tidak ditemukan
+   - Status lainnya = Ada masalah
+
+
+LANGKAH 5:
+----------
+TEST AKSES LANGSUNG GAMBAR:
+
+1. Buka browser
+2. Ketik: http://localhost/nurani/public/image/foto_MTS/20251002_105433-fotor-20251022182659.png
+3. Tekan Enter
+
+Jika gambar muncul = Path benar, masalah di CSS/JavaScript
+Jika gambar tidak muncul = Masalah di Apache/htaccess
+
+
+============================================
+TROUBLESHOOTING:
+============================================
+
+JIKA GAMBAR TIDAK MUNCUL:
+
+1. Cek Network Tab (F12):
+   - Apakah request ke gambar ada?
+   - Status code berapa?
+   - Jika 404 = File tidak ditemukan
+   - Jika 200 = File ada, masalah di CSS/JavaScript
+
+2. Cek Console Tab (F12):
+   - Apakah ada error?
+   - Error apa yang muncul?
+
+3. Test akses langsung:
+   http://localhost/nurani/public/image/foto_MTS/20251002_105433-fotor-20251022182659.png
+   
+   - Jika muncul = Path benar
+   - Jika tidak = Masalah Apache
+
+4. Cek file .htaccess:
+   - Pastikan file ada di: public/.htaccess
+   - Pastikan mod_rewrite aktif
+
+5. Restart Apache lagi
+
+6. Clear cache browser:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+
+============================================
+PERBAIKAN YANG DILAKUKAN:
+============================================
+
+1. Menambahkan inline style untuk background image
+2. Memperbaiki JavaScript untuk preload gambar
+3. Menambahkan error handling di JavaScript
+4. Memastikan gambar dimuat sebelum ditampilkan
+
+============================================
+

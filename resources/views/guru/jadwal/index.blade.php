@@ -29,6 +29,25 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
+<<<<<<< HEAD
+=======
+        .jadwal-card {
+            border-left: 4px solid #2E7D32;
+            transition: transform 0.3s ease;
+        }
+        .jadwal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .jadwal-hari-ini {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+        .badge-ruang {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
     </style>
 </head>
 <body>
@@ -55,10 +74,18 @@
                             $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                         @endphp
                         @if($hasPhoto && $photoUrl)
+<<<<<<< HEAD
                             <img src="{{ $photoUrl }}" alt="Foto Profil" 
                                  class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                         @else
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+=======
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                        @else
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3);">
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                 <i class="fas fa-user fa-2x text-primary"></i>
                             </div>
                         @endif
@@ -98,6 +125,7 @@
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
+<<<<<<< HEAD
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div>
                         <h1 class="h2">Jadwal Mengajar</h1>
@@ -152,13 +180,151 @@
                                 </table>
                             </div>
                         </div>
+=======
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                            Jadwal Mengajar
+                        </h2>
+                        <p class="text-muted mb-0">Lihat jadwal mengajar Anda yang telah ditentukan oleh Tenaga Usaha</p>
+                    </div>
+                </div>
+
+                <!-- Filter -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="GET" action="{{ route('guru.jadwal.index') }}" class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Filter Jadwal</label>
+                                <select name="filter" class="form-select" onchange="this.form.submit()">
+                                    <option value="semua" {{ $filter == 'semua' ? 'selected' : '' }}>Semua Jadwal</option>
+                                    <option value="hari_ini" {{ $filter == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                                    <option value="minggu_ini" {{ $filter == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
+                                    <option value="bulan_ini" {{ $filter == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Jadwal List -->
+                @if($jadwals->count() > 0)
+                    <div class="row">
+                        @foreach($jadwals as $jadwal)
+                            @php
+                                $isHariIni = false;
+                                $hariMap = [
+                                    'Monday' => 'senin',
+                                    'Tuesday' => 'selasa',
+                                    'Wednesday' => 'rabu',
+                                    'Thursday' => 'kamis',
+                                    'Friday' => 'jumat',
+                                    'Saturday' => 'sabtu',
+                                    'Sunday' => 'minggu'
+                                ];
+                                $hariIni = $hariMap[\Carbon\Carbon::today()->format('l')] ?? 'senin';
+                                if ($jadwal->hari == $hariIni || ($jadwal->tanggal && \Carbon\Carbon::parse($jadwal->tanggal)->isToday())) {
+                                    $isHariIni = true;
+                                }
+                            @endphp
+                            <div class="col-md-6 mb-3">
+                                <div class="card jadwal-card {{ $isHariIni ? 'jadwal-hari-ini' : '' }}">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h5 class="mb-1">
+                                                    <i class="fas fa-book me-2 text-primary"></i>
+                                                    {{ $jadwal->mata_pelajaran_nama }}
+                                                </h5>
+                                                <p class="text-muted mb-0 small">
+                                                    <i class="fas fa-user me-1"></i>
+                                                    Kelas {{ $jadwal->kelas }}
+                                                </p>
+                                            </div>
+                                            @if($isHariIni)
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>Hari Ini
+                                                </span>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="fas fa-calendar-day me-2 text-muted"></i>
+                                                <strong>{{ $jadwal->hari_nama }}</strong>
+                                                @if($jadwal->tanggal)
+                                                    <span class="text-muted ms-2">
+                                                        ({{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }})
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="fas fa-clock me-2 text-muted"></i>
+                                                <span>
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                                </span>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-door-open me-2 text-muted"></i>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    @if($jadwal->is_lab)
+                                                        <span class="badge bg-info badge-ruang">
+                                                            <i class="fas fa-flask me-1"></i>Laboratorium
+                                                        </span>
+                                                    @endif
+                                                    @if($jadwal->is_lapangan)
+                                                        <span class="badge bg-success badge-ruang">
+                                                            <i class="fas fa-running me-1"></i>Lapangan
+                                                        </span>
+                                                    @endif
+                                                    @if(!$jadwal->is_lab && !$jadwal->is_lapangan)
+                                                        <span class="badge bg-secondary badge-ruang">
+                                                            <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang ?? 'Ruang ' . $jadwal->kelas }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        @if($jadwal->keterangan)
+                                            <div class="alert alert-light mb-0">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <small>{{ $jadwal->keterangan }}</small>
+                                            </div>
+                                        @endif
+                                        
+                                        @if($jadwal->is_berulang)
+                                            <div class="mt-2">
+                                                <span class="badge bg-primary">
+                                                    <i class="fas fa-sync-alt me-1"></i>Berulang Setiap Minggu
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $jadwals->appends(request()->query())->links() }}
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                     </div>
                 @else
                     <div class="card">
                         <div class="card-body text-center py-5">
+<<<<<<< HEAD
                             <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
                             <h5 class="text-muted">Tidak ada jadwal mengajar</h5>
                             <p class="text-muted">Silakan hubungi admin untuk menambahkan jadwal mengajar Anda.</p>
+=======
+                            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Tidak ada jadwal mengajar</h5>
+                            <p class="text-muted">Jadwal mengajar akan muncul di sini setelah ditentukan oleh Tenaga Usaha</p>
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                         </div>
                     </div>
                 @endif

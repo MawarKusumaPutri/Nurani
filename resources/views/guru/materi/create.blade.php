@@ -92,6 +92,15 @@
                     <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
+<<<<<<< HEAD
+=======
+                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
+                        <i class="fas fa-calendar-check me-2"></i> Presensi Guru
+                    </a>
+                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
+                        <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
+                    </a>
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                     <a class="nav-link active" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>

@@ -1,0 +1,181 @@
+============================================
+SOLUSI FOTO SUDAH ADA TAPI TIDAK MUNCUL
+============================================
+
+MASALAH:
+--------
+Foto sudah ada di folder storage/app/public/profiles/guru/
+Tapi foto tidak muncul di halaman web
+
+
+============================================
+PENYEBAB UMUM:
+============================================
+
+1. STORAGE SYMLINK TIDAK ADA ATAU RUSAK
+   - public/storage harus link ke storage/app/public
+   - Jika tidak ada, foto tidak bisa diakses via web
+
+2. PATH DI DATABASE TIDAK SESUAI
+   - Path di database harus: profiles/guru/[nama-file]
+   - Jika path salah, PhotoHelper tidak bisa menemukan foto
+
+3. CACHE BROWSER
+   - Browser menyimpan cache foto lama
+   - Perlu hard refresh: Ctrl + F5
+
+4. PHOTOHELPER TIDAK BISA MEMBACA PATH
+   - PhotoHelper perlu diperbaiki untuk membaca berbagai format path
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+-------------------------------------
+1. Double-click: FIX_FOTO_SUDAH_ADA_TAPI_TIDAK_MUNCUL.bat
+2. Tunggu sampai selesai
+3. Script akan:
+   - Memperbarui PhotoHelper
+   - Membuat ulang storage symlink
+   - Verifikasi symlink
+   - Clear cache
+
+
+LANGKAH 2: Restart Apache
+--------------------------
+1. Buka XAMPP Control Panel
+2. STOP Apache
+3. TUNGGU 10 DETIK
+4. START Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3: Test Akses Foto Langsung
+------------------------------------
+1. Buka browser
+2. Akses URL foto langsung:
+   - Guru: http://localhost/nurani/public/storage/profiles/guru/[nama-file]
+   - TU: http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+   - Kepala Sekolah: http://localhost/nurani/public/storage/profiles/kepala_sekolah/[nama-file]
+
+3. Jika foto MUNCUL:
+   ✓ Symlink benar
+   ✓ Masalahnya di PhotoHelper atau cache
+   → Lanjut ke Langkah 4
+
+4. Jika foto TIDAK MUNCUL:
+   ✗ Masalah symlink
+   → Jalankan: php artisan storage:link
+   → Restart Apache
+   → Test lagi
+
+
+LANGKAH 4: Cek Path di Database
+--------------------------------
+1. Buka phpMyAdmin
+2. Pilih database: nurani
+3. Tabel: gurus (untuk Guru) atau users (untuk TU/Kepala Sekolah)
+4. Cari user yang login
+5. Lihat kolom: foto (untuk Guru) atau photo (untuk TU/Kepala Sekolah)
+6. Path harus: profiles/guru/[nama-file] atau profiles/tu/[nama-file] atau profiles/kepala_sekolah/[nama-file]
+
+7. Jika path TIDAK SESUAI:
+   - Update path di database sesuai dengan nama file di folder
+   - Contoh: jika file di folder: 1234567890_abc123_foto.jpg
+   - Path di database harus: profiles/guru/1234567890_abc123_foto.jpg
+
+
+LANGKAH 5: Hard Refresh Browser
+-------------------------------
+1. Tekan Ctrl + F5 (Hard Refresh)
+2. Atau:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+   - Refresh halaman
+
+
+LANGKAH 6: Cek Console Browser
+-------------------------------
+1. Buka browser
+2. Tekan F12 (Developer Tools)
+3. Tab "Console" → lihat error
+4. Tab "Network" → filter "Images" → lihat request foto
+5. Status code harus 200
+6. Jika 404 = path salah atau symlink tidak benar
+
+
+============================================
+CONTOH PERBAIKAN PATH DI DATABASE:
+============================================
+
+CONTOH 1: Path Salah
+---------------------
+File di folder: storage/app/public/profiles/guru/1234567890_abc123_foto.jpg
+Path di database: guru/foto/1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+UPDATE gurus SET foto = 'profiles/guru/1234567890_abc123_foto.jpg' WHERE id = [id_guru];
+
+
+CONTOH 2: Path Hanya Nama File
+-------------------------------
+File di folder: storage/app/public/profiles/guru/1234567890_abc123_foto.jpg
+Path di database: 1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+UPDATE gurus SET foto = 'profiles/guru/1234567890_abc123_foto.jpg' WHERE id = [id_guru];
+
+
+CONTOH 3: Path Benar
+--------------------
+File di folder: storage/app/public/profiles/guru/1234567890_abc123_foto.jpg
+Path di database: profiles/guru/1234567890_abc123_foto.jpg (BENAR!)
+
+
+============================================
+CARA CEK PATH DI DATABASE:
+============================================
+
+1. Buka phpMyAdmin
+2. Pilih database: nurani
+3. Tabel: gurus (untuk Guru)
+4. Cari user yang login
+5. Lihat kolom: foto
+6. Bandingkan dengan nama file di folder:
+   - Folder: storage/app/public/profiles/guru/[nama-file]
+   - Database: foto = 'profiles/guru/[nama-file]'
+   - Harus SAMA!
+
+
+============================================
+JIKA MASIH TIDAK MUNCUL:
+============================================
+
+1. Jalankan script lagi: FIX_FOTO_SUDAH_ADA_TAPI_TIDAK_MUNCUL.bat
+2. Restart Apache lagi
+3. Cek path di database lagi
+4. Update path di database jika tidak sesuai
+5. Hard refresh browser lagi: Ctrl + F5
+6. Cek console browser untuk error
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Masalah utama biasanya:
+1. Storage symlink tidak ada atau rusak
+2. Path di database tidak sesuai dengan nama file
+3. Cache browser
+
+Solusi:
+1. Jalankan script perbaikan
+2. Pastikan storage symlink ada
+3. Pastikan path di database sesuai dengan nama file
+4. Hard refresh browser
+
+============================================
+

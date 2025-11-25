@@ -1,0 +1,90 @@
+============================================
+CARA PAKAI - FIX FOTO PROFIL
+============================================
+
+LANGKAH 1:
+----------
+Double-click: FIX_FOTO_PROFIL.bat
+
+Tunggu sampai selesai.
+Script akan:
+- Memperbarui Controller (Guru, TU, Kepala Sekolah)
+- Memperbarui View Profile
+- Memperbarui Sidebar
+- Memastikan storage symlink
+- Clear cache Laravel
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. Restart Apache di XAMPP (STOP - TUNGGU 10 DETIK - START)
+2. Login sebagai Guru/TU/Kepala Sekolah
+3. Buka Edit Profil
+4. Upload foto (Format: JPG, PNG, GIF, Maksimal 2MB)
+5. Klik Simpan
+
+
+LANGKAH 3:
+----------
+Setelah klik Simpan:
+
+1. HARD REFRESH: Ctrl + F5 (PENTING!)
+2. Foto akan muncul di:
+   - Sidebar (foto profil kecil)
+   - Halaman Profil (foto profil besar)
+   - Dashboard (jika ada)
+
+
+============================================
+PERBAIKAN YANG DILAKUKAN:
+============================================
+
+1. Controller:
+   - Error handling untuk upload foto
+   - Verifikasi file tersimpan setelah upload
+   - Refresh data setelah update
+
+2. View:
+   - Menggunakan fresh data dari database
+   - Cache busting dengan timestamp dan random
+   - Error handling untuk foto yang tidak ditemukan
+
+3. Sidebar:
+   - Menggunakan fresh data dari database
+   - Cache busting untuk memastikan foto ter-update
+
+
+============================================
+JIKA FOTO MASIH TIDAK MUNCUL:
+============================================
+
+1. HARD REFRESH: Ctrl + F5 (PENTING!)
+
+2. Cek file foto ada di:
+   - Guru: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\guru\foto\
+   - TU/Kepala Sekolah: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\photos\
+
+3. Cek storage symlink:
+   - D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+
+4. Clear cache browser:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+
+5. Cek console browser (F12):
+   - Tab "Network" → filter "Images"
+   - Lihat apakah request ke foto ada
+   - Status code harus 200
+
+6. Test akses langsung foto:
+   - Guru: http://localhost/nurani/public/storage/guru/foto/[nama-file]
+   - TU/Kepala Sekolah: http://localhost/nurani/public/storage/photos/[nama-file]
+   - Jika muncul = path benar
+   - Jika tidak = masalah storage symlink
+
+============================================
+

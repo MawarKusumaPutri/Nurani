@@ -34,26 +34,26 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form method="GET" action="{{ route('tu.presensi-siswa.rekap') }}" class="row g-3">
+                    <form method="GET" action="{{ route('tu.presensi-siswa.rekap') }}" id="filterRekapForm" class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Kelas</label>
-                            <select name="kelas" class="form-select">
+                            <select name="kelas" class="form-select" id="kelasFilter" onchange="document.getElementById('filterRekapForm').submit();">
                                 <option value="">Semua Kelas</option>
-                                <option value="7" {{ $selectedKelas == '7' ? 'selected' : '' }}>Kelas 7</option>
-                                <option value="8" {{ $selectedKelas == '8' ? 'selected' : '' }}>Kelas 8</option>
-                                <option value="9" {{ $selectedKelas == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                <option value="7" {{ $selectedKelas == '7' || $selectedKelas === 7 ? 'selected' : '' }}>Kelas 7</option>
+                                <option value="8" {{ $selectedKelas == '8' || $selectedKelas === 8 ? 'selected' : '' }}>Kelas 8</option>
+                                <option value="9" {{ $selectedKelas == '9' || $selectedKelas === 9 ? 'selected' : '' }}>Kelas 9</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Bulan</label>
-                            <input type="month" name="bulan" class="form-control" value="{{ $selectedBulan }}">
+                            <input type="month" name="bulan" class="form-control" value="{{ $selectedBulan }}" onchange="document.getElementById('filterRekapForm').submit();">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Siswa (Opsional)</label>
-                            <select name="siswa_id" class="form-select">
+                            <select name="siswa_id" class="form-select" onchange="document.getElementById('filterRekapForm').submit();">
                                 <option value="">Semua Siswa</option>
                                 @foreach($siswas as $siswa)
-                                    <option value="{{ $siswa->id }}" {{ $selectedSiswa == $siswa->id ? 'selected' : '' }}>
+                                    <option value="{{ $siswa->id }}" {{ $selectedSiswa == $siswa->id || $selectedSiswa === $siswa->id ? 'selected' : '' }}>
                                         {{ $siswa->nama }} ({{ $siswa->nis }})
                                     </option>
                                 @endforeach
@@ -66,6 +66,24 @@
                             <a href="{{ route('tu.presensi-siswa.rekap') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-redo me-2"></i> Reset
                             </a>
+                            @if($selectedKelas || $selectedBulan || $selectedSiswa)
+                            <div class="mt-2">
+                                @if($selectedKelas)
+                                    <span class="badge bg-info me-2">Kelas: {{ $selectedKelas }}</span>
+                                @endif
+                                @if($selectedBulan)
+                                    <span class="badge bg-info me-2">Bulan: {{ Carbon\Carbon::parse($selectedBulan . '-01')->format('F Y') }}</span>
+                                @endif
+                                @if($selectedSiswa)
+                                    @php
+                                        $siswaSelected = $siswas->firstWhere('id', $selectedSiswa);
+                                    @endphp
+                                    @if($siswaSelected)
+                                        <span class="badge bg-info me-2">Siswa: {{ $siswaSelected->nama }}</span>
+                                    @endif
+                                @endif
+                            </div>
+                            @endif
                         </div>
                     </form>
                 </div>

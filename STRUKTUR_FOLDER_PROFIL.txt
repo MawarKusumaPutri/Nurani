@@ -1,0 +1,130 @@
+============================================
+STRUKTUR FOLDER PROFIL FOTO
+============================================
+
+LOKASI UTAMA (PRIORITAS 1):
+---------------------------
+D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\
+│
+├── guru\              (untuk foto profil Guru)
+│   └── [nama-file-foto].jpg
+│
+├── tu\                (untuk foto profil Tenaga Usaha)
+│   └── [nama-file-foto].jpg
+│
+└── kepala_sekolah\    (untuk foto profil Kepala Sekolah)
+    └── [nama-file-foto].jpg
+
+
+LOKASI FALLBACK (PRIORITAS 2):
+------------------------------
+D:\Praktikum DWBI\xampp\htdocs\nurani\public\image\profiles\
+│
+└── [nama-file-foto].jpg
+    (jika storage gagal, foto akan disimpan di sini)
+
+
+LOKASI KOMPATIBILITAS (UNTUK FOTO LAMA):
+----------------------------------------
+D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\guru\foto\
+│
+└── [nama-file-foto].jpg
+    (untuk foto guru yang sudah ada sebelumnya)
+
+D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\photos\
+│
+└── [nama-file-foto].jpg
+    (untuk foto TU/Kepala Sekolah yang sudah ada sebelumnya)
+
+
+============================================
+CARA KERJA:
+============================================
+
+1. SAAT UPLOAD FOTO:
+   - Sistem akan OTOMATIS membuat folder jika belum ada
+   - Foto akan disimpan di: storage/app/public/profiles/[role]/
+   - Jika gagal, fallback ke: public/image/profiles/
+
+2. SAAT MENAMPILKAN FOTO:
+   - Sistem akan mencari foto di berbagai lokasi:
+     * storage/app/public/profiles/[role]/
+     * public/image/profiles/
+     * storage/app/public/guru/foto/ (kompatibilitas)
+     * storage/app/public/photos/ (kompatibilitas)
+
+3. TIDAK PERLU MEMBUAT FOLDER MANUAL:
+   - Folder akan dibuat OTOMATIS saat upload foto
+   - Script BUAT_FOLDER_PROFIL.bat hanya untuk memastikan folder ada
+
+
+============================================
+CARA PAKAI:
+============================================
+
+OPTION 1: OTOMATIS (RECOMMENDED)
+---------------------------------
+1. Langsung upload foto di Edit Profil
+2. Sistem akan otomatis membuat folder
+3. Foto akan tersimpan dengan benar
+
+OPTION 2: MANUAL (OPSIONAL)
+----------------------------
+1. Jalankan: BUAT_FOLDER_PROFIL.bat
+2. Folder akan dibuat terlebih dahulu
+3. Lalu upload foto di Edit Profil
+
+
+============================================
+LOKASI FOTO BERDASARKAN ROLE:
+============================================
+
+GURU:
+-----
+- Utama: storage/app/public/profiles/guru/
+- Fallback: public/image/profiles/
+- Lama: storage/app/public/guru/foto/
+
+TENAGA USAHA (TU):
+------------------
+- Utama: storage/app/public/profiles/tu/
+- Fallback: public/image/profiles/
+- Lama: storage/app/public/photos/
+
+KEPALA SEKOLAH:
+---------------
+- Utama: storage/app/public/profiles/kepala_sekolah/
+- Fallback: public/image/profiles/
+- Lama: storage/app/public/photos/
+
+
+============================================
+CONTOH PATH FOTO DI DATABASE:
+============================================
+
+GURU:
+- Baru: profiles/guru/1234567890_abc123_foto.jpg
+- Lama: guru/foto/1234567890_abc123_foto.jpg
+
+TU:
+- Baru: profiles/tu/1234567890_abc123_foto.jpg
+- Lama: photos/1234567890_abc123_foto.jpg
+
+KEPALA SEKOLAH:
+- Baru: profiles/kepala_sekolah/1234567890_abc123_foto.jpg
+- Lama: photos/1234567890_abc123_foto.jpg
+
+
+============================================
+CATATAN PENTING:
+============================================
+
+1. Folder akan dibuat OTOMATIS saat upload foto
+2. Tidak perlu membuat folder secara manual
+3. Sistem akan otomatis menyimpan foto di folder yang sesuai
+4. Script BUAT_FOLDER_PROFIL.bat hanya untuk memastikan folder ada
+5. Jika folder sudah ada, tidak akan dibuat ulang
+
+
+============================================
+

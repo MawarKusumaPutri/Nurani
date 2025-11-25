@@ -1,0 +1,222 @@
+============================================
+SOLUSI FOTO PROFIL TIDAK MUNCUL
+============================================
+
+MASALAH:
+--------
+Status "Profil berhasil diperbarui!" muncul
+Tapi foto profil tidak muncul di halaman profil
+
+
+============================================
+PENYEBAB:
+============================================
+
+1. PATH DI DATABASE TIDAK SESUAI
+   - Path di database tidak sesuai dengan nama file di folder
+   - Contoh: path di database = "photos/xxx.jpg" tapi file ada di "profiles/tu/xxx.jpg"
+
+2. PHOTOHELPER TIDAK BISA MENEMUKAN FILE
+   - PhotoHelper tidak bisa membaca path dengan benar
+   - File ada tapi path tidak sesuai
+
+3. STORAGE SYMLINK TIDAK BENAR
+   - public/storage tidak link ke storage/app/public
+   - Foto tidak bisa diakses via web
+
+4. CACHE BROWSER
+   - Browser menyimpan cache foto lama
+   - Perlu hard refresh: Ctrl + F5
+
+
+============================================
+SOLUSI LENGKAP:
+============================================
+
+LANGKAH 1: Jalankan Script Perbaikan
+--------------------------------------
+1. Double-click: FIX_FOTO_PROFIL_TIDAK_MUNCUL.bat
+2. Tunggu sampai selesai
+3. Script akan:
+   - Memperbarui view TU profile dengan logic yang lebih robust
+   - Memperbarui PhotoHelper
+   - Membuat ulang storage symlink
+   - Verifikasi folder dan file
+   - Clear cache
+
+
+LANGKAH 2: Restart Apache
+--------------------------
+1. Buka XAMPP Control Panel
+2. STOP Apache
+3. TUNGGU 10 DETIK
+4. START Apache
+5. Pastikan status Running (hijau)
+
+
+LANGKAH 3: Cek Path di Database
+--------------------------------
+1. Buka phpMyAdmin: http://localhost/phpmyadmin
+2. Database: nurani
+3. Tabel: users
+4. Cari user yang login (role = 'tu')
+5. Lihat kolom: photo
+6. Path harus: profiles/tu/[nama-file]
+   - Contoh: profiles/tu/1234567890_abc123_foto.jpg
+   - Bukan: photos/1234567890_abc123_foto.jpg
+   - Bukan: 1234567890_abc123_foto.jpg (hanya nama file)
+
+
+LANGKAH 4: Update Path di Database (Jika Salah)
+------------------------------------------------
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: users
+4. Klik tab: SQL
+5. Jalankan query:
+
+UNTUK TU:
+---------
+UPDATE users 
+SET photo = 'profiles/tu/[nama-file]' 
+WHERE id = [id_user] AND role = 'tu';
+
+Contoh:
+UPDATE users 
+SET photo = 'profiles/tu/1234567890_abc123_foto.jpg' 
+WHERE id = 1 AND role = 'tu';
+
+Ganti [nama-file] dengan nama file yang ada di folder:
+- Folder: storage/app/public/profiles/tu/[nama-file]
+- Database: photo = 'profiles/tu/[nama-file]'
+- Harus SAMA!
+
+Ganti [id_user] dengan ID user yang login:
+- Cari di tabel users berdasarkan email atau nama
+
+
+LANGKAH 5: Test Akses Foto Langsung
+------------------------------------
+1. Buka browser
+2. Akses URL foto langsung:
+   - http://localhost/nurani/public/storage/profiles/tu/[nama-file]
+   - Ganti [nama-file] dengan nama file yang ada di folder
+
+3. Jika foto MUNCUL:
+   ✓ Symlink benar
+   ✓ Permission benar
+   → Masalahnya di path di database atau PhotoHelper
+   → Lanjut ke Langkah 6
+
+4. Jika foto TIDAK MUNCUL:
+   ✗ Masalah symlink atau permission
+   → Cek storage symlink: php artisan storage:link
+   → Cek permission folder: storage/app/public/profiles/tu/
+
+
+LANGKAH 6: Hard Refresh Browser
+---------------------------------
+1. Tekan Ctrl + F5 (Hard Refresh)
+2. Atau:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+   - Refresh halaman
+
+
+LANGKAH 7: Cek Console Browser
+-------------------------------
+1. Buka browser
+2. Tekan F12 (Developer Tools)
+3. Tab "Console" → lihat error
+4. Tab "Network" → filter "Images" → lihat request foto
+5. Status code harus 200
+6. Jika 404 = path salah atau file tidak ada
+7. Jika 403 = masalah permission atau symlink
+
+
+============================================
+CONTOH PERBAIKAN PATH:
+============================================
+
+CONTOH 1: Path Salah
+---------------------
+File di folder: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
+Path di database: photos/1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+UPDATE users 
+SET photo = 'profiles/tu/1234567890_abc123_foto.jpg' 
+WHERE id = 1 AND role = 'tu';
+
+
+CONTOH 2: Path Hanya Nama File
+-------------------------------
+File di folder: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
+Path di database: 1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+UPDATE users 
+SET photo = 'profiles/tu/1234567890_abc123_foto.jpg' 
+WHERE id = 1 AND role = 'tu';
+
+
+CONTOH 3: Path Benar
+--------------------
+File di folder: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
+Path di database: profiles/tu/1234567890_abc123_foto.jpg (BENAR!)
+
+
+============================================
+CARA MENCARI NAMA FILE YANG BENAR:
+============================================
+
+1. Buka File Explorer
+2. Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\tu\
+3. Lihat nama file yang ada (contoh: 1234567890_abc123_foto.jpg)
+4. Path di database harus: profiles/tu/1234567890_abc123_foto.jpg
+
+
+============================================
+CARA MENCARI ID USER:
+============================================
+
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: users
+4. Klik tab: Browse
+5. Cari user berdasarkan email atau nama
+6. Lihat kolom: id
+7. Gunakan ID tersebut untuk UPDATE query
+
+
+============================================
+JIKA MASIH TIDAK MUNCUL:
+============================================
+
+1. Jalankan script lagi: FIX_FOTO_PROFIL_TIDAK_MUNCUL.bat
+2. Restart Apache lagi
+3. Cek path di database lagi
+4. Update path di database jika tidak sesuai
+5. Hard refresh browser lagi: Ctrl + F5
+6. Cek console browser untuk error
+7. Test akses foto langsung di browser
+
+
+============================================
+KESIMPULAN:
+============================================
+
+Masalah utama biasanya:
+1. Path di database tidak sesuai dengan nama file
+2. Storage symlink tidak benar
+3. Cache browser
+
+Solusi:
+1. Jalankan script perbaikan
+2. Cek dan perbaiki path di database
+3. Pastikan storage symlink ada
+4. Hard refresh browser
+
+============================================
+

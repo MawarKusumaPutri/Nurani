@@ -1,0 +1,212 @@
+============================================
+CEK DAN FIX PATH DI DATABASE
+============================================
+
+MASALAH:
+--------
+Foto sudah ada di folder storage/app/public/profiles/guru/
+Tapi foto tidak muncul karena path di database tidak sesuai
+
+
+============================================
+CARA CEK PATH DI DATABASE:
+============================================
+
+LANGKAH 1: Buka phpMyAdmin
+---------------------------
+1. Buka browser
+2. Akses: http://localhost/phpmyadmin
+3. Login (biasanya username: root, password: kosong)
+4. Pilih database: nurani
+
+
+LANGKAH 2: Cek Tabel gurus (untuk Guru)
+----------------------------------------
+1. Klik tabel: gurus
+2. Klik tab: Browse
+3. Cari user yang login (berdasarkan email atau nama)
+4. Lihat kolom: foto
+5. Bandingkan dengan nama file di folder:
+   - Folder: storage/app/public/profiles/guru/[nama-file]
+   - Database: foto = 'profiles/guru/[nama-file]'
+   - Harus SAMA!
+
+
+LANGKAH 3: Cek Tabel users (untuk TU/Kepala Sekolah)
+-----------------------------------------------------
+1. Klik tabel: users
+2. Klik tab: Browse
+3. Cari user yang login (berdasarkan email atau nama)
+4. Lihat kolom: photo
+5. Bandingkan dengan nama file di folder:
+   - Folder: storage/app/public/profiles/tu/[nama-file] (untuk TU)
+   - Folder: storage/app/public/profiles/kepala_sekolah/[nama-file] (untuk Kepala Sekolah)
+   - Database: photo = 'profiles/tu/[nama-file]' atau 'profiles/kepala_sekolah/[nama-file]'
+   - Harus SAMA!
+
+
+============================================
+CARA FIX PATH DI DATABASE:
+============================================
+
+CONTOH 1: Path Salah untuk Guru
+--------------------------------
+File di folder: storage/app/public/profiles/guru/1234567890_abc123_foto.jpg
+Path di database: guru/foto/1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: gurus
+4. Klik tab: SQL
+5. Jalankan query:
+   UPDATE gurus 
+   SET foto = 'profiles/guru/1234567890_abc123_foto.jpg' 
+   WHERE id = [id_guru];
+   (Ganti [id_guru] dengan ID guru yang login)
+
+
+CONTOH 2: Path Hanya Nama File untuk Guru
+-------------------------------------------
+File di folder: storage/app/public/profiles/guru/1234567890_abc123_foto.jpg
+Path di database: 1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: gurus
+4. Klik tab: SQL
+5. Jalankan query:
+   UPDATE gurus 
+   SET foto = 'profiles/guru/1234567890_abc123_foto.jpg' 
+   WHERE id = [id_guru];
+   (Ganti [id_guru] dengan ID guru yang login)
+
+
+CONTOH 3: Path Salah untuk TU
+-------------------------------
+File di folder: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
+Path di database: photos/1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: users
+4. Klik tab: SQL
+5. Jalankan query:
+   UPDATE users 
+   SET photo = 'profiles/tu/1234567890_abc123_foto.jpg' 
+   WHERE id = [id_user] AND role = 'tu';
+   (Ganti [id_user] dengan ID user yang login)
+
+
+CONTOH 4: Path Salah untuk Kepala Sekolah
+------------------------------------------
+File di folder: storage/app/public/profiles/kepala_sekolah/1234567890_abc123_foto.jpg
+Path di database: photos/1234567890_abc123_foto.jpg (SALAH!)
+
+PERBAIKAN:
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: users
+4. Klik tab: SQL
+5. Jalankan query:
+   UPDATE users 
+   SET photo = 'profiles/kepala_sekolah/1234567890_abc123_foto.jpg' 
+   WHERE id = [id_user] AND role = 'kepala_sekolah';
+   (Ganti [id_user] dengan ID user yang login)
+
+
+============================================
+CARA MENCARI NAMA FILE YANG BENAR:
+============================================
+
+1. Buka File Explorer
+2. Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\profiles\guru\
+3. Lihat nama file yang ada (contoh: 1234567890_abc123_foto.jpg)
+4. Path di database harus: profiles/guru/1234567890_abc123_foto.jpg
+
+
+============================================
+CARA MENCARI ID USER/GURU:
+============================================
+
+1. Buka phpMyAdmin
+2. Database: nurani
+3. Tabel: gurus (untuk Guru) atau users (untuk TU/Kepala Sekolah)
+4. Klik tab: Browse
+5. Cari user berdasarkan email atau nama
+6. Lihat kolom: id
+7. Gunakan ID tersebut untuk UPDATE query
+
+
+============================================
+QUERY SQL LENGKAP:
+============================================
+
+UNTUK GURU:
+-----------
+-- Cek path saat ini
+SELECT id, user_id, foto FROM gurus WHERE user_id = [user_id];
+
+-- Update path jika salah
+UPDATE gurus 
+SET foto = 'profiles/guru/[nama-file]' 
+WHERE id = [id_guru];
+
+-- Contoh dengan nama file spesifik
+UPDATE gurus 
+SET foto = 'profiles/guru/1234567890_abc123_foto.jpg' 
+WHERE id = 1;
+
+
+UNTUK TU:
+---------
+-- Cek path saat ini
+SELECT id, email, photo FROM users WHERE role = 'tu' AND id = [user_id];
+
+-- Update path jika salah
+UPDATE users 
+SET photo = 'profiles/tu/[nama-file]' 
+WHERE id = [id_user] AND role = 'tu';
+
+-- Contoh dengan nama file spesifik
+UPDATE users 
+SET photo = 'profiles/tu/1234567890_abc123_foto.jpg' 
+WHERE id = 1 AND role = 'tu';
+
+
+UNTUK KEPALA SEKOLAH:
+---------------------
+-- Cek path saat ini
+SELECT id, email, photo FROM users WHERE role = 'kepala_sekolah' AND id = [user_id];
+
+-- Update path jika salah
+UPDATE users 
+SET photo = 'profiles/kepala_sekolah/[nama-file]' 
+WHERE id = [id_user] AND role = 'kepala_sekolah';
+
+-- Contoh dengan nama file spesifik
+UPDATE users 
+SET photo = 'profiles/kepala_sekolah/1234567890_abc123_foto.jpg' 
+WHERE id = 1 AND role = 'kepala_sekolah';
+
+
+============================================
+SETELAH UPDATE PATH:
+============================================
+
+1. Clear cache Laravel:
+   - Buka terminal
+   - cd D:\Praktikum DWBI\xampp\htdocs\nurani
+   - php artisan cache:clear
+   - php artisan view:clear
+
+2. Hard refresh browser:
+   - Tekan Ctrl + F5
+
+3. Foto akan muncul!
+
+
+============================================
+

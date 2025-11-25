@@ -381,12 +381,231 @@
                     <div class="col-md-3 mb-3">
                         <div class="card stat-card">
                             <div class="card-body text-center">
+<<<<<<< HEAD
                                 <i class="fas fa-calendar fa-2x mb-3"></i>
                                 <div class="stat-number">{{ $totalJadwalHariIni ?? 0 }}</div>
+=======
+                                <i class="fas fa-calendar-alt fa-2x mb-3"></i>
+                                <div class="stat-number">{{ $jadwalHariIni->count() }}</div>
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                 <div>Jadwal Hari Ini</div>
                             </div>
                         </div>
                     </div>
+<<<<<<< HEAD
+=======
+                </div>
+
+                <!-- Jadwal Mengajar Hari Ini -->
+                @if(isset($jadwalHariIni) && $jadwalHariIni->count() > 0)
+                <div class="card mb-4 border-warning">
+                    <div class="card-header bg-warning bg-opacity-10 border-warning">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-clock me-2 text-warning"></i>
+                                Jadwal Mengajar Hari Ini ({{ \Carbon\Carbon::today()->format('d F Y') }})
+                            </h5>
+                            <span class="badge bg-warning text-dark">{{ $jadwalHariIni->count() }} Jadwal</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($jadwalHariIni as $jadwal)
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-primary h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="mb-0 text-primary">
+                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
+                                                </h6>
+                                                <span class="badge bg-primary">{{ $jadwal->kelas }}</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                                </small>
+                                            </div>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if($jadwal->is_lab)
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-flask me-1"></i>Laboratorium
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->is_lapangan)
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-running me-1"></i>Lapangan
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->ruang)
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            @if($jadwal->keterangan)
+                                                <p class="text-muted small mt-2 mb-0">
+                                                    <i class="fas fa-info-circle me-1"></i>{{ Str::limit($jadwal->keterangan, 50) }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="card mb-4 border-secondary">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-0">Tidak ada jadwal mengajar hari ini</p>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Jadwal Mengajar Minggu Ini -->
+                <div class="card mb-4 border-info">
+                    <div class="card-header bg-info bg-opacity-10 border-info">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-week me-2 text-info"></i>
+                                Jadwal Mengajar Minggu Ini
+                            </h5>
+                            <a href="{{ route('guru.jadwal.index', ['filter' => 'minggu_ini']) }}" class="btn btn-sm btn-outline-info">
+                                Lihat Semua
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if($jadwalMingguIni && $jadwalMingguIni->count() > 0)
+                        <div class="row">
+                            @foreach($jadwalMingguIni->take(6) as $jadwal)
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card border-info h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="mb-0 text-info">
+                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
+                                                </h6>
+                                                <span class="badge bg-info">{{ $jadwal->kelas }}</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted d-block">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    <strong>{{ ucfirst($jadwal->hari) }}</strong>
+                                                    @if($jadwal->tanggal)
+                                                        ({{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }})
+                                                    @endif
+                                                </small>
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                                </small>
+                                            </div>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if($jadwal->is_lab)
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-flask me-1"></i>Laboratorium
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->is_lapangan)
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-running me-1"></i>Lapangan
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->ruang)
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">Belum ada jadwal mengajar untuk minggu ini. Jadwal akan muncul setelah ditentukan oleh Tenaga Usaha.</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Jadwal Mengajar Mendatang -->
+                <div class="card mb-4 border-primary">
+                    <div class="card-header bg-primary bg-opacity-10 border-primary">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                                Jadwal Mengajar Mendatang (7 Hari Ke Depan)
+                            </h5>
+                            <a href="{{ route('guru.jadwal.index') }}" class="btn btn-sm btn-outline-primary">
+                                Lihat Semua
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if($jadwalMendatang && $jadwalMendatang->count() > 0)
+                        <div class="row">
+                            @foreach($jadwalMendatang as $jadwal)
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card border-primary h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="mb-0 text-primary">
+                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
+                                                </h6>
+                                                <span class="badge bg-primary">{{ $jadwal->kelas }}</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted d-block">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    <strong>{{ ucfirst($jadwal->hari) }}</strong>
+                                                    @if($jadwal->tanggal)
+                                                        ({{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }})
+                                                    @endif
+                                                </small>
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                                </small>
+                                            </div>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if($jadwal->is_lab)
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-flask me-1"></i>Laboratorium
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->is_lapangan)
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-running me-1"></i>Lapangan
+                                                    </span>
+                                                @endif
+                                                @if($jadwal->ruang)
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">Belum ada jadwal mengajar mendatang. Jadwal akan muncul setelah ditentukan oleh Tenaga Usaha.</p>
+                        </div>
+                        @endif
+                    </div>
+>>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                 </div>
 
                 <div class="row">

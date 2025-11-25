@@ -1,0 +1,150 @@
+============================================
+CARA PAKAI - FIX FOTO PROFIL LENGKAP
+============================================
+
+LANGKAH 1:
+----------
+Double-click: FIX_FOTO_PROFIL_LENGKAP.bat
+
+Tunggu sampai selesai.
+Script akan:
+- Memperbarui Controller (Guru, TU, Kepala Sekolah)
+- Memperbarui View Profile
+- Memperbarui Dashboard Guru
+- Memperbarui Sidebar
+- Membuat ulang storage symlink
+- Verifikasi folder storage
+- Clear cache Laravel
+
+
+LANGKAH 2:
+----------
+Setelah script selesai:
+
+1. RESTART APACHE di XAMPP:
+   - Buka XAMPP Control Panel
+   - Klik STOP pada Apache
+   - TUNGGU 10 DETIK
+   - Klik START pada Apache
+   - Pastikan status Running (hijau)
+
+
+LANGKAH 3:
+----------
+Test upload foto:
+
+1. Login sebagai Guru/TU/Kepala Sekolah
+2. Buka Edit Profil
+3. Upload foto:
+   - Format: JPG, PNG, GIF
+   - Maksimal: 2MB
+4. Klik Simpan
+
+
+LANGKAH 4:
+----------
+Setelah klik Simpan:
+
+1. HARD REFRESH: Ctrl + F5 (PENTING!)
+2. Foto akan muncul di:
+   - Sidebar (foto profil kecil)
+   - Dashboard (foto profil kecil)
+   - Halaman Profil (foto profil besar)
+
+
+============================================
+PERBAIKAN YANG DILAKUKAN:
+============================================
+
+1. Controller:
+   - Error handling untuk upload foto
+   - Verifikasi file tersimpan setelah upload
+   - Refresh data setelah update
+   - Dashboard refresh data guru
+
+2. View:
+   - Dashboard Guru menggunakan fresh data
+   - Profile menggunakan fresh data dari database
+   - Sidebar menggunakan fresh data dari database
+   - Cache busting dengan timestamp dan random
+   - Error handling untuk foto yang tidak ditemukan
+
+3. Storage:
+   - Storage symlink dibuat ulang
+   - Folder storage diverifikasi
+   - Path foto diverifikasi
+
+
+============================================
+JIKA FOTO MASIH TIDAK MUNCUL:
+============================================
+
+1. HARD REFRESH: Ctrl + F5 (PENTING!)
+
+2. Cek file foto ada di:
+   - Guru: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\guru\foto\
+   - TU/Kepala Sekolah: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\photos\
+
+3. Cek storage symlink:
+   - Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\public\storage
+   - Harus link ke: storage\app\public
+   - Jika tidak ada, jalankan: php artisan storage:link
+
+4. Clear cache browser:
+   - Ctrl + Shift + Delete
+   - Pilih "Cached images and files"
+   - Clear data
+
+5. Cek console browser (F12):
+   - Tab "Network" → filter "Images"
+   - Lihat apakah request ke foto ada
+   - Status code harus 200
+   - Jika 404, berarti path salah
+
+6. Test akses langsung foto:
+   - Guru: http://localhost/nurani/public/storage/guru/foto/[nama-file]
+   - TU/Kepala Sekolah: http://localhost/nurani/public/storage/photos/[nama-file]
+   - Jika muncul = path benar
+   - Jika tidak = masalah storage symlink
+
+7. Cek database:
+   - Buka database
+   - Tabel: gurus (untuk Guru) atau users (untuk TU/Kepala Sekolah)
+   - Kolom: foto (untuk Guru) atau photo (untuk TU/Kepala Sekolah)
+   - Pastikan ada nilai di kolom tersebut
+
+8. Jika masih tidak muncul:
+   - Jalankan script lagi: FIX_FOTO_PROFIL_LENGKAP.bat
+   - Restart Apache lagi
+   - Clear cache browser lagi
+   - Hard refresh lagi: Ctrl + F5
+
+
+============================================
+DEBUGGING:
+============================================
+
+Untuk melihat apakah foto benar-benar tersimpan:
+
+1. Buka: D:\Praktikum DWBI\xampp\htdocs\nurani\storage\app\public\
+2. Cek folder:
+   - guru\foto\ (untuk Guru)
+   - photos\ (untuk TU/Kepala Sekolah)
+3. Jika ada file di sana, berarti upload berhasil
+4. Masalahnya mungkin di:
+   - Storage symlink
+   - Path di database
+   - Cache browser
+
+Untuk melihat path di database:
+
+1. Buka phpMyAdmin
+2. Pilih database: nurani
+3. Tabel: gurus (untuk Guru) atau users (untuk TU/Kepala Sekolah)
+4. Cari user yang login
+5. Lihat kolom: foto (untuk Guru) atau photo (untuk TU/Kepala Sekolah)
+6. Path harus: guru/foto/[nama-file] (untuk Guru) atau [nama-file] (untuk TU/Kepala Sekolah)
+
+
+============================================
+

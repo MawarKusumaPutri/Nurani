@@ -87,10 +87,43 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-title mb-0">
-                                        <i class="fas fa-calendar-check"></i> Daftar Semua Presensi
-                                        <small class="text-muted ms-2">(Hadir, Izin, dan Sakit)</small>
-                                    </h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-calendar-check"></i> Daftar Semua Presensi
+                                            <small class="text-muted ms-2">(Hadir, Izin, dan Sakit)</small>
+                                        </h5>
+                                        @if($allPresensi->count() > 0)
+                                        <!-- Pagination at Top -->
+                                        <div class="d-flex gap-3 align-items-center">
+                                            <span class="text-muted small">
+                                                Menampilkan {{ $allPresensi->firstItem() }} sampai {{ $allPresensi->lastItem() }} dari {{ $allPresensi->total() }} hasil
+                                            </span>
+                                            @if($allPresensi->onFirstPage())
+                                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                                    <i class="fas fa-chevron-left me-1"></i> Previous
+                                                </button>
+                                            @else
+                                                <a href="{{ $allPresensi->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                                    <i class="fas fa-chevron-left me-1"></i> Previous
+                                                </a>
+                                            @endif
+                                            
+                                            <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
+                                                Halaman {{ $allPresensi->currentPage() }} / {{ $allPresensi->lastPage() }}
+                                            </span>
+                                            
+                                            @if($allPresensi->hasMorePages())
+                                                <a href="{{ $allPresensi->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                                    Next <i class="fas fa-chevron-right ms-1"></i>
+                                                </a>
+                                            @else
+                                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                                    Next <i class="fas fa-chevron-right ms-1"></i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -112,7 +145,7 @@
                                                 @if($allPresensi->count() > 0)
                                                     @foreach($allPresensi as $index => $presensi)
                                                     <tr class="{{ $presensi->status_verifikasi === 'pending' ? 'table-warning' : '' }}">
-                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>{{ $allPresensi->firstItem() + $index }}</td>
                                                         <td>
                                                             <strong>{{ $presensi->guru->user->name }}</strong>
                                                             @if($presensi->status_verifikasi === 'pending')
@@ -704,4 +737,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+@endsection
+
+@section('styles')
+<style>
+    /* Pagination Button Styles - Blue color, not green */
+    .card-header .pagination-btn-active {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .card-header .pagination-btn-active:hover {
+        background-color: #0b5ed7 !important;
+        border-color: #0a58ca !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.4);
+    }
+    
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus,
+    .card-header .pagination-btn-active:visited {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+    }
+    
+    .card-header .pagination-btn-active:active {
+        background-color: #0a58ca !important;
+        border-color: #0a58ca !important;
+        transform: translateY(0);
+    }
+    
+    .card-header .btn-secondary.pagination-btn {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        opacity: 0.6;
+    }
+    
+    .card-header .pagination-btn {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+        border-radius: 6px;
+    }
+    
+    /* Override any green color that might be applied */
+    .card-header .pagination-btn-active,
+    .card-header .pagination-btn-active:hover,
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+    }
+</style>
 @endsection
