@@ -105,4 +105,12 @@ class Guru extends Model
     {
         return $this->hasMany(PresensiSiswa::class);
     }
+
+    /**
+     * Get the jadwal for the guru.
+     */
+    public function jadwal(): HasMany
+    {
+        return $this->hasMany(Jadwal::class);
+    }
 }
