@@ -28,37 +28,57 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="form-label">Mata Pelajaran</label>
-                                    <select class="form-select">
-                                        <option value="">Semua Mata Pelajaran</option>
-                                        <option value="matematika">Matematika</option>
-                                        <option value="bahasa_indonesia">Bahasa Indonesia</option>
-                                        <option value="bahasa_inggris">Bahasa Inggris</option>
-                                        <option value="ipa">IPA</option>
-                                        <option value="ips">IPS</option>
-                                    </select>
+                            <form method="GET" action="{{ route('tu.guru.index') }}" id="filterForm">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Mata Pelajaran</label>
+                                        <select name="mata_pelajaran" class="form-select" id="mataPelajaranFilter" onchange="document.getElementById('filterForm').submit();">
+                                            <option value="">Semua Mata Pelajaran</option>
+                                            @foreach($mataPelajaranList as $mp)
+                                                <option value="{{ $mp }}" {{ $mataPelajaran == $mp ? 'selected' : '' }}>
+                                                    {{ $mp }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Status</label>
+                                        <select name="status" class="form-select" id="statusFilter" onchange="document.getElementById('filterForm').submit();">
+                                            <option value="">Semua Status</option>
+                                            <option value="aktif" {{ $status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                            <option value="tidak_aktif" {{ $status == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Cari Guru</label>
+                                        <input type="text" name="search" class="form-control" id="searchInput" placeholder="Nama atau NIP" value="{{ $search }}" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">&nbsp;</label>
+                                        <button type="submit" class="btn btn-primary d-block w-100">
+                                            <i class="fas fa-search"></i> Filter
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select">
-                                        <option value="">Semua Status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak_aktif">Tidak Aktif</option>
-                                    </select>
+                                @if($mataPelajaran || $status || $search)
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <a href="{{ route('tu.guru.index') }}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-times"></i> Reset Filter
+                                        </a>
+                                        @if($mataPelajaran)
+                                            <span class="badge bg-info ms-2">Mata Pelajaran: {{ $mataPelajaran }}</span>
+                                        @endif
+                                        @if($status)
+                                            <span class="badge bg-info ms-2">Status: {{ ucfirst($status) }}</span>
+                                        @endif
+                                        @if($search)
+                                            <span class="badge bg-info ms-2">Pencarian: {{ $search }}</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Cari Guru</label>
-                                    <input type="text" class="form-control" placeholder="Nama atau NIP">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button class="btn btn-primary d-block w-100">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                </div>
-                            </div>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -146,8 +166,14 @@
                                 <div class="text-muted small">
                                     @if($gurus->total() > 0)
                                         Menampilkan {{ $gurus->firstItem() }} sampai {{ $gurus->lastItem() }} dari {{ $gurus->total() }} guru
+                                        @if($mataPelajaran || $status || $search)
+                                            (hasil filter)
+                                        @endif
                                     @else
                                         Tidak ada data
+                                        @if($mataPelajaran || $status || $search)
+                                            yang sesuai dengan filter
+                                        @endif
                                     @endif
                                 </div>
                                 <div class="d-flex">
@@ -156,13 +182,13 @@
                                             <i class="fas fa-chevron-left me-1"></i> Previous
                                         </button>
                                     @else
-                                        <a href="{{ $gurus->previousPageUrl() }}" class="btn btn-outline-secondary btn-sm me-2">
+                                        <a href="{{ $gurus->appends(request()->query())->previousPageUrl() }}" class="btn btn-outline-secondary btn-sm me-2">
                                             <i class="fas fa-chevron-left me-1"></i> Previous
                                         </a>
                                     @endif
                                     
                                     @if($gurus->hasMorePages())
-                                        <a href="{{ $gurus->nextPageUrl() }}" class="btn btn-outline-secondary btn-sm">
+                                        <a href="{{ $gurus->appends(request()->query())->nextPageUrl() }}" class="btn btn-outline-secondary btn-sm">
                                             Next <i class="fas fa-chevron-right ms-1"></i>
                                         </a>
                                     @else

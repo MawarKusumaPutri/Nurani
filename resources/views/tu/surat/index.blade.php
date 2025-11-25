@@ -78,9 +78,42 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-envelope"></i> Daftar Surat Menyurat
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-envelope"></i> Daftar Surat Menyurat
+                                </h5>
+                                @if($surats->count() > 0)
+                                <!-- Pagination at Top -->
+                                <div class="d-flex gap-3 align-items-center">
+                                    <span class="text-muted small">
+                                        Menampilkan {{ $surats->firstItem() }} sampai {{ $surats->lastItem() }} dari {{ $surats->total() }} hasil
+                                    </span>
+                                    @if($surats->onFirstPage())
+                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </button>
+                                    @else
+                                        <a href="{{ $surats->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </a>
+                                    @endif
+                                    
+                                    <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
+                                        Halaman {{ $surats->currentPage() }} / {{ $surats->lastPage() }}
+                                    </span>
+                                    
+                                    @if($surats->hasMorePages())
+                                        <a href="{{ $surats->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -151,7 +184,7 @@
                                                     };
                                                 @endphp
                                                 <tr>
-                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $surats->firstItem() + $index }}</td>
                                                     <td>{{ $surat->nomor_surat }}</td>
                                                     <td><span class="badge {{ $jenisBadge }}">{{ $jenisLabel }}</span></td>
                                                     <td>{{ $surat->perihal }}</td>
@@ -194,27 +227,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
-                            <!-- Pagination -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
@@ -222,4 +234,61 @@
         </main>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    /* Pagination Button Styles - Blue color, not green */
+    .card-header .pagination-btn-active {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .card-header .pagination-btn-active:hover {
+        background-color: #0b5ed7 !important;
+        border-color: #0a58ca !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.4);
+    }
+    
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus,
+    .card-header .pagination-btn-active:visited {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+    }
+    
+    .card-header .pagination-btn-active:active {
+        background-color: #0a58ca !important;
+        border-color: #0a58ca !important;
+        transform: translateY(0);
+    }
+    
+    .card-header .btn-secondary.pagination-btn {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        opacity: 0.6;
+    }
+    
+    .card-header .pagination-btn {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+        border-radius: 6px;
+    }
+    
+    /* Override any green color that might be applied */
+    .card-header .pagination-btn-active,
+    .card-header .pagination-btn-active:hover,
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+    }
+</style>
 @endsection

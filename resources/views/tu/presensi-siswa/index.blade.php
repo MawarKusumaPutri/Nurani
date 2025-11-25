@@ -131,9 +131,42 @@
             <!-- Presensi List -->
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i> Daftar Presensi Siswa
-                    </h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i> Daftar Presensi Siswa
+                        </h5>
+                        @if($presensiSiswa->count() > 0)
+                        <!-- Pagination at Top -->
+                        <div class="d-flex gap-3 align-items-center">
+                            <span class="text-muted small">
+                                Menampilkan {{ $presensiSiswa->firstItem() }} sampai {{ $presensiSiswa->lastItem() }} dari {{ $presensiSiswa->total() }} hasil
+                            </span>
+                            @if($presensiSiswa->onFirstPage())
+                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                    <i class="fas fa-chevron-left me-1"></i> Previous
+                                </button>
+                            @else
+                                <a href="{{ $presensiSiswa->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                    <i class="fas fa-chevron-left me-1"></i> Previous
+                                </a>
+                            @endif
+                            
+                            <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
+                                Halaman {{ $presensiSiswa->currentPage() }} / {{ $presensiSiswa->lastPage() }}
+                            </span>
+                            
+                            @if($presensiSiswa->hasMorePages())
+                                <a href="{{ $presensiSiswa->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                    Next <i class="fas fa-chevron-right ms-1"></i>
+                                </a>
+                            @else
+                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                    Next <i class="fas fa-chevron-right ms-1"></i>
+                                </button>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
                 </div>
                 <div class="card-body">
                     @if($presensiSiswa->count() > 0)
@@ -182,42 +215,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- Pagination -->
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <div class="text-muted small">
-                                @if($presensiSiswa->total() > 0)
-                                    Menampilkan {{ $presensiSiswa->firstItem() }} sampai {{ $presensiSiswa->lastItem() }} dari {{ $presensiSiswa->total() }} hasil
-                                @else
-                                    Tidak ada hasil
-                                @endif
-                            </div>
-                            <div class="d-flex gap-2">
-                                @if($presensiSiswa->onFirstPage())
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>
-                                        <i class="fas fa-chevron-left me-1"></i> Previous
-                                    </button>
-                                @else
-                                    <a href="{{ $presensiSiswa->previousPageUrl() }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-chevron-left me-1"></i> Previous
-                                    </a>
-                                @endif
-                                
-                                <span class="text-muted small px-2 d-flex align-items-center">
-                                    Halaman {{ $presensiSiswa->currentPage() }} / {{ $presensiSiswa->lastPage() }}
-                                </span>
-                                
-                                @if($presensiSiswa->hasMorePages())
-                                    <a href="{{ $presensiSiswa->nextPageUrl() }}" class="btn btn-outline-primary btn-sm">
-                                        Next <i class="fas fa-chevron-right ms-1"></i>
-                                    </a>
-                                @else
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>
-                                        Next <i class="fas fa-chevron-right ms-1"></i>
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
                     @else
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
@@ -229,5 +226,62 @@
         </main>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    /* Pagination Button Styles - Blue color, not green */
+    .card-header .pagination-btn-active {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .card-header .pagination-btn-active:hover {
+        background-color: #0b5ed7 !important;
+        border-color: #0a58ca !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.4);
+    }
+    
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus,
+    .card-header .pagination-btn-active:visited {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+    }
+    
+    .card-header .pagination-btn-active:active {
+        background-color: #0a58ca !important;
+        border-color: #0a58ca !important;
+        transform: translateY(0);
+    }
+    
+    .card-header .btn-secondary.pagination-btn {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        opacity: 0.6;
+    }
+    
+    .card-header .pagination-btn {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+        border-radius: 6px;
+    }
+    
+    /* Override any green color that might be applied */
+    .card-header .pagination-btn-active,
+    .card-header .pagination-btn-active:hover,
+    .card-header .pagination-btn-active:active,
+    .card-header .pagination-btn-active:focus {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+    }
+</style>
 @endsection
 

@@ -34,10 +34,58 @@ class TuController extends Controller
     }
     
     // Data Guru Management
-    public function guruIndex()
+    public function guruIndex(Request $request)
     {
-        $gurus = Guru::with('user')->orderBy('nip')->paginate(20);
-        return view('tu.guru.index', compact('gurus'));
+        // Get filter parameters from request
+        $mataPelajaran = $request->get('mata_pelajaran', '');
+        $status = $request->get('status', '');
+        $search = $request->get('search', '');
+        
+        // Base query
+        $query = Guru::with('user');
+        
+        // Apply mata pelajaran filter
+        if (!empty($mataPelajaran)) {
+            $query->where('mata_pelajaran', 'like', '%' . $mataPelajaran . '%');
+        }
+        
+        // Apply status filter
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+        
+        // Apply search filter (nama atau NIP)
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('nip', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+        
+        // Order and paginate
+        $gurus = $query->orderBy('nip')->paginate(20)->withQueryString();
+        
+        // Get unique mata pelajaran for filter dropdown
+        $mataPelajaranList = Guru::whereNotNull('mata_pelajaran')
+            ->where('mata_pelajaran', '!=', '')
+            ->where('mata_pelajaran', '!=', 'Belum ditentukan')
+            ->distinct()
+            ->pluck('mata_pelajaran')
+            ->flatMap(function($mp) {
+                // Handle comma-separated mata pelajaran
+                return explode(', ', $mp);
+            })
+            ->map(function($mp) {
+                return trim($mp);
+            })
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
+        
+        return view('tu.guru.index', compact('gurus', 'mataPelajaranList', 'mataPelajaran', 'status', 'search'));
     }
     
     public function guruCreate()
@@ -167,14 +215,48 @@ class TuController extends Controller
     }
     
     // Data Siswa Management
-    public function siswaIndex()
+    public function siswaIndex(Request $request)
     {
-        // Get all students grouped by class
-        $siswaKelas7 = Siswa::where('kelas', '7')->orderBy('nama')->get();
-        $siswaKelas8 = Siswa::where('kelas', '8')->orderBy('nama')->get();
-        $siswaKelas9 = Siswa::where('kelas', '9')->orderBy('nama')->get();
+        // Get filter parameters from request
+        $kelasFilter = $request->get('kelas', '');
+        $statusFilter = $request->get('status', '');
+        $search = $request->get('search', '');
         
-        return view('tu.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9'));
+        // Helper function to build query with filters
+        $buildQuery = function($kelas) use ($statusFilter, $search) {
+            $query = Siswa::where('kelas', $kelas);
+            
+            // Apply status filter
+            if (!empty($statusFilter)) {
+                $query->where('status', $statusFilter);
+            }
+            
+            // Apply search filter (nama atau NIS)
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nama', 'like', '%' . $search . '%')
+                      ->orWhere('nis', 'like', '%' . $search . '%');
+                });
+            }
+            
+            return $query->orderBy('nama')->get();
+        };
+        
+        // Get students grouped by class with filters
+        // If kelas filter is set, only show that class, otherwise show all
+        if (!empty($kelasFilter)) {
+            // Show only selected class
+            $siswaKelas7 = ($kelasFilter == '7') ? $buildQuery('7') : collect();
+            $siswaKelas8 = ($kelasFilter == '8') ? $buildQuery('8') : collect();
+            $siswaKelas9 = ($kelasFilter == '9') ? $buildQuery('9') : collect();
+        } else {
+            // Show all classes
+            $siswaKelas7 = $buildQuery('7');
+            $siswaKelas8 = $buildQuery('8');
+            $siswaKelas9 = $buildQuery('9');
+        }
+        
+        return view('tu.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9', 'kelasFilter', 'statusFilter', 'search'));
     }
     
     public function siswaCreate()
@@ -231,25 +313,26 @@ class TuController extends Controller
     // Presensi Management
     public function presensiIndex(Request $request)
     {
-        // Get all presensi with guru info
+        // Get all presensi with guru info - using pagination
+        $query = \App\Models\Presensi::with('guru.user')
+            ->orderByRaw("CASE WHEN status_verifikasi = 'pending' THEN 0 ELSE 1 END")
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc');
+        
+        // Paginate the results
+        $allPresensi = $query->paginate(50)->withQueryString();
+        
+        // Get all presensi for statistics (without pagination)
         $presensiList = \App\Models\Presensi::with('guru.user')
             ->orderByRaw("CASE WHEN status_verifikasi = 'pending' THEN 0 ELSE 1 END")
             ->orderBy('tanggal', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
         
-        // Sort all presensi with pending first
-        $allPresensi = $presensiList->sortBy(function($item) {
-            // Pending first (0), then approved (1), then rejected (2)
-            if ($item->status_verifikasi === 'pending') return 0;
-            if ($item->status_verifikasi === 'approved') return 1;
-            return 2;
-        })->values();
-        
-        // Separate by jenis for backward compatibility (if needed for tabs)
-        $presensiHadir = $allPresensi->where('jenis', 'hadir');
-        $presensiIzin = $allPresensi->where('jenis', 'izin');
-        $presensiSakit = $allPresensi->where('jenis', 'sakit');
+        // Separate by jenis for backward compatibility (if needed for tabs) - use presensiList for statistics
+        $presensiHadir = $presensiList->where('jenis', 'hadir');
+        $presensiIzin = $presensiList->where('jenis', 'izin');
+        $presensiSakit = $presensiList->where('jenis', 'sakit');
         
         // Apply filters for Hadir tab
         if ($request->has('status_hadir') && $request->status_hadir !== '') {
@@ -296,11 +379,11 @@ class TuController extends Controller
             });
         }
         
-        // Count pending for each type (for badges)
+        // Count pending for each type (for badges) - use presensiList
         $pendingHadir = $presensiHadir->where('status_verifikasi', 'pending')->count();
         $pendingIzin = $presensiIzin->where('status_verifikasi', 'pending')->count();
         $pendingSakit = $presensiSakit->where('status_verifikasi', 'pending')->count();
-        $totalPending = $allPresensi->where('status_verifikasi', 'pending')->count();
+        $totalPending = $presensiList->where('status_verifikasi', 'pending')->count();
         
         return view('tu.presensi.index', compact(
             'allPresensi',
@@ -378,7 +461,7 @@ class TuController extends Controller
             });
         }
 
-        $presensiSiswa = $query->paginate(50);
+        $presensiSiswa = $query->paginate(50)->withQueryString();
 
         // Get statistics - apply same filters
         $statsQuery = PresensiSiswa::query();
@@ -448,9 +531,11 @@ class TuController extends Controller
         $query = PresensiSiswa::with(['siswa', 'guru.user'])
             ->whereBetween('tanggal', [$startDate, $endDate]);
 
-        if ($selectedKelas) {
-            $query->whereHas('siswa', function($q) use ($selectedKelas) {
-                $q->where('kelas', $selectedKelas);
+        if ($selectedKelas && $selectedKelas !== '') {
+            // Ensure kelas is treated as string for comparison
+            $kelasFilter = (string) $selectedKelas;
+            $query->whereHas('siswa', function($q) use ($kelasFilter) {
+                $q->where('kelas', $kelasFilter);
             });
         }
 
@@ -475,8 +560,9 @@ class TuController extends Controller
         });
 
         // Get all siswa for filter
-        $siswas = Siswa::when($selectedKelas, function($q) use ($selectedKelas) {
-            $q->where('kelas', $selectedKelas);
+        $siswas = Siswa::when($selectedKelas && $selectedKelas !== '', function($q) use ($selectedKelas) {
+            $kelasFilter = (string) $selectedKelas;
+            $q->where('kelas', $kelasFilter);
         })->orderBy('nama')->get();
 
         return view('tu.presensi-siswa.rekap', compact(
@@ -1486,7 +1572,7 @@ class TuController extends Controller
     public function kalenderList()
     {
         try {
-            // Ambil semua event yang bisa diakses user (public atau milik user)
+            // Ambil semua event yang bisa diakses user (public atau milik user) - dengan pagination
             $events = Event::where(function($query) {
                 $query->where('is_public', true)
                       ->orWhere('created_by', Auth::id());
@@ -1494,7 +1580,7 @@ class TuController extends Controller
             ->with('creator')
             ->orderBy('tanggal_mulai', 'desc')
             ->orderBy('waktu_mulai', 'asc')
-            ->get();
+            ->paginate(50)->withQueryString();
             
             return view('tu.kalender.list', compact('events'));
         } catch (\Exception $e) {
@@ -1508,17 +1594,17 @@ class TuController extends Controller
     public function arsipIndex()
     {
         try {
-            // Ambil semua arsip yang bisa diakses user (public atau milik user)
+            // Ambil semua arsip yang bisa diakses user (public atau milik user) - dengan pagination
             $arsips = Arsip::where(function($query) {
                     $query->where('is_public', true)
                           ->orWhere('created_by', Auth::id());
                 })
                 ->with('creator')
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(50)->withQueryString();
             
             \Log::info('Arsip loaded:', [
-                'count' => $arsips->count(),
+                'count' => $arsips->total(),
                 'user_id' => Auth::id()
             ]);
             
@@ -1845,14 +1931,14 @@ class TuController extends Controller
                 ->with('creator')
                 ->orderBy('tanggal_surat', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(50)->withQueryString();
             
-            \Log::info('Surats fetched:', ['count' => $surats->count()]);
+            \Log::info('Surats fetched:', ['count' => $surats->total()]);
             
             return view('tu.surat.index', compact('surats'));
         } catch (\Exception $e) {
             \Log::error('Error fetching surats: ' . $e->getMessage());
-            return view('tu.surat.index', ['surats' => collect()]);
+            return view('tu.surat.index', ['surats' => \Illuminate\Pagination\LengthAwarePaginator::make([], 0, 50)]);
         }
     }
     
