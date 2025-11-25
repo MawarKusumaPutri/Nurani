@@ -29,8 +29,6 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
-<<<<<<< HEAD
-=======
         .jadwal-card {
             border-left: 4px solid #2E7D32;
             transition: transform 0.3s ease;
@@ -47,7 +45,6 @@
             font-size: 0.85rem;
             padding: 6px 12px;
         }
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
     </style>
 </head>
 <body>
@@ -74,18 +71,14 @@
                             $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                         @endphp
                         @if($hasPhoto && $photoUrl)
-<<<<<<< HEAD
-                            <img src="{{ $photoUrl }}" alt="Foto Profil" 
-                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                        @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-=======
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0;">
+                                    <i class="fas fa-user fa-2x text-primary"></i>
+                                </div>
                             </div>
                         @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3);">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                 <i class="fas fa-user fa-2x text-primary"></i>
                             </div>
                         @endif
@@ -125,62 +118,6 @@
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
-<<<<<<< HEAD
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <div>
-                        <h1 class="h2">Jadwal Mengajar</h1>
-                        <p class="text-muted mb-0">Jadwal yang dibuat oleh Tenaga Usaha akan otomatis muncul di sini</p>
-                    </div>
-                </div>
-
-                @if($jadwals && $jadwals->count() > 0)
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Hari</th>
-                                            <th>Mata Pelajaran</th>
-                                            <th>Kelas</th>
-                                            <th>Jam</th>
-                                            <th>Ruang</th>
-                                            <th>Semester</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($jadwals as $jadwal)
-                                            <tr>
-                                                <td><strong>{{ ucfirst($jadwal->hari) }}</strong></td>
-                                                <td>{{ $jadwal->mata_pelajaran }}</td>
-                                                <td>{{ $jadwal->kelas }}</td>
-                                                <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
-                                                <td>
-                                                    {{ $jadwal->ruang ?? '-' }}
-                                                    @if($jadwal->is_lab)
-                                                        <span class="badge bg-info ms-1">Lab</span>
-                                                    @endif
-                                                    @if($jadwal->is_lapangan ?? false)
-                                                        <span class="badge bg-success ms-1">Lapangan</span>
-                                                    @endif
-                                                    @if($jadwal->is_berulang)
-                                                        <span class="badge bg-warning ms-1">Berulang</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $jadwal->semester }}</td>
-                                                <td>
-                                                    <span class="badge bg-{{ $jadwal->status == 'aktif' ? 'success' : 'secondary' }}">
-                                                        {{ ucfirst($jadwal->status) }}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-=======
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="mb-1">
@@ -198,10 +135,10 @@
                             <div class="col-md-4">
                                 <label class="form-label">Filter Jadwal</label>
                                 <select name="filter" class="form-select" onchange="this.form.submit()">
-                                    <option value="semua" {{ $filter == 'semua' ? 'selected' : '' }}>Semua Jadwal</option>
-                                    <option value="hari_ini" {{ $filter == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
-                                    <option value="minggu_ini" {{ $filter == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
-                                    <option value="bulan_ini" {{ $filter == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
+                                    <option value="semua" {{ ($filter ?? 'semua') == 'semua' ? 'selected' : '' }}>Semua Jadwal</option>
+                                    <option value="hari_ini" {{ ($filter ?? '') == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                                    <option value="minggu_ini" {{ ($filter ?? '') == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
+                                    <option value="bulan_ini" {{ ($filter ?? '') == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
                                 </select>
                             </div>
                         </form>
@@ -209,7 +146,7 @@
                 </div>
 
                 <!-- Jadwal List -->
-                @if($jadwals->count() > 0)
+                @if($jadwals && $jadwals->count() > 0)
                     <div class="row">
                         @foreach($jadwals as $jadwal)
                             @php
@@ -309,22 +246,17 @@
                     </div>
                     
                     <!-- Pagination -->
+                    @if(method_exists($jadwals, 'links'))
                     <div class="d-flex justify-content-center mt-4">
                         {{ $jadwals->appends(request()->query())->links() }}
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                     </div>
+                    @endif
                 @else
                     <div class="card">
                         <div class="card-body text-center py-5">
-<<<<<<< HEAD
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">Tidak ada jadwal mengajar</h5>
-                            <p class="text-muted">Silakan hubungi admin untuk menambahkan jadwal mengajar Anda.</p>
-=======
                             <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
                             <h5 class="text-muted">Tidak ada jadwal mengajar</h5>
                             <p class="text-muted">Jadwal mengajar akan muncul di sini setelah ditentukan oleh Tenaga Usaha</p>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                         </div>
                     </div>
                 @endif

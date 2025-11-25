@@ -381,19 +381,12 @@
                     <div class="col-md-3 mb-3">
                         <div class="card stat-card">
                             <div class="card-body text-center">
-<<<<<<< HEAD
-                                <i class="fas fa-calendar fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $totalJadwalHariIni ?? 0 }}</div>
-=======
-                                <i class="fas fa-calendar-alt fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $jadwalHariIni->count() }}</div>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                <i class="fas fa-calendar-day fa-2x mb-3"></i>
+                                <div class="stat-number">{{ $totalJadwalHariIni ?? ($jadwalHariIni->count() ?? 0) }}</div>
                                 <div>Jadwal Hari Ini</div>
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
-=======
                 </div>
 
                 <!-- Jadwal Mengajar Hari Ini -->
@@ -605,7 +598,6 @@
                         </div>
                         @endif
                     </div>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                 </div>
 
                 <div class="row">

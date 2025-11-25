@@ -127,6 +127,34 @@ class GuruController extends Controller
             ->limit(5)
             ->get();
 
+        // Get jadwal mengajar mendatang (7 hari ke depan) - OTOMATIS TER SINKRON dengan jadwal yang dibuat TU
+        $today = Carbon::today();
+        $endDate = $today->copy()->addDays(7);
+        
+        $jadwalMendatang = Jadwal::where('guru_id', $guru->id)
+            ->where('status', 'aktif') // Hanya jadwal aktif
+            ->where(function($query) use ($today, $endDate) {
+                // Jadwal berulang (selalu tampil)
+                $query->where('is_berulang', true)
+                      // Atau jadwal sekali (tanggal antara hari ini dan 7 hari ke depan)
+                      ->orWhere(function($q) use ($today, $endDate) {
+                          $q->where('is_berulang', false)
+                            ->whereBetween('tanggal', [$today->format('Y-m-d'), $endDate->format('Y-m-d')]);
+                      });
+            })
+            ->orderByRaw("CASE LOWER(hari) 
+                WHEN 'senin' THEN 1 
+                WHEN 'selasa' THEN 2 
+                WHEN 'rabu' THEN 3 
+                WHEN 'kamis' THEN 4 
+                WHEN 'jumat' THEN 5 
+                WHEN 'sabtu' THEN 6 
+                WHEN 'minggu' THEN 7 
+                ELSE 8 END")
+            ->orderBy('jam_mulai', 'asc')
+            ->limit(10)
+            ->get();
+
         return view('guru.dashboard', compact(
             'guru',
             'mataPelajaranList',
@@ -140,7 +168,8 @@ class GuruController extends Controller
             'unreadNotifications',
             'jadwalHariIni',
             'totalJadwalHariIni',
-            'jadwalMingguIni'
+            'jadwalMingguIni',
+            'jadwalMendatang'
         ));
     }
 
@@ -328,25 +357,6 @@ class GuruController extends Controller
         $guru->refresh();
 
         return redirect()->route('guru.profile.index')->with('success', 'Profil berhasil diperbarui');
-    }
-
-    public function jadwalIndex()
-    {
-        $guru = Guru::where('user_id', Auth::id())->first();
-        
-        if (!$guru) {
-            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
-        }
-
-        // Ambil semua jadwal untuk guru ini, termasuk yang dibuat oleh TU
-        // Otomatis tersinkron karena menggunakan guru_id yang sama
-        $jadwals = Jadwal::where('guru_id', $guru->id)
-            ->where('status', 'aktif') // Hanya tampilkan jadwal aktif
-            ->orderByRaw("FIELD(hari, 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
-            ->orderBy('jam_mulai')
-            ->get();
-
-        return view('guru.jadwal.index', compact('guru', 'jadwals'));
     }
 
     public function storeMateri(Request $request)
