@@ -33,11 +33,7 @@ class PhotoHelper
                 // Path is inside public directory
                 $relativePath = str_replace($publicPath, '', $photoPath);
                 $relativePath = str_replace('\\', '/', ltrim($relativePath, '/\\'));
-<<<<<<< HEAD
                 return url($relativePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset($relativePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             } else {
                 // Path is outside public directory - create symlink or copy
                 // For now, try to access via asset if possible
@@ -49,14 +45,9 @@ class PhotoHelper
         // Check if it's a storage path (profiles/guru/xxx.jpg, profiles/tu/xxx.jpg, etc)
         // PRIORITAS 1: Cek di storage dengan path lengkap
         if (Storage::disk('public')->exists($photoPath)) {
-<<<<<<< HEAD
             // Gunakan url() untuk memastikan URL lengkap dengan base URL dari request
             // url() otomatis menggunakan base URL dari request saat ini
             $url = url('storage/' . $photoPath);
-=======
-            // Gunakan asset() untuk memastikan URL lengkap dengan base URL
-            $url = asset('storage/' . $photoPath);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             // Verifikasi URL bisa diakses
             if ($url) {
                 return $url . '?v=' . time() . '&r=' . rand(1000, 9999);
@@ -66,13 +57,8 @@ class PhotoHelper
         // PRIORITAS 2: Cek dengan path absolut di storage
         $storageFullPath = storage_path('app/public/' . $photoPath);
         if (file_exists($storageFullPath)) {
-<<<<<<< HEAD
             // Gunakan url() untuk memastikan URL lengkap dengan base URL dari request
             $url = url('storage/' . $photoPath);
-=======
-            // Gunakan asset() untuk memastikan URL lengkap dengan base URL
-            $url = asset('storage/' . $photoPath);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             if ($url) {
                 return $url . '?v=' . time() . '&r=' . rand(1000, 9999);
             }
@@ -82,20 +68,12 @@ class PhotoHelper
         if (strpos($photoPath, 'guru/foto/') === 0 || strpos($photoPath, 'photos/') === 0) {
             // Cek di storage
             if (Storage::disk('public')->exists($photoPath)) {
-<<<<<<< HEAD
                 return url('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             }
             // Cek dengan path absolut
             $oldPath = storage_path('app/public/' . $photoPath);
             if (file_exists($oldPath)) {
-<<<<<<< HEAD
                 return url('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             }
         }
         
@@ -121,11 +99,7 @@ class PhotoHelper
         // PRIORITAS 4: Check if it's in public directory (image/profiles/xxx.jpg or image/foto/xxx.jpg)
         $publicPath = public_path($photoPath);
         if (file_exists($publicPath)) {
-<<<<<<< HEAD
-                return url($photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-            return asset($photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+            return url($photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
         }
 
         // Try with default path if provided
@@ -133,11 +107,7 @@ class PhotoHelper
             // Try with full path
             $defaultFullPath = public_path($defaultPath . '/' . basename($photoPath));
             if (file_exists($defaultFullPath)) {
-<<<<<<< HEAD
                 return url($defaultPath . '/' . basename($photoPath)) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset($defaultPath . '/' . basename($photoPath)) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             }
             
             // Try with path from photoPath
@@ -145,11 +115,7 @@ class PhotoHelper
             $filename = end($pathParts);
             $defaultFullPath2 = public_path($defaultPath . '/' . $filename);
             if (file_exists($defaultFullPath2)) {
-<<<<<<< HEAD
                 return url($defaultPath . '/' . $filename) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset($defaultPath . '/' . $filename) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             }
         }
 
@@ -160,12 +126,8 @@ class PhotoHelper
             // Cek apakah file benar-benar ada di storage dengan path yang diberikan
             $storageFullPath = storage_path('app/public/' . $photoPath);
             if (file_exists($storageFullPath)) {
-                // Gunakan asset() untuk memastikan URL lengkap dengan base URL
-<<<<<<< HEAD
+                // Gunakan url() untuk memastikan URL lengkap dengan base URL dari request
                 return url('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                return asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             }
         }
         
@@ -194,11 +156,7 @@ class PhotoHelper
                 // Cek di public
                 $publicFullPath = public_path($possiblePath);
                 if (file_exists($publicFullPath)) {
-<<<<<<< HEAD
                     return url($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                    return asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                 }
             }
         }
@@ -219,17 +177,13 @@ class PhotoHelper
                 // Cek di storage
                 $fullPath = storage_path('app/public/' . $possiblePath);
                 if (file_exists($fullPath)) {
-                    return asset('storage/' . $possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                    return url('storage/' . $possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
                 }
                 
                 // Cek di public
                 $publicFullPath = public_path($possiblePath);
                 if (file_exists($publicFullPath)) {
-<<<<<<< HEAD
                     return url($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-=======
-                    return asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                 }
             }
         }

@@ -254,11 +254,7 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <div class="form-check">
-<<<<<<< HEAD
                                                 <input class="form-check-input" type="checkbox" id="is_lapangan" name="is_lapangan" {{ $jadwal->is_lapangan ?? false ? 'checked' : '' }}>
-=======
-                                                <input class="form-check-input" type="checkbox" id="is_lapangan" name="is_lapangan" {{ isset($jadwal->is_lapangan) && $jadwal->is_lapangan ? 'checked' : '' }}>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                                 <label class="form-check-label" for="is_lapangan">
                                                     Menggunakan Lapangan
                                                 </label>

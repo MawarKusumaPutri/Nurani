@@ -85,7 +85,6 @@
                                     <i class="fas fa-archive"></i> Daftar Arsip Dokumen
                                 </h5>
                                 @if($arsips->count() > 0)
-<<<<<<< HEAD
                                 <!-- Pagination Controls - Moved to Top -->
                                 <div class="d-flex gap-2 align-items-center">
                                     @if($arsips->onFirstPage())
@@ -94,45 +93,20 @@
                                         </button>
                                     @else
                                         <a href="{{ $arsips->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
-=======
-                                <!-- Pagination at Top -->
-                                <div class="d-flex gap-3 align-items-center">
-                                    <span class="text-muted small">
-                                        Menampilkan {{ $arsips->firstItem() }} sampai {{ $arsips->lastItem() }} dari {{ $arsips->total() }} hasil
-                                    </span>
-                                    @if($arsips->onFirstPage())
-                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
-                                            <i class="fas fa-chevron-left me-1"></i> Previous
-                                        </button>
-                                    @else
-                                        <a href="{{ $arsips->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                             <i class="fas fa-chevron-left me-1"></i> Previous
                                         </a>
                                     @endif
                                     
-<<<<<<< HEAD
                                     <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
-=======
-                                    <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                         Halaman {{ $arsips->currentPage() }} / {{ $arsips->lastPage() }}
                                     </span>
                                     
                                     @if($arsips->hasMorePages())
-<<<<<<< HEAD
                                         <a href="{{ $arsips->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                             Next <i class="fas fa-chevron-right ms-1"></i>
                                         </a>
                                     @else
                                         <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
-=======
-                                        <a href="{{ $arsips->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
-                                            Next <i class="fas fa-chevron-right ms-1"></i>
-                                        </a>
-                                    @else
-                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                             Next <i class="fas fa-chevron-right ms-1"></i>
                                         </button>
                                     @endif

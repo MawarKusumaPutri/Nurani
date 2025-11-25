@@ -825,11 +825,7 @@ class TuController extends Controller
             'is_lapangan' => 'nullable'
         ]);
 
-<<<<<<< HEAD
         // Generate ruang berdasarkan kelas, is_lab, dan is_lapangan
-=======
-        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
         if ($request->has('is_lab')) {
             $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
         } elseif ($request->has('is_lapangan')) {
@@ -935,11 +931,7 @@ class TuController extends Controller
             'is_lapangan' => 'nullable'
         ]);
 
-<<<<<<< HEAD
         // Generate ruang berdasarkan kelas, is_lab, dan is_lapangan
-=======
-        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
         if ($request->has('is_lab')) {
             $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
         } elseif ($request->has('is_lapangan')) {
@@ -1621,11 +1613,7 @@ class TuController extends Controller
                 })
                 ->with('creator')
                 ->orderBy('created_at', 'desc')
-<<<<<<< HEAD
-                ->paginate(50);
-=======
                 ->paginate(50)->withQueryString();
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             
             \Log::info('Arsip loaded:', [
                 'count' => $arsips->total(),
@@ -1955,11 +1943,7 @@ class TuController extends Controller
                 ->with('creator')
                 ->orderBy('tanggal_surat', 'desc')
                 ->orderBy('created_at', 'desc')
-<<<<<<< HEAD
-                ->paginate(50);
-=======
                 ->paginate(50)->withQueryString();
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
             
             \Log::info('Surats fetched:', ['count' => $surats->total()]);
             

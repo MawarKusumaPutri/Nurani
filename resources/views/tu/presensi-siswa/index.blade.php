@@ -136,7 +136,6 @@
                             <i class="fas fa-list me-2"></i> Daftar Presensi Siswa
                         </h5>
                         @if($presensiSiswa->count() > 0)
-<<<<<<< HEAD
                         <!-- Pagination Controls - Moved to Top -->
                         <div class="d-flex gap-2 align-items-center">
                             @if($presensiSiswa->onFirstPage())
@@ -145,45 +144,20 @@
                                 </button>
                             @else
                                 <a href="{{ $presensiSiswa->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
-=======
-                        <!-- Pagination at Top -->
-                        <div class="d-flex gap-3 align-items-center">
-                            <span class="text-muted small">
-                                Menampilkan {{ $presensiSiswa->firstItem() }} sampai {{ $presensiSiswa->lastItem() }} dari {{ $presensiSiswa->total() }} hasil
-                            </span>
-                            @if($presensiSiswa->onFirstPage())
-                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
-                                    <i class="fas fa-chevron-left me-1"></i> Previous
-                                </button>
-                            @else
-                                <a href="{{ $presensiSiswa->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                     <i class="fas fa-chevron-left me-1"></i> Previous
                                 </a>
                             @endif
                             
-<<<<<<< HEAD
                             <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
-=======
-                            <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                 Halaman {{ $presensiSiswa->currentPage() }} / {{ $presensiSiswa->lastPage() }}
                             </span>
                             
                             @if($presensiSiswa->hasMorePages())
-<<<<<<< HEAD
                                 <a href="{{ $presensiSiswa->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                     Next <i class="fas fa-chevron-right ms-1"></i>
                                 </a>
                             @else
                                 <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
-=======
-                                <a href="{{ $presensiSiswa->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
-                                    Next <i class="fas fa-chevron-right ms-1"></i>
-                                </a>
-                            @else
-                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                                     Next <i class="fas fa-chevron-right ms-1"></i>
                                 </button>
                             @endif

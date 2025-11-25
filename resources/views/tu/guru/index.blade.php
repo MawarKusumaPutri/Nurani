@@ -198,47 +198,6 @@
                                     </tbody>
                                 </table>
                             </div>
-<<<<<<< HEAD
-=======
-                            
-                            <!-- Pagination -->
-                            <div class="d-flex justify-content-between align-items-center mt-4 pagination-custom">
-                                <div class="text-muted small">
-                                    @if($gurus->total() > 0)
-                                        Menampilkan {{ $gurus->firstItem() }} sampai {{ $gurus->lastItem() }} dari {{ $gurus->total() }} guru
-                                        @if($mataPelajaran || $status || $search)
-                                            (hasil filter)
-                                        @endif
-                                    @else
-                                        Tidak ada data
-                                        @if($mataPelajaran || $status || $search)
-                                            yang sesuai dengan filter
-                                        @endif
-                                    @endif
-                                </div>
-                                <div class="d-flex">
-                                    @if($gurus->onFirstPage())
-                                        <button class="btn btn-outline-secondary btn-sm me-2" disabled>
-                                            <i class="fas fa-chevron-left me-1"></i> Previous
-                                        </button>
-                                    @else
-                                        <a href="{{ $gurus->appends(request()->query())->previousPageUrl() }}" class="btn btn-outline-secondary btn-sm me-2">
-                                            <i class="fas fa-chevron-left me-1"></i> Previous
-                                        </a>
-                                    @endif
-                                    
-                                    @if($gurus->hasMorePages())
-                                        <a href="{{ $gurus->appends(request()->query())->nextPageUrl() }}" class="btn btn-outline-secondary btn-sm">
-                                            Next <i class="fas fa-chevron-right ms-1"></i>
-                                        </a>
-                                    @else
-                                        <button class="btn btn-outline-secondary btn-sm" disabled>
-                                            Next <i class="fas fa-chevron-right ms-1"></i>
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                         </div>
                     </div>
                 </div>

@@ -130,29 +130,56 @@
                             </div>
                             <div class="card-body text-center">
                                 @php
+                                    // Refresh user data dari database untuk memastikan data terbaru
                                     $freshUser = \App\Models\User::find($user->id);
-<<<<<<< HEAD
-                                    $photoPath = 'photos/' . $freshUser->photo;
-                                    $hasPhoto = $freshUser->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-                                    $photoUrl = $hasPhoto ? asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999) : null;
-=======
-                                    $photoUrl = $freshUser->photo ? \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles') : null;
-                                    $hasPhoto = $photoUrl !== null;
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                    $photoUrl = null;
+                                    $hasPhoto = false;
+                                    
+                                    if ($freshUser && !empty($freshUser->photo)) {
+                                        // Langsung gunakan PhotoHelper dengan path yang ada di database
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                                        
+                                        // Jika masih null, coba berbagai kemungkinan path
+                                        if (!$photoUrl) {
+                                            $photoPath = $freshUser->photo;
+                                            $basename = basename($photoPath);
+                                            
+                                            // Coba berbagai kemungkinan lokasi
+                                            $possiblePaths = [
+                                                $photoPath, // Path asli dari database
+                                                'profiles/kepala_sekolah/' . $basename,
+                                                'profiles/kepala_sekolah/' . $photoPath,
+                                                'photos/' . $basename,
+                                                'photos/' . $photoPath,
+                                                'image/profiles/' . $basename,
+                                                'image/profiles/' . $photoPath
+                                            ];
+                                            
+                                            foreach ($possiblePaths as $path) {
+                                                $url = \App\Helpers\PhotoHelper::getPhotoUrl($path, 'image/profiles');
+                                                if ($url && $url !== null && $url !== '') {
+                                                    $photoUrl = $url;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        
+                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                                    }
                                 @endphp
                                 @if($hasPhoto && $photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none;">
+                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex'; console.error('Error loading photo: {{ addslashes($photoUrl) }}');">
+                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none; align-items: center; justify-content: center; border-radius: 50%;">
                                         <i class="fas fa-user-tie"></i>
                                     </div>
                                 @else
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32;">
+                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                         <i class="fas fa-user-tie"></i>
                                     </div>
                                     <p class="text-muted">Foto profil belum diatur</p>
                                 @endif
                                 <a href="{{ route('kepala_sekolah.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
-                                    <i class="fas fa-edit"></i> {{ $freshUser->photo ? 'Ganti Foto' : 'Upload Foto' }}
+                                    <i class="fas fa-edit"></i> {{ ($freshUser && !empty($freshUser->photo)) ? 'Ganti Foto' : 'Upload Foto' }}
                                 </a>
                             </div>
                         </div>
