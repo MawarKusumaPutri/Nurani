@@ -85,31 +85,28 @@
                                     <i class="fas fa-archive"></i> Daftar Arsip Dokumen
                                 </h5>
                                 @if($arsips->count() > 0)
-                                <!-- Pagination at Top -->
-                                <div class="d-flex gap-3 align-items-center">
-                                    <span class="text-muted small">
-                                        Menampilkan {{ $arsips->firstItem() }} sampai {{ $arsips->lastItem() }} dari {{ $arsips->total() }} hasil
-                                    </span>
+                                <!-- Pagination Controls - Moved to Top -->
+                                <div class="d-flex gap-2 align-items-center">
                                     @if($arsips->onFirstPage())
-                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
                                             <i class="fas fa-chevron-left me-1"></i> Previous
                                         </button>
                                     @else
-                                        <a href="{{ $arsips->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                        <a href="{{ $arsips->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                             <i class="fas fa-chevron-left me-1"></i> Previous
                                         </a>
                                     @endif
                                     
-                                    <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
+                                    <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
                                         Halaman {{ $arsips->currentPage() }} / {{ $arsips->lastPage() }}
                                     </span>
                                     
                                     @if($arsips->hasMorePages())
-                                        <a href="{{ $arsips->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                        <a href="{{ $arsips->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                             Next <i class="fas fa-chevron-right ms-1"></i>
                                         </a>
                                     @else
-                                        <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
                                             Next <i class="fas fa-chevron-right ms-1"></i>
                                         </button>
                                     @endif
@@ -118,6 +115,14 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            @if($arsips->count() > 0)
+                            <!-- Pagination Info -->
+                            <div class="mb-3">
+                                <div class="text-muted small">
+                                    Menampilkan {{ $arsips->firstItem() }} sampai {{ $arsips->lastItem() }} dari {{ $arsips->total() }} dokumen
+                                </div>
+                            </div>
+                            @endif
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>

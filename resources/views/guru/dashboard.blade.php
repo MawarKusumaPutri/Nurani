@@ -381,8 +381,8 @@
                     <div class="col-md-3 mb-3">
                         <div class="card stat-card">
                             <div class="card-body text-center">
-                                <i class="fas fa-calendar-alt fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $jadwalHariIni->count() }}</div>
+                                <i class="fas fa-calendar-day fa-2x mb-3"></i>
+                                <div class="stat-number">{{ $totalJadwalHariIni ?? ($jadwalHariIni->count() ?? 0) }}</div>
                                 <div>Jadwal Hari Ini</div>
                             </div>
                         </div>
@@ -674,6 +674,89 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jadwal Hari Ini -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card content-card">
+                            <div class="card-body text-center py-5">
+                                @if($jadwalHariIni && $jadwalHariIni->count() > 0)
+                                    <div class="row">
+                                        @foreach($jadwalHariIni as $jadwal)
+                                            <div class="col-md-6 mb-3">
+                                                <div class="p-3 border rounded">
+                                                    <h6 class="mb-2">{{ $jadwal->mata_pelajaran }}</h6>
+                                                    <p class="mb-1 text-muted small">{{ $jadwal->kelas }}</p>
+                                                    <p class="mb-0">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}
+                                                        @if($jadwal->ruang)
+                                                            <span class="ms-2">
+                                                                <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
+                                                            </span>
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <i class="fas fa-calendar-times fa-3x text-danger mb-3"></i>
+                                    <h5 class="text-muted">Tidak ada jadwal mengajar hari ini</h5>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jadwal Minggu Ini -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card content-card">
+                            <div class="card-header bg-white border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                                        Jadwal Mengajar Minggu Ini
+                                    </h5>
+                                    <a href="{{ route('guru.jadwal.index') }}" class="btn btn-sm btn-outline-primary">
+                                        Lihat Semua
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @if($jadwalMingguIni && $jadwalMingguIni->count() > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hari</th>
+                                                    <th>Mata Pelajaran</th>
+                                                    <th>Kelas</th>
+                                                    <th>Jam</th>
+                                                    <th>Ruang</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($jadwalMingguIni as $jadwal)
+                                                    <tr>
+                                                        <td><strong>{{ ucfirst($jadwal->hari) }}</strong></td>
+                                                        <td>{{ $jadwal->mata_pelajaran }}</td>
+                                                        <td>{{ $jadwal->kelas }}</td>
+                                                        <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
+                                                        <td>{{ $jadwal->ruang ?? '-' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="text-muted text-center py-3">Tidak ada jadwal mengajar minggu ini</p>
                                 @endif
                             </div>
                         </div>

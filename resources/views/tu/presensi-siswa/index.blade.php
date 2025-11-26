@@ -136,31 +136,28 @@
                             <i class="fas fa-list me-2"></i> Daftar Presensi Siswa
                         </h5>
                         @if($presensiSiswa->count() > 0)
-                        <!-- Pagination at Top -->
-                        <div class="d-flex gap-3 align-items-center">
-                            <span class="text-muted small">
-                                Menampilkan {{ $presensiSiswa->firstItem() }} sampai {{ $presensiSiswa->lastItem() }} dari {{ $presensiSiswa->total() }} hasil
-                            </span>
+                        <!-- Pagination Controls - Moved to Top -->
+                        <div class="d-flex gap-2 align-items-center">
                             @if($presensiSiswa->onFirstPage())
-                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
                                     <i class="fas fa-chevron-left me-1"></i> Previous
                                 </button>
                             @else
-                                <a href="{{ $presensiSiswa->appends(request()->query())->previousPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                <a href="{{ $presensiSiswa->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                     <i class="fas fa-chevron-left me-1"></i> Previous
                                 </a>
                             @endif
                             
-                            <span class="text-muted px-3" style="font-weight: 500; font-size: 0.95rem;">
+                            <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
                                 Halaman {{ $presensiSiswa->currentPage() }} / {{ $presensiSiswa->lastPage() }}
                             </span>
                             
                             @if($presensiSiswa->hasMorePages())
-                                <a href="{{ $presensiSiswa->appends(request()->query())->nextPageUrl() }}" class="btn pagination-btn pagination-btn-active" style="min-width: 100px; font-weight: 500;">
+                                <a href="{{ $presensiSiswa->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
                                     Next <i class="fas fa-chevron-right ms-1"></i>
                                 </a>
                             @else
-                                <button class="btn btn-secondary pagination-btn" disabled style="min-width: 100px; font-weight: 500;">
+                                <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
                                     Next <i class="fas fa-chevron-right ms-1"></i>
                                 </button>
                             @endif
@@ -170,6 +167,16 @@
                 </div>
                 <div class="card-body">
                     @if($presensiSiswa->count() > 0)
+                        <!-- Pagination Info -->
+                        <div class="mb-3">
+                            <div class="text-muted small">
+                                @if($presensiSiswa->total() > 0)
+                                    Menampilkan {{ $presensiSiswa->firstItem() }} sampai {{ $presensiSiswa->lastItem() }} dari {{ $presensiSiswa->total() }} hasil
+                                @else
+                                    Tidak ada hasil
+                                @endif
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>

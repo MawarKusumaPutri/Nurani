@@ -9,24 +9,27 @@
             @php
                 $user = Auth::user();
                 $photoUrl = null;
+                $hasPhoto = false;
                 
                 if ($user) {
                     // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                     $freshUser = \App\Models\User::find($user->id);
                     if ($freshUser && !empty($freshUser->photo)) {
-                        // OTOMATIS cari foto dengan default path yang benar
+                        // Method 1: PhotoHelper dengan default path
                         $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'profiles/kepala_sekolah');
                         
-                        // Jika masih null, coba dengan path lain
+                        // Method 2: PhotoHelper tanpa default path
                         if (!$photoUrl) {
-                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo);
                         }
                         
-                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                        // Method 3: Langsung cek di storage dengan path dari database
                         if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
-                            $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            $baseUrl = request()->getSchemeAndHttpHost();
+                            $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
                         }
                         
+<<<<<<< HEAD
                         // Jika masih null, coba dengan path absolut
                         if (!$photoUrl) {
                             $storagePath = storage_path('app/public/' . $freshUser->photo);
@@ -53,14 +56,41 @@
                                 }
                             }
                         }
+=======
+                        // Method 4: Cek dengan basename di folder profiles/kepala_sekolah
+                        if (!$photoUrl) {
+                            $basename = basename($freshUser->photo);
+                            $storagePath = 'profiles/kepala_sekolah/' . $basename;
+                            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                $baseUrl = request()->getSchemeAndHttpHost();
+                                $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            }
+                        }
+                        
+                        // Method 5: Cek file secara langsung di disk
+                        if (!$photoUrl) {
+                            $fullPath = storage_path('app/public/' . $freshUser->photo);
+                            if (file_exists($fullPath)) {
+                                $baseUrl = request()->getSchemeAndHttpHost();
+                                $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            }
+                        }
+                        
+                        // Method 6: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
+                        if ($photoUrl && strpos($photoUrl, 'localhost') !== false) {
+                            $baseUrl = request()->getSchemeAndHttpHost();
+                            $photoUrl = str_replace('http://localhost', $baseUrl, $photoUrl);
+                        }
+                        
+                        $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                     }
                 }
-                $hasPhoto = $photoUrl !== null && $photoUrl !== '';
             @endphp
             <div class="mb-2" style="display: flex; justify-content: center;">
                 @if($hasPhoto && $photoUrl)
                     <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                        <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-ks" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-ks').style.display='flex';">
+                        <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-ks" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onload="console.log('Sidebar photo loaded:', this.src);" onerror="console.error('Sidebar photo error:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-ks').style.display='flex';">
                         <div id="profile-placeholder-ks" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
                             <i class="fas fa-user-tie fa-2x text-primary"></i>
                         </div>

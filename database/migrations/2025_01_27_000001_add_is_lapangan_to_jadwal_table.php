@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jadwal', function (Blueprint $table) {
-<<<<<<< HEAD
-            //
-=======
-            $table->boolean('is_lapangan')->default(false)->after('is_lab');
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+            if (!Schema::hasColumn('jadwal', 'is_lapangan')) {
+                $table->boolean('is_lapangan')->default(false)->after('is_lab');
+            }
         });
     }
 
@@ -26,15 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('jadwal', function (Blueprint $table) {
-<<<<<<< HEAD
-            //
-        });
-    }
-};
-=======
             $table->dropColumn('is_lapangan');
         });
     }
 };
 
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5

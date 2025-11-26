@@ -80,11 +80,49 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-calendar"></i> Daftar Jadwal Pelajaran
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-calendar"></i> Daftar Jadwal Pelajaran
+                                </h5>
+                                @if(isset($jadwals) && $jadwals->count() > 0)
+                                <!-- Pagination Controls - Moved to Top -->
+                                <div class="d-flex gap-2 align-items-center">
+                                    @if($jadwals->onFirstPage())
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </button>
+                                    @else
+                                        <a href="{{ $jadwals->previousPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </a>
+                                    @endif
+                                    
+                                    <span class="text-dark small px-3 d-flex align-items-center fw-bold" style="font-size: 14px;">
+                                        Halaman {{ $jadwals->currentPage() }} / {{ $jadwals->lastPage() }}
+                                    </span>
+                                    
+                                    @if($jadwals->hasMorePages())
+                                        <a href="{{ $jadwals->nextPageUrl() }}" class="btn btn-sm" style="min-width: 100px; background-color: #0d6efd; color: white; border-color: #0d6efd; font-weight: 600;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-outline-secondary btn-sm" disabled style="min-width: 100px; opacity: 0.5;">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
+                            @if(isset($jadwals) && $jadwals->count() > 0)
+                            <!-- Pagination Info -->
+                            <div class="mb-3">
+                                <div class="text-muted small">
+                                    Menampilkan {{ $jadwals->firstItem() }} sampai {{ $jadwals->lastItem() }} dari {{ $jadwals->total() }} jadwal
+                                </div>
+                            </div>
+                            @endif
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
@@ -103,7 +141,6 @@
                                     <tbody>
                                         @if(isset($jadwals) && $jadwals->count() > 0)
                                             @php
-                                                $no = 1;
                                                 $iconMap = [
                                                     'matematika' => ['icon' => 'fa-calculator', 'color' => 'text-primary'],
                                                     'bahasa_indonesia' => ['icon' => 'fa-book', 'color' => 'text-success'],
@@ -129,7 +166,7 @@
                                                     'sementara' => 'bg-warning',
                                                 ];
                                             @endphp
-                                            @foreach($jadwals as $jadwal)
+                                            @foreach($jadwals as $index => $jadwal)
                                                 @php
                                                     $icon = $iconMap[$jadwal->mata_pelajaran]['icon'] ?? 'fa-book';
                                                     $iconColor = $iconMap[$jadwal->mata_pelajaran]['color'] ?? 'text-secondary';
@@ -137,7 +174,7 @@
                                                     $statusColor = $statusColorMap[$jadwal->status] ?? 'bg-secondary';
                                                 @endphp
                                                 <tr>
-                                                    <td>{{ $no++ }}</td>
+                                                    <td>{{ $jadwals->firstItem() + $index }}</td>
                                                     <td>
                                                         <i class="fas {{ $icon }} {{ $iconColor }}"></i> 
                                                         {{ $jadwal->mata_pelajaran_nama }}

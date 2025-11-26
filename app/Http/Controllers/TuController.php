@@ -737,10 +737,10 @@ class TuController extends Controller
         $jadwals = Jadwal::with(['guru.user'])
             ->orderBy('hari')
             ->orderBy('jam_mulai')
-            ->get();
+            ->paginate(50);
         
         // Log untuk debugging
-        \Log::info('Jadwal Index - Total jadwals: ' . $jadwals->count());
+        \Log::info('Jadwal Index - Total jadwals: ' . $jadwals->total());
         
         return view('tu.jadwal.index', compact('jadwals'));
     }
@@ -825,7 +825,7 @@ class TuController extends Controller
             'is_lapangan' => 'nullable'
         ]);
 
-        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
+        // Generate ruang berdasarkan kelas, is_lab, dan is_lapangan
         if ($request->has('is_lab')) {
             $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
         } elseif ($request->has('is_lapangan')) {
@@ -931,7 +931,7 @@ class TuController extends Controller
             'is_lapangan' => 'nullable'
         ]);
 
-        // Generate ruang berdasarkan kelas, is_lab, atau is_lapangan
+        // Generate ruang berdasarkan kelas, is_lab, dan is_lapangan
         if ($request->has('is_lab')) {
             $ruang = 'Lab ' . ucfirst($request->mata_pelajaran);
         } elseif ($request->has('is_lapangan')) {

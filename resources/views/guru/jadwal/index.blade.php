@@ -71,11 +71,14 @@
                             $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                         @endphp
                         @if($hasPhoto && $photoUrl)
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0;">
+                                    <i class="fas fa-user fa-2x text-primary"></i>
+                                </div>
                             </div>
                         @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3);">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                 <i class="fas fa-user fa-2x text-primary"></i>
                             </div>
                         @endif
@@ -132,10 +135,10 @@
                             <div class="col-md-4">
                                 <label class="form-label">Filter Jadwal</label>
                                 <select name="filter" class="form-select" onchange="this.form.submit()">
-                                    <option value="semua" {{ $filter == 'semua' ? 'selected' : '' }}>Semua Jadwal</option>
-                                    <option value="hari_ini" {{ $filter == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
-                                    <option value="minggu_ini" {{ $filter == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
-                                    <option value="bulan_ini" {{ $filter == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
+                                    <option value="semua" {{ ($filter ?? 'semua') == 'semua' ? 'selected' : '' }}>Semua Jadwal</option>
+                                    <option value="hari_ini" {{ ($filter ?? '') == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                                    <option value="minggu_ini" {{ ($filter ?? '') == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
+                                    <option value="bulan_ini" {{ ($filter ?? '') == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
                                 </select>
                             </div>
                         </form>
@@ -143,7 +146,7 @@
                 </div>
 
                 <!-- Jadwal List -->
-                @if($jadwals->count() > 0)
+                @if($jadwals && $jadwals->count() > 0)
                     <div class="row">
                         @foreach($jadwals as $jadwal)
                             @php
@@ -243,9 +246,11 @@
                     </div>
                     
                     <!-- Pagination -->
+                    @if(method_exists($jadwals, 'links'))
                     <div class="d-flex justify-content-center mt-4">
                         {{ $jadwals->appends(request()->query())->links() }}
                     </div>
+                    @endif
                 @else
                     <div class="card">
                         <div class="card-body text-center py-5">

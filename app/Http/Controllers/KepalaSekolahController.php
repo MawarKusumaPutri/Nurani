@@ -575,46 +575,63 @@ class KepalaSekolahController extends Controller
     
     public function siswaIndex(Request $request)
     {
-        // Get filter parameters from request
-        $kelasFilter = $request->get('kelas', '');
-        $statusFilter = $request->get('status', '');
-        $search = $request->get('search', '');
+        // Get filter parameters
+        $selectedKelas = $request->get('kelas', '');
+        $selectedStatus = $request->get('status', '');
+        $searchQuery = $request->get('search', '');
         
-        // Helper function to build query with filters
-        $buildQuery = function($kelas) use ($statusFilter, $search) {
-            $query = Siswa::where('kelas', $kelas);
-            
-            // Apply status filter
-            if (!empty($statusFilter)) {
-                $query->where('status', $statusFilter);
-            }
-            
-            // Apply search filter (nama atau NIS)
-            if (!empty($search)) {
-                $query->where(function($q) use ($search) {
-                    $q->where('nama', 'like', '%' . $search . '%')
-                      ->orWhere('nis', 'like', '%' . $search . '%');
-                });
-            }
-            
-            return $query->orderBy('nama')->get();
-        };
+        // Base query untuk semua siswa
+        $query = Siswa::query();
         
-        // Get students grouped by class with filters
-        // If kelas filter is set, only show that class, otherwise show all
-        if (!empty($kelasFilter)) {
-            // Show only selected class
-            $siswaKelas7 = ($kelasFilter == '7') ? $buildQuery('7') : collect();
-            $siswaKelas8 = ($kelasFilter == '8') ? $buildQuery('8') : collect();
-            $siswaKelas9 = ($kelasFilter == '9') ? $buildQuery('9') : collect();
-        } else {
-            // Show all classes
-            $siswaKelas7 = $buildQuery('7');
-            $siswaKelas8 = $buildQuery('8');
-            $siswaKelas9 = $buildQuery('9');
+        // Apply filters
+        if ($selectedKelas && $selectedKelas !== '') {
+            $query->where('kelas', $selectedKelas);
         }
         
-        return view('kepala_sekolah.siswa.index', compact('siswaKelas7', 'siswaKelas8', 'siswaKelas9', 'kelasFilter', 'statusFilter', 'search'));
+        if ($selectedStatus && $selectedStatus !== '') {
+            $query->where('status', $selectedStatus);
+        }
+        
+        if ($searchQuery && $searchQuery !== '') {
+            $query->where(function($q) use ($searchQuery) {
+                $q->where('nama', 'like', '%' . $searchQuery . '%')
+                  ->orWhere('nis', 'like', '%' . $searchQuery . '%');
+            });
+        }
+        
+        // Get all students
+        $allSiswa = $query->orderBy('kelas')->orderBy('nama')->get();
+        
+        // Group by class jika tidak ada filter kelas
+        if (!$selectedKelas && !$searchQuery) {
+            $siswaKelas7 = $allSiswa->where('kelas', '7');
+            $siswaKelas8 = $allSiswa->where('kelas', '8');
+            $siswaKelas9 = $allSiswa->where('kelas', '9');
+        } else {
+            // Jika ada filter, tampilkan semua di satu list
+            $siswaKelas7 = collect();
+            $siswaKelas8 = collect();
+            $siswaKelas9 = collect();
+            
+            foreach ($allSiswa as $siswa) {
+                if ($siswa->kelas == '7') {
+                    $siswaKelas7->push($siswa);
+                } elseif ($siswa->kelas == '8') {
+                    $siswaKelas8->push($siswa);
+                } elseif ($siswa->kelas == '9') {
+                    $siswaKelas9->push($siswa);
+                }
+            }
+        }
+        
+        return view('kepala_sekolah.siswa.index', compact(
+            'siswaKelas7', 
+            'siswaKelas8', 
+            'siswaKelas9',
+            'selectedKelas',
+            'selectedStatus',
+            'searchQuery'
+        ));
     }
     
     // Profile Management
@@ -674,15 +691,70 @@ class KepalaSekolahController extends Controller
                 
                 if ($photoPath) {
                     // Path sudah benar: profiles/kepala_sekolah/[nama-file]
-                    // Langsung simpan ke database tanpa perlu edit manual
-                    $user->photo = $photoPath;
+                    // Verifikasi file benar-benar tersimpan SEBELUM menyimpan ke database
+                    $fileExists = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                    $fullPath = storage_path('app/public/' . $photoPath);
+                    $fileExistsOnDisk = file_exists($fullPath);
+                    
+                    \Log::info('Photo upload attempt for kepala sekolah', [
+                        'user_id' => $user->id,
+                        'photo_path' => $photoPath,
+                        'file_exists_storage' => $fileExists,
+                        'file_exists_disk' => $fileExistsOnDisk,
+                        'full_path' => $fullPath,
+                        'photo_url' => url('storage/' . $photoPath)
+                    ]);
+                    
+                    // Hanya simpan ke database jika file benar-benar ada
+                    if ($fileExists || $fileExistsOnDisk) {
+                        $user->photo = $photoPath;
+                        \Log::info('Photo path saved to database', [
+                            'user_id' => $user->id,
+                            'photo_path' => $photoPath
+                        ]);
+                    } else {
+                        \Log::error('Photo file not found after upload', [
+                            'user_id' => $user->id,
+                            'photo_path' => $photoPath,
+                            'full_path' => $fullPath,
+                            'storage_disk_list' => \Illuminate\Support\Facades\Storage::disk('public')->files('profiles/kepala_sekolah')
+                        ]);
+                        return back()->withErrors(['photo' => 'Foto berhasil diupload tapi file tidak ditemukan. Silakan coba lagi.'])->withInput();
+                    }
                 } else {
                     // Fallback: simpan di public/image/profiles
                     $photoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
                     if ($photoPath) {
-                        // Path: image/profiles/[nama-file]
-                        $user->photo = $photoPath;
+                        // Verifikasi file benar-benar tersimpan SEBELUM menyimpan ke database
+                        $fileExists = file_exists(public_path($photoPath));
+                        
+                        \Log::info('Photo upload attempt to public for kepala sekolah', [
+                            'user_id' => $user->id,
+                            'photo_path' => $photoPath,
+                            'file_exists' => $fileExists,
+                            'full_path' => public_path($photoPath)
+                        ]);
+                        
+                        // Hanya simpan ke database jika file benar-benar ada
+                        if ($fileExists) {
+                            $user->photo = $photoPath;
+                            \Log::info('Photo path saved to database (public)', [
+                                'user_id' => $user->id,
+                                'photo_path' => $photoPath
+                            ]);
+                        } else {
+                            \Log::error('Photo file not found after upload to public', [
+                                'user_id' => $user->id,
+                                'photo_path' => $photoPath,
+                                'full_path' => public_path($photoPath)
+                            ]);
+                            return back()->withErrors(['photo' => 'Foto berhasil diupload tapi file tidak ditemukan. Silakan coba lagi.'])->withInput();
+                        }
                     } else {
+                        \Log::error('Failed to save photo for kepala sekolah', [
+                            'user_id' => $user->id,
+                            'original_name' => $file->getClientOriginalName()
+                        ]);
                         return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
                     }
                 }
@@ -695,7 +767,18 @@ class KepalaSekolahController extends Controller
             $user->password = Hash::make($request->password);
         }
         
+        // Simpan semua perubahan ke database
         $user->save();
+        
+        // Verifikasi foto tersimpan dengan benar
+        if ($request->hasFile('photo')) {
+            $savedUser = User::find($user->id);
+            \Log::info('Photo verification after save', [
+                'user_id' => $savedUser->id,
+                'photo_in_db' => $savedUser->photo,
+                'photo_exists' => $savedUser->photo ? \Illuminate\Support\Facades\Storage::disk('public')->exists($savedUser->photo) : false
+            ]);
+        }
         
         // Get fresh user data from database to ensure photo is loaded
         $freshUser = User::find($user->id);
@@ -708,7 +791,11 @@ class KepalaSekolahController extends Controller
             \Artisan::call('view:clear');
             \Artisan::call('cache:clear');
             \Artisan::call('config:clear');
+<<<<<<< HEAD
             \Artisan::call('config:clear');
+=======
+            \Artisan::call('route:clear');
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
         } catch (\Exception $e) {
             // Ignore cache errors
         }
