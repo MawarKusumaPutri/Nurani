@@ -136,47 +136,73 @@
                                     $hasPhoto = false;
                                     
                                     if ($freshUser && !empty($freshUser->photo)) {
-                                        // Langsung gunakan PhotoHelper dengan path yang ada di database
-                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                                        // Method 1: PhotoHelper dengan default path
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'profiles/kepala_sekolah');
                                         
-                                        // Jika masih null, coba berbagai kemungkinan path
+                                        // Method 2: PhotoHelper tanpa default path
                                         if (!$photoUrl) {
-                                            $photoPath = $freshUser->photo;
-                                            $basename = basename($photoPath);
-                                            
-                                            // Coba berbagai kemungkinan lokasi
-                                            $possiblePaths = [
-                                                $photoPath, // Path asli dari database
-                                                'profiles/kepala_sekolah/' . $basename,
-                                                'profiles/kepala_sekolah/' . $photoPath,
-                                                'photos/' . $basename,
-                                                'photos/' . $photoPath,
-                                                'image/profiles/' . $basename,
-                                                'image/profiles/' . $photoPath
-                                            ];
-                                            
-                                            foreach ($possiblePaths as $path) {
-                                                $url = \App\Helpers\PhotoHelper::getPhotoUrl($path, 'image/profiles');
-                                                if ($url && $url !== null && $url !== '') {
-                                                    $photoUrl = $url;
-                                                    break;
-                                                }
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo);
+                                        }
+                                        
+                                        // Method 3: Langsung cek di storage dengan path dari database
+                                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        }
+                                        
+                                        // Method 4: Cek dengan basename di folder profiles/kepala_sekolah
+                                        if (!$photoUrl) {
+                                            $basename = basename($freshUser->photo);
+                                            $storagePath = 'profiles/kepala_sekolah/' . $basename;
+                                            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                                $baseUrl = request()->getSchemeAndHttpHost();
+                                                $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
                                             }
                                         }
                                         
-                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                                        // Method 5: Cek file secara langsung di disk
+                                        if (!$photoUrl) {
+                                            $fullPath = storage_path('app/public/' . $freshUser->photo);
+                                            if (file_exists($fullPath)) {
+                                                $baseUrl = request()->getSchemeAndHttpHost();
+                                                $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            }
+                                        }
+                                        
+                                        // Method 6: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
+                                        if ($photoUrl && strpos($photoUrl, 'localhost') !== false) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = str_replace('http://localhost', $baseUrl, $photoUrl);
+                                        }
+                                        
+                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
                                     }
                                 @endphp
+                                
                                 @if($hasPhoto && $photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex'; console.error('Error loading photo: {{ addslashes($photoUrl) }}');">
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none; align-items: center; justify-content: center; border-radius: 50%;">
-                                        <i class="fas fa-user-tie"></i>
+                                    <div class="position-relative d-inline-block mb-3">
+                                        <img src="{{ $photoUrl }}" alt="Foto Profil" 
+                                             id="profile-photo-img"
+                                             class="img-thumbnail" 
+                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block;"
+                                             onload="console.log('Photo loaded successfully:', this.src);"
+                                             onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder').style.display='flex';">
+                                        <div id="profile-photo-placeholder" class="profile-circle" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none; align-items: center; justify-content: center; border-radius: 50%; background: #f8f9fa;">
+                                            <i class="fas fa-user-tie text-muted"></i>
+                                        </div>
                                     </div>
                                 @else
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                                        <i class="fas fa-user-tie"></i>
+                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f8f9fa;">
+                                        <i class="fas fa-user-tie text-muted"></i>
                                     </div>
                                     <p class="text-muted">Foto profil belum diatur</p>
+                                    @if(!empty($freshUser->photo))
+                                        <small class="text-danger d-block mt-2">
+                                            <i class="fas fa-exclamation-triangle"></i> 
+                                            Foto ada di database ({{ $freshUser->photo }}) tapi tidak dapat dimuat. 
+                                            Silakan coba upload ulang.
+                                        </small>
+                                    @endif
                                 @endif
                                 <a href="{{ route('kepala_sekolah.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
                                     <i class="fas fa-edit"></i> {{ ($freshUser && !empty($freshUser->photo)) ? 'Ganti Foto' : 'Upload Foto' }}

@@ -19,6 +19,29 @@ use App\Http\Controllers\GuruMataPelajaranController;
 |
 */
 
+// Storage route untuk serve file (mengatasi masalah symlink di Windows)
+Route::get('/storage/{path}', function ($path) {
+    $path = urldecode($path);
+    
+    // Cek apakah file ada di storage
+    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        $filePath = storage_path('app/public/' . $path);
+        
+        if (file_exists($filePath)) {
+            $file = \Illuminate\Support\Facades\Storage::disk('public')->get($path);
+            $type = \Illuminate\Support\Facades\Storage::disk('public')->mimeType($path);
+            
+            return response($file, 200, [
+                'Content-Type' => $type,
+                'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+                'Cache-Control' => 'public, max-age=3600',
+            ]);
+        }
+    }
+    
+    abort(404);
+})->where('path', '.*');
+
 // Home page
 Route::get('/', function () {
     return view('welcome');

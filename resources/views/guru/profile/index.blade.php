@@ -49,68 +49,62 @@
                             // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                             $freshGuru = \App\Models\Guru::find($guru->id);
                             $photoUrl = null;
+                            $hasPhoto = false;
                             
                             if ($freshGuru && !empty($freshGuru->foto)) {
-<<<<<<< HEAD
-                                // OTOMATIS cari foto dengan berbagai kemungkinan path
-=======
-                                // OTOMATIS cari foto dengan default path yang benar
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                // Method 1: PhotoHelper dengan default path
                                 $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
                                 
-                                // Jika masih null, coba dengan path lain
+                                // Method 2: PhotoHelper dengan path lain
                                 if (!$photoUrl) {
                                     $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
                                 }
                                 
-<<<<<<< HEAD
-                                // Jika masih null, coba dengan path lain lagi
+                                // Method 3: PhotoHelper dengan path guru/foto
                                 if (!$photoUrl) {
                                     $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
                                 }
                                 
-=======
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
-                                // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                // Method 4: Langsung cek di storage dengan path dari database
                                 if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
-                                    $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
                                 }
-<<<<<<< HEAD
                                 
-                                // Coba dengan path lengkap di storage
+                                // Method 5: Cek dengan basename di folder profiles/guru
                                 if (!$photoUrl) {
-                                    $storagePath = storage_path('app/public/' . $freshGuru->foto);
-                                    if (file_exists($storagePath)) {
-                                        $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    $basename = basename($freshGuru->foto);
+                                    $storagePath = 'profiles/guru/' . $basename;
+                                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                        $baseUrl = request()->getSchemeAndHttpHost();
+                                        $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
                                     }
                                 }
                                 
-                                // Coba dengan path di public
+                                // Method 6: Cek file secara langsung di disk
                                 if (!$photoUrl) {
-                                    $publicPath = public_path($freshGuru->foto);
-                                    if (file_exists($publicPath)) {
-                                        $photoUrl = asset($freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    $fullPath = storage_path('app/public/' . $freshGuru->foto);
+                                    if (file_exists($fullPath)) {
+                                        $baseUrl = request()->getSchemeAndHttpHost();
+                                        $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
                                     }
                                 }
-=======
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                
+                                // Method 7: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
+                                if ($photoUrl && strpos($photoUrl, 'localhost') !== false) {
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = str_replace('http://localhost', $baseUrl, $photoUrl);
+                                }
+                                
+                                $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
                             }
-                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                         @endphp
                         @if($hasPhoto && $photoUrl)
-<<<<<<< HEAD
-                            <img src="{{ $photoUrl }}" alt="Foto Profil" 
-                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);" 
-                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: none;">
-                                <i class="fas fa-user fa-2x text-primary"></i>
-=======
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru-sidebar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru-sidebar').style.display='flex';">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru-sidebar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onload="console.log('Sidebar photo loaded:', this.src);" onerror="console.error('Sidebar photo error:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru-sidebar').style.display='flex';">
                                 <div id="profile-placeholder-guru-sidebar" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
                                     <i class="fas fa-user fa-2x text-primary"></i>
                                 </div>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                             </div>
                         @else
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
@@ -257,75 +251,86 @@
                             </div>
                             <div class="card-body text-center">
                                 @php
-<<<<<<< HEAD
                                     // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                                     $freshGuru = \App\Models\Guru::find($guru->id);
                                     $photoUrl = null;
+                                    $hasPhoto = false;
                                     
                                     if ($freshGuru && !empty($freshGuru->foto)) {
-                                        // OTOMATIS cari foto dengan berbagai kemungkinan path
+                                        // Method 1: PhotoHelper dengan default path
                                         $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
                                         
-                                        // Jika masih null, coba dengan path lain
+                                        // Method 2: PhotoHelper dengan path lain
                                         if (!$photoUrl) {
                                             $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
                                         }
                                         
-                                        // Jika masih null, coba dengan path lain lagi
+                                        // Method 3: PhotoHelper dengan path guru/foto
                                         if (!$photoUrl) {
                                             $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
                                         }
                                         
-                                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                        // Method 4: Langsung cek di storage dengan path dari database
                                         if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
-                                            $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
                                         }
                                         
-                                        // Coba dengan path lengkap di storage
+                                        // Method 5: Cek dengan basename di folder profiles/guru
                                         if (!$photoUrl) {
-                                            $storagePath = storage_path('app/public/' . $freshGuru->foto);
-                                            if (file_exists($storagePath)) {
-                                                $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            $basename = basename($freshGuru->foto);
+                                            $storagePath = 'profiles/guru/' . $basename;
+                                            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                                $baseUrl = request()->getSchemeAndHttpHost();
+                                                $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
                                             }
                                         }
                                         
-                                        // Coba dengan path di public
+                                        // Method 6: Cek file secara langsung di disk
                                         if (!$photoUrl) {
-                                            $publicPath = public_path($freshGuru->foto);
-                                            if (file_exists($publicPath)) {
-                                                $photoUrl = asset($freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            $fullPath = storage_path('app/public/' . $freshGuru->foto);
+                                            if (file_exists($fullPath)) {
+                                                $baseUrl = request()->getSchemeAndHttpHost();
+                                                $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
                                             }
                                         }
+                                        
+                                        // Method 7: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
+                                        if ($photoUrl && strpos($photoUrl, 'localhost') !== false) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = str_replace('http://localhost', $baseUrl, $photoUrl);
+                                        }
+                                        
+                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
                                     }
-                                    $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                                 @endphp
                                 @if($hasPhoto && $photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
-                                        <i class="fas fa-user-tie text-secondary"></i>
-=======
-                                    $freshGuru = \App\Models\Guru::find($guru->id);
-                                    $photoUrl = $freshGuru->foto ? \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles') : null;
-                                    $hasPhoto = $photoUrl !== null;
-                                @endphp
-                                @if($hasPhoto && $photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail mb-3" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div class="profile-circle mb-3" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none;">
-                                        <i class="fas fa-user-tie"></i>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                    <div class="position-relative d-inline-block mb-3">
+                                        <img src="{{ $photoUrl }}" alt="Foto Profil" 
+                                             id="profile-photo-img-main"
+                                             class="img-thumbnail" 
+                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block;"
+                                             onload="console.log('Photo loaded successfully:', this.src);"
+                                             onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';">
+                                        <div id="profile-photo-placeholder-main" class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                            <i class="fas fa-user-tie text-secondary"></i>
+                                        </div>
                                     </div>
                                 @else
                                     <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0;">
                                         <i class="fas fa-user-tie text-secondary"></i>
                                     </div>
                                     <p class="text-muted">Foto profil belum diatur</p>
+                                    @if(!empty($freshGuru->foto))
+                                        <small class="text-danger d-block mt-2">
+                                            <i class="fas fa-exclamation-triangle"></i> 
+                                            Foto ada di database ({{ $freshGuru->foto }}) tapi tidak dapat dimuat. 
+                                            Silakan coba upload ulang.
+                                        </small>
+                                    @endif
                                 @endif
                                 <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
-<<<<<<< HEAD
-                                    <i class="fas fa-edit"></i> {{ $freshGuru && $freshGuru->foto ? 'Ganti Foto' : 'Upload Foto' }}
-=======
-                                    <i class="fas fa-edit"></i> {{ $freshGuru->foto ? 'Ganti Foto' : 'Upload Foto' }}
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
+                                    <i class="fas fa-edit"></i> {{ ($freshGuru && !empty($freshGuru->foto)) ? 'Ganti Foto' : 'Upload Foto' }}
                                 </a>
                             </div>
                         </div>

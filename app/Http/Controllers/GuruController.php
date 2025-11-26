@@ -319,9 +319,34 @@ class GuruController extends Controller
                 $fotoPath = PhotoHelper::savePhoto($file, 'profiles/guru', true);
                 
                 if ($fotoPath) {
-                    // Path sudah benar: profiles/guru/[nama-file]
-                    // Langsung simpan ke database tanpa perlu edit manual
-                    $guru->foto = $fotoPath;
+                    // Verifikasi file benar-benar tersimpan SEBELUM menyimpan ke database
+                    $fileExists = \Illuminate\Support\Facades\Storage::disk('public')->exists($fotoPath);
+                    $fullPath = storage_path('app/public/' . $fotoPath);
+                    $fileExistsOnDisk = file_exists($fullPath);
+                    
+                    \Log::info('Photo upload attempt for guru', [
+                        'guru_id' => $guru->id,
+                        'foto_path' => $fotoPath,
+                        'file_exists_storage' => $fileExists,
+                        'file_exists_disk' => $fileExistsOnDisk,
+                        'full_path' => $fullPath
+                    ]);
+                    
+                    // Hanya simpan ke database jika file benar-benar ada
+                    if ($fileExists || $fileExistsOnDisk) {
+                        $guru->foto = $fotoPath;
+                        \Log::info('Photo path saved to database for guru', [
+                            'guru_id' => $guru->id,
+                            'foto_path' => $fotoPath
+                        ]);
+                    } else {
+                        \Log::error('Photo file not found after upload for guru', [
+                            'guru_id' => $guru->id,
+                            'foto_path' => $fotoPath,
+                            'full_path' => $fullPath
+                        ]);
+                        return back()->withErrors(['foto' => 'Foto berhasil diupload tapi file tidak ditemukan. Silakan coba lagi.'])->withInput();
+                    }
                 } else {
                     // Fallback: simpan di public/image/profiles
                     $fotoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
@@ -353,8 +378,28 @@ class GuruController extends Controller
         
         $guru->update($updateData);
         
+        // Verifikasi foto tersimpan dengan benar
+        if ($request->hasFile('foto')) {
+            $savedGuru = Guru::find($guru->id);
+            \Log::info('Photo verification after save for guru', [
+                'guru_id' => $savedGuru->id,
+                'foto_in_db' => $savedGuru->foto,
+                'foto_exists' => $savedGuru->foto ? \Illuminate\Support\Facades\Storage::disk('public')->exists($savedGuru->foto) : false
+            ]);
+        }
+        
         // Refresh guru data to ensure latest photo is loaded
         $guru->refresh();
+        
+        // Clear all caches to ensure fresh data
+        try {
+            \Artisan::call('view:clear');
+            \Artisan::call('cache:clear');
+            \Artisan::call('config:clear');
+            \Artisan::call('route:clear');
+        } catch (\Exception $e) {
+            // Ignore cache errors
+        }
 
         return redirect()->route('guru.profile.index')->with('success', 'Profil berhasil diperbarui');
     }
