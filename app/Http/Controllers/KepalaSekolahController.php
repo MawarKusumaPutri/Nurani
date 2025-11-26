@@ -708,6 +708,7 @@ class KepalaSekolahController extends Controller
             \Artisan::call('view:clear');
             \Artisan::call('cache:clear');
             \Artisan::call('config:clear');
+            \Artisan::call('config:clear');
         } catch (\Exception $e) {
             // Ignore cache errors
         }

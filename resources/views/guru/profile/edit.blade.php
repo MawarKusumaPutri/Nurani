@@ -129,16 +129,41 @@
                                         <div class="mb-2 position-relative d-inline-block">
                                             @php
                                                 $freshGuru = \App\Models\Guru::find($guru->id);
-                                                $photoUrl = $freshGuru->foto ? \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles') : '#';
-                                                $hasPhoto = $photoUrl !== null && $photoUrl !== '#';
+                                                $photoUrl = null;
+                                                $hasPhoto = false;
+                                                
+                                                if ($freshGuru && $freshGuru->foto) {
+                                                    // OTOMATIS cari foto dengan default path yang benar
+                                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
+                                                    
+                                                    // Jika masih null, coba dengan path lain
+                                                    if (!$photoUrl) {
+                                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
+                                                    }
+                                                    
+                                                    // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                                    if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                                        $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time();
+                                                    }
+                                                    
+                                                    // Jika masih null, coba dengan path absolut
+                                                    if (!$photoUrl) {
+                                                        $storagePath = storage_path('app/public/' . $freshGuru->foto);
+                                                        if (file_exists($storagePath)) {
+                                                            $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time();
+                                                        }
+                                                    }
+                                                    
+                                                    $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                                                }
                                             @endphp
                                             <div class="position-relative d-inline-block" style="width: 150px; height: 150px;">
-                                                <img id="photoPreview" src="{{ $photoUrl }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
-                                                <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%; position: absolute; top: 0; left: 0;">
+                                                <img id="photoPreview" src="{{ $hasPhoto ? $photoUrl : '' }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative; z-index: 1;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
+                                                <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%; position: absolute; top: 0; left: 0; z-index: 0;">
                                                     <i class="fas fa-user fa-3x text-muted"></i>
                                                 </div>
                                                 <!-- Checkmark indicator -->
-                                                <div id="photoCheckmark" class="position-absolute {{ $hasPhoto ? 'd-flex' : 'd-none' }}" style="bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); border-radius: 50%; width: 32px; height: 32px; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
+                                                <div id="photoCheckmark" class="position-absolute d-none" style="bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); border-radius: 50%; width: 32px; height: 32px; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
                                                     <i class="fas fa-check text-white" style="font-size: 18px; font-weight: bold;"></i>
                                                 </div>
                                             </div>
@@ -223,17 +248,39 @@
     <script>
     function previewPhoto(input) {
         if (input.files && input.files[0]) {
+            // Validasi ukuran file (maksimal 2MB)
+            const file = input.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2MB dalam bytes
+            
+            if (file.size > maxSize) {
+                alert('Ukuran file terlalu besar! Maksimal 2MB.');
+                input.value = ''; // Reset input
+                return;
+            }
+            
+            // Validasi tipe file
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert('Format file tidak valid! Hanya JPG, PNG, dan GIF yang diizinkan.');
+                input.value = ''; // Reset input
+                return;
+            }
+            
             const reader = new FileReader();
             const checkmark = document.getElementById('photoCheckmark');
+            const preview = document.getElementById('photoPreview');
+            const placeholder = document.getElementById('photoPlaceholder');
             
             reader.onload = function(e) {
-                const preview = document.getElementById('photoPreview');
-                const placeholder = document.getElementById('photoPlaceholder');
-                
                 if (preview && placeholder) {
+                    // Set preview image
                     preview.src = e.target.result;
                     preview.classList.remove('d-none');
+                    preview.style.display = 'block';
+                    
+                    // Hide placeholder
                     placeholder.classList.add('d-none');
+                    placeholder.style.display = 'none';
                     
                     // Show checkmark when photo is selected
                     if (checkmark) {
@@ -246,7 +293,12 @@
                 }
             };
             
-            reader.readAsDataURL(input.files[0]);
+            reader.onerror = function() {
+                alert('Error membaca file! Silakan coba lagi.');
+                input.value = ''; // Reset input
+            };
+            
+            reader.readAsDataURL(file);
         } else {
             // Hide checkmark if no file selected
             const checkmark = document.getElementById('photoCheckmark');
@@ -265,10 +317,27 @@
         
         if (preview && checkmark) {
             // Check if preview is visible and has a valid image
-            if (!preview.classList.contains('d-none') && preview.src && preview.src !== '#' && preview.src !== window.location.href) {
-                checkmark.classList.remove('d-none');
-                checkmark.classList.add('d-flex');
-                checkmark.style.display = 'flex';
+            const hasValidImage = !preview.classList.contains('d-none') && 
+                                 preview.src && 
+                                 preview.src !== '' && 
+                                 preview.src !== '#' && 
+                                 preview.src !== window.location.href &&
+                                 !preview.src.includes('data:image/svg+xml');
+            
+            if (hasValidImage) {
+                // Wait for image to load
+                preview.onload = function() {
+                    checkmark.classList.remove('d-none');
+                    checkmark.classList.add('d-flex');
+                    checkmark.style.display = 'flex';
+                };
+                
+                // If image fails to load, hide checkmark
+                preview.onerror = function() {
+                    checkmark.classList.add('d-none');
+                    checkmark.classList.remove('d-flex');
+                    checkmark.style.display = 'none';
+                };
             }
         }
     });

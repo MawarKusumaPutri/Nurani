@@ -26,6 +26,33 @@
                         if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
                             $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
                         }
+                        
+                        // Jika masih null, coba dengan path absolut
+                        if (!$photoUrl) {
+                            $storagePath = storage_path('app/public/' . $freshUser->photo);
+                            if (file_exists($storagePath)) {
+                                $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            }
+                        }
+                        
+                        // Jika masih null, coba langsung dengan path dari database
+                        if (!$photoUrl) {
+                            // Coba berbagai kemungkinan path
+                            $possiblePaths = [
+                                'storage/' . $freshUser->photo,
+                                'storage/profiles/kepala_sekolah/' . basename($freshUser->photo),
+                                'storage/image/profiles/' . basename($freshUser->photo),
+                                $freshUser->photo
+                            ];
+                            
+                            foreach ($possiblePaths as $possiblePath) {
+                                $fullPath = public_path($possiblePath);
+                                if (file_exists($fullPath)) {
+                                    $photoUrl = asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 $hasPhoto = $photoUrl !== null && $photoUrl !== '';
