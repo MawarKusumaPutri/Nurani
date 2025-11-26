@@ -132,6 +132,36 @@
                                                 $photoUrl = null;
                                                 $hasPhoto = false;
                                                 
+<<<<<<< HEAD
+                                                if ($freshGuru && $freshGuru->foto) {
+                                                    // OTOMATIS cari foto dengan default path yang benar
+                                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
+                                                    
+                                                    // Jika masih null, coba dengan path lain
+                                                    if (!$photoUrl) {
+                                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
+                                                    }
+                                                    
+                                                    // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                                    if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                                        $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time();
+                                                    }
+                                                    
+                                                    // Jika masih null, coba dengan path absolut
+                                                    if (!$photoUrl) {
+                                                        $storagePath = storage_path('app/public/' . $freshGuru->foto);
+                                                        if (file_exists($storagePath)) {
+                                                            $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time();
+                                                        }
+                                                    }
+                                                    
+                                                    $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+                                                }
+                                            @endphp
+                                            <div class="position-relative d-inline-block" style="width: 150px; height: 150px;">
+                                                <img id="photoPreview" src="{{ $hasPhoto ? $photoUrl : '' }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative; z-index: 1;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
+                                                <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%; position: absolute; top: 0; left: 0; z-index: 0;">
+=======
                                                 if ($freshGuru && !empty($freshGuru->foto)) {
                                                     // OTOMATIS cari foto dengan berbagai kemungkinan path
                                                     $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
@@ -169,14 +199,20 @@
                                                 <div id="photoPlaceholder" 
                                                      class="bg-light d-inline-flex align-items-center justify-content-center" 
                                                      style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid #2E7D32; position: absolute; top: 0; left: 0; z-index: 1; {{ $hasPhoto && $photoUrl ? 'display: none;' : 'display: flex;' }} background: #f8f9fa;">
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                                                     <i class="fas fa-user fa-3x text-muted"></i>
                                                 </div>
                                                 
                                                 <!-- Checkmark indicator -->
+<<<<<<< HEAD
+                                                <div id="photoCheckmark" class="position-absolute d-none" style="bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); border-radius: 50%; width: 32px; height: 32px; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
+                                                    <i class="fas fa-check text-white" style="font-size: 18px; font-weight: bold;"></i>
+=======
                                                 <div id="photoCheckmark" 
                                                      class="position-absolute d-flex align-items-center justify-content-center" 
                                                      style="bottom: 5px; right: 5px; background: rgba(40, 167, 69, 0.9); border-radius: 50%; width: 36px; height: 36px; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 3px solid white; {{ $hasPhoto && $photoUrl ? 'display: flex;' : 'display: none;' }}">
                                                     <i class="fas fa-check text-white" style="font-size: 16px; font-weight: bold;"></i>
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                                                 </div>
                                             </div>
                                         </div>
@@ -262,10 +298,41 @@
         console.log('previewPhoto called', input.files);
         
         if (input.files && input.files[0]) {
+            // Validasi ukuran file (maksimal 2MB)
+            const file = input.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2MB dalam bytes
+            
+            if (file.size > maxSize) {
+                alert('Ukuran file terlalu besar! Maksimal 2MB.');
+                input.value = ''; // Reset input
+                return;
+            }
+            
+            // Validasi tipe file
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert('Format file tidak valid! Hanya JPG, PNG, dan GIF yang diizinkan.');
+                input.value = ''; // Reset input
+                return;
+            }
+            
             const reader = new FileReader();
             const checkmark = document.getElementById('photoCheckmark');
             const preview = document.getElementById('photoPreview');
             const placeholder = document.getElementById('photoPlaceholder');
+<<<<<<< HEAD
+            
+            reader.onload = function(e) {
+                if (preview && placeholder) {
+                    // Set preview image
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                    preview.style.display = 'block';
+                    
+                    // Hide placeholder
+                    placeholder.classList.add('d-none');
+                    placeholder.style.display = 'none';
+=======
             
             // Validate file type
             const file = input.files[0];
@@ -291,6 +358,7 @@
                     preview.src = e.target.result;
                     preview.style.display = 'block';
                     preview.style.zIndex = '2';
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                     
                     // Hide placeholder
                     placeholder.style.display = 'none';
@@ -308,12 +376,21 @@
                 }
             };
             
+<<<<<<< HEAD
+            reader.onerror = function() {
+                alert('Error membaca file! Silakan coba lagi.');
+                input.value = ''; // Reset input
+            };
+            
+            reader.readAsDataURL(file);
+=======
             reader.onerror = function(e) {
                 console.error('FileReader error', e);
                 alert('Gagal membaca file. Silakan coba lagi.');
             };
             
             reader.readAsDataURL(input.files[0]);
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
         } else {
             console.log('No file selected');
             // Hide checkmark if no file selected
@@ -331,6 +408,29 @@
         
         if (preview && checkmark) {
             // Check if preview is visible and has a valid image
+<<<<<<< HEAD
+            const hasValidImage = !preview.classList.contains('d-none') && 
+                                 preview.src && 
+                                 preview.src !== '' && 
+                                 preview.src !== '#' && 
+                                 preview.src !== window.location.href &&
+                                 !preview.src.includes('data:image/svg+xml');
+            
+            if (hasValidImage) {
+                // Wait for image to load
+                preview.onload = function() {
+                    checkmark.classList.remove('d-none');
+                    checkmark.classList.add('d-flex');
+                    checkmark.style.display = 'flex';
+                };
+                
+                // If image fails to load, hide checkmark
+                preview.onerror = function() {
+                    checkmark.classList.add('d-none');
+                    checkmark.classList.remove('d-flex');
+                    checkmark.style.display = 'none';
+                };
+=======
             const hasValidImage = preview.src && 
                                  preview.src !== '' && 
                                  preview.src !== '#' && 
@@ -342,6 +442,7 @@
                 console.log('Existing photo found, checkmark shown');
             } else {
                 console.log('No existing photo');
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
             }
         }
     });

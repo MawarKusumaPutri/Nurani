@@ -130,6 +130,56 @@
                             </div>
                             <div class="card-body text-center">
                                 @php
+<<<<<<< HEAD
+                                    // SELALU ambil data fresh dari database untuk memastikan foto terbaru
+                                    $freshUser = \App\Models\User::find($user->id);
+                                    $photoPath = $freshUser->photo ?? null;
+                                    $photoUrl = null;
+                                    $hasPhoto = false;
+                                    
+                                    if ($photoPath) {
+                                        // OTOMATIS cari foto dengan default path yang benar
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'profiles/kepala_sekolah');
+                                        
+                                        // Jika masih null, coba dengan path lain
+                                        if (!$photoUrl) {
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'image/profiles');
+                                        }
+                                        
+                                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
+                                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath)) {
+                                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        }
+                                        
+                                        // Jika masih null, coba dengan path absolut
+                                        if (!$photoUrl) {
+                                            $storagePath = storage_path('app/public/' . $photoPath);
+                                            if (file_exists($storagePath)) {
+                                                $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            }
+                                        }
+                                        
+                                        // Jika masih null, coba langsung dengan path dari database
+                                        if (!$photoUrl) {
+                                            // Coba berbagai kemungkinan path
+                                            $possiblePaths = [
+                                                'storage/' . $photoPath,
+                                                'storage/profiles/kepala_sekolah/' . basename($photoPath),
+                                                'storage/image/profiles/' . basename($photoPath),
+                                                $photoPath
+                                            ];
+                                            
+                                            foreach ($possiblePaths as $possiblePath) {
+                                                $fullPath = public_path($possiblePath);
+                                                if (file_exists($fullPath)) {
+                                                    $photoUrl = asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        
+                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '';
+=======
                                     // Refresh user data dari database untuk memastikan data terbaru
                                     $freshUser = \App\Models\User::find($user->id);
                                     $photoUrl = null;
@@ -176,11 +226,26 @@
                                         }
                                         
                                         $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                                     }
                                 @endphp
                                 
                                 @if($hasPhoto && $photoUrl)
                                     <div class="position-relative d-inline-block mb-3">
+<<<<<<< HEAD
+                                        <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-main-ks" class="img-thumbnail" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-main-ks').style.display='flex';" onload="console.log('Foto berhasil dimuat:', this.src);">
+                                        <div id="profile-placeholder-main-ks" class="profile-circle d-none" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; display: none; align-items: center; justify-content: center;">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="profile-circle mb-3 d-inline-flex align-items-center justify-content-center" style="width: 200px; height: 200px; font-size: 72px; border: 3px solid #2E7D32;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <p class="text-muted">Foto profil belum diatur</p>
+                                    @if($photoPath)
+                                        <p class="text-danger small">Path: {{ $photoPath }}</p>
+=======
                                         <img src="{{ $photoUrl }}" alt="Foto Profil" 
                                              id="profile-photo-img"
                                              class="img-thumbnail" 
@@ -202,6 +267,7 @@
                                             Foto ada di database ({{ $freshUser->photo }}) tapi tidak dapat dimuat. 
                                             Silakan coba upload ulang.
                                         </small>
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                                     @endif
                                 @endif
                                 <a href="{{ route('kepala_sekolah.profile.edit') }}" class="btn btn-sm btn-primary mt-2">

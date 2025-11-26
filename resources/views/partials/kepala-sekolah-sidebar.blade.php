@@ -29,6 +29,34 @@
                             $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
                         }
                         
+<<<<<<< HEAD
+                        // Jika masih null, coba dengan path absolut
+                        if (!$photoUrl) {
+                            $storagePath = storage_path('app/public/' . $freshUser->photo);
+                            if (file_exists($storagePath)) {
+                                $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            }
+                        }
+                        
+                        // Jika masih null, coba langsung dengan path dari database
+                        if (!$photoUrl) {
+                            // Coba berbagai kemungkinan path
+                            $possiblePaths = [
+                                'storage/' . $freshUser->photo,
+                                'storage/profiles/kepala_sekolah/' . basename($freshUser->photo),
+                                'storage/image/profiles/' . basename($freshUser->photo),
+                                $freshUser->photo
+                            ];
+                            
+                            foreach ($possiblePaths as $possiblePath) {
+                                $fullPath = public_path($possiblePath);
+                                if (file_exists($fullPath)) {
+                                    $photoUrl = asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    break;
+                                }
+                            }
+                        }
+=======
                         // Method 4: Cek dengan basename di folder profiles/kepala_sekolah
                         if (!$photoUrl) {
                             $basename = basename($freshUser->photo);
@@ -55,6 +83,7 @@
                         }
                         
                         $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
+>>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                     }
                 }
             @endphp
