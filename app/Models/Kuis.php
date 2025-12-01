@@ -17,6 +17,7 @@ class Kuis extends Model
         'mata_pelajaran',
         'tipe_kuis',
         'video_url',
+        'link_kuis',
         'video_title',
         'video_thumbnail',
         'video_soal',

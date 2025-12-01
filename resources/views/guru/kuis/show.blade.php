@@ -270,6 +270,21 @@
                                     <h6>Durasi:</h6>
                                     <p class="mb-0">{{ $kuis->durasi_menit }} menit</p>
                                 </div>
+
+                                @if($kuis->link_kuis)
+                                    <div class="mb-3">
+                                        <h6>Link Kuis Eksternal:</h6>
+                                        <p class="mb-2">
+                                            <a href="{{ $kuis->link_kuis }}" target="_blank" rel="noopener noreferrer">
+                                                {{ $kuis->link_kuis }}
+                                            </a>
+                                        </p>
+                                        <a href="{{ $kuis->link_kuis }}" target="_blank" rel="noopener noreferrer"
+                                           class="btn btn-sm btn-outline-primary w-100">
+                                            <i class="fas fa-external-link-alt me-1"></i>Buka Kuis di Tab Baru
+                                        </a>
+                                    </div>
+                                @endif
                                 
                                 <div class="mb-3">
                                     <h6>Status:</h6>

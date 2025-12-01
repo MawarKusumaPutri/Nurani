@@ -138,6 +138,7 @@
                                                     <th>Jam Keluar</th>
                                                     <th>Status Verifikasi</th>
                                                     <th>Keterangan</th>
+                                                    <th>Tugas Pengganti</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
@@ -188,6 +189,23 @@
                                                         </td>
                                                         <td>{{ $presensi->keterangan ?? '-' }}</td>
                                                         <td>
+                                                            @if($presensi->tugas_kelas_7 || $presensi->tugas_kelas_8 || $presensi->tugas_kelas_9)
+                                                                <ul class="mb-0 ps-3">
+                                                                    @if($presensi->tugas_kelas_7)
+                                                                        <li><strong>Kelas 7:</strong> {{ $presensi->tugas_kelas_7 }}</li>
+                                                                    @endif
+                                                                    @if($presensi->tugas_kelas_8)
+                                                                        <li><strong>Kelas 8:</strong> {{ $presensi->tugas_kelas_8 }}</li>
+                                                                    @endif
+                                                                    @if($presensi->tugas_kelas_9)
+                                                                        <li><strong>Kelas 9:</strong> {{ $presensi->tugas_kelas_9 }}</li>
+                                                                    @endif
+                                                                </ul>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
                                                             @if($presensi->status_verifikasi === 'pending')
                                                                 <form action="{{ route('tu.presensi.verify', $presensi->id) }}" method="POST" class="d-inline">
                                                                     @csrf
@@ -217,7 +235,7 @@
                                                     @endforeach
                                                 @else
                                                     <tr>
-                                                        <td colspan="9" class="text-center text-muted">Belum ada data presensi</td>
+                                                        <td colspan="10" class="text-center text-muted">Belum ada data presensi</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -452,6 +470,7 @@
                                                     <th>Tanggal Selesai</th>
                                                     <th>Durasi</th>
                                                     <th>Alasan</th>
+                                                    <th>Tugas Pengganti</th>
                                                     <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
@@ -472,6 +491,23 @@
                                                         <td>{{ $izin->tanggal->format('d/m/Y') }}</td>
                                                         <td>1 hari</td>
                                                         <td>{{ $izin->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            @if($izin->tugas_kelas_7 || $izin->tugas_kelas_8 || $izin->tugas_kelas_9)
+                                                                <ul class="mb-0 ps-3">
+                                                                    @if($izin->tugas_kelas_7)
+                                                                        <li><strong>Kelas 7:</strong> {{ $izin->tugas_kelas_7 }}</li>
+                                                                    @endif
+                                                                    @if($izin->tugas_kelas_8)
+                                                                        <li><strong>Kelas 8:</strong> {{ $izin->tugas_kelas_8 }}</li>
+                                                                    @endif
+                                                                    @if($izin->tugas_kelas_9)
+                                                                        <li><strong>Kelas 9:</strong> {{ $izin->tugas_kelas_9 }}</li>
+                                                                    @endif
+                                                                </ul>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($izin->status_verifikasi === 'pending')
                                                                 <span class="badge bg-warning">Menunggu</span>
@@ -507,7 +543,7 @@
                                                     @endforeach
                                                 @else
                                                     <tr>
-                                                        <td colspan="9" class="text-center text-muted">Belum ada data izin</td>
+                                                        <td colspan="10" class="text-center text-muted">Belum ada data izin</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -587,6 +623,7 @@
                                                     <th>Tanggal Selesai</th>
                                                     <th>Durasi</th>
                                                     <th>Diagnosa</th>
+                                                    <th>Tugas Pengganti</th>
                                                     <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
@@ -606,6 +643,23 @@
                                                         <td>{{ $sakit->tanggal->format('d/m/Y') }}</td>
                                                         <td>1 hari</td>
                                                         <td>{{ $sakit->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            @if($sakit->tugas_kelas_7 || $sakit->tugas_kelas_8 || $sakit->tugas_kelas_9)
+                                                                <ul class="mb-0 ps-3">
+                                                                    @if($sakit->tugas_kelas_7)
+                                                                        <li><strong>Kelas 7:</strong> {{ $sakit->tugas_kelas_7 }}</li>
+                                                                    @endif
+                                                                    @if($sakit->tugas_kelas_8)
+                                                                        <li><strong>Kelas 8:</strong> {{ $sakit->tugas_kelas_8 }}</li>
+                                                                    @endif
+                                                                    @if($sakit->tugas_kelas_9)
+                                                                        <li><strong>Kelas 9:</strong> {{ $sakit->tugas_kelas_9 }}</li>
+                                                                    @endif
+                                                                </ul>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($sakit->status_verifikasi === 'pending')
                                                                 <span class="badge bg-warning">Menunggu</span>
@@ -641,7 +695,7 @@
                                                     @endforeach
                                                 @else
                                                     <tr>
-                                                        <td colspan="8" class="text-center text-muted">Belum ada data sakit</td>
+                                                        <td colspan="9" class="text-center text-muted">Belum ada data sakit</td>
                                                     </tr>
                                                 @endif
                                             </tbody>

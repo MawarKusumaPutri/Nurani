@@ -209,6 +209,20 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="link_kuis" class="form-label">Link Kuis (Quizizz, Kahoot, dll)</label>
+                                                <input type="url" class="form-control @error('link_kuis') is-invalid @enderror"
+                                                       id="link_kuis" name="link_kuis" value="{{ old('link_kuis') }}"
+                                                       placeholder="https://quizizz.com/..., https://kahoot.it/..., dsb">
+                                                <div class="form-text">
+                                                    Opsional. Jika diisi, siswa akan diarahkan ke link ini saat mengerjakan kuis.
+                                                </div>
+                                                @error('link_kuis')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="row">

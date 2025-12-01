@@ -65,6 +65,7 @@ class KuisController extends Controller
             'hari_dibuat' => 'required|string|max:20',
             'waktu_dibuat' => 'required|date_format:H:i',
             'zona_waktu' => 'required|string|max:10',
+            'link_kuis' => 'nullable|url|max:255',
             'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
             'esai_petunjuk' => 'nullable|string',
             'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
@@ -91,6 +92,7 @@ class KuisController extends Controller
             'hari_dibuat' => $request->hari_dibuat,
             'waktu_dibuat' => $request->waktu_dibuat,
             'zona_waktu' => $request->zona_waktu,
+            'link_kuis' => $request->link_kuis,
             'is_active' => true
         ];
 
@@ -164,6 +166,7 @@ class KuisController extends Controller
             'mata_pelajaran' => 'required|string|max:255',
             'tipe_kuis' => 'required|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
+            'link_kuis' => 'nullable|url|max:255',
             'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
             'esai_petunjuk' => 'nullable|string',
             'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
@@ -182,7 +185,8 @@ class KuisController extends Controller
             'kelas' => $request->kelas,
             'mata_pelajaran' => $request->mata_pelajaran,
             'tipe_kuis' => $request->tipe_kuis,
-            'durasi_menit' => $request->durasi
+            'durasi_menit' => $request->durasi,
+            'link_kuis' => $request->link_kuis,
         ];
 
         if ($request->tipe_kuis === 'video') {

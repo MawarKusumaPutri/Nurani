@@ -192,6 +192,14 @@
                                                 {{ $item->created_at->format('d M Y') }}
                                             </small>
                                         </div>
+                                        @if($item->link_kuis)
+                                            <div class="mt-2">
+                                                <a href="{{ $item->link_kuis }}" target="_blank" rel="noopener noreferrer"
+                                                   class="btn btn-sm btn-outline-primary w-100">
+                                                    <i class="fas fa-external-link-alt me-1"></i>Buka Link Kuis
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="card-footer bg-transparent">
                                         <div class="d-flex gap-2">

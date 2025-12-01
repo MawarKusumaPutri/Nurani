@@ -151,10 +151,27 @@
                     </div>
                 @endif
 
-                @if(session('error'))
+            @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>
                         {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                            <div>
+                                <strong>Periksa kembali formulir presensi:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
@@ -188,12 +205,15 @@
                     <div class="card-body">
                         <form action="{{ route('guru.presensi.store') }}" method="POST" id="presensiForm">
                             @csrf
+                            @php
+                                $defaultJenis = old('jenis', 'hadir');
+                            @endphp
                             
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Tanggal <span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal" class="form-control" 
-                                           value="{{ date('Y-m-d') }}" 
+                                           value="{{ old('tanggal', date('Y-m-d')) }}" 
                                            max="{{ date('Y-m-d') }}" 
                                            id="tanggalPresensi"
                                            required>
@@ -214,7 +234,7 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-check-circle fa-3x text-success mb-2"></i>
                                                 <h6>Hadir</h6>
-                                                <input type="radio" name="jenis" value="hadir" id="jenis-hadir" class="d-none" checked>
+                                                <input type="radio" name="jenis" value="hadir" id="jenis-hadir" class="d-none" {{ $defaultJenis === 'hadir' ? 'checked' : '' }}>
                                             </div>
                                         </div>
                                     </div>
@@ -223,7 +243,7 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-user-injured fa-3x text-danger mb-2"></i>
                                                 <h6>Sakit</h6>
-                                                <input type="radio" name="jenis" value="sakit" id="jenis-sakit" class="d-none">
+                                                <input type="radio" name="jenis" value="sakit" id="jenis-sakit" class="d-none" {{ $defaultJenis === 'sakit' ? 'checked' : '' }}>
                                             </div>
                                         </div>
                                     </div>
@@ -232,7 +252,7 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-file-alt fa-3x text-warning mb-2"></i>
                                                 <h6>Izin</h6>
-                                                <input type="radio" name="jenis" value="izin" id="jenis-izin" class="d-none">
+                                                <input type="radio" name="jenis" value="izin" id="jenis-izin" class="d-none" {{ $defaultJenis === 'izin' ? 'checked' : '' }}>
                                             </div>
                                         </div>
                                     </div>
@@ -244,7 +264,7 @@
                                     <label class="form-label">Jam Masuk <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="time" name="jam_masuk" class="form-control" 
-                                               id="jam_masuk" required>
+                                               id="jam_masuk" value="{{ old('jam_masuk') }}" required>
                                         <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_masuk')" title="Gunakan waktu saat ini">
                                             <i class="fas fa-clock"></i> Sekarang
                                         </button>
@@ -259,7 +279,7 @@
                                     <label class="form-label">Jam Keluar</label>
                                     <div class="input-group">
                                         <input type="time" name="jam_keluar" class="form-control" 
-                                               id="jam_keluar">
+                                               id="jam_keluar" value="{{ old('jam_keluar') }}">
                                         <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_keluar')" title="Gunakan waktu saat ini">
                                             <i class="fas fa-clock"></i> Sekarang
                                         </button>
@@ -273,7 +293,60 @@
                             <div id="keterangan-section" class="mb-3" style="display: none;">
                                 <label class="form-label">Keterangan <span class="text-danger">*</span></label>
                                 <textarea name="keterangan" class="form-control" rows="3" 
-                                          placeholder="Masukkan alasan izin..." id="keterangan"></textarea>
+                                          placeholder="Masukkan alasan izin..." id="keterangan">{{ old('keterangan') }}</textarea>
+                            </div>
+
+                            <div id="tugas-section" class="mb-4" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <label class="form-label mb-1">
+                                            Tugas Pengganti Untuk Siswa <span class="text-danger">*</span>
+                                        </label>
+                                        <p class="text-muted mb-2" id="tugas-hint">
+                                            Isi instruksi tugas minimal untuk salah satu kelas (7, 8, atau 9) ketika guru memilih presensi sakit atau izin.
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-book me-1"></i> Wajib saat sakit/izin
+                                    </span>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-light">
+                                                <strong>Kelas 7</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas_7" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Kerjakan LKS hal. 15-20 dan rangkum materi bab 2.">{{ old('tugas_kelas_7') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-light">
+                                                <strong>Kelas 8</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas_8" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Buat catatan materi baru dan kerjakan latihan 3.">{{ old('tugas_kelas_8') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-light">
+                                                <strong>Kelas 9</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas_9" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Selesaikan paket ujian bab 4 dan kumpulkan besok.">{{ old('tugas_kelas_9') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @error('tugas_kelas_7')
+                                    <div class="text-danger small mt-2">
+                                        <i class="fas fa-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
                             <div class="d-flex gap-2">
@@ -319,6 +392,22 @@
                             <i class="fas fa-info-circle me-1"></i>Anda masih bisa menambah presensi untuk tanggal lain menggunakan tombol "Tambah Presensi" di atas.
                         </small>
                     </div>
+                    @if(in_array($todayPresensi->jenis, ['sakit', 'izin']) && ($todayPresensi->tugas_kelas_7 || $todayPresensi->tugas_kelas_8 || $todayPresensi->tugas_kelas_9))
+                        <div class="mt-3">
+                            <strong>Tugas Pengganti:</strong>
+                            <ul class="mb-0">
+                                @if($todayPresensi->tugas_kelas_7)
+                                    <li>Kelas 7: {{ $todayPresensi->tugas_kelas_7 }}</li>
+                                @endif
+                                @if($todayPresensi->tugas_kelas_8)
+                                    <li>Kelas 8: {{ $todayPresensi->tugas_kelas_8 }}</li>
+                                @endif
+                                @if($todayPresensi->tugas_kelas_9)
+                                    <li>Kelas 9: {{ $todayPresensi->tugas_kelas_9 }}</li>
+                                @endif
+                            </ul>
+                        </div>
+                    @endif
                 </div>
                 @endif
 
@@ -343,6 +432,7 @@
                                         <th>Jam Masuk</th>
                                         <th>Jam Keluar</th>
                                         <th>Keterangan</th>
+                                        <th>Tugas Pengganti</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -374,6 +464,23 @@
                                         <td>{{ $p->jam_keluar ? date('H:i', strtotime($p->jam_keluar)) : '-' }}</td>
                                         <td>{{ $p->keterangan ?? '-' }}</td>
                                         <td>
+                                            @if($p->tugas_kelas_7 || $p->tugas_kelas_8 || $p->tugas_kelas_9)
+                                                <ul class="mb-0 ps-3">
+                                                    @if($p->tugas_kelas_7)
+                                                        <li><strong>Kelas 7:</strong> {{ $p->tugas_kelas_7 }}</li>
+                                                    @endif
+                                                    @if($p->tugas_kelas_8)
+                                                        <li><strong>Kelas 8:</strong> {{ $p->tugas_kelas_8 }}</li>
+                                                    @endif
+                                                    @if($p->tugas_kelas_9)
+                                                        <li><strong>Kelas 9:</strong> {{ $p->tugas_kelas_9 }}</li>
+                                                    @endif
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                        <td>
                                             @if($p->status_verifikasi === 'pending')
                                                 <span class="badge badge-pending text-white">Menunggu</span>
                                             @elseif($p->status_verifikasi === 'approved')
@@ -398,6 +505,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const defaultPresensiType = @json(old('jenis', 'hadir'));
+        const formHasErrors = @json($errors->any());
+
         function selectPresensiType(type) {
             // Remove active class from all cards
             document.querySelectorAll('.presensi-type-card').forEach(card => {
@@ -418,6 +528,8 @@
             const keteranganSection = document.getElementById('keterangan-section');
             const jamMasuk = document.getElementById('jam_masuk');
             const keterangan = document.getElementById('keterangan');
+            const tugasSection = document.getElementById('tugas-section');
+            const tugasHint = document.getElementById('tugas-hint');
             
             if (type === 'hadir') {
                 jamSection.style.display = 'block';
@@ -428,26 +540,43 @@
                 if (!jamMasuk.value) {
                     setCurrentTime('jam_masuk');
                 }
+                if (tugasSection) {
+                    tugasSection.style.display = 'none';
+                }
+                if (tugasHint) {
+                    tugasHint.classList.add('text-muted');
+                }
             } else if (type === 'izin') {
                 jamSection.style.display = 'none';
                 keteranganSection.style.display = 'block';
                 jamMasuk.required = false;
                 keterangan.required = true;
+                if (tugasSection) {
+                    tugasSection.style.display = 'block';
+                }
             } else { // sakit
                 jamSection.style.display = 'block';
                 keteranganSection.style.display = 'none';
                 jamMasuk.required = true;
                 keterangan.required = false;
                 // Auto-fill jam masuk saat pilih sakit agar TU tahu kapan mulai sakit
-                setCurrentTime('jam_masuk');
+                if (!jamMasuk.value) {
+                    setCurrentTime('jam_masuk');
+                }
                 // Update info text
                 document.getElementById('jamMasukInfo').style.display = 'none';
                 document.getElementById('jamMasukSakitInfo').style.display = 'inline';
+                if (tugasSection) {
+                    tugasSection.style.display = 'block';
+                }
             }
             
             // Reset info text for hadir
             if (type === 'hadir') {
                 document.getElementById('jamMasukInfo').style.display = 'inline';
+                document.getElementById('jamMasukSakitInfo').style.display = 'none';
+            } else if (type === 'izin') {
+                document.getElementById('jamMasukInfo').style.display = 'none';
                 document.getElementById('jamMasukSakitInfo').style.display = 'none';
             }
         }
@@ -506,6 +635,7 @@
                 
                 // Reset form
                 document.getElementById('presensiForm').reset();
+                document.querySelectorAll('.tugas-textarea').forEach(textarea => textarea.value = '');
                 
                 // Set tanggal default to today
                 document.getElementById('tanggalPresensi').value = '{{ date('Y-m-d') }}';
@@ -535,8 +665,18 @@
                 }
             }
             
-            // Set hadir as default active
-            selectPresensiType('hadir');
+            // Jika ada error validasi, tampilkan form otomatis
+            const formCard = document.getElementById('presensiFormCard');
+            const btnTambah = document.getElementById('btnTambahPresensi');
+            if (formHasErrors && formCard && btnTambah) {
+                formCard.style.display = 'block';
+                btnTambah.innerHTML = '<i class="fas fa-times me-2"></i>Tutup Form';
+                btnTambah.classList.remove('btn-success');
+                btnTambah.classList.add('btn-secondary');
+            }
+            
+            // Set jenis default sesuai input terakhir
+            selectPresensiType(defaultPresensiType || 'hadir');
         });
 
         // Auto-refresh status every 10 seconds if there's pending presensi

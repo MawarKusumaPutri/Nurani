@@ -18,7 +18,10 @@ class Presensi extends Model
         'keterangan',
         'status_verifikasi',
         'verified_by',
-        'verified_at'
+        'verified_at',
+        'tugas_kelas_7',
+        'tugas_kelas_8',
+        'tugas_kelas_9',
     ];
 
     protected $casts = [

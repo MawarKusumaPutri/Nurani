@@ -47,12 +47,15 @@ class PresensiController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'jenis' => 'required|in:hadir,sakit,izin',
             'tanggal' => 'required|date',
             'jam_masuk' => 'required_if:jenis,hadir|required_if:jenis,sakit|nullable|date_format:H:i',
             'jam_keluar' => 'nullable|date_format:H:i|after:jam_masuk',
             'keterangan' => 'required_if:jenis,izin|nullable|string|max:500',
+            'tugas_kelas_7' => 'nullable|string|max:1000',
+            'tugas_kelas_8' => 'nullable|string|max:1000',
+            'tugas_kelas_9' => 'nullable|string|max:1000',
         ], [
             'jenis.required' => 'Jenis presensi harus dipilih',
             'jenis.in' => 'Jenis presensi tidak valid',
@@ -63,7 +66,26 @@ class PresensiController extends Controller
             'jam_keluar.after' => 'Jam keluar harus setelah jam masuk',
             'keterangan.required_if' => 'Keterangan harus diisi untuk izin',
             'keterangan.max' => 'Keterangan maksimal 500 karakter',
+            'tugas_kelas_7.max' => 'Instruksi untuk kelas 7 maksimal 1000 karakter',
+            'tugas_kelas_8.max' => 'Instruksi untuk kelas 8 maksimal 1000 karakter',
+            'tugas_kelas_9.max' => 'Instruksi untuk kelas 9 maksimal 1000 karakter',
         ]);
+
+        $tugasKelas7 = trim((string) $request->input('tugas_kelas_7'));
+        $tugasKelas8 = trim((string) $request->input('tugas_kelas_8'));
+        $tugasKelas9 = trim((string) $request->input('tugas_kelas_9'));
+
+        if (in_array($request->jenis, ['sakit', 'izin'], true)) {
+            if ($tugasKelas7 === '' && $tugasKelas8 === '' && $tugasKelas9 === '') {
+                return redirect()->route('guru.presensi.index')
+                    ->withInput()
+                    ->withErrors([
+                        'tugas_kelas_7' => 'Minimal isi satu instruksi tugas untuk kelas 7, 8, atau 9 saat guru tidak hadir.',
+                    ]);
+            }
+        } else {
+            $tugasKelas7 = $tugasKelas8 = $tugasKelas9 = null;
+        }
 
         // Check if already presensi on this date
         $existingPresensi = Presensi::where('guru_id', $guru->id)
@@ -84,6 +106,9 @@ class PresensiController extends Controller
             'jam_masuk' => ($request->jenis === 'hadir' || $request->jenis === 'sakit') ? $request->jam_masuk : null,
             'jam_keluar' => $request->jam_keluar ?? null,
             'keterangan' => $request->keterangan,
+            'tugas_kelas_7' => $tugasKelas7 ?: null,
+            'tugas_kelas_8' => $tugasKelas8 ?: null,
+            'tugas_kelas_9' => $tugasKelas9 ?: null,
             'status_verifikasi' => 'pending',
         ]);
 
