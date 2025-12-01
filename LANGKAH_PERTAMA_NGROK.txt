@@ -1,0 +1,96 @@
+═══════════════════════════════════════════════════════════
+  LANGKAH PERTAMA: DAFTAR NGROK (Paling Penting!)
+═══════════════════════════════════════════════════════════
+
+🎯 JAWABAN SINGKAT:
+   → DAFTAR DULU, baru download!
+
+═══════════════════════════════════════════════════════════
+  URUTAN YANG BENAR
+═══════════════════════════════════════════════════════════
+
+1. ✅ DAFTAR NGROK (Paling pertama!)
+   → Untuk dapat authtoken
+   → Tanpa authtoken, ngrok tidak bisa jalan
+
+2. ✅ DOWNLOAD NGROK (Setelah daftar)
+   → Untuk dapat file ngrok.exe
+   → Bisa download dari dashboard setelah daftar
+
+3. ✅ SETUP AUTHTOKEN (Setelah download)
+   → Pakai authtoken dari langkah 1
+   → Untuk konfigurasi ngrok
+
+═══════════════════════════════════════════════════════════
+  LANGKAH 1: DAFTAR NGROK (WAJIB DULU!)
+═══════════════════════════════════════════════════════════
+
+1. Buka browser
+2. Kunjungi: https://ngrok.com
+3. Klik "Sign up" atau "Get started for free"
+4. Daftar dengan:
+   - Email, atau
+   - GitHub (lebih cepat, tidak perlu verifikasi)
+5. Login ke dashboard ngrok
+6. CATAT AUTHTOKEN Anda (akan muncul di dashboard)
+
+Authtoken terlihat seperti:
+   2abc123def456ghi789jkl012mno345pqr678stu901vwx234yz
+
+⚠️  PENTING: Simpan authtoken ini!
+   Akan dipakai untuk setup ngrok nanti.
+
+═══════════════════════════════════════════════════════════
+  LANGKAH 2: DOWNLOAD NGROK (Setelah Daftar)
+═══════════════════════════════════════════════════════════
+
+1. Di dashboard ngrok (setelah login)
+2. Klik "Download"
+3. Pilih "Windows"
+4. Download ngrok.zip
+5. Extract ngrok.exe
+6. Simpan ngrok.exe di folder project:
+   D:\Praktikum DWBI\xampp\htdocs\nurani\ngrok.exe
+
+═══════════════════════════════════════════════════════════
+  LANGKAH 3: SETUP AUTHTOKEN (Pakai Script)
+═══════════════════════════════════════════════════════════
+
+1. Double-click: SETUP_NGROK_LENGKAP.bat
+2. Script akan meminta authtoken
+3. Paste authtoken dari langkah 1
+4. Tekan Enter
+5. Selesai! Authtoken tersimpan
+
+═══════════════════════════════════════════════════════════
+  KENAPA HARUS DAFTAR DULU?
+═══════════════════════════════════════════════════════════
+
+❌ Jika download dulu tanpa daftar:
+   - Ngrok bisa didownload
+   - Tapi TIDAK BISA JALAN tanpa authtoken
+   - Harus daftar dulu untuk dapat authtoken
+
+✅ Jika daftar dulu:
+   - Dapat authtoken (wajib untuk setup)
+   - Bisa download ngrok.exe
+   - Bisa setup dan jalankan ngrok
+   - Semua berfungsi dengan baik!
+
+═══════════════════════════════════════════════════════════
+  RINGKASAN
+═══════════════════════════════════════════════════════════
+
+URUTAN YANG BENAR:
+   1. Daftar Ngrok → dapat authtoken
+   2. Download ngrok.exe → dapat file
+   3. Setup authtoken → konfigurasi
+   4. Jalankan ngrok → dapat URL publik
+   5. Akses dari device lain ✅
+
+JAWABAN UNTUK PERTANYAAN ANDA:
+   → DAFTAR DULU, baru download!
+   → Keduanya perlu, tapi daftar dulu yang penting!
+
+═══════════════════════════════════════════════════════════
+

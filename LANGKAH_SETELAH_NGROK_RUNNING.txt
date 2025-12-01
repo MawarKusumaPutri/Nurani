@@ -1,0 +1,62 @@
+═══════════════════════════════════════════════════════════
+  LANGKAH SETELAH NGROK RUNNING (TERLIHAT DI TASK MANAGER)
+═══════════════════════════════════════════════════════════
+
+✅ KONFIRMASI:
+
+   Ngrok sudah running! (Terlihat di Task Manager)
+   → Proses: "n The ngrok agent gets you onli..." (ngrok.exe)
+   → Status: Running
+   → Memory: 4.8 MB
+
+═══════════════════════════════════════════════════════════
+  LANGKAH SELANJUTNYA
+═══════════════════════════════════════════════════════════
+
+Karena jendela console tidak muncul, gunakan Web Interface
+Ngrok untuk melihat URL!
+
+LANGKAH 1: BUKA WEB INTERFACE NGROK
+   1. Buka browser (Chrome, Edge, Firefox)
+   2. Ketik di address bar:
+      http://127.0.0.1:4040
+      Atau: http://localhost:4040
+   3. Tekan Enter
+
+   Akan muncul halaman web ngrok!
+
+LANGKAH 2: LIHAT URL DI WEB INTERFACE
+   Di halaman web ngrok:
+   → Cari bagian "Forwarding"
+   → Akan terlihat seperti:
+     Forwarding
+     https://abc-def-123.ngrok-free.app → http://localhost:80
+   → Copy URL (bagian kiri, sebelum →)
+   → Contoh: https://abc-def-123.ngrok-free.app
+
+LANGKAH 3: TAMBAHKAN /nurani/public
+   Setelah copy URL:
+   → Tambahkan /nurani/public di AKHIR
+   → Contoh:
+     - URL ngrok: https://abc-def-123.ngrok-free.app
+     - URL lengkap: https://abc-def-123.ngrok-free.app/nurani/public
+
+LANGKAH 4: TEST DI BROWSER
+   Buka browser:
+   1. Ketik URL lengkap di address bar
+   2. Tekan Enter
+   3. Website muncul? ✅
+
+═══════════════════════════════════════════════════════════
+  RINGKASAN
+═══════════════════════════════════════════════════════════
+
+✅ Ngrok sudah running (terlihat di Task Manager)
+✅ Buka Web Interface Ngrok: http://127.0.0.1:4040
+✅ Lihat URL di halaman web (bagian "Forwarding")
+✅ Copy URL dan tambahkan /nurani/public
+
+Selesai! ✅
+
+═══════════════════════════════════════════════════════════
+

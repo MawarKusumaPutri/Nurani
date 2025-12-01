@@ -1,152 +1,49 @@
-============================================
-CARA PAKAI SISTEM OTOMATIS FOTO PROFIL
-============================================
+═══════════════════════════════════════════════════════════════
+  SETUP IP ADDRESS - FULL OTOMATIS!
+═══════════════════════════════════════════════════════════════
 
-KEUNGGULAN SISTEM BARU:
------------------------
-✓ OTOMATIS menyimpan path yang benar saat upload
-✓ OTOMATIS mencari file berdasarkan nama (fleksibel)
-✓ Tidak perlu update manual di database
-✓ Mendukung berbagai format path
-✓ Foto lama akan tetap muncul (otomatis dicari)
+🚀 CARA PALING MUDAH (TIDAK PERLU KLIK MANUAL):
 
+1. Double-click: SETUP_IP_OTOMATIS_ADMIN.bat
+2. Jika muncul pop-up UAC, klik "Yes"
+3. Script akan otomatis:
+   ✅ Mencari IP address saat ini
+   ✅ Mencari Subnet Mask dan Gateway
+   ✅ Setup static IP address
+4. Selesai! ✅
 
-============================================
-CARA PAKAI:
-============================================
+═══════════════════════════════════════════════════════════════
 
-LANGKAH 1: Jalankan Script Perbaikan
--------------------------------------
-1. Double-click: FIX_OTOMATIS_FOTO_PROFIL.bat
-2. Tunggu sampai selesai
-3. Script akan:
-   - Memperbarui PhotoHelper (otomatis cari file)
-   - Memperbarui Controller (otomatis simpan path)
-   - Membuat ulang storage symlink
-   - Clear cache
+📋 ATAU:
 
+1. Klik kanan pada: SETUP_IP_OTOMATIS_ADMIN.bat
+2. Pilih "Run as administrator"
+3. Klik "Yes" jika muncul UAC
+4. Script akan otomatis setup
+5. Selesai! ✅
 
-LANGKAH 2: Restart Apache
---------------------------
-1. Buka XAMPP Control Panel
-2. STOP Apache
-3. TUNGGU 10 DETIK
-4. START Apache
-5. Pastikan status Running (hijau)
+═══════════════════════════════════════════════════════════════
 
+💡 YANG PERLU ANDA LAKUKAN:
 
-LANGKAH 3: Upload Foto Profil (OTOMATIS)
-------------------------------------------
-1. Login sebagai Guru/TU/Kepala Sekolah
-2. Buka Edit Profil
-3. Pilih foto (Format: JPG, PNG, GIF, Maksimal 2MB)
-4. Klik Simpan
-5. Path akan disimpan OTOMATIS dengan benar
-6. TIDAK PERLU UPDATE MANUAL DI DATABASE!
+✅ Double-click script
+✅ Klik "Yes" jika muncul pop-up UAC
+✅ Selesai!
 
+❌ TIDAK PERLU:
+   - Klik kanan di jendela
+   - Pilih Properties
+   - Klik 2x TCP/IPv4
+   - Isi form manual
+   - DLL
 
-LANGKAH 4: Hard Refresh Browser
---------------------------------
-1. Tekan Ctrl + F5
-2. Foto akan muncul OTOMATIS
+═══════════════════════════════════════════════════════════════
 
+🎯 HASIL:
 
-============================================
-BAGI FOTO LAMA YANG SUDAH ADA:
-============================================
+✅ IP address sudah static
+✅ Tidak akan berubah lagi
+✅ Tidak perlu setting manual
+✅ Langsung bisa dipakai!
 
-Sistem akan OTOMATIS mencari file berdasarkan nama:
-- Tidak peduli format path di database
-- Cari di semua kemungkinan lokasi:
-  * profiles/tu/[nama-file]
-  * profiles/guru/[nama-file]
-  * profiles/kepala_sekolah/[nama-file]
-  * photos/[nama-file]
-  * guru/foto/[nama-file]
-  * image/profiles/[nama-file]
-
-Jadi foto lama akan tetap muncul OTOMATIS!
-
-
-============================================
-CONTOH:
-============================================
-
-CONTOH 1: Upload Foto Baru
----------------------------
-1. Login sebagai TU
-2. Edit Profil → Pilih foto → Simpan
-3. Path otomatis disimpan: profiles/tu/1234567890_abc123_foto.jpg
-4. Foto langsung muncul (tidak perlu update database)
-
-
-CONTOH 2: Foto Lama dengan Path Berbeda
-----------------------------------------
-Path di database: photos/1234567890_abc123_foto.jpg (format lama)
-File ada di: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
-
-Sistem akan OTOMATIS:
-1. Ambil nama file: 1234567890_abc123_foto.jpg
-2. Cari di semua lokasi
-3. Temukan di: profiles/tu/1234567890_abc123_foto.jpg
-4. Tampilkan foto (OTOMATIS!)
-
-
-CONTOH 3: Path Hanya Nama File
---------------------------------
-Path di database: 1234567890_abc123_foto.jpg (hanya nama file)
-File ada di: storage/app/public/profiles/tu/1234567890_abc123_foto.jpg
-
-Sistem akan OTOMATIS:
-1. Ambil nama file: 1234567890_abc123_foto.jpg
-2. Cari di semua lokasi
-3. Temukan di: profiles/tu/1234567890_abc123_foto.jpg
-4. Tampilkan foto (OTOMATIS!)
-
-
-============================================
-TIDAK PERLU LAGI:
-============================================
-
-❌ Update manual di database
-❌ Tentukan nama file manual
-❌ Edit path di database
-❌ Khawatir format path berbeda
-
-Sekarang SEMUA OTOMATIS!
-
-
-============================================
-JIKA MASIH TIDAK MUNCUL:
-============================================
-
-1. Pastikan file foto ada di folder:
-   - storage/app/public/profiles/tu/ (untuk TU)
-   - storage/app/public/profiles/guru/ (untuk Guru)
-   - storage/app/public/profiles/kepala_sekolah/ (untuk Kepala Sekolah)
-
-2. Pastikan storage symlink ada:
-   - Jalankan: php artisan storage:link
-
-3. Hard refresh browser: Ctrl + F5
-
-4. Cek console browser (F12) untuk error
-
-5. Test akses foto langsung:
-   - http://localhost/nurani/public/storage/profiles/tu/[nama-file]
-
-
-============================================
-KESIMPULAN:
-============================================
-
-Sistem sekarang OTOMATIS:
-✓ Upload foto → Path disimpan otomatis
-✓ Tampilkan foto → Otomatis cari file berdasarkan nama
-✓ Tidak perlu update manual di database
-✓ Foto lama tetap muncul (otomatis dicari)
-
-TIDAK PERLU LAGI UPDATE MANUAL!
-
-============================================
-
+═══════════════════════════════════════════════════════════════

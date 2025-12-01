@@ -1,0 +1,73 @@
+═══════════════════════════════════════════════════════════
+  PILIHAN ONBOARDING NGROK - YANG TEPAT UNTUK ANDA
+═══════════════════════════════════════════════════════════
+
+🎯 PERTANYAAN ANDA:
+   "Ini pilih yang mana ya??"
+
+✅ JAWABAN SINGKAT:
+   → Pilih "Sharing local apps without deploying"
+   → Lalu klik "Continue"
+
+═══════════════════════════════════════════════════════════
+  PILIHAN YANG TEPAT
+═══════════════════════════════════════════════════════════
+
+PERTANYAAN 1: "How would you describe yourself?"
+   ✅ Software Engineer (Development)
+      → SUDAH BENAR! Biarkan seperti itu.
+
+PERTANYAAN 2: "What are you interested in using ngrok for?"
+   ✅ Sharing local apps without deploying
+      → PILIH INI! Ini yang paling cocok untuk Anda.
+
+   Kenapa pilih ini?
+   → Anda ingin share aplikasi Laravel lokal ke device lain
+   → Tidak perlu deploy ke hosting
+   → Cocok untuk testing/demo
+   → Tepat dengan kebutuhan Anda
+
+PERTANYAAN 3: "Are you using ngrok for"
+   ✅ Development
+      → SUDAH BENAR! Biarkan seperti itu.
+
+═══════════════════════════════════════════════════════════
+  LANGKAH SETELAH PILIH
+═══════════════════════════════════════════════════════════
+
+1. ✅ Pilih "Sharing local apps without deploying"
+   (pertanyaan 2)
+
+2. ✅ Pastikan "Development" terpilih
+   (pertanyaan 3)
+
+3. ✅ Klik "Continue" (tombol biru di kanan bawah)
+
+4. ✅ Lanjut ke dashboard untuk cari authtoken dan download ngrok
+
+═══════════════════════════════════════════════════════════
+  RINGKASAN
+═══════════════════════════════════════════════════════════
+
+| Pertanyaan | Pilihan yang Tepat |
+|------------|-------------------|
+| How would you describe yourself? | Software Engineer ✅ |
+| What are you interested in using ngrok for? | Sharing local apps without deploying ✅ |
+| Are you using ngrok for | Development ✅ |
+
+═══════════════════════════════════════════════════════════
+  CATATAN
+═══════════════════════════════════════════════════════════
+
+→ Pilihan ini hanya untuk onboarding (sekali saja)
+→ Tidak mempengaruhi fungsi ngrok
+→ Bisa diubah nanti di settings jika perlu
+→ Yang penting adalah dapat authtoken dan download ngrok
+
+═══════════════════════════════════════════════════════════
+
+Intinya: Pilih "Sharing local apps without deploying"
+lalu klik "Continue"!
+
+═══════════════════════════════════════════════════════════
+

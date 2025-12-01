@@ -1,0 +1,46 @@
+═══════════════════════════════════════════════════════════════
+  CARA PALING MUDAH - TIDAK BINGUNG LAGI!
+═══════════════════════════════════════════════════════════════
+
+🚀 CARA PALING MUDAH (PAKAI SCRIPT):
+
+1. Double-click: SETUP_IP_INTERAKTIF.bat
+2. Ikuti instruksi di layar (satu per satu)
+3. Selesai!
+
+═══════════════════════════════════════════════════════════════
+
+📋 ATAU MANUAL (3 LANGKAH SAJA):
+
+LANGKAH 1: Buka Jendela
+────────────────────────
+Windows + R → ketik: ncpa.cpl → Enter
+
+LANGKAH 2: Klik Kanan
+─────────────────────
+Di jendela yang terbuka:
+→ Lihat bagian KIRI
+→ Cari "Wi-Fi" (ada ikon 📶)
+→ Klik KANAN pada "Wi-Fi"
+→ Pilih "Properties"
+
+LANGKAH 3: Setup IP
+───────────────────
+→ Klik 2x "Internet Protocol Version 4"
+→ Pilih "Use the following IP address"
+→ Isi 3 kolom:
+   • IP address: 192.168.1.13
+   • Subnet mask: 255.255.255.0
+   • Default gateway: 192.168.1.1
+→ OK → OK
+
+═══════════════════════════════════════════════════════════════
+
+💡 YANG PERLU DIINGAT:
+
+✅ Klik KANAN pada "Wi-Fi" (bukan kiri)
+✅ Klik 2x "Internet Protocol Version 4" (bukan Version 6)
+✅ Pilih "Use the following IP address" (bukan "Obtain automatically")
+
+═══════════════════════════════════════════════════════════════
+

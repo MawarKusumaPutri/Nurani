@@ -1,0 +1,112 @@
+═══════════════════════════════════════════════════════════
+  CARA PAKAI NGROK - WIFI TIDAK BISA SAMA (marina345)
+═══════════════════════════════════════════════════════════
+
+🎯 MASALAH ANDA:
+   - WiFi device ini: "marina345"
+   - Device lain tidak bisa pakai WiFi yang sama
+   - Perlu solusi agar device lain bisa akses
+
+✅ SOLUSI: Pakai Ngrok (GRATIS)
+   - Aplikasi tetap di laptop ini
+   - Ngrok membuat "terowongan" ke internet
+   - Device lain akses via internet (WiFi/data mereka sendiri)
+   - TIDAK PERLU WiFi sama!
+
+═══════════════════════════════════════════════════════════
+  LANGKAH SETUP (Sekali Saja)
+═══════════════════════════════════════════════════════════
+
+LANGKAH 1: DAFTAR NGROK (GRATIS)
+   1. Buka browser → https://ngrok.com
+   2. Klik "Sign up" (gratis)
+   3. Daftar dengan email
+   4. Login ke dashboard
+
+LANGKAH 2: DOWNLOAD NGROK
+   1. Di dashboard, klik "Download"
+   2. Pilih "Windows"
+   3. Download ngrok.zip
+   4. Extract ngrok.exe
+   5. Simpan ngrok.exe di folder project ini:
+      D:\Praktikum DWBI\xampp\htdocs\nurani\ngrok.exe
+
+LANGKAH 3: SETUP AUTHTOKEN (Sekali Saja)
+   1. Di dashboard ngrok, copy authtoken Anda
+   2. Double-click: SETUP_NGROK_LENGKAP.bat
+   3. Script akan meminta authtoken
+   4. Paste authtoken → Enter
+   5. Selesai! Authtoken tersimpan
+
+═══════════════════════════════════════════════════════════
+  CARA PAKAI (Setiap Kali)
+═══════════════════════════════════════════════════════════
+
+LANGKAH 1: JALANKAN NGROK
+   1. Pastikan Apache Running di XAMPP (hijau)
+   2. Double-click: SETUP_NGROK_LENGKAP.bat
+   3. Script akan otomatis jalankan ngrok
+   4. Akan muncul jendela ngrok baru
+
+LANGKAH 2: CATAT URL NGROK
+   1. Lihat jendela ngrok yang baru terbuka
+   2. Cari baris "Forwarding" → ada URL seperti:
+      https://abc123.ngrok.io
+   3. CATAT URL tersebut!
+   4. JANGAN TUTUP jendela ngrok
+
+LANGKAH 3: AKSES DARI DEVICE LAIN
+   1. Device lain (smartphone/laptop) harus terhubung internet
+      (WiFi/data mereka sendiri, TIDAK perlu WiFi sama!)
+   2. Buka browser
+   3. Ketik URL ngrok + /nurani/public
+      Contoh: https://abc123.ngrok.io/nurani/public
+   4. Tekan Enter
+   5. Website akan muncul! ✅
+
+═══════════════════════════════════════════════════════════
+  CONTOH AKSES
+═══════════════════════════════════════════════════════════
+
+Jika URL ngrok: https://abc123.ngrok.io
+Maka akses: https://abc123.ngrok.io/nurani/public
+
+═══════════════════════════════════════════════════════════
+  CATATAN PENTING
+═══════════════════════════════════════════════════════════
+
+⚠️  URL ngrok akan berubah setiap restart
+    (kecuali pakai plan berbayar)
+
+⚠️  JANGAN TUTUP jendela ngrok saat device lain akses
+    Jika ngrok mati, URL tidak bisa diakses
+
+⚠️  Semua device harus terhubung ke internet
+    - Laptop ini: WiFi marina345 (terhubung internet)
+    - Device lain: WiFi/data mereka sendiri (terhubung internet)
+    - TIDAK perlu WiFi sama!
+
+═══════════════════════════════════════════════════════════
+  TIPS
+═══════════════════════════════════════════════════════════
+
+1. Simpan URL Ngrok
+   - Setelah ngrok running, screenshot URL
+   - Share ke device lain (WhatsApp, email, dll)
+   - Akan memudahkan akses
+
+2. Bookmark di Device Lain
+   - Setelah berhasil akses, bookmark URL di browser
+   - Akan memudahkan akses berikutnya
+
+3. Untuk Production
+   - Jika butuh URL tetap, pertimbangkan hosting online
+   - Atau upgrade ngrok ke plan berbayar
+
+═══════════════════════════════════════════════════════════
+
+Dengan Ngrok, device lain bisa akses aplikasi tanpa perlu
+WiFi yang sama! Semua device cukup terhubung ke internet.
+
+═══════════════════════════════════════════════════════════
+

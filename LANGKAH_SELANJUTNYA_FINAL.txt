@@ -1,0 +1,83 @@
+═══════════════════════════════════════════════════════════════
+  LANGKAH SELANJUTNYA: AGAR BISA RUN DI DEVICE LAIN
+═══════════════════════════════════════════════════════════════
+
+✅ YANG SUDAH SELESAI:
+   ✅ Static IP sudah setup (jika sudah dijalankan)
+   ✅ Firewall sudah setup (jika sudah dijalankan)
+   ✅ UAC Settings sudah diaktifkan
+
+═══════════════════════════════════════════════════════════════
+
+🚀 LANGKAH FINAL (URUT!):
+
+LANGKAH 1: Cek Semua
+─────────────────────
+1. Double-click: CEK_SEMUA_SEKALIGUS.bat
+2. Pastikan semua ✅ (hijau)
+3. Jika masih ada ❌, jalankan: PERBAIKI_SEMUA_OTOMATIS.bat
+
+LANGKAH 2: Catat IP Address
+────────────────────────────
+Dari hasil Langkah 1, catat IP address Anda
+Contoh: 192.168.1.13
+Simpan di notes/phone
+
+LANGKAH 3: Pastikan Apache Running
+───────────────────────────────────
+1. Buka XAMPP Control Panel
+2. Lihat Apache
+3. Pastikan status: Running (hijau)
+4. Jika tidak, klik "Start"
+
+LANGKAH 4: Pastikan WiFi Sama
+──────────────────────────────
+Di Laptop Server: Lihat nama WiFi (contoh: "marina345")
+Di Device Lain: Pastikan WiFi SAMA dengan laptop server
+⚠️  PENTING: Semua device harus dalam WiFi yang sama!
+
+LANGKAH 5: Test dari Device Lain
+─────────────────────────────────
+Dari Smartphone/Laptop Lain:
+1. Pastikan WiFi sama
+2. Buka browser
+3. Ketik: http://[IP_ADDRESS]/nurani/public
+   (Ganti [IP_ADDRESS] dengan IP dari Langkah 2)
+4. Tekan Enter
+5. Jika website muncul → BERHASIL! ✅
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CARA PALING CEPAT:
+
+1. Double-click: TEST_DARI_DEVICE_LAIN.bat
+2. Ikuti panduan di layar
+3. Test dari device lain
+4. Selesai! ✅
+
+═══════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+✅ Catat IP address setelah Langkah 1
+✅ Apache harus selalu Running saat pakai
+✅ Semua device harus dalam WiFi yang sama
+✅ Bookmark URL di browser device lain
+
+═══════════════════════════════════════════════════════════════
+
+🔧 JIKA ERROR:
+
+"This site can't be reached"
+→ Pastikan Apache Running
+→ Pastikan WiFi sama
+→ Jalankan: SETUP_FIREWALL_OTOMATIS.bat
+
+"Connection timeout"
+→ Jalankan: SETUP_FIREWALL_OTOMATIS.bat
+
+"403 Forbidden"
+→ Restart Apache di XAMPP
+
+═══════════════════════════════════════════════════════════════
+

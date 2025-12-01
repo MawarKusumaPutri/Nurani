@@ -1,0 +1,59 @@
+═══════════════════════════════════════════════════════════════
+  CARA PAKAI SETUP_FIREWALL_OTOMATIS.bat
+═══════════════════════════════════════════════════════════════
+
+🚀 CARA PALING MUDAH:
+
+1. Double-click: SETUP_FIREWALL_OTOMATIS.bat
+2. Akan muncul pop-up "User Account Control" (UAC)
+3. Klik "Yes" di pop-up tersebut
+4. Script akan otomatis setup firewall
+5. Selesai! ✅
+
+═══════════════════════════════════════════════════════════════
+
+📍 LOKASI POP-UP "YES":
+
+Setelah double-click script, akan muncul pop-up di tengah layar:
+
+┌─────────────────────────────────────┐
+│  User Account Control               │
+├─────────────────────────────────────┤
+│                                     │
+│  Do you want to allow this app to   │
+│  make changes to your device?       │
+│                                     │
+│  [Yes]  [No]                        │ ← KLIK "YES" DI SINI!
+│                                     │
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ JIKA TIDAK MUNCUL POP-UP:
+
+Cara 1 (Manual):
+1. Klik kanan pada: SETUP_FIREWALL_OTOMATIS.bat
+2. Pilih "Run as administrator"
+3. Klik "Yes" jika muncul pop-up
+4. Script akan jalan
+
+Cara 2 (Cek UAC Settings):
+1. Tekan Windows + R
+2. Ketik: msconfig
+3. Tekan Enter
+4. Tab "Tools" → "Change UAC settings" → "Launch"
+5. Pastikan slider tidak di "Never notify"
+6. OK → Restart jika perlu
+
+═══════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+✅ Pop-up biasanya muncul di tengah layar
+✅ Warna pop-up biasanya biru atau abu-abu
+✅ Ada tulisan "User Account Control" di atas
+✅ Ada tombol "Yes" dan "No" di bawah
+✅ Klik "Yes" untuk lanjut
+
+═══════════════════════════════════════════════════════════════
+

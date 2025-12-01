@@ -1,0 +1,69 @@
+═══════════════════════════════════════════════════════════════
+  LANGKAH SELANJUTNYA - AGAR BISA DIPAKAI DI DEVICE LAIN
+═══════════════════════════════════════════════════════════════
+
+✅ YANG SUDAH SELESAI:
+   ✅ UAC Settings sudah diaktifkan
+   ✅ Pop-up "Yes" sekarang akan muncul
+
+═══════════════════════════════════════════════════════════════
+
+🚀 LANGKAH SELANJUTNYA (URUT!):
+
+LANGKAH 1: Setup Static IP
+───────────────────────────
+1. Double-click: SETUP_IP_OTOMATIS_ADMIN.bat
+2. Klik "Yes" jika muncul pop-up
+3. ✅ Selesai!
+4. Catat IP address yang muncul (contoh: 192.168.1.13)
+
+LANGKAH 2: Setup Firewall
+──────────────────────────
+1. Double-click: SETUP_FIREWALL_OTOMATIS.bat
+2. Klik "Yes" jika muncul pop-up
+3. ✅ Selesai!
+
+LANGKAH 3: Pastikan Apache Running
+───────────────────────────────────
+1. Buka XAMPP Control Panel
+2. Lihat Apache
+3. Pastikan status: Running (hijau)
+4. Jika tidak, klik "Start"
+5. ✅ Selesai!
+
+LANGKAH 4: Cek Semua
+─────────────────────
+1. Double-click: CEK_SEMUA_SEKALIGUS.bat
+2. Pastikan semua ✅ (hijau)
+3. ✅ Selesai!
+
+LANGKAH 5: Test dari Device Lain
+─────────────────────────────────
+1. Pastikan device lain dalam WiFi yang sama
+2. Buka browser
+3. Ketik: http://[IP_ADDRESS]/nurani/public
+   (Ganti [IP_ADDRESS] dengan IP dari Langkah 1)
+4. Tekan Enter
+5. ✅ Website muncul = BERHASIL!
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CARA PALING CEPAT (SEMUA SEKALIGUS):
+
+1. Double-click: SETUP_SEMUA_SEKALIGUS.bat
+2. Klik "Yes" untuk setiap pop-up yang muncul
+3. Pastikan Apache Running (jika belum)
+4. Test dari device lain
+5. ✅ Selesai!
+
+═══════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+✅ Catat IP address setelah Langkah 1
+✅ Pastikan semua device dalam WiFi yang sama
+✅ Apache harus selalu Running saat pakai
+✅ Jika ada error, jalankan CEK_SEMUA_SEKALIGUS.bat
+
+═══════════════════════════════════════════════════════════════
+

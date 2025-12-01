@@ -1,0 +1,68 @@
+═══════════════════════════════════════════════════════════════
+  URUTAN KLIK YANG BENAR - STEP BY STEP
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  JENDELA "NETWORK CONNECTIONS" (sudah terbuka)              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  [Toolbar dengan tombol-tombol]                            │
+│                                                             │
+│  ┌─────────────────┐                                       │
+│  │ 📶 Wi-Fi        │  ← KLIK KANAN DI SINI! (LANGKAH 1)   │
+│  │    marina345    │                                       │
+│  │    Intel(...)   │                                       │
+│  └─────────────────┘                                       │
+│                                                             │
+│  [No preview available]                                     │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+        (Menu pop-up muncul)
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Menu Pop-up:                                               │
+│  ┌─────────────────────────────┐                           │
+│  │ Connect/Disconnect           │                           │
+│  │ Status                       │                           │
+│  │ Properties          ← KLIK INI! (LANGKAH 2)            │
+│  │ Diagnose                     │                           │
+│  │ Rename                       │                           │
+│  │ Delete                       │                           │
+│  └─────────────────────────────┘                           │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│  JENDELA "Wi-Fi Properties"                                 │
+├─────────────────────────────────────────────────────────────┤
+│  [Tab: Networking] [Tab: Sharing]                          │
+│                                                             │
+│  ☑ Client for Microsoft Networks                           │
+│  ☑ File and Printer Sharing                                │
+│  ☑ Internet Protocol Version 4 (TCP/IPv4)                  │
+│                              ↑                              │
+│                    KLIK 2 KALI DI SINI! (LANGKAH 3)         │
+│  ☑ Internet Protocol Version 6 (TCP/IPv6)                  │
+│                                                             │
+│  [OK] [Cancel]                                              │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│  JENDELA "Internet Protocol Version 4 Properties"           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ○ Obtain an IP address automatically                       │
+│  ● Use the following IP address  ← PILIH INI! (LANGKAH 4) │
+│                                                             │
+│  IP address:      [192.168.1.13  ]  ← ISI INI (LANGKAH 5) │
+│  Subnet mask:     [255.255.255.0 ]  ← ISI INI (LANGKAH 5) │
+│  Default gateway: [192.168.1.1   ]  ← ISI INI (LANGKAH 5) │
+│                                                             │
+│  [OK] [Cancel]                                              │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+                    Klik OK → OK
+                        ↓
+                    SELESAI! ✅
+
+═══════════════════════════════════════════════════════════════
+
