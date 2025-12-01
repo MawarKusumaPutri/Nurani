@@ -79,9 +79,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-envelope"></i> Daftar Surat Menyurat
-                                </h5>
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-envelope"></i> Daftar Surat Menyurat
+                            </h5>
                                 @if($surats->count() > 0)
                                 <!-- Pagination Controls - Moved to Top -->
                                 <div class="d-flex gap-2 align-items-center">

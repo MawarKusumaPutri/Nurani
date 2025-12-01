@@ -74,7 +74,8 @@ class KuisController extends Controller
             'soal.*.pilihan_b' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_c' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_d' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
-            'soal.*.jawaban_benar' => 'required_if:tipe_kuis,pilihan_ganda|nullable|in:A,B,C,D'
+            'soal.*.jawaban_benar' => 'required_if:tipe_kuis,pilihan_ganda|nullable|in:A,B,C,D',
+            'external_quiz_url' => 'nullable|url|max:500',
         ]);
 
         // Prepare data based on quiz type
@@ -92,7 +93,11 @@ class KuisController extends Controller
             'hari_dibuat' => $request->hari_dibuat,
             'waktu_dibuat' => $request->waktu_dibuat,
             'zona_waktu' => $request->zona_waktu,
+<<<<<<< HEAD
             'link_kuis' => $request->link_kuis,
+=======
+            'external_quiz_url' => $request->external_quiz_url,
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
             'is_active' => true
         ];
 
@@ -175,7 +180,8 @@ class KuisController extends Controller
             'soal.*.pilihan_b' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_c' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_d' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
-            'soal.*.jawaban_benar' => 'required_if:tipe_kuis,pilihan_ganda|nullable|in:A,B,C,D'
+            'soal.*.jawaban_benar' => 'required_if:tipe_kuis,pilihan_ganda|nullable|in:A,B,C,D',
+            'external_quiz_url' => 'nullable|url|max:500',
         ]);
 
         // Prepare data based on quiz type
@@ -186,7 +192,11 @@ class KuisController extends Controller
             'mata_pelajaran' => $request->mata_pelajaran,
             'tipe_kuis' => $request->tipe_kuis,
             'durasi_menit' => $request->durasi,
+<<<<<<< HEAD
             'link_kuis' => $request->link_kuis,
+=======
+            'external_quiz_url' => $request->external_quiz_url,
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
         ];
 
         if ($request->tipe_kuis === 'video') {

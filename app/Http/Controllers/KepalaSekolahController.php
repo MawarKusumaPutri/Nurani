@@ -707,7 +707,7 @@ class KepalaSekolahController extends Controller
                     
                     // Hanya simpan ke database jika file benar-benar ada
                     if ($fileExists || $fileExistsOnDisk) {
-                        $user->photo = $photoPath;
+                    $user->photo = $photoPath;
                         \Log::info('Photo path saved to database', [
                             'user_id' => $user->id,
                             'photo_path' => $photoPath
@@ -737,7 +737,7 @@ class KepalaSekolahController extends Controller
                         
                         // Hanya simpan ke database jika file benar-benar ada
                         if ($fileExists) {
-                            $user->photo = $photoPath;
+                        $user->photo = $photoPath;
                             \Log::info('Photo path saved to database (public)', [
                                 'user_id' => $user->id,
                                 'photo_path' => $photoPath

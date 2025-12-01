@@ -211,6 +211,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
+<<<<<<< HEAD
                                                 <label for="link_kuis" class="form-label">Link Kuis (Quizizz, Kahoot, dll)</label>
                                                 <input type="url" class="form-control @error('link_kuis') is-invalid @enderror"
                                                        id="link_kuis" name="link_kuis" value="{{ old('link_kuis') }}"
@@ -219,6 +220,22 @@
                                                     Opsional. Jika diisi, siswa akan diarahkan ke link ini saat mengerjakan kuis.
                                                 </div>
                                                 @error('link_kuis')
+=======
+                                                <label for="external_quiz_url" class="form-label">
+                                                    Link Kuis Eksternal (Quizizz, Kahoot, Google Form, dll)
+                                                </label>
+                                                <input type="url"
+                                                       class="form-control @error('external_quiz_url') is-invalid @enderror"
+                                                       id="external_quiz_url"
+                                                       name="external_quiz_url"
+                                                       value="{{ old('external_quiz_url') }}"
+                                                       placeholder="https://quizizz.com/..., https://kahoot.it/..., atau link kuis lainnya">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-info-circle me-1"></i>
+                                                    Opsional. Jika diisi, siswa dapat langsung diarahkan ke link kuis ini.
+                                                </small>
+                                                @error('external_quiz_url')
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                                     <div class="text-danger small">{{ $message }}</div>
                                                 @enderror
                                             </div>

@@ -21,6 +21,7 @@ class Kuis extends Model
         'video_title',
         'video_thumbnail',
         'video_soal',
+        'external_quiz_url',
         'soal',
         'esai_soal',
         'esai_petunjuk',

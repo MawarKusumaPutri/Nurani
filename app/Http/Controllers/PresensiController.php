@@ -53,9 +53,15 @@ class PresensiController extends Controller
             'jam_masuk' => 'required_if:jenis,hadir|required_if:jenis,sakit|nullable|date_format:H:i',
             'jam_keluar' => 'nullable|date_format:H:i|after:jam_masuk',
             'keterangan' => 'required_if:jenis,izin|nullable|string|max:500',
+<<<<<<< HEAD
             'tugas_kelas_7' => 'nullable|string|max:1000',
             'tugas_kelas_8' => 'nullable|string|max:1000',
             'tugas_kelas_9' => 'nullable|string|max:1000',
+=======
+            'tugas_kelas7' => 'nullable|string|max:500',
+            'tugas_kelas8' => 'nullable|string|max:500',
+            'tugas_kelas9' => 'nullable|string|max:500',
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
         ], [
             'jenis.required' => 'Jenis presensi harus dipilih',
             'jenis.in' => 'Jenis presensi tidak valid',
@@ -66,6 +72,7 @@ class PresensiController extends Controller
             'jam_keluar.after' => 'Jam keluar harus setelah jam masuk',
             'keterangan.required_if' => 'Keterangan harus diisi untuk izin',
             'keterangan.max' => 'Keterangan maksimal 500 karakter',
+<<<<<<< HEAD
             'tugas_kelas_7.max' => 'Instruksi untuk kelas 7 maksimal 1000 karakter',
             'tugas_kelas_8.max' => 'Instruksi untuk kelas 8 maksimal 1000 karakter',
             'tugas_kelas_9.max' => 'Instruksi untuk kelas 9 maksimal 1000 karakter',
@@ -85,6 +92,28 @@ class PresensiController extends Controller
             }
         } else {
             $tugasKelas7 = $tugasKelas8 = $tugasKelas9 = null;
+=======
+            'tugas_kelas7.max' => 'Instruksi tugas kelas 7 maksimal 500 karakter',
+            'tugas_kelas8.max' => 'Instruksi tugas kelas 8 maksimal 500 karakter',
+            'tugas_kelas9.max' => 'Instruksi tugas kelas 9 maksimal 500 karakter',
+        ]);
+
+        // Pastikan guru yang sakit/izin memberikan tugas minimal untuk satu kelas
+        if (in_array($request->jenis, ['sakit', 'izin'])) {
+            $tugasFilled = collect([
+                $request->tugas_kelas7,
+                $request->tugas_kelas8,
+                $request->tugas_kelas9,
+            ])->filter(fn ($value) => !empty(trim((string) $value)))->count();
+
+            if ($tugasFilled === 0) {
+                return back()
+                    ->withErrors([
+                        'tugas_kelas7' => 'Guru wajib memberikan tugas minimal untuk satu kelas ketika memilih presensi sakit atau izin.'
+                    ])
+                    ->withInput();
+            }
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
         }
 
         // Check if already presensi on this date
@@ -106,9 +135,15 @@ class PresensiController extends Controller
             'jam_masuk' => ($request->jenis === 'hadir' || $request->jenis === 'sakit') ? $request->jam_masuk : null,
             'jam_keluar' => $request->jam_keluar ?? null,
             'keterangan' => $request->keterangan,
+<<<<<<< HEAD
             'tugas_kelas_7' => $tugasKelas7 ?: null,
             'tugas_kelas_8' => $tugasKelas8 ?: null,
             'tugas_kelas_9' => $tugasKelas9 ?: null,
+=======
+            'tugas_kelas7' => $request->tugas_kelas7,
+            'tugas_kelas8' => $request->tugas_kelas8,
+            'tugas_kelas9' => $request->tugas_kelas9,
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
             'status_verifikasi' => 'pending',
         ]);
 

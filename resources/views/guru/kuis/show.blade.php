@@ -271,6 +271,7 @@
                                     <p class="mb-0">{{ $kuis->durasi_menit }} menit</p>
                                 </div>
 
+<<<<<<< HEAD
                                 @if($kuis->link_kuis)
                                     <div class="mb-3">
                                         <h6>Link Kuis Eksternal:</h6>
@@ -283,6 +284,19 @@
                                            class="btn btn-sm btn-outline-primary w-100">
                                             <i class="fas fa-external-link-alt me-1"></i>Buka Kuis di Tab Baru
                                         </a>
+=======
+                                @if($kuis->external_quiz_url)
+                                    <div class="mb-3">
+                                        <h6>Link Kuis Eksternal:</h6>
+                                        <a href="{{ $kuis->external_quiz_url }}" target="_blank" rel="noopener"
+                                           class="btn btn-outline-success w-100 mb-2">
+                                            <i class="fas fa-external-link-alt me-2"></i>
+                                            Buka Link Kuis
+                                        </a>
+                                        <small class="text-muted d-block">
+                                            {{ \Illuminate\Support\Str::limit($kuis->external_quiz_url, 60) }}
+                                        </small>
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                     </div>
                                 @endif
                                 

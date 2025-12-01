@@ -45,8 +45,8 @@
                             if (file_exists($fullPath)) {
                                 $baseUrl = request()->getSchemeAndHttpHost();
                                 $photoUrl = $baseUrl . '/storage/' . $freshUser->photo . '?v=' . time() . '&r=' . rand(1000, 9999);
-                            }
                         }
+                    }
                         
                         // Method 6: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
                         if ($photoUrl && strpos($photoUrl, 'localhost') !== false) {

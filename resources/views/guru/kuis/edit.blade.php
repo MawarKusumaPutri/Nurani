@@ -251,6 +251,26 @@
                                                 <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="external_quiz_url" class="form-label">
+                                                    Link Kuis Eksternal (Quizizz, Kahoot, Google Form, dll)
+                                                </label>
+                                                <input type="url"
+                                                       class="form-control @error('external_quiz_url') is-invalid @enderror"
+                                                       id="external_quiz_url"
+                                                       name="external_quiz_url"
+                                                       value="{{ old('external_quiz_url', $kuis->external_quiz_url) }}"
+                                                       placeholder="https://quizizz.com/..., https://kahoot.it/..., atau link kuis lainnya">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-info-circle me-1"></i>
+                                                    Opsional. Jika diisi, siswa dapat langsung diarahkan ke link kuis ini.
+                                                </small>
+                                                @error('external_quiz_url')
+                                                    <div class="text-danger small">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">

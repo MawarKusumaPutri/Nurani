@@ -81,9 +81,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-calendar"></i> Daftar Jadwal Pelajaran
-                                </h5>
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-calendar"></i> Daftar Jadwal Pelajaran
+                            </h5>
                                 @if(isset($jadwals) && $jadwals->count() > 0)
                                 <!-- Pagination Controls - Moved to Top -->
                                 <div class="d-flex gap-2 align-items-center">

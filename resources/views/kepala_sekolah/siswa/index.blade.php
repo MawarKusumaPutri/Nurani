@@ -60,43 +60,43 @@
                         <div class="card">
                             <div class="card-body">
                                 <form method="GET" action="{{ route('kepala_sekolah.siswa.index') }}" id="filterForm">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Kelas</label>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Kelas</label>
                                             <select class="form-select" name="kelas" id="kelasFilter" onchange="document.getElementById('filterForm').submit();">
-                                                <option value="">Semua Kelas</option>
+                                            <option value="">Semua Kelas</option>
                                                 <option value="7" {{ $selectedKelas == '7' ? 'selected' : '' }}>Kelas 7</option>
                                                 <option value="8" {{ $selectedKelas == '8' ? 'selected' : '' }}>Kelas 8</option>
                                                 <option value="9" {{ $selectedKelas == '9' ? 'selected' : '' }}>Kelas 9</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Status</label>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Status</label>
                                             <select class="form-select" name="status" id="statusFilter" onchange="document.getElementById('filterForm').submit();">
-                                                <option value="">Semua Status</option>
+                                            <option value="">Semua Status</option>
                                                 <option value="aktif" {{ $selectedStatus == 'aktif' ? 'selected' : '' }}>Aktif</option>
                                                 <option value="tidak_aktif" {{ $selectedStatus == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Cari Siswa</label>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Cari Siswa</label>
                                             <input type="text" class="form-control" name="search" id="searchInput" 
                                                    placeholder="Nama atau NIS" value="{{ $searchQuery ?? '' }}"
                                                    onkeyup="if(event.key === 'Enter') document.getElementById('filterForm').submit();">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">&nbsp;</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">&nbsp;</label>
                                             <div class="d-flex gap-2">
                                                 <button type="submit" class="btn btn-primary flex-fill">
-                                                    <i class="fas fa-search"></i> Filter
-                                                </button>
+                                            <i class="fas fa-search"></i> Filter
+                                        </button>
                                                 @if($selectedKelas || $selectedStatus || $searchQuery)
                                                 <a href="{{ route('kepala_sekolah.siswa.index') }}" class="btn btn-secondary" title="Reset Filter">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                                 @endif
-                                            </div>
-                                        </div>
+                                    </div>
+                                </div>
                                     </div>
                                 </form>
                             </div>

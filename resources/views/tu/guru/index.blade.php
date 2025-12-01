@@ -29,37 +29,37 @@
                     <div class="card">
                         <div class="card-body">
                             <form method="GET" action="{{ route('tu.guru.index') }}" id="filterForm">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="form-label">Mata Pelajaran</label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Mata Pelajaran</label>
                                         <select name="mata_pelajaran" class="form-select" id="mataPelajaranFilter" onchange="document.getElementById('filterForm').submit();">
-                                            <option value="">Semua Mata Pelajaran</option>
+                                        <option value="">Semua Mata Pelajaran</option>
                                             @foreach($mataPelajaranList as $mp)
                                                 <option value="{{ $mp }}" {{ $mataPelajaran == $mp ? 'selected' : '' }}>
                                                     {{ $mp }}
                                                 </option>
                                             @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Status</label>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Status</label>
                                         <select name="status" class="form-select" id="statusFilter" onchange="document.getElementById('filterForm').submit();">
-                                            <option value="">Semua Status</option>
+                                        <option value="">Semua Status</option>
                                             <option value="aktif" {{ $status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                                             <option value="tidak_aktif" {{ $status == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Cari Guru</label>
-                                        <input type="text" name="search" class="form-control" id="searchInput" placeholder="Nama atau NIP" value="{{ $search }}" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">&nbsp;</label>
-                                        <button type="submit" class="btn btn-primary d-block w-100">
-                                            <i class="fas fa-search"></i> Filter
-                                        </button>
-                                    </div>
+                                    </select>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Cari Guru</label>
+                                        <input type="text" name="search" class="form-control" id="searchInput" placeholder="Nama atau NIP" value="{{ $search }}" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                        <button type="submit" class="btn btn-primary d-block w-100">
+                                        <i class="fas fa-search"></i> Filter
+                                    </button>
+                                </div>
+                            </div>
                                 @if($mataPelajaran || $status || $search)
                                 <div class="row mt-3">
                                     <div class="col-md-12">
@@ -105,9 +105,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-chalkboard-teacher"></i> Daftar Guru
-                                </h5>
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chalkboard-teacher"></i> Daftar Guru
+                            </h5>
                                 @if($gurus->count() > 0)
                                 <!-- Pagination Controls - Moved to Top -->
                                 <div class="d-flex gap-2 align-items-center">

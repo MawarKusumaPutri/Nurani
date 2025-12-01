@@ -159,6 +159,7 @@
                     </div>
                 @endif
 
+<<<<<<< HEAD
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <div class="d-flex align-items-start">
@@ -172,6 +173,12 @@
                                 </ul>
                             </div>
                         </div>
+=======
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-triangle-exclamation me-2"></i>
+                        Terjadi kesalahan pada formulir. Mohon periksa kembali input Anda.
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
@@ -234,7 +241,11 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-check-circle fa-3x text-success mb-2"></i>
                                                 <h6>Hadir</h6>
+<<<<<<< HEAD
                                                 <input type="radio" name="jenis" value="hadir" id="jenis-hadir" class="d-none" {{ $defaultJenis === 'hadir' ? 'checked' : '' }}>
+=======
+                                                <input type="radio" name="jenis" value="hadir" id="jenis-hadir" class="d-none" {{ old('jenis', 'hadir') === 'hadir' ? 'checked' : '' }}>
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +254,11 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-user-injured fa-3x text-danger mb-2"></i>
                                                 <h6>Sakit</h6>
+<<<<<<< HEAD
                                                 <input type="radio" name="jenis" value="sakit" id="jenis-sakit" class="d-none" {{ $defaultJenis === 'sakit' ? 'checked' : '' }}>
+=======
+                                                <input type="radio" name="jenis" value="sakit" id="jenis-sakit" class="d-none" {{ old('jenis') === 'sakit' ? 'checked' : '' }}>
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
@@ -252,7 +267,11 @@
                                             <div class="card-body text-center">
                                                 <i class="fas fa-file-alt fa-3x text-warning mb-2"></i>
                                                 <h6>Izin</h6>
+<<<<<<< HEAD
                                                 <input type="radio" name="jenis" value="izin" id="jenis-izin" class="d-none" {{ $defaultJenis === 'izin' ? 'checked' : '' }}>
+=======
+                                                <input type="radio" name="jenis" value="izin" id="jenis-izin" class="d-none" {{ old('jenis') === 'izin' ? 'checked' : '' }}>
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
@@ -292,6 +311,7 @@
 
                             <div id="keterangan-section" class="mb-3" style="display: none;">
                                 <label class="form-label">Keterangan <span class="text-danger">*</span></label>
+<<<<<<< HEAD
                                 <textarea name="keterangan" class="form-control" rows="3" 
                                           placeholder="Masukkan alasan izin..." id="keterangan">{{ old('keterangan') }}</textarea>
                             </div>
@@ -318,35 +338,101 @@
                                             </div>
                                             <div class="card-body">
                                                 <textarea name="tugas_kelas_7" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Kerjakan LKS hal. 15-20 dan rangkum materi bab 2.">{{ old('tugas_kelas_7') }}</textarea>
+=======
+                <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror" rows="3" 
+                          placeholder="Masukkan alasan izin..." id="keterangan">{{ old('keterangan') }}</textarea>
+                                @error('keterangan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div id="tugas-section" class="mb-3" style="display: none;">
+                                <label class="form-label d-flex align-items-center">
+                                    Tugas Pengganti untuk Siswa <span class="text-danger ms-1">*</span>
+                                </label>
+                                <small class="text-muted d-block mb-3">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Ketika guru sakit atau izin, wajib memberikan instruksi tugas/LKS untuk kelas yang diajar (kelas 7, 8, dan/atau 9).
+                                    Minimal isi salah satu kelas agar siswa tetap memiliki kegiatan belajar.
+                                </small>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="card border-success shadow-sm">
+                                            <div class="card-header bg-success text-white py-2">
+                                                <strong>Kelas 7</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas7" id="tugas_kelas7" rows="3"
+                                                          class="form-control tugas-textarea @error('tugas_kelas7') is-invalid @enderror"
+                                                          placeholder="Contoh: Kerjakan LKS Tema 3 halaman 12-15 dan catat di buku tugas.">{{ old('tugas_kelas7') }}</textarea>
+                                                @error('tugas_kelas7')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
+<<<<<<< HEAD
                                         <div class="card h-100">
                                             <div class="card-header bg-light">
                                                 <strong>Kelas 8</strong>
                                             </div>
                                             <div class="card-body">
                                                 <textarea name="tugas_kelas_8" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Buat catatan materi baru dan kerjakan latihan 3.">{{ old('tugas_kelas_8') }}</textarea>
+=======
+                                        <div class="card border-success shadow-sm">
+                                            <div class="card-header bg-success text-white py-2">
+                                                <strong>Kelas 8</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas8" id="tugas_kelas8" rows="3"
+                                                          class="form-control tugas-textarea @error('tugas_kelas8') is-invalid @enderror"
+                                                          placeholder="Contoh: Lengkapi rangkuman materi Bab 2 kemudian upload di Classroom.">{{ old('tugas_kelas8') }}</textarea>
+                                                @error('tugas_kelas8')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
+<<<<<<< HEAD
                                         <div class="card h-100">
                                             <div class="card-header bg-light">
                                                 <strong>Kelas 9</strong>
                                             </div>
                                             <div class="card-body">
                                                 <textarea name="tugas_kelas_9" class="form-control tugas-textarea" rows="4" placeholder="Contoh: Selesaikan paket ujian bab 4 dan kumpulkan besok.">{{ old('tugas_kelas_9') }}</textarea>
+=======
+                                        <div class="card border-success shadow-sm">
+                                            <div class="card-header bg-success text-white py-2">
+                                                <strong>Kelas 9</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea name="tugas_kelas9" id="tugas_kelas9" rows="3"
+                                                          class="form-control tugas-textarea @error('tugas_kelas9') is-invalid @enderror"
+                                                          placeholder="Contoh: Latihan soal UTS paket B nomor 1-20, kumpulkan minggu depan.">{{ old('tugas_kelas9') }}</textarea>
+                                                @error('tugas_kelas9')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 @error('tugas_kelas_7')
                                     <div class="text-danger small mt-2">
                                         <i class="fas fa-exclamation-circle me-1"></i>{{ $message }}
                                     </div>
                                 @enderror
+=======
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-lightbulb me-1 text-warning"></i>
+                                    Kosongkan kelas yang tidak membutuhkan tugas. Sistem akan otomatis menyimpan kelas yang diisi saja.
+                                </small>
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                             </div>
 
                             <div class="d-flex gap-2">
@@ -462,7 +548,28 @@
                                             @endif
                                         </td>
                                         <td>{{ $p->jam_keluar ? date('H:i', strtotime($p->jam_keluar)) : '-' }}</td>
-                                        <td>{{ $p->keterangan ?? '-' }}</td>
+                                        <td>
+                                            {{ $p->keterangan ?? '-' }}
+                                            @php
+                                                $tugasList = collect([
+                                                    'Kelas 7' => $p->tugas_kelas7,
+                                                    'Kelas 8' => $p->tugas_kelas8,
+                                                    'Kelas 9' => $p->tugas_kelas9,
+                                                ])->filter(fn($value) => !empty($value));
+                                            @endphp
+                                            @if($tugasList->count() > 0)
+                                                <div class="mt-2">
+                                                    <span class="badge bg-success text-white">
+                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
+                                                    </span>
+                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
+                                                        @foreach($tugasList as $kelas => $tugas)
+                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($p->tugas_kelas_7 || $p->tugas_kelas_8 || $p->tugas_kelas_9)
                                                 <ul class="mb-0 ps-3">
@@ -529,7 +636,19 @@
             const jamMasuk = document.getElementById('jam_masuk');
             const keterangan = document.getElementById('keterangan');
             const tugasSection = document.getElementById('tugas-section');
+<<<<<<< HEAD
             const tugasHint = document.getElementById('tugas-hint');
+=======
+            const tugasTextareas = document.querySelectorAll('.tugas-textarea');
+            const requiresTugas = (type === 'sakit' || type === 'izin');
+            
+            if (tugasSection) {
+                tugasSection.style.display = requiresTugas ? 'block' : 'none';
+                if (!requiresTugas) {
+                    tugasTextareas.forEach(area => area.value = '');
+                }
+            }
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
             
             if (type === 'hadir') {
                 jamSection.style.display = 'block';
@@ -635,7 +754,11 @@
                 
                 // Reset form
                 document.getElementById('presensiForm').reset();
+<<<<<<< HEAD
                 document.querySelectorAll('.tugas-textarea').forEach(textarea => textarea.value = '');
+=======
+                document.querySelectorAll('.tugas-textarea').forEach(area => area.value = '');
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
                 
                 // Set tanggal default to today
                 document.getElementById('tanggalPresensi').value = '{{ date('Y-m-d') }}';
@@ -655,15 +778,27 @@
 
         // Initialize - set hadir as default active and auto-fill jam masuk
         document.addEventListener('DOMContentLoaded', function() {
-            // Set hadir as default active (will auto-fill jam masuk)
-            const jamMasuk = document.getElementById('jam_masuk');
-            if (jamMasuk) {
-                // Only auto-fill if form is visible
-                const formCard = document.getElementById('presensiFormCard');
-                if (formCard && (formCard.style.display === 'block' || !formCard.style.display)) {
+            const formCard = document.getElementById('presensiFormCard');
+            const btnTambah = document.getElementById('btnTambahPresensi');
+            const hasErrors = @json($errors->any());
+            const defaultType = @json(old('jenis', 'hadir'));
+
+            if (hasErrors && formCard && btnTambah) {
+                formCard.style.display = 'block';
+                btnTambah.innerHTML = '<i class="fas fa-times me-2"></i>Tutup Form';
+                btnTambah.classList.remove('btn-success');
+                btnTambah.classList.add('btn-secondary');
+            }
+
+            selectPresensiType(defaultType);
+
+            if (defaultType === 'hadir' && formCard && (formCard.style.display === 'block' || hasErrors)) {
+                const jamMasuk = document.getElementById('jam_masuk');
+                if (jamMasuk && !jamMasuk.value) {
                     setCurrentTime('jam_masuk');
                 }
             }
+<<<<<<< HEAD
             
             // Jika ada error validasi, tampilkan form otomatis
             const formCard = document.getElementById('presensiFormCard');
@@ -677,6 +812,8 @@
             
             // Set jenis default sesuai input terakhir
             selectPresensiType(defaultPresensiType || 'hadir');
+=======
+>>>>>>> de19a31 (memperbaiki presensi guru 2)
         });
 
         // Auto-refresh status every 10 seconds if there's pending presensi

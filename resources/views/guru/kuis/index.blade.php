@@ -211,6 +211,13 @@
                                                class="btn btn-sm btn-outline-success">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            @if($item->external_quiz_url)
+                                                <a href="{{ $item->external_quiz_url }}" target="_blank" rel="noopener"
+                                                   class="btn btn-sm btn-outline-warning"
+                                                   title="Buka link kuis eksternal">
+                                                    <i class="fas fa-external-link-alt"></i>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

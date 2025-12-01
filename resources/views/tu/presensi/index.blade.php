@@ -187,7 +187,28 @@
                                                                 <span class="badge bg-danger">Ditolak</span>
                                                             @endif
                                                         </td>
-                                                        <td>{{ $presensi->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $presensi->keterangan ?? '-' }}
+                                                            @php
+                                                                $tugasList = collect([
+                                                                    'Kelas 7' => $presensi->tugas_kelas7,
+                                                                    'Kelas 8' => $presensi->tugas_kelas8,
+                                                                    'Kelas 9' => $presensi->tugas_kelas9,
+                                                                ])->filter(fn($value) => !empty($value));
+                                                            @endphp
+                                                            @if($tugasList->count() > 0)
+                                                                <div class="mt-2">
+                                                                    <span class="badge bg-success text-white">
+                                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
+                                                                    </span>
+                                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
+                                                                        @foreach($tugasList as $kelas => $tugas)
+                                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($presensi->tugas_kelas_7 || $presensi->tugas_kelas_8 || $presensi->tugas_kelas_9)
                                                                 <ul class="mb-0 ps-3">
@@ -358,7 +379,28 @@
                                                                 <span class="badge bg-danger">Ditolak</span>
                                                             @endif
                                                         </td>
-                                                        <td>{{ $hadir->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $hadir->keterangan ?? '-' }}
+                                                            @php
+                                                                $tugasList = collect([
+                                                                    'Kelas 7' => $hadir->tugas_kelas7,
+                                                                    'Kelas 8' => $hadir->tugas_kelas8,
+                                                                    'Kelas 9' => $hadir->tugas_kelas9,
+                                                                ])->filter(fn($value) => !empty($value));
+                                                            @endphp
+                                                            @if($tugasList->count() > 0)
+                                                                <div class="mt-2">
+                                                                    <span class="badge bg-success text-white">
+                                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
+                                                                    </span>
+                                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
+                                                                        @foreach($tugasList as $kelas => $tugas)
+                                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($hadir->status_verifikasi === 'pending')
                                                                 <form action="{{ route('tu.presensi.verify', $hadir->id) }}" method="POST" class="d-inline">
@@ -490,7 +532,28 @@
                                                         <td>{{ $izin->tanggal->format('d/m/Y') }}</td>
                                                         <td>{{ $izin->tanggal->format('d/m/Y') }}</td>
                                                         <td>1 hari</td>
-                                                        <td>{{ $izin->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $izin->keterangan ?? '-' }}
+                                                            @php
+                                                                $tugasList = collect([
+                                                                    'Kelas 7' => $izin->tugas_kelas7,
+                                                                    'Kelas 8' => $izin->tugas_kelas8,
+                                                                    'Kelas 9' => $izin->tugas_kelas9,
+                                                                ])->filter(fn($value) => !empty($value));
+                                                            @endphp
+                                                            @if($tugasList->count() > 0)
+                                                                <div class="mt-2">
+                                                                    <span class="badge bg-success text-white">
+                                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
+                                                                    </span>
+                                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
+                                                                        @foreach($tugasList as $kelas => $tugas)
+                                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($izin->tugas_kelas_7 || $izin->tugas_kelas_8 || $izin->tugas_kelas_9)
                                                                 <ul class="mb-0 ps-3">
@@ -642,7 +705,28 @@
                                                         <td>{{ $sakit->tanggal->format('d/m/Y') }}</td>
                                                         <td>{{ $sakit->tanggal->format('d/m/Y') }}</td>
                                                         <td>1 hari</td>
-                                                        <td>{{ $sakit->keterangan ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $sakit->keterangan ?? '-' }}
+                                                            @php
+                                                                $tugasList = collect([
+                                                                    'Kelas 7' => $sakit->tugas_kelas7,
+                                                                    'Kelas 8' => $sakit->tugas_kelas8,
+                                                                    'Kelas 9' => $sakit->tugas_kelas9,
+                                                                ])->filter(fn($value) => !empty($value));
+                                                            @endphp
+                                                            @if($tugasList->count() > 0)
+                                                                <div class="mt-2">
+                                                                    <span class="badge bg-success text-white">
+                                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
+                                                                    </span>
+                                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
+                                                                        @foreach($tugasList as $kelas => $tugas)
+                                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if($sakit->tugas_kelas_7 || $sakit->tugas_kelas_8 || $sakit->tugas_kelas_9)
                                                                 <ul class="mb-0 ps-3">
