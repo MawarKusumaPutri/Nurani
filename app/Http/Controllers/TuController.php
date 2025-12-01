@@ -1933,15 +1933,40 @@ class TuController extends Controller
     }
     
     // Surat Management
-    public function suratIndex()
+    public function suratIndex(Request $request)
     {
         try {
-            $surats = Surat::where(function($query) {
-                    $query->where('created_by', Auth::id())
-                          ->orWhere('arsipkan', true);
+            $query = Surat::where(function($q) {
+                    $q->where('created_by', Auth::id())
+                      ->orWhere('arsipkan', true);
                 })
-                ->with('creator')
-                ->orderBy('tanggal_surat', 'desc')
+                ->with('creator');
+            
+            // Filter berdasarkan tipe surat (masuk/keluar)
+            if ($request->filled('tipe_surat')) {
+                $query->where('tipe_surat', $request->tipe_surat);
+            }
+            
+            // Filter berdasarkan jenis surat
+            if ($request->filled('jenis_surat')) {
+                $query->where('jenis_surat', $request->jenis_surat);
+            }
+            
+            // Filter berdasarkan status
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            
+            // Filter berdasarkan pencarian (nomor surat atau perihal)
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('nomor_surat', 'like', "%{$search}%")
+                      ->orWhere('perihal', 'like', "%{$search}%");
+                });
+            }
+            
+            $surats = $query->orderBy('tanggal_surat', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->paginate(50)->withQueryString();
             
@@ -2000,12 +2025,15 @@ class TuController extends Controller
     public function suratUpdate(Request $request, $id)
     {
         $request->validate([
+            'tipe_surat' => 'required|in:masuk,keluar',
             'jenis_surat' => 'required|string',
             'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
             'perihal' => 'required|string|max:255',
-            'penerima' => 'required|string',
-            'penerima_lainnya' => 'nullable|string|max:255',
+            'penerima' => 'required_if:tipe_surat,keluar|nullable|string',
+            'penerima_lainnya' => 'required_if:penerima,lainnya|nullable|string|max:255',
+            'pengirim' => 'required_if:tipe_surat,masuk|nullable|string',
+            'pengirim_lainnya' => 'required_if:pengirim,lainnya|nullable|string|max:255',
             'isi_surat' => 'required|string',
             'pembuat_surat' => 'required|string',
             'jabatan_pembuat' => 'nullable|string|max:255',
@@ -2024,12 +2052,14 @@ class TuController extends Controller
             }
             
             $suratData = [
+                'tipe_surat' => $request->tipe_surat,
                 'jenis_surat' => $request->jenis_surat,
                 'nomor_surat' => $request->nomor_surat,
                 'tanggal_surat' => $request->tanggal_surat,
                 'perihal' => $request->perihal,
-                'penerima' => $request->penerima,
-                'penerima_lainnya' => $request->penerima_lainnya,
+                'penerima' => $request->tipe_surat === 'keluar' ? $request->penerima : 'Tenaga Usaha',
+                'penerima_lainnya' => $request->tipe_surat === 'keluar' && $request->penerima === 'lainnya' ? $request->penerima_lainnya : null,
+                'pengirim' => $request->tipe_surat === 'masuk' ? ($request->pengirim === 'lainnya' ? $request->pengirim_lainnya : $request->pengirim) : null,
                 'isi_surat' => $request->isi_surat,
                 'pembuat_surat' => $request->pembuat_surat,
                 'jabatan_pembuat' => $request->jabatan_pembuat ?? 'Tenaga Usaha',
@@ -2192,12 +2222,15 @@ class TuController extends Controller
     public function suratSend(Request $request)
     {
         $request->validate([
+            'tipe_surat' => 'required|in:masuk,keluar',
             'jenis_surat' => 'required|string',
             'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
             'perihal' => 'required|string|max:255',
-            'penerima' => 'required|string',
-            'penerima_lainnya' => 'nullable|string|max:255',
+            'penerima' => 'required_if:tipe_surat,keluar|nullable|string',
+            'penerima_lainnya' => 'required_if:penerima,lainnya|nullable|string|max:255',
+            'pengirim' => 'required_if:tipe_surat,masuk|nullable|string',
+            'pengirim_lainnya' => 'required_if:pengirim,lainnya|nullable|string|max:255',
             'isi_surat' => 'required|string',
             'pembuat_surat' => 'required|string',
             'jabatan_pembuat' => 'nullable|string|max:255',
@@ -2209,12 +2242,14 @@ class TuController extends Controller
         try {
             // Simpan data surat
         $suratData = [
+            'tipe_surat' => $request->tipe_surat,
             'jenis_surat' => $request->jenis_surat,
             'nomor_surat' => $request->nomor_surat,
             'tanggal_surat' => $request->tanggal_surat,
             'perihal' => $request->perihal,
-            'penerima' => $request->penerima,
-            'penerima_lainnya' => $request->penerima_lainnya,
+            'penerima' => $request->tipe_surat === 'keluar' ? $request->penerima : 'Tenaga Usaha',
+            'penerima_lainnya' => $request->tipe_surat === 'keluar' && $request->penerima === 'lainnya' ? $request->penerima_lainnya : null,
+            'pengirim' => $request->tipe_surat === 'masuk' ? ($request->pengirim === 'lainnya' ? $request->pengirim_lainnya : $request->pengirim) : null,
             'isi_surat' => $request->isi_surat,
             'pembuat_surat' => $request->pembuat_surat,
             'jabatan_pembuat' => $request->jabatan_pembuat ?? 'Tenaga Usaha',

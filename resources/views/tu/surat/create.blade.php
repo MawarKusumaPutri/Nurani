@@ -66,20 +66,37 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
+                                            <label for="tipe_surat" class="form-label">Tipe Surat <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="tipe_surat" name="tipe_surat" required onchange="toggleTipeSurat()">
+                                                <option value="">Pilih Tipe Surat</option>
+                                                <option value="keluar" {{ old('tipe_surat') == 'keluar' ? 'selected' : '' }}>Surat Keluar</option>
+                                                <option value="masuk" {{ old('tipe_surat') == 'masuk' ? 'selected' : '' }}>Surat Masuk</option>
+                                            </select>
+                                            <div class="form-text">
+                                                <strong>Surat Keluar:</strong> Surat yang dikirim dari TU ke Kepala Sekolah, Dinas Pendidikan, dll.<br>
+                                                <strong>Surat Masuk:</strong> Surat yang diterima TU dari Dinas Pendidikan, Kepala Sekolah, dll.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
                                             <label for="jenis_surat" class="form-label">Jenis Surat <span class="text-danger">*</span></label>
                                             <select class="form-select" id="jenis_surat" name="jenis_surat" required>
                                                 <option value="">Pilih Jenis Surat</option>
-                                                <option value="surat_keputusan">Surat Keputusan</option>
-                                                <option value="surat_edaran">Surat Edaran</option>
-                                                <option value="surat_undangan">Surat Undangan</option>
-                                                <option value="surat_tugas">Surat Tugas</option>
-                                                <option value="surat_izin">Surat Izin</option>
-                                                <option value="surat_pengumuman">Surat Pengumuman</option>
-                                                <option value="surat_permohonan">Surat Permohonan</option>
-                                                <option value="surat_balasan">Surat Balasan</option>
+                                                <option value="surat_keputusan" {{ old('jenis_surat') == 'surat_keputusan' ? 'selected' : '' }}>Surat Keputusan</option>
+                                                <option value="surat_edaran" {{ old('jenis_surat') == 'surat_edaran' ? 'selected' : '' }}>Surat Edaran</option>
+                                                <option value="surat_undangan" {{ old('jenis_surat') == 'surat_undangan' ? 'selected' : '' }}>Surat Undangan</option>
+                                                <option value="surat_tugas" {{ old('jenis_surat') == 'surat_tugas' ? 'selected' : '' }}>Surat Tugas</option>
+                                                <option value="surat_izin" {{ old('jenis_surat') == 'surat_izin' ? 'selected' : '' }}>Surat Izin</option>
+                                                <option value="surat_pengumuman" {{ old('jenis_surat') == 'surat_pengumuman' ? 'selected' : '' }}>Surat Pengumuman</option>
+                                                <option value="surat_permohonan" {{ old('jenis_surat') == 'surat_permohonan' ? 'selected' : '' }}>Surat Permohonan</option>
+                                                <option value="surat_balasan" {{ old('jenis_surat') == 'surat_balasan' ? 'selected' : '' }}>Surat Balasan</option>
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="nomor_surat" class="form-label">Nomor Surat <span class="text-danger">*</span></label>
@@ -113,13 +130,42 @@
                                     <input type="text" class="form-control" id="perihal" name="perihal" placeholder="Masukkan perihal surat" required>
                                 </div>
 
-                                <div class="mb-3">
+                                <!-- Field untuk Surat Keluar -->
+                                <div id="penerima-section" class="mb-3" style="display: none;">
                                     <label for="penerima" class="form-label">Kepada <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="penerima" name="penerima" required>
+                                    <select class="form-select" id="penerima" name="penerima">
                                         <option value="">Pilih Penerima</option>
-                                        <option value="kepala_sekolah">Kepala Sekolah</option>
-                                        <option value="guru">Semua Guru</option>
+                                        <option value="kepala_sekolah" {{ old('penerima') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                                        <option value="dinas_pendidikan" {{ old('penerima') == 'dinas_pendidikan' ? 'selected' : '' }}>Dinas Pendidikan</option>
+                                        <option value="yayasan" {{ old('penerima') == 'yayasan' ? 'selected' : '' }}>Yayasan</option>
+                                        <option value="guru" {{ old('penerima') == 'guru' ? 'selected' : '' }}>Semua Guru</option>
+                                        <option value="siswa" {{ old('penerima') == 'siswa' ? 'selected' : '' }}>Semua Siswa</option>
+                                        <option value="orang_tua" {{ old('penerima') == 'orang_tua' ? 'selected' : '' }}>Orang Tua Siswa</option>
+                                        <option value="lainnya" {{ old('penerima') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                                     </select>
+                                    <div id="penerima_lainnya-section" class="mt-2" style="display: none;">
+                                        <input type="text" class="form-control" id="penerima_lainnya" name="penerima_lainnya" 
+                                               placeholder="Masukkan penerima lainnya" value="{{ old('penerima_lainnya') }}">
+                                    </div>
+                                </div>
+                                
+                                <!-- Field untuk Surat Masuk -->
+                                <div id="pengirim-section" class="mb-3" style="display: none;">
+                                    <label for="pengirim" class="form-label">Dari <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="pengirim" name="pengirim">
+                                        <option value="">Pilih Pengirim</option>
+                                        <option value="kepala_sekolah" {{ old('pengirim') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                                        <option value="dinas_pendidikan" {{ old('pengirim') == 'dinas_pendidikan' ? 'selected' : '' }}>Dinas Pendidikan</option>
+                                        <option value="yayasan" {{ old('pengirim') == 'yayasan' ? 'selected' : '' }}>Yayasan</option>
+                                        <option value="lainnya" {{ old('pengirim') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
+                                    <div id="pengirim_lainnya-section" class="mt-2" style="display: none;">
+                                        <input type="text" class="form-control" id="pengirim_lainnya" name="pengirim_lainnya" 
+                                               placeholder="Masukkan pengirim lainnya" value="{{ old('pengirim_lainnya') }}">
+                                    </div>
+                                    <div class="form-text">
+                                        Surat masuk adalah surat yang diterima oleh Tenaga Usaha (TU) dari pihak lain.
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
@@ -254,6 +300,59 @@ document.addEventListener('DOMContentLoaded', function() {
     
     penerima.addEventListener('change', togglePenerimaLainnya);
     togglePenerimaLainnya(); // Initial call
+    
+    // Toggle field berdasarkan tipe surat
+    function toggleTipeSurat() {
+        const tipeSurat = document.getElementById('tipe_surat').value;
+        const penerimaSection = document.getElementById('penerima-section');
+        const pengirimSection = document.getElementById('pengirim-section');
+        const penerima = document.getElementById('penerima');
+        const pengirim = document.getElementById('pengirim');
+        
+        if (tipeSurat === 'keluar') {
+            // Surat Keluar: tampilkan field penerima, sembunyikan pengirim
+            penerimaSection.style.display = 'block';
+            pengirimSection.style.display = 'none';
+            penerima.required = true;
+            pengirim.required = false;
+            pengirim.value = '';
+        } else if (tipeSurat === 'masuk') {
+            // Surat Masuk: tampilkan field pengirim, sembunyikan penerima
+            penerimaSection.style.display = 'none';
+            pengirimSection.style.display = 'block';
+            penerima.required = false;
+            pengirim.required = true;
+            penerima.value = '';
+            document.getElementById('penerima_lainnya-section').style.display = 'none';
+        } else {
+            // Belum dipilih: sembunyikan semua
+            penerimaSection.style.display = 'none';
+            pengirimSection.style.display = 'none';
+            penerima.required = false;
+            pengirim.required = false;
+        }
+    }
+    
+    // Toggle pengirim lainnya
+    const pengirim = document.getElementById('pengirim');
+    const pengirimLainnyaSection = document.getElementById('pengirim_lainnya-section');
+    
+    function togglePengirimLainnya() {
+        if (pengirim.value === 'lainnya') {
+            pengirimLainnyaSection.style.display = 'block';
+            document.getElementById('pengirim_lainnya').required = true;
+        } else {
+            pengirimLainnyaSection.style.display = 'none';
+            document.getElementById('pengirim_lainnya').required = false;
+            document.getElementById('pengirim_lainnya').value = '';
+        }
+    }
+    
+    pengirim.addEventListener('change', togglePengirimLainnya);
+    
+    // Initial call
+    toggleTipeSurat();
+    togglePengirimLainnya();
 });
 </script>
 @endsection

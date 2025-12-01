@@ -37,37 +37,51 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="form-label">Jenis Surat</label>
-                                    <select class="form-select">
-                                        <option value="">Semua Jenis</option>
-                                        <option value="surat_keputusan">Surat Keputusan</option>
-                                        <option value="surat_edaran">Surat Edaran</option>
-                                        <option value="surat_undangan">Surat Undangan</option>
-                                        <option value="surat_tugas">Surat Tugas</option>
-                                    </select>
+                            <form method="GET" action="{{ route('tu.surat.index') }}">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="form-label">Tipe Surat</label>
+                                        <select class="form-select" name="tipe_surat">
+                                            <option value="">Semua Tipe</option>
+                                            <option value="masuk" {{ request('tipe_surat') == 'masuk' ? 'selected' : '' }}>Surat Masuk</option>
+                                            <option value="keluar" {{ request('tipe_surat') == 'keluar' ? 'selected' : '' }}>Surat Keluar</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Jenis Surat</label>
+                                        <select class="form-select" name="jenis_surat">
+                                            <option value="">Semua Jenis</option>
+                                            <option value="surat_keputusan" {{ request('jenis_surat') == 'surat_keputusan' ? 'selected' : '' }}>Surat Keputusan</option>
+                                            <option value="surat_edaran" {{ request('jenis_surat') == 'surat_edaran' ? 'selected' : '' }}>Surat Edaran</option>
+                                            <option value="surat_undangan" {{ request('jenis_surat') == 'surat_undangan' ? 'selected' : '' }}>Surat Undangan</option>
+                                            <option value="surat_tugas" {{ request('jenis_surat') == 'surat_tugas' ? 'selected' : '' }}>Surat Tugas</option>
+                                            <option value="surat_izin" {{ request('jenis_surat') == 'surat_izin' ? 'selected' : '' }}>Surat Izin</option>
+                                            <option value="surat_pengumuman" {{ request('jenis_surat') == 'surat_pengumuman' ? 'selected' : '' }}>Surat Pengumuman</option>
+                                            <option value="surat_permohonan" {{ request('jenis_surat') == 'surat_permohonan' ? 'selected' : '' }}>Surat Permohonan</option>
+                                            <option value="surat_balasan" {{ request('jenis_surat') == 'surat_balasan' ? 'selected' : '' }}>Surat Balasan</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="">Semua Status</option>
+                                            <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                            <option value="terkirim" {{ request('status') == 'terkirim' ? 'selected' : '' }}>Terkirim</option>
+                                            <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Cari Surat</label>
+                                        <input type="text" class="form-control" name="search" placeholder="Nomor surat atau perihal" value="{{ request('search') }}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">&nbsp;</label>
+                                        <button type="submit" class="btn btn-primary d-block w-100">
+                                            <i class="fas fa-search"></i> Filter
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select">
-                                        <option value="">Semua Status</option>
-                                        <option value="draft">Draft</option>
-                                        <option value="terkirim">Terkirim</option>
-                                        <option value="diterima">Diterima</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Cari Surat</label>
-                                    <input type="text" class="form-control" placeholder="Nomor surat atau perihal">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button class="btn btn-primary d-block w-100">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -126,10 +140,11 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Tipe</th>
                                             <th>Nomor Surat</th>
                                             <th>Jenis</th>
                                             <th>Perihal</th>
-                                            <th>Kepada</th>
+                                            <th>{{ request('tipe_surat') == 'masuk' ? 'Dari' : 'Kepada' }}</th>
                                             <th>Tanggal</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
@@ -187,13 +202,48 @@
                                                         'lainnya' => $surat->penerima_lainnya ?? 'Lainnya',
                                                         default => 'Penerima'
                                                     };
+                                                    
+                                                    $tipeBadge = match($surat->tipe_surat ?? 'keluar') {
+                                                        'masuk' => 'bg-info',
+                                                        'keluar' => 'bg-success',
+                                                        default => 'bg-secondary'
+                                                    };
+                                                    
+                                                    $tipeLabel = match($surat->tipe_surat ?? 'keluar') {
+                                                        'masuk' => 'Masuk',
+                                                        'keluar' => 'Keluar',
+                                                        default => 'Keluar'
+                                                    };
+                                                    
+                                                    // Untuk surat masuk, tampilkan pengirim; untuk surat keluar, tampilkan penerima
+                                                    $pengirimText = '';
+                                                    if (($surat->tipe_surat ?? 'keluar') === 'masuk') {
+                                                        if (in_array($surat->pengirim, ['kepala_sekolah', 'dinas_pendidikan', 'yayasan'])) {
+                                                            $pengirimText = match($surat->pengirim) {
+                                                                'kepala_sekolah' => 'Kepala Sekolah',
+                                                                'dinas_pendidikan' => 'Dinas Pendidikan',
+                                                                'yayasan' => 'Yayasan',
+                                                                default => $surat->pengirim ?? '-'
+                                                            };
+                                                        } else {
+                                                            // Jika bukan dari dropdown, berarti custom text
+                                                            $pengirimText = $surat->pengirim ?? '-';
+                                                        }
+                                                    }
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $surats->firstItem() + $index }}</td>
+                                                    <td><span class="badge {{ $tipeBadge }}">{{ $tipeLabel }}</span></td>
                                                     <td>{{ $surat->nomor_surat }}</td>
                                                     <td><span class="badge {{ $jenisBadge }}">{{ $jenisLabel }}</span></td>
                                                     <td>{{ $surat->perihal }}</td>
-                                                    <td>{{ $penerimaText }}</td>
+                                                    <td>
+                                                        @if(($surat->tipe_surat ?? 'keluar') === 'masuk')
+                                                            {{ $pengirimText }}
+                                                        @else
+                                                            {{ $penerimaText }}
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $surat->tanggal_surat->format('d M Y') }}</td>
                                                     <td><span class="badge {{ $statusBadge }}">{{ $statusLabel }}</span></td>
                                                     <td>
@@ -218,7 +268,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="8" class="text-center py-4">
+                                                <td colspan="9" class="text-center py-4">
                                                     <div class="text-muted">
                                                         <i class="fas fa-inbox fa-3x mb-3"></i>
                                                         <p class="mb-0">Belum ada surat yang tersimpan.</p>

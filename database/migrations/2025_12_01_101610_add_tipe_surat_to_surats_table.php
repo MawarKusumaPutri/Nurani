@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->boolean('is_lapangan')->default(false)->after('is_lab');
+        Schema::table('surats', function (Blueprint $table) {
+            $table->enum('tipe_surat', ['masuk', 'keluar'])->default('keluar')->after('jenis_surat');
+            $table->string('pengirim')->nullable()->after('penerima_lainnya');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('is_lapangan');
+        Schema::table('surats', function (Blueprint $table) {
+            $table->dropColumn(['tipe_surat', 'pengirim']);
         });
     }
 };
