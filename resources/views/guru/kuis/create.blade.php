@@ -168,9 +168,9 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="tipe_kuis" class="form-label">Tipe Kuis <span class="text-danger">*</span></label>
+                                                <label for="tipe_kuis" class="form-label">Tipe Kuis</label>
                                                 <select class="form-select @error('tipe_kuis') is-invalid @enderror" 
-                                                        id="tipe_kuis" name="tipe_kuis" required onchange="toggleQuizType()">
+                                                        id="tipe_kuis" name="tipe_kuis" onchange="toggleQuizType()">
                                                     <option value="">Pilih Tipe Kuis</option>
                                                     <option value="pilihan_ganda" {{ old('tipe_kuis') == 'pilihan_ganda' ? 'selected' : '' }}>Pilihan Ganda</option>
                                                     <option value="esai" {{ old('tipe_kuis') == 'esai' ? 'selected' : '' }}>Esai</option>
@@ -211,16 +211,6 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-<<<<<<< HEAD
-                                                <label for="link_kuis" class="form-label">Link Kuis (Quizizz, Kahoot, dll)</label>
-                                                <input type="url" class="form-control @error('link_kuis') is-invalid @enderror"
-                                                       id="link_kuis" name="link_kuis" value="{{ old('link_kuis') }}"
-                                                       placeholder="https://quizizz.com/..., https://kahoot.it/..., dsb">
-                                                <div class="form-text">
-                                                    Opsional. Jika diisi, siswa akan diarahkan ke link ini saat mengerjakan kuis.
-                                                </div>
-                                                @error('link_kuis')
-=======
                                                 <label for="external_quiz_url" class="form-label">
                                                     Link Kuis Eksternal (Quizizz, Kahoot, Google Form, dll)
                                                 </label>
@@ -235,7 +225,6 @@
                                                     Opsional. Jika diisi, siswa dapat langsung diarahkan ke link kuis ini.
                                                 </small>
                                                 @error('external_quiz_url')
->>>>>>> de19a31 (memperbaiki presensi guru 2)
                                                     <div class="text-danger small">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -335,7 +324,7 @@
                             </div>
 
                             <!-- Regular Quiz Fields -->
-                            <div id="regular-fields">
+                            <div id="regular-fields" style="display: none;">
                                 <div class="card mt-4">
                                     <div class="card-header bg-info text-white">
                                         <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Soal Kuis</h5>
@@ -481,14 +470,30 @@
                 esaiFields.style.display = 'block';
                 regularFields.style.display = 'none';
                 soalContainer.style.display = 'none';
+                // Remove required from hidden fields
+                const hiddenFields = regularFields.querySelectorAll('input[required], select[required], textarea[required]');
+                hiddenFields.forEach(field => {
+                    field.removeAttribute('required');
+                });
             } else if (tipeKuis === 'pilihan_ganda') {
                 esaiFields.style.display = 'none';
                 regularFields.style.display = 'block';
                 soalContainer.style.display = 'block';
+                // Remove required from hidden fields
+                const hiddenFields = esaiFields.querySelectorAll('input[required], select[required], textarea[required]');
+                hiddenFields.forEach(field => {
+                    field.removeAttribute('required');
+                });
             } else {
+                // Tipe kuis tidak dipilih (hanya link eksternal)
                 esaiFields.style.display = 'none';
                 regularFields.style.display = 'none';
                 soalContainer.style.display = 'none';
+                // Remove required from all hidden fields
+                const allHiddenFields = document.querySelectorAll('#esai-fields input[required], #esai-fields select[required], #esai-fields textarea[required], #regular-fields input[required], #regular-fields select[required], #regular-fields textarea[required]');
+                allHiddenFields.forEach(field => {
+                    field.removeAttribute('required');
+                });
             }
         }
 
@@ -581,6 +586,40 @@
             document.getElementById('waktu_dibuat').value = timeString;
             document.getElementById('zona_waktu').value = timezone;
         }
+
+        // Form submit handler to remove required from hidden fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[action*="kuis.store"]');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const tipeKuis = document.getElementById('tipe_kuis').value;
+                    
+                    // If tipe_kuis is not selected, remove required from all quiz type fields
+                    if (!tipeKuis || tipeKuis === '') {
+                        const allQuizFields = document.querySelectorAll('#esai-fields input[required], #esai-fields select[required], #esai-fields textarea[required], #regular-fields input[required], #regular-fields select[required], #regular-fields textarea[required]');
+                        allQuizFields.forEach(field => {
+                            field.removeAttribute('required');
+                        });
+                    }
+                    
+                    // If tipe_kuis is esai, remove required from regular fields
+                    if (tipeKuis === 'esai') {
+                        const regularFields = document.querySelectorAll('#regular-fields input[required], #regular-fields select[required], #regular-fields textarea[required]');
+                        regularFields.forEach(field => {
+                            field.removeAttribute('required');
+                        });
+                    }
+                    
+                    // If tipe_kuis is pilihan_ganda, remove required from esai fields
+                    if (tipeKuis === 'pilihan_ganda') {
+                        const esaiFields = document.querySelectorAll('#esai-fields input[required], #esai-fields select[required], #esai-fields textarea[required]');
+                        esaiFields.forEach(field => {
+                            field.removeAttribute('required');
+                        });
+                    }
+                });
+            }
+        });
 
         // Add first question automatically and update date/time
         document.addEventListener('DOMContentLoaded', function() {

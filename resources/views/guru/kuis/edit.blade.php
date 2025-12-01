@@ -208,9 +208,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="tipe_kuis" class="form-label">Tipe Kuis <span class="text-danger">*</span></label>
+                                        <label for="tipe_kuis" class="form-label">Tipe Kuis</label>
                                         <select class="form-select @error('tipe_kuis') is-invalid @enderror" 
-                                                id="tipe_kuis" name="tipe_kuis" required onchange="toggleQuizType()">
+                                                id="tipe_kuis" name="tipe_kuis" onchange="toggleQuizType()">
                                             <option value="">Pilih Tipe Kuis</option>
                                             <option value="pilihan_ganda" {{ old('tipe_kuis', $kuis->tipe_kuis) == 'pilihan_ganda' ? 'selected' : '' }}>Pilihan Ganda</option>
                                             <option value="esai" {{ old('tipe_kuis', $kuis->tipe_kuis) == 'esai' ? 'selected' : '' }}>Esai</option>

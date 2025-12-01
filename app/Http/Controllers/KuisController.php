@@ -59,16 +59,15 @@ class KuisController extends Controller
             'deskripsi' => 'nullable|string',
             'kelas' => 'required|string|max:255',
             'mata_pelajaran' => 'required|string|max:255',
-            'tipe_kuis' => 'required|in:pilihan_ganda,esai',
+            'tipe_kuis' => 'nullable|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
             'tanggal_dibuat' => 'required|date',
             'hari_dibuat' => 'required|string|max:20',
             'waktu_dibuat' => 'required|date_format:H:i',
             'zona_waktu' => 'required|string|max:10',
-            'link_kuis' => 'nullable|url|max:255',
             'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
             'esai_petunjuk' => 'nullable|string',
-            'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
+            'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array',
             'soal.*.pertanyaan' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_a' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_b' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
@@ -78,11 +77,25 @@ class KuisController extends Controller
             'external_quiz_url' => 'nullable|url|max:500',
         ]);
 
+        // Additional validation: if tipe_kuis is pilihan_ganda, ensure at least one question
+        if ($request->tipe_kuis === 'pilihan_ganda' && (!$request->soal || count($request->soal) === 0)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['soal' => 'Minimal harus ada 1 soal untuk kuis pilihan ganda.']);
+        }
+
+        // Additional validation: if tipe_kuis is esai, ensure esai_soal is filled
+        if ($request->tipe_kuis === 'esai' && empty($request->esai_soal)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['esai_soal' => 'Pertanyaan esai harus diisi.']);
+        }
+
         // Prepare data based on quiz type
         $kuisData = [
             'guru_id' => $guru->id,
             'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
+            'deskripsi' => $request->deskripsi ?? '', // Ensure deskripsi is never null
             'kelas' => $request->kelas,
             'mata_pelajaran' => $request->mata_pelajaran,
             'tipe_kuis' => $request->tipe_kuis,
@@ -93,11 +106,7 @@ class KuisController extends Controller
             'hari_dibuat' => $request->hari_dibuat,
             'waktu_dibuat' => $request->waktu_dibuat,
             'zona_waktu' => $request->zona_waktu,
-<<<<<<< HEAD
-            'link_kuis' => $request->link_kuis,
-=======
             'external_quiz_url' => $request->external_quiz_url,
->>>>>>> de19a31 (memperbaiki presensi guru 2)
             'is_active' => true
         ];
 
@@ -105,8 +114,10 @@ class KuisController extends Controller
             // Handle essay quiz
             $kuisData['esai_soal'] = $request->esai_soal;
             $kuisData['esai_petunjuk'] = $request->esai_petunjuk;
-            $kuisData['soal'] = null; // No multiple choice questions for essay quiz
-        } else {
+            $kuisData['soal'] = json_encode([]); // Empty array for essay quiz (soal cannot be null)
+            $kuisData['video_url'] = null;
+            $kuisData['video_soal'] = null;
+        } elseif ($request->tipe_kuis === 'pilihan_ganda') {
             // Handle multiple choice quiz
             $soalFormatted = [];
             if ($request->soal) {
@@ -125,6 +136,15 @@ class KuisController extends Controller
                 }
             }
             $kuisData['soal'] = json_encode($soalFormatted);
+            $kuisData['esai_soal'] = null;
+            $kuisData['esai_petunjuk'] = null;
+            $kuisData['video_url'] = null;
+            $kuisData['video_soal'] = null;
+        } else {
+            // Handle external link only (no quiz type selected)
+            $kuisData['soal'] = json_encode([]); // Empty array for external link quiz (soal cannot be null)
+            $kuisData['esai_soal'] = null;
+            $kuisData['esai_petunjuk'] = null;
             $kuisData['video_url'] = null;
             $kuisData['video_soal'] = null;
         }
@@ -169,12 +189,11 @@ class KuisController extends Controller
             'deskripsi' => 'nullable|string',
             'kelas' => 'required|string|max:255',
             'mata_pelajaran' => 'required|string|max:255',
-            'tipe_kuis' => 'required|in:pilihan_ganda,esai',
+            'tipe_kuis' => 'nullable|in:pilihan_ganda,esai',
             'durasi' => 'required|integer|min:5|max:180',
-            'link_kuis' => 'nullable|url|max:255',
             'esai_soal' => 'required_if:tipe_kuis,esai|nullable|string',
             'esai_petunjuk' => 'nullable|string',
-            'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array|min:1',
+            'soal' => 'required_if:tipe_kuis,pilihan_ganda|nullable|array',
             'soal.*.pertanyaan' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_a' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
             'soal.*.pilihan_b' => 'required_if:tipe_kuis,pilihan_ganda|nullable|string',
@@ -187,24 +206,22 @@ class KuisController extends Controller
         // Prepare data based on quiz type
         $kuisData = [
             'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
+            'deskripsi' => $request->deskripsi ?? '', // Ensure deskripsi is never null
             'kelas' => $request->kelas,
             'mata_pelajaran' => $request->mata_pelajaran,
             'tipe_kuis' => $request->tipe_kuis,
             'durasi_menit' => $request->durasi,
-<<<<<<< HEAD
-            'link_kuis' => $request->link_kuis,
-=======
             'external_quiz_url' => $request->external_quiz_url,
->>>>>>> de19a31 (memperbaiki presensi guru 2)
         ];
 
-        if ($request->tipe_kuis === 'video') {
-            // Handle video quiz
-            $kuisData['video_url'] = $request->video_url;
-            $kuisData['video_soal'] = $request->video_soal;
-            $kuisData['soal'] = json_encode([]); // Empty array for video quiz
-        } else {
+        if ($request->tipe_kuis === 'esai') {
+            // Handle essay quiz
+            $kuisData['esai_soal'] = $request->esai_soal;
+            $kuisData['esai_petunjuk'] = $request->esai_petunjuk;
+            $kuisData['soal'] = json_encode([]); // Empty array for essay quiz (soal cannot be null)
+            $kuisData['video_url'] = null;
+            $kuisData['video_soal'] = null;
+        } elseif ($request->tipe_kuis === 'pilihan_ganda') {
             // Handle multiple choice quiz
             $soalFormatted = [];
             if ($request->soal) {
@@ -223,6 +240,22 @@ class KuisController extends Controller
                 }
             }
             $kuisData['soal'] = json_encode($soalFormatted);
+            $kuisData['esai_soal'] = null;
+            $kuisData['esai_petunjuk'] = null;
+            $kuisData['video_url'] = null;
+            $kuisData['video_soal'] = null;
+        } elseif ($request->tipe_kuis === 'video') {
+            // Handle video quiz
+            $kuisData['video_url'] = $request->video_url;
+            $kuisData['video_soal'] = $request->video_soal;
+            $kuisData['soal'] = json_encode([]); // Empty array for video quiz (soal cannot be null)
+            $kuisData['esai_soal'] = null;
+            $kuisData['esai_petunjuk'] = null;
+        } else {
+            // Handle external link only (no quiz type selected)
+            $kuisData['soal'] = json_encode([]); // Empty array for external link quiz (soal cannot be null)
+            $kuisData['esai_soal'] = null;
+            $kuisData['esai_petunjuk'] = null;
             $kuisData['video_url'] = null;
             $kuisData['video_soal'] = null;
         }

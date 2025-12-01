@@ -10,7 +10,7 @@
     <style>
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -30,9 +30,12 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
         }
         .quiz-type-badge {
             font-size: 0.8rem;
@@ -46,7 +49,7 @@
             background: #f8f9fa;
         }
         .question-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             color: white;
             width: 30px;
             height: 30px;
@@ -118,13 +121,21 @@
                     <div>
                         <h2 class="mb-1">{{ $kuis->judul }}</h2>
                         <p class="text-muted mb-0">
-                            <span class="badge bg-primary quiz-type-badge me-2">
-                                @if($kuis->tipe_kuis === 'esai')
-                                    <i class="fas fa-edit me-1"></i>Esai
-                                @else
-                                    <i class="fas fa-question-circle me-1"></i>Pilihan Ganda
-                                @endif
-                            </span>
+                            @if($kuis->tipe_kuis)
+                                <span class="badge bg-success quiz-type-badge me-2">
+                                    @if($kuis->tipe_kuis === 'esai')
+                                        <i class="fas fa-edit me-1"></i>Esai
+                                    @elseif($kuis->tipe_kuis === 'pilihan_ganda')
+                                        <i class="fas fa-question-circle me-1"></i>Pilihan Ganda
+                                    @elseif($kuis->tipe_kuis === 'video')
+                                        <i class="fas fa-video me-1"></i>Video
+                                    @endif
+                                </span>
+                            @elseif($kuis->external_quiz_url)
+                                <span class="badge bg-success quiz-type-badge me-2">
+                                    <i class="fas fa-external-link-alt me-1"></i>Link Eksternal
+                                </span>
+                            @endif
                             {{ $kuis->mata_pelajaran }} - Kelas {{ $kuis->kelas }}
                         </p>
                     </div>
@@ -180,7 +191,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @else
+                        @elseif($kuis->tipe_kuis === 'pilihan_ganda')
                             <!-- Multiple Choice Quiz -->
                             <div class="card">
                                 <div class="card-header bg-success text-white">
@@ -241,13 +252,50 @@
                                     @endif
                                 </div>
                             </div>
+                        @elseif($kuis->external_quiz_url)
+                            <!-- External Link Quiz -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="fas fa-external-link-alt me-2"></i>Kuis Eksternal</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-link fa-4x text-success mb-3"></i>
+                                        <h5>Kuis ini menggunakan link eksternal</h5>
+                                        <p class="text-muted">Siswa akan diarahkan ke link kuis eksternal untuk mengerjakan kuis.</p>
+                                    </div>
+                                    <a href="{{ $kuis->external_quiz_url }}" target="_blank" rel="noopener noreferrer"
+                                       class="btn btn-lg btn-success">
+                                        <i class="fas fa-external-link-alt me-2"></i>
+                                        Buka Link Kuis
+                                    </a>
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            {{ $kuis->external_quiz_url }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Default/Unknown Quiz Type -->
+                            <div class="card">
+                                <div class="card-header bg-warning text-white">
+                                    <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Informasi Kuis</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Informasi kuis tidak tersedia</p>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     </div>
 
                     <!-- Sidebar Information -->
                     <div class="col-lg-4">
                         <div class="card">
-                            <div class="card-header bg-info text-white">
+                            <div class="card-header bg-success text-white">
                                 <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informasi Kuis</h5>
                             </div>
                             <div class="card-body">
@@ -271,24 +319,10 @@
                                     <p class="mb-0">{{ $kuis->durasi_menit }} menit</p>
                                 </div>
 
-<<<<<<< HEAD
-                                @if($kuis->link_kuis)
-                                    <div class="mb-3">
-                                        <h6>Link Kuis Eksternal:</h6>
-                                        <p class="mb-2">
-                                            <a href="{{ $kuis->link_kuis }}" target="_blank" rel="noopener noreferrer">
-                                                {{ $kuis->link_kuis }}
-                                            </a>
-                                        </p>
-                                        <a href="{{ $kuis->link_kuis }}" target="_blank" rel="noopener noreferrer"
-                                           class="btn btn-sm btn-outline-primary w-100">
-                                            <i class="fas fa-external-link-alt me-1"></i>Buka Kuis di Tab Baru
-                                        </a>
-=======
                                 @if($kuis->external_quiz_url)
                                     <div class="mb-3">
                                         <h6>Link Kuis Eksternal:</h6>
-                                        <a href="{{ $kuis->external_quiz_url }}" target="_blank" rel="noopener"
+                                        <a href="{{ $kuis->external_quiz_url }}" target="_blank" rel="noopener noreferrer"
                                            class="btn btn-outline-success w-100 mb-2">
                                             <i class="fas fa-external-link-alt me-2"></i>
                                             Buka Link Kuis
@@ -296,7 +330,6 @@
                                         <small class="text-muted d-block">
                                             {{ \Illuminate\Support\Str::limit($kuis->external_quiz_url, 60) }}
                                         </small>
->>>>>>> de19a31 (memperbaiki presensi guru 2)
                                     </div>
                                 @endif
                                 
