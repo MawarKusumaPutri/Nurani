@@ -16,6 +16,7 @@ class Presensi extends Model
         'jam_masuk',
         'jam_keluar',
         'keterangan',
+        'surat_sakit',
         'tugas_kelas7',
         'tugas_kelas8',
         'tugas_kelas9',

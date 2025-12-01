@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Presensi;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class PresensiController extends Controller
@@ -53,6 +54,7 @@ class PresensiController extends Controller
             'jam_masuk' => 'required_if:jenis,hadir|required_if:jenis,sakit|nullable|date_format:H:i',
             'jam_keluar' => 'nullable|date_format:H:i|after:jam_masuk',
             'keterangan' => 'required_if:jenis,izin|nullable|string|max:500',
+            'surat_sakit' => 'nullable|file|mimes:pdf,png,jpg,jpeg|max:5120',
             'tugas_kelas_7' => 'nullable|string|max:1000',
             'tugas_kelas_8' => 'nullable|string|max:1000',
             'tugas_kelas_9' => 'nullable|string|max:1000',
@@ -66,6 +68,9 @@ class PresensiController extends Controller
             'jam_keluar.after' => 'Jam keluar harus setelah jam masuk',
             'keterangan.required_if' => 'Keterangan harus diisi untuk izin',
             'keterangan.max' => 'Keterangan maksimal 500 karakter',
+            'surat_sakit.file' => 'File surat sakit harus berupa file',
+            'surat_sakit.mimes' => 'File surat sakit harus berformat PDF, PNG, atau JPG',
+            'surat_sakit.max' => 'Ukuran file surat sakit maksimal 5MB',
             'tugas_kelas_7.max' => 'Instruksi untuk kelas 7 maksimal 1000 karakter',
             'tugas_kelas_8.max' => 'Instruksi untuk kelas 8 maksimal 1000 karakter',
             'tugas_kelas_9.max' => 'Instruksi untuk kelas 9 maksimal 1000 karakter',
@@ -104,6 +109,16 @@ class PresensiController extends Controller
                 ->with('error', "Anda sudah melakukan presensi untuk tanggal ini ({$request->tanggal}) sebagai {$jenisLama}. Setiap tanggal hanya bisa diisi sekali.");
         }
 
+        // Handle file upload surat sakit
+        $suratSakitPath = null;
+        if ($request->hasFile('surat_sakit')) {
+            $file = $request->file('surat_sakit');
+            $filename = time() . '_' . $guru->id . '_' . $file->getClientOriginalName();
+            $suratSakitPath = $file->storeAs('public/presensi/surat_sakit', $filename);
+            // Remove 'public/' prefix for database storage
+            $suratSakitPath = str_replace('public/', '', $suratSakitPath);
+        }
+
         // Create presensi
         Presensi::create([
             'guru_id' => $guru->id,
@@ -112,6 +127,7 @@ class PresensiController extends Controller
             'jam_masuk' => ($request->jenis === 'hadir' || $request->jenis === 'sakit') ? $request->jam_masuk : null,
             'jam_keluar' => $request->jam_keluar ?? null,
             'keterangan' => $request->keterangan,
+            'surat_sakit' => $suratSakitPath,
             'tugas_kelas_7' => $tugasKelas7 ?: null,
             'tugas_kelas_8' => $tugasKelas8 ?: null,
             'tugas_kelas_9' => $tugasKelas9 ?: null,

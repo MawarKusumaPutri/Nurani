@@ -203,7 +203,7 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('guru.presensi.store') }}" method="POST" id="presensiForm">
+                        <form action="{{ route('guru.presensi.store') }}" method="POST" id="presensiForm" enctype="multipart/form-data">
                             @csrf
                             @php
                                 $defaultJenis = old('jenis', 'hadir');
@@ -297,6 +297,34 @@
                                 @error('keterangan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div id="surat-sakit-section" class="mb-3" style="display: none;">
+                                <label class="form-label">
+                                    Surat Dokter / Surat Sakit 
+                                    <span class="badge bg-info text-white ms-2">
+                                        <i class="fas fa-info-circle me-1"></i>Opsional
+                                    </span>
+                                </label>
+                                <input type="file" name="surat_sakit" id="surat_sakit" 
+                                       class="form-control @error('surat_sakit') is-invalid @enderror" 
+                                       accept=".pdf,.png,.jpg,.jpeg">
+                                <small class="text-muted d-block mt-1">
+                                    <i class="fas fa-file-alt me-1"></i>
+                                    Format yang didukung: PDF, PNG, JPG, JPEG (Maksimal 5MB)
+                                </small>
+                                @error('surat_sakit')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                                <div id="surat-sakit-preview" class="mt-2" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-file me-2"></i>
+                                        <span id="surat-sakit-filename"></span>
+                                        <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="clearSuratSakit()">
+                                            <i class="fas fa-times"></i> Hapus
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="tugas-section" class="mb-4" style="display: none;">
@@ -426,6 +454,16 @@
                             </ul>
                         </div>
                     @endif
+                    @if($todayPresensi->surat_sakit)
+                        <div class="mt-3">
+                            <strong>Surat Sakit:</strong>
+                            <a href="{{ Storage::url($todayPresensi->surat_sakit) }}" 
+                               target="_blank" 
+                               class="btn btn-sm btn-outline-primary ms-2">
+                                <i class="fas fa-file-pdf me-1"></i>Lihat Surat
+                            </a>
+                        </div>
+                    @endif
                 </div>
                 @endif
 
@@ -451,6 +489,7 @@
                                         <th>Jam Keluar</th>
                                         <th>Keterangan</th>
                                         <th>Tugas Pengganti</th>
+                                        <th>Surat Sakit</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -520,6 +559,17 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @if($p->surat_sakit)
+                                                <a href="{{ Storage::url($p->surat_sakit) }}" 
+                                                   target="_blank" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-file-pdf me-1"></i>Lihat Surat
+                                                </a>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                        <td>
                                             @if($p->status_verifikasi === 'pending')
                                                 <span class="badge badge-pending text-white">Menunggu</span>
                                             @elseif($p->status_verifikasi === 'approved')
@@ -568,13 +618,27 @@
             const jamMasuk = document.getElementById('jam_masuk');
             const keterangan = document.getElementById('keterangan');
             const tugasSection = document.getElementById('tugas-section');
+            const suratSakitSection = document.getElementById('surat-sakit-section');
             const tugasTextareas = document.querySelectorAll('.tugas-textarea');
             const requiresTugas = (type === 'sakit' || type === 'izin');
+            const requiresSuratSakit = (type === 'sakit'); // Hanya untuk sakit, bukan izin
             
             if (tugasSection) {
                 tugasSection.style.display = requiresTugas ? 'block' : 'none';
                 if (!requiresTugas) {
                     tugasTextareas.forEach(textarea => textarea.value = '');
+                }
+            }
+            
+            // Show/hide surat sakit section
+            if (suratSakitSection) {
+                suratSakitSection.style.display = requiresSuratSakit ? 'block' : 'none';
+                if (!requiresSuratSakit) {
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) {
+                        suratSakitInput.value = '';
+                    }
+                    clearSuratSakit();
                 }
             }
             
@@ -601,6 +665,15 @@
                 if (tugasSection) {
                     tugasSection.style.display = 'block';
                 }
+                // Surat sakit tidak diperlukan untuk izin
+                if (suratSakitSection) {
+                    suratSakitSection.style.display = 'none';
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) {
+                        suratSakitInput.value = '';
+                    }
+                    clearSuratSakit();
+                }
             } else { // sakit
                 jamSection.style.display = 'block';
                 keteranganSection.style.display = 'none';
@@ -615,6 +688,9 @@
                 document.getElementById('jamMasukSakitInfo').style.display = 'inline';
                 if (tugasSection) {
                     tugasSection.style.display = 'block';
+                }
+                if (suratSakitSection) {
+                    suratSakitSection.style.display = 'block';
                 }
             }
             
@@ -722,6 +798,64 @@
                     setCurrentTime('jam_masuk');
                 }
             }
+        });
+
+        // Function to handle surat sakit file preview
+        function handleSuratSakitPreview() {
+            const suratSakitInput = document.getElementById('surat_sakit');
+            const previewDiv = document.getElementById('surat-sakit-preview');
+            const filenameSpan = document.getElementById('surat-sakit-filename');
+            
+            if (suratSakitInput) {
+                suratSakitInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const fileName = file.name;
+                        const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+                        
+                        // Validate file type
+                        const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+                        if (!allowedTypes.includes(file.type)) {
+                            alert('Format file tidak didukung. Silakan pilih file PDF, PNG, atau JPG.');
+                            suratSakitInput.value = '';
+                            if (previewDiv) previewDiv.style.display = 'none';
+                            return;
+                        }
+                        
+                        // Validate file size (5MB)
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert('Ukuran file terlalu besar. Maksimal 5MB.');
+                            suratSakitInput.value = '';
+                            if (previewDiv) previewDiv.style.display = 'none';
+                            return;
+                        }
+                        
+                        if (previewDiv && filenameSpan) {
+                            filenameSpan.textContent = fileName + ' (' + fileSize + ' MB)';
+                            previewDiv.style.display = 'block';
+                        }
+                    } else {
+                        if (previewDiv) previewDiv.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        // Function to clear surat sakit
+        function clearSuratSakit() {
+            const suratSakitInput = document.getElementById('surat_sakit');
+            const previewDiv = document.getElementById('surat-sakit-preview');
+            if (suratSakitInput) {
+                suratSakitInput.value = '';
+            }
+            if (previewDiv) {
+                previewDiv.style.display = 'none';
+            }
+        }
+        
+        // Initialize surat sakit preview handler
+        document.addEventListener('DOMContentLoaded', function() {
+            handleSuratSakitPreview();
         });
 
         // Auto-refresh status every 10 seconds if there's pending presensi
