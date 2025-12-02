@@ -8,6 +8,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        html, body {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
@@ -34,13 +43,202 @@
             border: none;
             border-radius: 8px;
         }
+        
+        /* Responsive Styles */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            pointer-events: auto;
+            touch-action: manipulation;
+        }
+        
+        .sidebar-toggle:hover {
+            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
+            transform: scale(1.05);
+        }
+        
+        .sidebar-toggle:active {
+            transform: scale(0.95);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.05) !important;
+            z-index: 1040;
+            transition: background 0.3s ease;
+        }
+        
+        .sidebar-overlay.show {
+            background: rgba(0,0,0,0.05) !important;
+            z-index: 1040 !important;
+        }
+        
+        /* Pastikan sidebar lebih tinggi dari overlay dan hijau terang */
+        .sidebar.show {
+            z-index: 1061 !important;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
+        }
+        
+        #sidebar.show {
+            z-index: 1061 !important;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
+        }
+        
+        /* Pastikan semua elemen di sidebar tidak hitam */
+        .sidebar * {
+            background-color: transparent !important;
+        }
+        
+        .sidebar .p-4 {
+            background: transparent !important;
+        }
+        
+        .sidebar nav {
+            background: transparent !important;
+        }
+        
+        .sidebar .nav {
+            background: transparent !important;
+        }
+        
+        .sidebar .nav-link {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.1) !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Make sure nav links are always clickable */
+        .sidebar .nav-link {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 1001 !important;
+            position: relative !important;
+            display: block !important;
+            touch-action: manipulation !important;
+        }
+        
+        .sidebar .nav-link:hover {
+            pointer-events: auto !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .sidebar .nav-link:active {
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure sidebar is always above overlay */
+        .sidebar.show {
+            z-index: 1061 !important;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block !important;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1061 !important;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 85%;
+                height: 100vh;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior: contain !important;
+                pointer-events: auto !important;
+                background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+                background-color: #2E7D32 !important;
+            }
+            
+            .sidebar.show {
+                left: 0;
+                background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+                background-color: #2E7D32 !important;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+                background: rgba(0,0,0,0.05) !important;
+                z-index: 1040 !important;
+            }
+            
+            /* Pastikan semua elemen di sidebar tidak hitam di mobile */
+            .sidebar * {
+                background-color: transparent !important;
+            }
+            
+            .sidebar .p-4 {
+                background: transparent !important;
+            }
+            
+            .sidebar nav {
+                background: transparent !important;
+            }
+            
+            .sidebar .nav {
+                background: transparent !important;
+            }
+            
+            .sidebar .nav-link {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                background: rgba(255, 255, 255, 0.1) !important;
+                background-color: rgba(255, 255, 255, 0.1) !important;
+            }
+            
+            /* Ensure sidebar is always clickable when shown */
+            .sidebar.show {
+                pointer-events: auto !important;
+            }
+            
+            .sidebar.show * {
+                pointer-events: auto !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" type="button" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <div class="container-fluid" style="position: relative; z-index: 1;">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0">
+            <div class="col-md-3 col-lg-2 sidebar p-0" id="sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
                 <div class="p-4">
                     <h4 class="text-white mb-4">
                         <i class="fas fa-chalkboard-teacher me-2"></i>
@@ -89,26 +287,26 @@
                 </div>
                 
                 <nav class="nav flex-column px-3">
-                    <a class="nav-link" href="{{ route('guru.dashboard') }}">
+                    <a class="nav-link" href="{{ route('guru.dashboard') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
                     </a>
-                    <a class="nav-link" href="{{ route('guru.materi.index') }}">
+                    <a class="nav-link" href="{{ route('guru.materi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>
-                    <a class="nav-link active" href="{{ route('guru.kuis.index') }}">
+                    <a class="nav-link active" href="{{ route('guru.kuis.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
                     <hr class="text-white-50">
-                    <a class="nav-link" href="{{ route('logout') }}">
+                    <a class="nav-link" href="{{ route('logout') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </nav>
@@ -235,5 +433,148 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const isOpen = sidebar.classList.contains('show');
+            
+            if (isOpen) {
+                // Close sidebar
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+                // Enable body scroll when sidebar is closed
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.top = '';
+                document.body.style.background = '#ffffff';
+                document.body.style.backgroundColor = '#ffffff';
+            } else {
+                // Open sidebar
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                if (overlay) overlay.style.display = 'block';
+                // Prevent body scroll when sidebar is open
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (window.innerWidth <= 991) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+            }
+            // Always reset body styles regardless of screen size
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        }
+        
+        // Ensure body has white background on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        const overlay = document.querySelector('.sidebar-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
+        
+        // Robust function to setup nav links
+        function setupNavLinks() {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(function(link) {
+                // Clone link untuk memastikan event listener baru terpasang
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+                
+                // Force styles dengan !important
+                newLink.style.setProperty('pointer-events', 'auto', 'important');
+                newLink.style.setProperty('cursor', 'pointer', 'important');
+                newLink.style.setProperty('z-index', '1001', 'important');
+                newLink.style.setProperty('position', 'relative', 'important');
+                newLink.style.setProperty('display', 'block', 'important');
+                newLink.style.setProperty('touch-action', 'manipulation', 'important');
+                
+                // Add click event listener
+                newLink.addEventListener('click', function(e) {
+                    console.log('Nav link clicked:', newLink.href);
+                    const href = newLink.getAttribute('href');
+                    
+                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        // Close sidebar tapi biarkan browser navigate
+                        closeSidebar();
+                        // JANGAN prevent default - biarkan browser navigate secara normal
+                    } else {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, false);
+                
+                // Add touch event listener untuk mobile
+                newLink.addEventListener('touchend', function(e) {
+                    console.log('Nav link touched:', newLink.href);
+                    const href = newLink.getAttribute('href');
+                    
+                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        closeSidebar();
+                        // Navigate
+                        window.location.href = href;
+                        e.preventDefault();
+                        return false;
+                    }
+                }, false);
+            });
+        }
+        
+        // Setup nav links saat DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavLinks();
+            
+            // Setup ulang setiap kali sidebar dibuka
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                const observer = new MutationObserver(function(mutations) {
+                    if (sidebar.classList.contains('show')) {
+                        setTimeout(setupNavLinks, 100);
+                    }
+                });
+                observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+            }
+        });
+        
+        // Pastikan setupNavLinks tersedia secara global
+        window.setupNavLinks = setupNavLinks;
+        
+        // Also ensure sidebar itself is clickable
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.style.pointerEvents = 'auto';
+            sidebar.style.zIndex = '1061';
+        }
+    </script>
 </body>
 </html>

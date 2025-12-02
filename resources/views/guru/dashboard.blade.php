@@ -8,6 +8,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        html, body {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
@@ -18,11 +27,21 @@
             border-radius: 8px;
             margin: 4px 0;
             transition: all 0.3s ease;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 1001 !important;
+            position: relative !important;
+            display: block !important;
+            touch-action: manipulation !important;
         }
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
             color: white;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1) !important;
             transform: translateX(5px);
+            pointer-events: auto !important;
+        }
+        .sidebar .nav-link:active {
+            pointer-events: auto !important;
         }
         .card {
             border: none;
@@ -130,7 +149,9 @@
                 z-index: 1050;
                 transition: left 0.3s ease;
                 width: 280px;
-                max-width: 80%;
+                max-width: 85%;
+                height: 100vh;
+                overflow-y: auto;
             }
             
             .sidebar.show {
@@ -144,6 +165,47 @@
             .col-md-9.col-lg-10 {
                 width: 100%;
                 margin-left: 0;
+                padding: 15px !important;
+            }
+            
+            /* Tambahkan margin untuk header agar tidak tertutup hamburger menu dan simetris */
+            .header-dashboard {
+                margin-left: 60px !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+                margin-right: 15px !important;
+            }
+            
+            .header-title-section {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                flex: 1;
+            }
+            
+            /* Pastikan content area simetris */
+            .col-md-9.col-lg-10 {
+                padding-left: 0 !important;
+                padding-right: 15px !important;
+            }
+            
+            /* Card statistik simetris */
+            .row.mb-4 {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+                padding-left: 15px !important;
+                padding-right: 0 !important;
+            }
+            
+            /* Mata pelajaran switcher simetris */
+            .mata-pelajaran-switcher {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+            }
+            
+            /* Semua card simetris */
+            .card.mb-4 {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
             }
         }
         
@@ -226,26 +288,87 @@
                             // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                             $freshGuru = \App\Models\Guru::find($guru->id);
                             $photoUrl = null;
+                            $hasPhoto = false;
                             
                             if ($freshGuru && !empty($freshGuru->foto)) {
-                                // OTOMATIS cari foto dengan default path yang benar
+                                // Method 1: PhotoHelper dengan default path
                                 $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
                                 
-                                // Jika masih null, coba dengan path lain
+                                // Method 2: PhotoHelper dengan path lain
                                 if (!$photoUrl) {
                                     $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
                                 }
                                 
-                                // Jika masih null, coba langsung dengan asset() untuk URL lengkap
-                                if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
-                                    $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                // Method 3: PhotoHelper dengan path guru/foto
+                                if (!$photoUrl) {
+                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
                                 }
+                                
+                                // Method 4: Langsung cek di storage dengan path dari database
+                                if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                }
+                                
+                                // Method 5: Cek dengan basename di folder profiles/guru
+                                if (!$photoUrl) {
+                                    $basename = basename($freshGuru->foto);
+                                    $storagePath = 'profiles/guru/' . $basename;
+                                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                        $baseUrl = request()->getSchemeAndHttpHost();
+                                        $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    }
+                                }
+                                
+                                // Method 6: Cek file secara langsung di disk dengan berbagai kemungkinan path
+                                if (!$photoUrl) {
+                                    $possiblePaths = [
+                                        $freshGuru->foto,
+                                        'profiles/guru/' . basename($freshGuru->foto),
+                                        'guru/foto/' . basename($freshGuru->foto),
+                                        'image/profiles/' . basename($freshGuru->foto)
+                                    ];
+                                    
+                                    foreach ($possiblePaths as $possiblePath) {
+                                        $fullPath = storage_path('app/public/' . $possiblePath);
+                                        if (file_exists($fullPath)) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = $baseUrl . '/storage/' . $possiblePath . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                // Method 7: Jika PhotoHelper menghasilkan URL dengan localhost, ganti dengan base URL dari request
+                                if ($photoUrl && (strpos($photoUrl, 'localhost') !== false || strpos($photoUrl, '127.0.0.1') !== false)) {
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = str_replace(['http://localhost', 'https://localhost', 'http://127.0.0.1', 'https://127.0.0.1'], $baseUrl, $photoUrl);
+                                }
+                                
+                                // Method 8: Jika masih null, coba langsung construct URL dari path di database (fallback)
+                                if (!$photoUrl && !empty($freshGuru->foto)) {
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                }
+                                
+                                $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null' && $photoUrl !== '#';
                             }
-                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
                         @endphp
                         @if($hasPhoto && $photoUrl)
                             <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru').style.display='flex';">
+                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onload="console.log('Dashboard photo loaded:', this.src); this.style.display='block'; document.getElementById('profile-placeholder-guru').style.display='none';" onerror="console.error('Dashboard photo error:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru').style.display='flex';">
+                                <div id="profile-placeholder-guru" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
+                                    <i class="fas fa-user fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        @elseif(!empty($freshGuru->foto))
+                            {{-- Jika ada path di database tapi tidak bisa dimuat, coba tampilkan dengan URL langsung --}}
+                            @php
+                                $baseUrl = request()->getSchemeAndHttpHost();
+                                $directUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                            @endphp
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <img src="{{ $directUrl }}" alt="Foto Profil" id="profile-photo-img-guru" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onload="console.log('Dashboard photo loaded (direct):', this.src); this.style.display='block'; document.getElementById('profile-placeholder-guru').style.display='none';" onerror="console.error('Dashboard photo error (direct):', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru').style.display='flex';">
                                 <div id="profile-placeholder-guru" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
                                     <i class="fas fa-user fa-2x text-primary"></i>
                                 </div>
@@ -264,26 +387,26 @@
                 </div>
                 
                 <nav class="nav flex-column px-3">
-                    <a class="nav-link active" href="{{ route('guru.dashboard') }}">
+                    <a class="nav-link active" href="{{ route('guru.dashboard') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
                     </a>
-                    <a class="nav-link" href="{{ route('guru.materi.index') }}">
+                    <a class="nav-link" href="{{ route('guru.materi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>
-                    <a class="nav-link" href="{{ route('guru.kuis.index') }}">
+                    <a class="nav-link" href="{{ route('guru.kuis.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
                     <hr class="text-white-50">
-                    <a class="nav-link" href="{{ route('logout') }}">
+                    <a class="nav-link" href="{{ route('logout') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </nav>
@@ -292,8 +415,8 @@
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
+                <div class="d-flex justify-content-between align-items-center mb-4 header-dashboard">
+                    <div class="header-title-section">
                         <h2 class="mb-1">Selamat Datang, {{ $guru->user->name }}!</h2>
                         <p class="text-muted mb-0">Kelola materi pembelajaran dan aktivitas mengajar Anda</p>
                     </div>
@@ -326,7 +449,7 @@
 
                 <!-- Mata Pelajaran Switcher -->
                 @if($mataPelajaranList->count() > 1)
-                    <div class="card mb-4">
+                    <div class="card mb-4 mata-pelajaran-switcher">
                         <div class="card-body">
                             <h6 class="card-title mb-3">
                                 <i class="fas fa-exchange-alt me-2 text-primary"></i>
@@ -807,9 +930,124 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.toggle('show');
-            overlay.classList.toggle('show');
+            const isOpen = sidebar.classList.contains('show');
+            
+            if (isOpen) {
+                // Close sidebar
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+                // Enable body scroll when sidebar is closed
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.top = '';
+                document.body.style.background = '#ffffff';
+                document.body.style.backgroundColor = '#ffffff';
+            } else {
+                // Open sidebar
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                if (overlay) overlay.style.display = 'block';
+                // Prevent body scroll when sidebar is open
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
         }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (window.innerWidth <= 991) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+            }
+            // Always reset body styles regardless of screen size
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        }
+        
+        // Ensure body has white background on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        });
+        
+        // Robust function to setup nav links
+        function setupNavLinks() {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(function(link) {
+                // Force styles dengan !important
+                link.style.setProperty('pointer-events', 'auto', 'important');
+                link.style.setProperty('cursor', 'pointer', 'important');
+                link.style.setProperty('z-index', '1001', 'important');
+                link.style.setProperty('position', 'relative', 'important');
+                link.style.setProperty('display', 'block', 'important');
+                link.style.setProperty('touch-action', 'manipulation', 'important');
+                
+                // Remove existing listeners by cloning
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+                
+                // Add click event listener
+                newLink.addEventListener('click', function(e) {
+                    console.log('Nav link clicked:', newLink.href);
+                    const href = newLink.getAttribute('href');
+                    
+                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        closeSidebar();
+                        // Biarkan browser navigate secara normal
+                    } else {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, { capture: false });
+                
+                // Add touch event listener untuk mobile
+                newLink.addEventListener('touchend', function(e) {
+                    console.log('Nav link touched:', newLink.href);
+                    const href = newLink.getAttribute('href');
+                    
+                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        closeSidebar();
+                        window.location.href = href;
+                        e.preventDefault();
+                        return false;
+                    }
+                }, { capture: false });
+            });
+        }
+        
+        // Setup nav links saat DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavLinks();
+            
+            // Setup ulang setelah sidebar dibuka
+            const observer = new MutationObserver(function(mutations) {
+                setupNavLinks();
+            });
+            
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                observer.observe(sidebar, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
         
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
@@ -817,12 +1055,26 @@
             const toggleBtn = document.querySelector('.sidebar-toggle');
             const overlay = document.querySelector('.sidebar-overlay');
             
+            // Don't close if clicking on a nav link
+            if (event.target.closest('.nav-link')) {
+                return;
+            }
+            
             if (window.innerWidth <= 991) {
                 if (!sidebar.contains(event.target) && 
                     !toggleBtn.contains(event.target) && 
                     sidebar.classList.contains('show')) {
                     sidebar.classList.remove('show');
                     overlay.classList.remove('show');
+                    if (overlay) overlay.style.display = 'none';
+                    // Enable body scroll when sidebar is closed
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                    document.body.style.height = '';
+                    document.body.style.top = '';
+                    document.body.style.background = '#ffffff';
+                    document.body.style.backgroundColor = '#ffffff';
                 }
             }
         });

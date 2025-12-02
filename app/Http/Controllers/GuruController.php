@@ -259,18 +259,31 @@ class GuruController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
+        // Refresh data untuk memastikan data terbaru
+        $guru->refresh();
+        $guru->load('user');
+
         return view('guru.profile.index', compact('guru'));
     }
 
     public function profileEdit()
     {
-        $guru = Guru::where('user_id', Auth::id())->first();
-        
-        if (!$guru) {
-            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
-        }
+        try {
+            $guru = Guru::where('user_id', Auth::id())->first();
+            
+            if (!$guru) {
+                return redirect()->route('guru.dashboard')->with('error', 'Data guru tidak ditemukan');
+            }
 
-        return view('guru.profile.edit', compact('guru'));
+            // Refresh data untuk memastikan data terbaru
+            $guru->refresh();
+            $guru->load('user');
+
+            return view('guru.profile.edit', compact('guru'));
+        } catch (\Exception $e) {
+            \Log::error('Error in profileEdit: ' . $e->getMessage());
+            return redirect()->route('guru.dashboard')->with('error', 'Terjadi kesalahan saat memuat halaman edit profil: ' . $e->getMessage());
+        }
     }
 
     public function updateProfil(Request $request)
@@ -281,15 +294,26 @@ class GuruController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nip' => 'required|string|max:255',
-            'mata_pelajaran' => 'required|string|max:255',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'biodata' => 'nullable|string',
-            'kontak' => 'nullable|string|max:255',
-            'keahlian' => 'nullable|string'
-        ]);
+        try {
+            $request->validate([
+                'nama' => 'required|string|max:255',
+                'nip' => 'required|string|max:255',
+                'mata_pelajaran' => 'required|string|max:255',
+                'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'biodata' => 'nullable|string',
+                'kontak' => 'nullable|string|max:255',
+                'keahlian' => 'nullable|string'
+            ], [
+                'nama.required' => 'Nama lengkap wajib diisi.',
+                'nip.required' => 'NIP wajib diisi.',
+                'mata_pelajaran.required' => 'Mata pelajaran wajib diisi.',
+                'foto.image' => 'File yang diupload harus berupa gambar.',
+                'foto.mimes' => 'Format gambar harus JPG, PNG, atau GIF.',
+                'foto.max' => 'Ukuran gambar maksimal 2MB.'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        }
 
         // Update data user
         $guru->user->update([
@@ -372,19 +396,28 @@ class GuruController extends Controller
         ];
         
         // Add foto to update data if it was uploaded
-        if ($request->hasFile('foto')) {
+        if ($request->hasFile('foto') && !empty($guru->foto)) {
             $updateData['foto'] = $guru->foto;
         }
         
         $guru->update($updateData);
         
+        // Refresh data guru untuk memastikan data terbaru
+        $guru->refresh();
+        $guru->load('user');
+        
         // Verifikasi foto tersimpan dengan benar
-        if ($request->hasFile('foto')) {
-            $savedGuru = Guru::find($guru->id);
-            \Log::info('Photo verification after save for guru', [
-                'guru_id' => $savedGuru->id,
-                'foto_in_db' => $savedGuru->foto,
-                'foto_exists' => $savedGuru->foto ? \Illuminate\Support\Facades\Storage::disk('public')->exists($savedGuru->foto) : false
+        if ($guru->foto) {
+            $photoExists = \Illuminate\Support\Facades\Storage::disk('public')->exists($guru->foto);
+            $photoFullPath = storage_path('app/public/' . $guru->foto);
+            $photoFileExists = file_exists($photoFullPath);
+            
+            \Log::info('Photo verification after update', [
+                'guru_id' => $guru->id,
+                'foto_path' => $guru->foto,
+                'storage_exists' => $photoExists,
+                'file_exists' => $photoFileExists,
+                'full_path' => $photoFullPath
             ]);
         }
         

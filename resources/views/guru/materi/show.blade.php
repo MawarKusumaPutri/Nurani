@@ -163,9 +163,43 @@
                         @if($materi->link_video)
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <h5 class="card-title mb-3">Video Pembelajaran</h5>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title mb-0">Video Pembelajaran</h5>
+                                        @php
+                                            // Convert YouTube URL to embed format if needed
+                                            $videoUrl = $materi->link_video;
+                                            if (strpos($videoUrl, 'youtube.com/watch') !== false) {
+                                                parse_str(parse_url($videoUrl, PHP_URL_QUERY), $params);
+                                                if (isset($params['v'])) {
+                                                    $videoUrl = 'https://www.youtube.com/embed/' . $params['v'];
+                                                }
+                                            } elseif (strpos($videoUrl, 'youtu.be/') !== false) {
+                                                $videoId = substr(parse_url($videoUrl, PHP_URL_PATH), 1);
+                                                $videoUrl = 'https://www.youtube.com/embed/' . $videoId;
+                                            } elseif (strpos($videoUrl, 'youtube.com/embed/') === false) {
+                                                // If it's not already an embed URL, try to extract video ID
+                                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $videoUrl, $matches)) {
+                                                    $videoUrl = 'https://www.youtube.com/embed/' . $matches[1];
+                                                }
+                                            }
+                                            
+                                            // Get original URL for button
+                                            $originalUrl = $materi->link_video;
+                                            if (strpos($originalUrl, 'youtube.com') === false && strpos($originalUrl, 'youtu.be') === false) {
+                                                // If it's already an embed URL, convert back to watch URL
+                                                if (preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $originalUrl, $matches)) {
+                                                    $originalUrl = 'https://www.youtube.com/watch?v=' . $matches[1];
+                                                }
+                                            }
+                                        @endphp
+                                        <a href="{{ $originalUrl }}" target="_blank" class="btn btn-danger btn-sm" style="background-color: #FF0000 !important; border-color: #FF0000 !important; color: white !important; display: inline-flex !important; align-items: center !important; padding: 8px 16px !important; text-decoration: none !important; font-weight: 500 !important;">
+                                            <span style="margin-right: 8px; font-size: 18px;">▶</span>
+                                            <i class="fab fa-youtube me-2" style="font-size: 18px !important;"></i>
+                                            <span>Buka di YouTube</span>
+                                        </a>
+                                    </div>
                                     <div class="ratio ratio-16x9">
-                                        <iframe src="{{ $materi->link_video }}" 
+                                        <iframe src="{{ $videoUrl }}" 
                                                 frameborder="0" 
                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                                 allowfullscreen></iframe>

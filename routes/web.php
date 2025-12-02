@@ -64,6 +64,9 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+// API Routes for Auto-fill
+Route::get('/api/users-by-role', [AuthController::class, 'getUsersByRole'])->name('api.users-by-role');
+
 // Protected Routes
 Route::middleware('auth')->group(function () {
     // Guru Routes

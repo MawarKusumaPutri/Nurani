@@ -7,40 +7,77 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        html, body {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            position: relative;
+        }
+        
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
         }
+        
+        #sidebar {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
+        }
+        
+        .sidebar.show {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
+            z-index: 1061 !important;
+        }
+        
+        .sidebar * {
+            background-color: transparent !important;
+        }
+        
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             padding: 12px 20px;
             border-radius: 8px;
             margin: 4px 0;
             transition: all 0.3s ease;
+            background-color: transparent !important;
         }
+        
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
             color: white;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1) !important;
             transform: translateX(5px);
         }
+        
         .card {
             border: none;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 8px;
         }
+        
         .form-control, .form-select {
             border-radius: 8px;
             border: 1px solid #e0e0e0;
         }
+        
         .form-control:focus, .form-select:focus {
             border-color: #2E7D32;
             box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
         }
+        
         .file-upload-area {
             border: 2px dashed #2E7D32;
             border-radius: 8px;
@@ -49,20 +86,118 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
+        
         .file-upload-area:hover {
             background: rgba(46, 125, 50, 0.05);
         }
+        
         .file-upload-area.dragover {
             background: rgba(46, 125, 50, 0.1);
             border-color: #2E7D32;
         }
+        
+        /* Responsive Sidebar Toggle */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 99999;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            pointer-events: auto;
+            touch-action: manipulation;
+            min-width: 48px;
+            min-height: 48px;
+            font-size: 18px;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.05) !important;
+            z-index: 1040;
+            pointer-events: auto;
+            transition: background 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .sidebar-overlay.show {
+            pointer-events: auto;
+            display: block;
+            opacity: 1;
+            background: rgba(0,0,0,0.05) !important;
+            z-index: 1040 !important;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1061 !important;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 85%;
+                height: 100vh;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                pointer-events: auto !important;
+            }
+            
+            .sidebar.show {
+                left: 0 !important;
+                transform: translateX(0) !important;
+                pointer-events: auto !important;
+                z-index: 1061 !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            #sidebar.show {
+                left: 0 !important;
+                transform: translateX(0) !important;
+                pointer-events: auto !important;
+                z-index: 1061 !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
-<body>
-    <div class="container-fluid">
+<body style="margin: 0; padding: 0; position: relative;">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" type="button" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <div class="container-fluid" style="position: relative; z-index: 1;">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0">
+            <div class="col-md-3 col-lg-2 sidebar p-0" id="sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
                 <div class="p-4">
                     <h4 class="text-white mb-4">
                         <i class="fas fa-chalkboard-teacher me-2"></i>
@@ -86,29 +221,26 @@
                 </div>
                 
                 <nav class="nav flex-column px-3">
-                    <a class="nav-link" href="{{ route('guru.dashboard') }}">
+                    <a class="nav-link" href="{{ route('guru.dashboard') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
-<<<<<<< HEAD
-=======
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
+                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
                     </a>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
-                    <a class="nav-link active" href="{{ route('guru.materi.index') }}">
+                    <a class="nav-link active" href="{{ route('guru.materi.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>
-                    <a class="nav-link" href="{{ route('guru.kuis.index') }}">
+                    <a class="nav-link" href="{{ route('guru.kuis.index') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
                     <hr class="text-white-50">
-                    <a class="nav-link" href="{{ route('logout') }}">
+                    <a class="nav-link" href="{{ route('logout') }}" onclick="closeSidebar(); return true;">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </a>
                 </nav>
@@ -194,13 +326,6 @@
                                         <label for="topik" class="form-label">Topik <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="topik" name="topik" 
                                                value="{{ old('topik') }}" required>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="link_video" class="form-label">Link Video</label>
-                                        <input type="url" class="form-control" id="link_video" name="link_video" 
-                                               value="{{ old('link_video') }}" 
-                                               placeholder="https://youtube.com/watch?v=...">
                                     </div>
                                     
                                     <div class="mb-3">
@@ -298,6 +423,61 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const isOpen = sidebar.classList.contains('show');
+            
+            if (isOpen) {
+                // Close sidebar
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.top = '';
+                document.body.style.background = '#ffffff';
+                document.body.style.backgroundColor = '#ffffff';
+            } else {
+                // Open sidebar
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                if (overlay) overlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (window.innerWidth <= 991) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                if (overlay) overlay.style.display = 'none';
+            }
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+        });
     </script>
 </body>
 </html>

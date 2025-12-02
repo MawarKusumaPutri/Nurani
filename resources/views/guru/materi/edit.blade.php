@@ -100,15 +100,12 @@
                     <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
-<<<<<<< HEAD
-=======
                     <a class="nav-link" href="{{ route('guru.presensi.index') }}">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
                     <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
                         <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
                     </a>
->>>>>>> bd1c07c5fea862aa0b0a3105a6b0f728d080abb5
                     <a class="nav-link active" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>
@@ -191,13 +188,6 @@
                                         <label for="topik" class="form-label">Topik <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="topik" name="topik" 
                                                value="{{ old('topik', $materi->topik) }}" required>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="link_video" class="form-label">Link Video</label>
-                                        <input type="url" class="form-control" id="link_video" name="link_video" 
-                                               value="{{ old('link_video', $materi->link_video) }}" 
-                                               placeholder="https://youtube.com/watch?v=...">
                                     </div>
                                     
                                     <div class="mb-3">

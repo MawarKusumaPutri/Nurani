@@ -82,12 +82,22 @@
                                     }
                                 }
                                 
-                                // Method 6: Cek file secara langsung di disk
+                                // Method 6: Cek file secara langsung di disk dengan berbagai kemungkinan path
                                 if (!$photoUrl) {
-                                    $fullPath = storage_path('app/public/' . $freshGuru->foto);
-                                    if (file_exists($fullPath)) {
-                                        $baseUrl = request()->getSchemeAndHttpHost();
-                                        $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    $possiblePaths = [
+                                        $freshGuru->foto,
+                                        'profiles/guru/' . basename($freshGuru->foto),
+                                        'guru/foto/' . basename($freshGuru->foto),
+                                        'image/profiles/' . basename($freshGuru->foto)
+                                    ];
+                                    
+                                    foreach ($possiblePaths as $possiblePath) {
+                                        $fullPath = storage_path('app/public/' . $possiblePath);
+                                        if (file_exists($fullPath)) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = $baseUrl . '/storage/' . $possiblePath . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            break;
+                                        }
                                     }
                                 }
                                 
@@ -97,7 +107,13 @@
                                     $photoUrl = str_replace('http://localhost', $baseUrl, $photoUrl);
                                 }
                                 
-                                $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
+                                // Method 8: Jika masih null, coba langsung construct URL dari path di database (fallback)
+                                if (!$photoUrl && !empty($freshGuru->foto)) {
+                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                    $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                }
+                                
+                                $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null' && $photoUrl !== '#';
                             }
                         @endphp
                         @if($hasPhoto && $photoUrl)
@@ -254,53 +270,80 @@
                                 @php
                                     // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                                     $freshGuru = \App\Models\Guru::find($guru->id);
-<<<<<<< HEAD
                                     $photoPath = $freshGuru->foto ?? null;
                                     $photoUrl = null;
                                     $hasPhoto = false;
                                     
-                                    if ($photoPath) {
-                                        // OTOMATIS cari foto dengan default path yang benar
-                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'profiles/guru');
+                                    if ($freshGuru && !empty($freshGuru->foto)) {
+                                        // Debug: Log path foto dari database
+                                        \Log::info('Trying to load photo for guru', [
+                                            'guru_id' => $freshGuru->id,
+                                            'foto_path_in_db' => $freshGuru->foto
+                                        ]);
+                                        
+                                        // OTOMATIS cari foto dengan berbagai kemungkinan path
+                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
                                         
                                         // Jika masih null, coba dengan path lain
                                         if (!$photoUrl) {
-                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'image/profiles');
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
                                         }
                                         
-                                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
-                                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath)) {
-                                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
-                                        }
-                                        
-                                        // Jika masih null, coba dengan path absolut
+                                        // Jika masih null, coba dengan path lain lagi
                                         if (!$photoUrl) {
-                                            $storagePath = storage_path('app/public/' . $photoPath);
-                                            if (file_exists($storagePath)) {
-                                                $photoUrl = asset('storage/' . $photoPath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'guru/foto');
+                                        }
+                                        
+                                        // Jika masih null, coba langsung dengan base URL dari request
+                                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        }
+                                        
+                                        // Jika masih null, coba dengan basename di folder profiles/guru
+                                        if (!$photoUrl) {
+                                            $basename = basename($freshGuru->foto);
+                                            $storagePath = 'profiles/guru/' . $basename;
+                                            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storagePath)) {
+                                                $baseUrl = request()->getSchemeAndHttpHost();
+                                                $photoUrl = $baseUrl . '/storage/' . $storagePath . '?v=' . time() . '&r=' . rand(1000, 9999);
                                             }
                                         }
                                         
-                                        // Jika masih null, coba langsung dengan path dari database
+                                        // Jika masih null, cek file secara langsung di disk dengan berbagai kemungkinan path
                                         if (!$photoUrl) {
-                                            // Coba berbagai kemungkinan path
                                             $possiblePaths = [
-                                                'storage/' . $photoPath,
-                                                'storage/profiles/guru/' . basename($photoPath),
-                                                'storage/image/profiles/' . basename($photoPath),
-                                                $photoPath
+                                                $freshGuru->foto,
+                                                'profiles/guru/' . basename($freshGuru->foto),
+                                                'guru/foto/' . basename($freshGuru->foto),
+                                                'image/profiles/' . basename($freshGuru->foto)
                                             ];
                                             
                                             foreach ($possiblePaths as $possiblePath) {
-                                                $fullPath = public_path($possiblePath);
+                                                $fullPath = storage_path('app/public/' . $possiblePath);
                                                 if (file_exists($fullPath)) {
-                                                    $photoUrl = asset($possiblePath) . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                                    $baseUrl = request()->getSchemeAndHttpHost();
+                                                    $photoUrl = $baseUrl . '/storage/' . $possiblePath . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                                    \Log::info('Photo found at path', ['path' => $possiblePath, 'url' => $photoUrl]);
                                                     break;
                                                 }
                                             }
                                         }
                                         
-                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null';
+                                        // Jika masih null, coba langsung construct URL dari path di database
+                                        if (!$photoUrl && !empty($freshGuru->foto)) {
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            // Coba langsung dengan path dari database
+                                            $photoUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                            \Log::info('Trying direct URL construction', ['url' => $photoUrl]);
+                                        }
+                                        
+                                        $hasPhoto = $photoUrl !== null && $photoUrl !== '' && $photoUrl !== 'null' && $photoUrl !== '#';
+                                        
+                                        \Log::info('Photo URL result', [
+                                            'has_photo' => $hasPhoto,
+                                            'photo_url' => $photoUrl
+                                        ]);
                                     }
                                 @endphp
                                 @if($hasPhoto && $photoUrl)
@@ -308,25 +351,41 @@
                                         <img src="{{ $photoUrl }}" alt="Foto Profil" 
                                              id="profile-photo-img-main"
                                              class="img-thumbnail" 
-                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block;"
-                                             onload="console.log('Photo loaded successfully:', this.src);"
-                                             onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';">
+                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
+                                             onload="console.log('Photo loaded successfully:', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
+                                             onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
+                                             onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
                                         <div id="profile-photo-placeholder-main" class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
                                             <i class="fas fa-user-tie text-secondary"></i>
                                         </div>
                                     </div>
+                                @elseif(!empty($freshGuru->foto))
+                                    {{-- Jika ada path di database tapi tidak bisa dimuat, coba tampilkan dengan URL langsung --}}
+                                    @php
+                                        $baseUrl = request()->getSchemeAndHttpHost();
+                                        $directUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                    @endphp
+                                    <div class="position-relative d-inline-block mb-3">
+                                        <img src="{{ $directUrl }}" alt="Foto Profil" 
+                                             id="profile-photo-img-main"
+                                             class="img-thumbnail" 
+                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
+                                             onload="console.log('Photo loaded successfully (direct):', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
+                                             onerror="console.error('Error loading photo (direct):', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
+                                             onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
+                                        <div id="profile-photo-placeholder-main" class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                            <i class="fas fa-user-tie text-secondary"></i>
+                                        </div>
+                                    </div>
+                                    <small class="text-info d-block mt-2">
+                                        <i class="fas fa-info-circle"></i> 
+                                        Path foto: {{ $freshGuru->foto }}
+                                    </small>
                                 @else
                                     <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0;">
                                         <i class="fas fa-user-tie text-secondary"></i>
                                     </div>
                                     <p class="text-muted">Foto profil belum diatur</p>
-                                    @if(!empty($freshGuru->foto))
-                                        <small class="text-danger d-block mt-2">
-                                            <i class="fas fa-exclamation-triangle"></i> 
-                                            Foto ada di database ({{ $freshGuru->foto }}) tapi tidak dapat dimuat. 
-                                            Silakan coba upload ulang.
-                                        </small>
-                                    @endif
                                 @endif
                                 <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
                                     <i class="fas fa-edit"></i> {{ ($freshGuru && !empty($freshGuru->foto)) ? 'Ganti Foto' : 'Upload Foto' }}

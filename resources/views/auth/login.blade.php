@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer-when-downgrade">
     <title>Login Guru - TMS NURANI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -228,6 +231,45 @@
             font-weight: 600;
         }
         
+        .form-check {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+        
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #2E7D32;
+            border: 2px solid #e1e5e9;
+            border-radius: 4px;
+        }
+        
+        .form-check-input:checked {
+            background-color: #2E7D32;
+            border-color: #2E7D32;
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-check-label i {
+            margin-right: 5px;
+            color: #2E7D32;
+        }
+        
+        .form-check-label:hover {
+            color: #2E7D32;
+        }
+        
         .alert {
             border-radius: 12px;
             margin-bottom: 20px;
@@ -262,32 +304,44 @@
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
+                min-height: 100vh;
             }
             
             .login-container {
-                padding: 20px;
-                align-items: flex-start;
-                padding-top: 40px;
+                padding: 15px;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                padding-top: 20px;
+                padding-bottom: 20px;
             }
             
             .login-card {
-                margin: 0;
-                padding: 30px 20px;
+                margin: 0 auto;
+                padding: 35px 25px;
                 max-width: 100%;
-                border-radius: 15px;
+                width: 100%;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            }
+            
+            .logo-section {
+                margin-bottom: 30px;
             }
             
             .logo {
-                width: 60px;
-                height: 60px;
+                width: 70px;
+                height: 70px;
+                margin-bottom: 15px;
             }
             
             .logo i {
-                font-size: 30px;
+                font-size: 35px;
             }
             
             .brand-name {
-                font-size: 24px;
+                font-size: 26px;
+                margin-bottom: 8px;
             }
             
             .brand-subtitle {
@@ -295,21 +349,152 @@
             }
             
             .form-title {
-                font-size: 20px;
+                font-size: 22px;
+                margin-bottom: 8px;
             }
             
             .form-subtitle {
                 font-size: 13px;
+                margin-bottom: 25px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-label {
+                font-size: 14px;
+                margin-bottom: 6px;
             }
             
             .form-control {
-                padding: 12px 15px;
+                padding: 14px 18px;
                 font-size: 16px;
+                border-radius: 10px;
             }
             
             .btn-login {
-                padding: 12px 20px;
+                padding: 14px 25px;
+                font-size: 16px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .form-check {
+                padding: 8px 0;
+            }
+            
+            .form-check-label {
+                font-size: 13px;
+            }
+            
+            .form-links {
+                margin-top: 15px;
+            }
+            
+            .form-links a {
+                font-size: 14px;
+                padding: 10px 18px;
+            }
+            
+            .features {
+                margin-top: 25px;
+                padding-top: 25px;
+            }
+            
+            .feature-item {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+            
+            .alert {
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 10px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+            
+            .login-card {
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            
+            .logo-section {
+                margin-bottom: 25px;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 12px;
+            }
+            
+            .logo i {
+                font-size: 30px;
+            }
+            
+            .brand-name {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+            
+            .brand-subtitle {
+                font-size: 13px;
+            }
+            
+            .form-title {
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+            
+            .form-subtitle {
+                font-size: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 18px;
+            }
+            
+            .form-label {
+                font-size: 13px;
+                margin-bottom: 5px;
+            }
+            
+            .form-control {
+                padding: 13px 16px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+            
+            .btn-login {
+                padding: 13px 20px;
                 font-size: 15px;
+                border-radius: 8px;
+                margin-bottom: 12px;
+            }
+            
+            .form-check {
+                padding: 6px 0;
+            }
+            
+            .form-check-label {
+                font-size: 12px;
+            }
+            
+            .form-links {
+                margin-top: 12px;
+            }
+            
+            .form-links a {
+                font-size: 13px;
+                padding: 8px 15px;
             }
             
             .features {
@@ -318,28 +503,38 @@
             }
             
             .feature-item {
-                font-size: 13px;
-                margin-bottom: 12px;
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .feature-item i {
+                font-size: 14px;
+                margin-right: 8px;
+                width: 18px;
+            }
+            
+            .alert {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+            
+            #email-hint {
+                font-size: 11px;
             }
         }
         
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 15px;
-                padding-top: 30px;
-            }
-            
+        @media (max-width: 360px) {
             .login-card {
                 padding: 25px 15px;
             }
             
             .logo {
-                width: 50px;
-                height: 50px;
+                width: 55px;
+                height: 55px;
             }
             
             .logo i {
-                font-size: 25px;
+                font-size: 28px;
             }
             
             .brand-name {
@@ -350,9 +545,14 @@
                 font-size: 18px;
             }
             
-            .form-links a {
+            .form-control {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+            
+            .btn-login {
+                padding: 12px 18px;
                 font-size: 14px;
-                padding: 8px 15px;
             }
         }
     </style>
@@ -381,7 +581,7 @@
                 </div>
             @endif
             
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
                 
                 <div class="form-group">
@@ -399,9 +599,13 @@
                     <input type="email" 
                            class="form-control" 
                            name="email" 
+                           id="email"
                            placeholder="Masukkan email Anda"
                            value="{{ old('email') }}"
                            required>
+                    <small class="text-muted" id="email-hint" style="display: none; font-size: 12px; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Email otomatis terisi berdasarkan role yang dipilih
+                    </small>
                 </div>
                 
                 <div class="form-group">
@@ -419,9 +623,31 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-login">
-                    <i class="fas fa-sign-in-alt me-2"></i>Masuk ke TMS
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               name="remember" 
+                               id="remember" 
+                               value="1"
+                               {{ old('remember') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="remember" style="color: #666; font-size: 14px; cursor: pointer;">
+                            <i class="fas fa-check-circle"></i> Ingat saya (Auto-login)
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-login" id="loginButton">
+                    <i class="fas fa-sign-in-alt me-2"></i><span id="loginButtonText">Masuk ke TMS</span>
+                    <span id="loginButtonLoading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin me-2"></i>Memproses...
+                    </span>
                 </button>
+                
+                <div id="loginError" class="alert alert-danger" style="display: none; margin-top: 15px;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="loginErrorText"></span>
+                </div>
             </form>
             
             <div class="form-links">
@@ -468,11 +694,15 @@
             toggleIcon.style.opacity = '1';
         }
         
-        // Pastikan icon tetap terlihat saat input field focus
+        // Auto-fill email berdasarkan role
         document.addEventListener('DOMContentLoaded', function() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
+            const roleSelect = document.querySelector('select[name="role"]');
+            const emailInput = document.getElementById('email');
+            const emailHint = document.getElementById('email-hint');
             
+            // Pastikan icon tetap terlihat saat input field focus
             if (passwordField && toggleIcon) {
                 passwordField.addEventListener('focus', function() {
                     toggleIcon.style.display = 'block';
@@ -486,6 +716,94 @@
                     toggleIcon.style.opacity = '1';
                 });
             }
+            
+            // Auto-fill email saat role dipilih
+            if (roleSelect && emailInput) {
+                roleSelect.addEventListener('change', function() {
+                    const role = this.value;
+                    if (role) {
+                        // Ambil email pertama dari role yang dipilih
+                        fetch(`/api/users-by-role?role=${role}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success && data.users && data.users.length > 0) {
+                                    // Auto-fill email pertama
+                                    emailInput.value = data.users[0].email;
+                                    emailHint.style.display = 'block';
+                                    
+                                    // Jika hanya ada 1 user, auto-fill password juga (opsional)
+                                    if (data.users.length === 1 && data.users[0].default_password) {
+                                        // Jangan auto-fill password untuk keamanan
+                                        // Tapi bisa ditampilkan hint
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.log('Auto-fill error:', error);
+                                // Jika error, biarkan user input manual
+                            });
+                    } else {
+                        emailInput.value = '';
+                        emailHint.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Load saved credentials dari localStorage (remember me)
+            const savedEmail = localStorage.getItem('remembered_email');
+            const savedRole = localStorage.getItem('remembered_role');
+            const rememberChecked = localStorage.getItem('remember_me') === 'true';
+            
+            if (rememberChecked && savedEmail && savedRole) {
+                if (roleSelect) roleSelect.value = savedRole;
+                if (emailInput) emailInput.value = savedEmail;
+                const rememberCheckbox = document.getElementById('remember');
+                if (rememberCheckbox) rememberCheckbox.checked = true;
+            }
+        });
+        
+        // Handle login - biarkan form submit normal untuk menghindari security warning
+        // Hanya tambahkan loading state dan save credentials
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const loginButton = document.getElementById('loginButton');
+            const loginButtonText = document.getElementById('loginButtonText');
+            const loginButtonLoading = document.getElementById('loginButtonLoading');
+            const loginError = document.getElementById('loginError');
+            
+            // Hide error
+            if (loginError) {
+                loginError.style.display = 'none';
+            }
+            
+            // Show loading state
+            if (loginButton) {
+                loginButton.disabled = true;
+            }
+            if (loginButtonText) {
+                loginButtonText.style.display = 'none';
+            }
+            if (loginButtonLoading) {
+                loginButtonLoading.style.display = 'inline';
+            }
+            
+            // Save credentials jika remember me checked
+            const rememberCheckbox = document.getElementById('remember');
+            const emailInput = document.getElementById('email');
+            const roleSelect = document.querySelector('select[name="role"]');
+            
+            if (rememberCheckbox && rememberCheckbox.checked && emailInput && roleSelect) {
+                localStorage.setItem('remembered_email', emailInput.value);
+                localStorage.setItem('remembered_role', roleSelect.value);
+                localStorage.setItem('remember_me', 'true');
+            } else {
+                localStorage.removeItem('remembered_email');
+                localStorage.removeItem('remembered_role');
+                localStorage.removeItem('remember_me');
+            }
+            
+            // Biarkan form submit secara normal (tidak preventDefault)
+            // Browser akan handle submission dan redirect otomatis
+            // Jika muncul warning, user bisa klik "Tetap kirim" atau "Send anyway"
         });
     </script>
 </body>

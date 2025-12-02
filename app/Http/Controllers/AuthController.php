@@ -55,7 +55,10 @@ class AuthController extends Controller
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             \Log::info('Login successful for user:', ['name' => $user->name, 'email' => $user->email]);
-            Auth::login($user);
+            
+            // Handle remember me
+            $remember = $request->has('remember') && $request->remember == '1';
+            Auth::login($user, $remember);
             
             // Track guru login activity
             if ($role === 'guru') {
@@ -99,16 +102,23 @@ class AuthController extends Controller
             }
             
             // Redirect berdasarkan role
-            switch ($role) {
-                case 'guru':
-                    return redirect()->route('guru.dashboard');
-                case 'tu':
-                    return redirect()->route('tu.dashboard');
-                case 'kepala_sekolah':
-                    return redirect()->route('kepala_sekolah.dashboard');
-                default:
-                    return redirect()->route('guru.dashboard');
+            $redirectUrl = match($role) {
+                'guru' => route('guru.dashboard'),
+                'tu' => route('tu.dashboard'),
+                'kepala_sekolah' => route('kepala_sekolah.dashboard'),
+                default => route('guru.dashboard')
+            };
+            
+            // Jika request AJAX, return JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $redirectUrl,
+                    'message' => 'Login berhasil'
+                ]);
             }
+            
+            return redirect($redirectUrl);
         } else {
             \Log::info('Login failed:', [
                 'user_found' => $user ? true : false,
@@ -123,8 +133,18 @@ class AuthController extends Controller
             default => 'pengguna'
         };
 
+        $errorMessage = 'Email atau password tidak valid. Pastikan Anda adalah ' . $roleText . ' yang terdaftar.';
+        
+        // Jika request AJAX, return JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'error' => $errorMessage
+            ], 422);
+        }
+
         return back()->withErrors([
-            'email' => 'Email atau password tidak valid. Pastikan Anda adalah ' . $roleText . ' yang terdaftar.',
+            'email' => $errorMessage,
         ])->withInput($request->except('password'));
     }
 
@@ -325,5 +345,31 @@ class AuthController extends Controller
         }
 
         return back()->withErrors(['email' => 'User tidak ditemukan.'])->withInput();
+    }
+
+    /**
+     * Get users by role for auto-fill
+     */
+    public function getUsersByRole(Request $request)
+    {
+        $role = $request->query('role');
+        
+        if (!$role || !in_array($role, ['guru', 'tu', 'kepala_sekolah'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid role'
+            ], 400);
+        }
+        
+        $users = User::where('role', $role)
+            ->select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
+        
+        return response()->json([
+            'success' => true,
+            'users' => $users,
+            'count' => $users->count()
+        ]);
     }
 }
