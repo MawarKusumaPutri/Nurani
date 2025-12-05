@@ -186,11 +186,14 @@
         .badge-notification {
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             color: white;
-            padding: 12px 24px;
+            padding: 10px 18px;
             border-radius: 25px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
         }
         
         /* Action Buttons */
@@ -229,10 +232,40 @@
         /* Header Styles */
         .page-header {
             background: white;
-            padding: 30px;
+            padding: 25px 30px;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .header-title-section h2 {
+            font-size: 24px;
+            line-height: 1.3;
+        }
+        
+        .header-title-section p.text-muted {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .header-title-section p.text-muted.small {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        /* Pagination Section */
+        .pagination-section {
+            margin-bottom: 20px;
+        }
+        
+        .pagination-section .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: none;
+        }
+        
+        .pagination-section .card-body {
+            padding: 15px 20px;
         }
         
         .page-title {
@@ -373,10 +406,11 @@
         .notification-status-badge {
             padding: 6px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            white-space: nowrap;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
@@ -394,9 +428,122 @@
         .notification-status-badge i {
             font-size: 10px;
         }
+        
+        /* Responsive Styles */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1050;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 80%;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            /* Tambahkan margin untuk header agar tidak tertutup hamburger menu dan simetris */
+            .page-header {
+                margin-left: 60px !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+                margin-right: 15px !important;
+            }
+            
+            .header-title-section {
+                flex: 1;
+                margin-right: 15px;
+            }
+            
+            /* Pagination section simetris */
+            .pagination-section {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            /* Select all container simetris */
+            .select-all-wrapper {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+            
+            /* Notifications list simetris */
+            .row:not(.select-all-wrapper):not(:first-child) {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+                padding-left: 15px !important;
+                padding-right: 0 !important;
+            }
+            
+            /* Col-12 dalam notifications list */
+            .row:not(.select-all-wrapper):not(:first-child) .col-12 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 24px !important;
+            }
+            
+            .page-subtitle {
+                font-size: 14px !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
     <div class="container-fluid">
         <div class="row">
             @include('partials.kepala-sekolah-sidebar')
@@ -405,21 +552,25 @@
             <div class="col-md-9 col-lg-10 p-4">
                 <!-- Header -->
                 <div class="page-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h1 class="page-title">
-                                <i class="fas fa-bell me-2"></i>
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                        <div class="header-title-section flex-grow-1">
+                            <h2 class="mb-1">Selamat Datang, {{ Auth::user()->name }}!</h2>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-bell me-2 text-primary"></i>
                                 Notifikasi
-                            </h1>
-                            <p class="page-subtitle mb-0">Kelola dan lihat semua notifikasi sistem</p>
+                            </p>
+                            <p class="text-muted small mb-0">Kelola dan lihat semua notifikasi sistem</p>
                         </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="d-flex flex-column align-items-end">
-                                <span class="badge badge-notification mb-2">
+                        <div class="d-flex align-items-start gap-3 flex-shrink-0">
+                            <div>
+                                <span class="badge bg-primary px-3 py-2">Kepala Sekolah</span>
+                            </div>
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <span class="badge badge-notification">
                                     <i class="fas fa-bell me-2"></i>
                                     {{ $totalNotifications }} Notifikasi
                                 </span>
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <div class="notification-status-badge notification-status-read">
                                         <i class="fas fa-check-circle me-1"></i>
                                         <span>{{ $readNotifications }} Dibaca</span>
@@ -434,52 +585,56 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Pagination Controls - Moved to Top -->
-                    @if($notifications->count() > 0 && ($notifications->hasPages()))
-                    <div class="mt-3 pt-3 border-top">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                            <div class="text-muted small">
-                                @if($notifications->total() > 0)
-                                    Menampilkan {{ $notifications->firstItem() }} sampai {{ $notifications->lastItem() }} dari {{ $notifications->total() }} hasil
-                                    <span class="badge bg-primary ms-2">Halaman {{ $notifications->currentPage() }} dari {{ $notifications->lastPage() }}</span>
-                                @else
-                                    Tidak ada hasil
-                                @endif
-                            </div>
-                            <div class="d-flex gap-2 align-items-center">
-                                @if($notifications->onFirstPage())
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>
-                                        <i class="fas fa-chevron-left me-1"></i> Previous
-                                    </button>
-                                @else
-                                    <a href="{{ $notifications->previousPageUrl() }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-chevron-left me-1"></i> Previous
-                                    </a>
-                                @endif
-                                
-                                <span class="text-muted small px-2">
-                                    Halaman {{ $notifications->currentPage() }} / {{ $notifications->lastPage() }}
-                                </span>
-                                
-                                @if($notifications->hasMorePages())
-                                    <a href="{{ $notifications->nextPageUrl() }}" class="btn btn-outline-primary btn-sm">
-                                        Next <i class="fas fa-chevron-right ms-1"></i>
-                                    </a>
-                                @else
-                                    <button class="btn btn-outline-secondary btn-sm" disabled>
-                                        Next <i class="fas fa-chevron-right ms-1"></i>
-                                    </button>
-                                @endif
+                </div>
+                
+                <!-- Pagination Controls - Separate Section -->
+                @if($notifications->count() > 0 && ($notifications->hasPages()))
+                <div class="pagination-section">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                <div class="text-muted small">
+                                    @if($notifications->total() > 0)
+                                        Menampilkan {{ $notifications->firstItem() }} sampai {{ $notifications->lastItem() }} dari {{ $notifications->total() }} hasil
+                                        <span class="badge bg-primary ms-2">Halaman {{ $notifications->currentPage() }} dari {{ $notifications->lastPage() }}</span>
+                                    @else
+                                        Tidak ada hasil
+                                    @endif
+                                </div>
+                                <div class="d-flex gap-2 align-items-center">
+                                    @if($notifications->onFirstPage())
+                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </button>
+                                    @else
+                                        <a href="{{ $notifications->previousPageUrl() }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-chevron-left me-1"></i> Previous
+                                        </a>
+                                    @endif
+                                    
+                                    <span class="text-muted small px-2">
+                                        Halaman {{ $notifications->currentPage() }} / {{ $notifications->lastPage() }}
+                                    </span>
+                                    
+                                    @if($notifications->hasMorePages())
+                                        <a href="{{ $notifications->nextPageUrl() }}" class="btn btn-outline-primary btn-sm">
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                            Next <i class="fas fa-chevron-right ms-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
-                    @endif
                 </div>
+                @endif
 
                 <!-- Select All & Bulk Actions -->
                 @if($notifications->count() > 0)
-                <div class="select-all-container" id="bulkActionsContainer" style="display: none;">
+                <div class="select-all-container select-all-wrapper" id="bulkActionsContainer" style="display: none;">
                     <div class="select-all-left">
                         <input type="checkbox" id="selectAll" class="notification-checkbox">
                         <label for="selectAll" class="select-all-label">Pilih Semua</label>
@@ -1035,6 +1190,33 @@
             
             // Update relative time every minute
             setInterval(updateNotificationTimes, 60000);
+        });
+        
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) {
+                sidebar.classList.toggle('show');
+            }
+            if (overlay) {
+                overlay.classList.toggle('show');
+            }
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            if (window.innerWidth <= 991) {
+                if (sidebar && !sidebar.contains(event.target) && 
+                    toggleBtn && !toggleBtn.contains(event.target) && 
+                    sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                    if (overlay) overlay.classList.remove('show');
+                }
+            }
         });
     </script>
 </body>

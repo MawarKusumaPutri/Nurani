@@ -56,9 +56,125 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        .btn-primary {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* Responsive Styles */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1050;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 80%;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            /* Tambahkan margin untuk header agar tidak tertutup hamburger menu dan simetris */
+            .header-guru {
+                margin-left: 60px !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+                margin-right: 15px !important;
+            }
+            
+            .header-title-section {
+                flex: 1;
+                margin-right: 15px;
+            }
+            
+            /* Card guru simetris */
+            .guru-list-row {
+                margin-left: 60px !important;
+                margin-right: 15px !important;
+                padding-left: 15px !important;
+                padding-right: 0 !important;
+            }
+            
+            /* Pagination simetris */
+            .pagination-wrapper-guru {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .pagination-custom {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .col-md-6, .col-lg-4 {
+                margin-bottom: 15px;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
     <div class="container-fluid">
         <div class="row">
             @include('partials.kepala-sekolah-sidebar')
@@ -66,23 +182,29 @@
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-1">
+                <div class="d-flex justify-content-between align-items-center mb-4 header-guru">
+                    <div class="header-title-section flex-grow-1">
+                        <h2 class="mb-1">Selamat Datang, {{ Auth::user()->name }}!</h2>
+                        <p class="text-muted mb-0">
                             <i class="fas fa-chalkboard-teacher me-2 text-primary"></i>
                             Data Guru
-                        </h2>
-                        <p class="text-muted mb-0">Kelola dan pantau data semua guru</p>
+                        </p>
+                        <p class="text-muted small mb-0">Kelola dan pantau data semua guru</p>
                     </div>
-                    <div>
-                        <span class="badge bg-primary fs-6">
-                            {{ $gurus->total() }} Guru
-                        </span>
+                    <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <span class="badge bg-primary px-3 py-2">Kepala Sekolah</span>
+                        </div>
+                        <div>
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                {{ $gurus->total() }} Guru
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Guru List -->
-                <div class="row">
+                <div class="row guru-list-row">
                     @if($gurus->count() > 0)
                         @foreach($gurus as $guru)
                             <div class="col-md-6 col-lg-4 mb-4">
@@ -180,7 +302,7 @@
                         @endforeach
 
                         <!-- Pagination -->
-                        <div class="col-12">
+                        <div class="col-12 pagination-wrapper-guru">
                             <div class="d-flex justify-content-between align-items-center mt-4 pagination-custom">
                                 <div class="text-muted small">
                                     Menampilkan {{ $gurus->firstItem() ?? 0 }} sampai {{ $gurus->lastItem() ?? 0 }} dari {{ $gurus->total() }} guru
@@ -331,6 +453,33 @@
         // setInterval(function() {
         //     location.reload();
         // }, 60000);
+        
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) {
+                sidebar.classList.toggle('show');
+            }
+            if (overlay) {
+                overlay.classList.toggle('show');
+            }
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            if (window.innerWidth <= 991) {
+                if (sidebar && !sidebar.contains(event.target) && 
+                    toggleBtn && !toggleBtn.contains(event.target) && 
+                    sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                    if (overlay) overlay.classList.remove('show');
+                }
+            }
+        });
     </script>
 </body>
 </html>

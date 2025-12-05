@@ -28,20 +28,83 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
+        
+        /* Responsive Styles */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1050;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                width: 280px;
+                max-width: 80%;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
     <div class="container-fluid">
         <div class="row">
             @include('partials.kepala-sekolah-sidebar')
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Edit Profil</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <a href="{{ route('kepala_sekolah.profile.index') }}" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">Edit Profil</h2>
+                        <p class="text-muted">Ubah informasi profil Anda</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('kepala_sekolah.profile.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Kembali
                         </a>
                     </div>
                 </div>
@@ -77,45 +140,6 @@
                                         <div class="mb-2 position-relative d-inline-block">
                                             @php
                                                 $freshUser = \App\Models\User::find($user->id);
-<<<<<<< HEAD
-                                                $photoPath = $freshUser->photo ?? null;
-                                                $photoUrl = null;
-                                                $hasPhoto = false;
-                                                
-                                                if ($photoPath) {
-                                                    // OTOMATIS cari foto dengan default path yang benar
-                                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'profiles/kepala_sekolah');
-                                                    
-                                                    // Jika masih null, coba dengan path lain
-                                                    if (!$photoUrl) {
-                                                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($photoPath, 'image/profiles');
-                                                    }
-                                                    
-                                                    // Jika masih null, coba langsung dengan asset() untuk URL lengkap
-                                                    if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath)) {
-                                                        $photoUrl = asset('storage/' . $photoPath) . '?v=' . time();
-                                                    }
-                                                    
-                                                    // Jika masih null, coba dengan path absolut
-                                                    if (!$photoUrl) {
-                                                        $storagePath = storage_path('app/public/' . $photoPath);
-                                                        if (file_exists($storagePath)) {
-                                                            $photoUrl = asset('storage/' . $photoPath) . '?v=' . time();
-                                                        }
-                                                    }
-                                                    
-                                                    $hasPhoto = $photoUrl !== null && $photoUrl !== '';
-                                                }
-                                            @endphp
-                                            <div class="position-relative d-inline-block" style="width: 150px; height: 150px;">
-                                                <img id="photoPreview" src="{{ $hasPhoto ? $photoUrl : '' }}" alt="Foto Profil" class="img-thumbnail {{ !$hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; position: relative; z-index: 1;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
-                                                <div id="photoPlaceholder" class="bg-light d-inline-flex align-items-center justify-content-center {{ $hasPhoto ? 'd-none' : '' }}" style="width: 150px; height: 150px; border-radius: 50%; position: absolute; top: 0; left: 0; z-index: 0;">
-                                                    <i class="fas fa-user-tie fa-3x text-muted"></i>
-                                                </div>
-                                                <!-- Checkmark indicator -->
-                                                <div id="photoCheckmark" class="position-absolute d-none" style="bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); border-radius: 50%; width: 32px; height: 32px; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
-                                                    <i class="fas fa-check text-white" style="font-size: 18px; font-weight: bold;"></i>
-=======
                                                 $photoUrl = null;
                                                 $hasPhoto = false;
                                                 
@@ -165,7 +189,6 @@
                                                      class="position-absolute d-flex align-items-center justify-content-center" 
                                                      style="bottom: 5px; right: 5px; background: rgba(40, 167, 69, 0.9); border-radius: 50%; width: 36px; height: 36px; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 3px solid white; {{ $hasPhoto && $photoUrl ? 'display: flex;' : 'display: none;' }}">
                                                     <i class="fas fa-check text-white" style="font-size: 16px; font-weight: bold;"></i>
->>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                                                 </div>
                                             </div>
                                         </div>
@@ -250,11 +273,43 @@
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
+    }
+    
+    function closeSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+    }
+    
+    // Close sidebar when clicking on nav links
+    document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                closeSidebar();
+            });
+        });
+    });
+    
+    </script>
     <script>
     function previewPhoto(input) {
         console.log('previewPhoto called', input.files);
@@ -282,59 +337,6 @@
             const checkmark = document.getElementById('photoCheckmark');
             const preview = document.getElementById('photoPreview');
             const placeholder = document.getElementById('photoPlaceholder');
-<<<<<<< HEAD
-            
-            reader.onload = function(e) {
-                if (preview && placeholder) {
-                    // Set preview image
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                    preview.style.display = 'block';
-                    
-                    // Hide placeholder
-                    placeholder.classList.add('d-none');
-                    placeholder.style.display = 'none';
-                    
-                    // Show checkmark when photo is selected
-                    if (checkmark) {
-                        checkmark.classList.remove('d-none');
-                        checkmark.classList.add('d-flex');
-                        checkmark.style.display = 'flex';
-                        // Add animation
-                        checkmark.style.animation = 'fadeIn 0.3s ease-in';
-                    }
-                }
-            };
-            
-            reader.onerror = function() {
-                alert('Error membaca file! Silakan coba lagi.');
-                input.value = ''; // Reset input
-            };
-            
-            reader.readAsDataURL(file);
-        } else {
-            // Hide checkmark if no file selected
-            const checkmark = document.getElementById('photoCheckmark');
-            if (checkmark) {
-                checkmark.classList.add('d-none');
-                checkmark.classList.remove('d-flex');
-=======
-            
-            // Validate file type
-            const file = input.files[0];
-            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-            if (!validTypes.includes(file.type)) {
-                alert('Format file tidak valid. Harap pilih file JPG, PNG, atau GIF.');
-                input.value = '';
-                return;
-            }
-            
-            // Validate file size (2MB = 2097152 bytes)
-            if (file.size > 2097152) {
-                alert('Ukuran file terlalu besar. Maksimal 2MB.');
-                input.value = '';
-                return;
-            }
             
             reader.onload = function(e) {
                 console.log('FileReader loaded', e.target.result);
@@ -366,13 +368,12 @@
                 alert('Gagal membaca file. Silakan coba lagi.');
             };
             
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         } else {
             console.log('No file selected');
             // Hide checkmark if no file selected
             const checkmark = document.getElementById('photoCheckmark');
             if (checkmark) {
->>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
                 checkmark.style.display = 'none';
             }
         }
@@ -385,29 +386,6 @@
         
         if (preview && checkmark) {
             // Check if preview is visible and has a valid image
-<<<<<<< HEAD
-            const hasValidImage = !preview.classList.contains('d-none') && 
-                                 preview.src && 
-                                 preview.src !== '' && 
-                                 preview.src !== '#' && 
-                                 preview.src !== window.location.href &&
-                                 !preview.src.includes('data:image/svg+xml');
-            
-            if (hasValidImage) {
-                // Wait for image to load
-                preview.onload = function() {
-                    checkmark.classList.remove('d-none');
-                    checkmark.classList.add('d-flex');
-                    checkmark.style.display = 'flex';
-                };
-                
-                // If image fails to load, hide checkmark
-                preview.onerror = function() {
-                    checkmark.classList.add('d-none');
-                    checkmark.classList.remove('d-flex');
-                    checkmark.style.display = 'none';
-                };
-=======
             const hasValidImage = preview.src && 
                                  preview.src !== '' && 
                                  preview.src !== '#' && 
@@ -420,7 +398,6 @@
                 console.log('Existing photo found, checkmark shown');
             } else {
                 console.log('No existing photo');
->>>>>>> 5f41084b51ea9f60057a6b73d46e022c2cca4807
             }
         }
     });
