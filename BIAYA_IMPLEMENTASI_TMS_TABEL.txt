@@ -1,0 +1,55 @@
+============================================
+IDENTIFIKASI BIAYA IMPLEMENTASI TMS
+============================================
+
+Untuk di-copy ke tabel dokumen Word Anda:
+
+No | Aktivitas | Biaya
+---|-----------|------
+1  | Kustomisasi dan pengembangan fitur sistem TMS (Laravel) | Rp 5.000.000 - 8.000.000
+2  | Hosting VPS atau cloud untuk deployment sistem | Rp 1.500.000 - 3.000.000
+3  | Pengadaan perangkat keras tambahan (jika diperlukan) | Rp 2.000.000 - 5.000.000
+4  | Perawatan rutin sistem dan dukungan teknis (per tahun) | Rp 2.000.000 - 3.000.000
+
+============================================
+VERSI SINGKAT (Sesuai Format Foto 2)
+============================================
+
+1. Kustomisasi dan pengembangan fitur sistem TMS (Laravel)
+   Biaya: Rp 5.000.000 - 8.000.000
+
+2. Hosting VPS atau cloud untuk deployment sistem
+   Biaya: Rp 1.500.000 - 3.000.000
+
+3. Pengadaan perangkat keras tambahan (jika diperlukan)
+   Biaya: Rp 2.000.000 - 5.000.000
+
+4. Perawatan rutin sistem dan dukungan teknis (per tahun)
+   Biaya: Rp 2.000.000 - 3.000.000
+
+============================================
+PENJELASAN SINGKAT
+============================================
+
+1. Kustomisasi Fitur TMS (Laravel)
+   - Development dashboard, jadwal, materi, kuis
+   - Testing dan debugging
+   - Biaya: Rp 5.000.000 - 8.000.000
+
+2. Hosting VPS/Cloud
+   - Server aplikasi dan database
+   - Domain dan SSL certificate
+   - Biaya: Rp 1.500.000 - 3.000.000
+
+3. Perangkat Keras (Opsional)
+   - Hanya jika hosting on-premise
+   - Server, UPS, network equipment
+   - Biaya: Rp 2.000.000 - 5.000.000
+
+4. Maintenance & Support
+   - Update sistem, backup, troubleshooting
+   - Dukungan teknis untuk user
+   - Biaya: Rp 2.000.000 - 3.000.000/tahun
+
+============================================
+

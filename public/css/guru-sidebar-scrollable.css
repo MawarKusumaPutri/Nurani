@@ -1,0 +1,126 @@
+/* CSS untuk Scrollable Sidebar Guru - Sama seperti TU */
+
+.sidebar {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure sidebar content is scrollable */
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+#sidebar .p-4 {
+    flex-shrink: 0;
+}
+
+#sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+    width: 100%;
+    display: block;
+}
+
+/* Ensure nav items are in single column */
+.sidebar .nav {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.sidebar .nav-link,
+.sidebar .nav form {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.sidebar .nav form button {
+    width: 100%;
+    text-align: left;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        z-index: 1050;
+        transition: left 0.3s ease;
+        width: 280px;
+        max-width: 80%;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #sidebar nav {
+        max-height: calc(100vh - 250px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent any wrapping or multi-column layout */
+    .sidebar .nav {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+    }
+    
+    .sidebar .nav-link,
+    .sidebar .nav form {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 auto !important;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .sidebar-overlay.show {
+        display: block;
+    }
+    
+    .col-md-9, .col-lg-10 {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+

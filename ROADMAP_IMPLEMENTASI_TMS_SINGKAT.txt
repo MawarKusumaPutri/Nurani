@@ -1,0 +1,121 @@
+============================================
+6.2 ROADMAP IMPLEMENTASI
+============================================
+
+Berikut ini adalah roadmap implementasi sistem perbaikan Teaching Management System (TMS) di MTS Nurul Aiman Tanjungsari Sumedang:
+
+Gambar 6.1. Roadmap Implementasi Sistem TMS
+
+============================================
+TAHAP 1: PERSIAPAN DAN ANALISIS
+Timeline: Minggu 1 - 4
+============================================
+
+Aktivitas:
+- Analisis kebutuhan spesifik sekolah (Kepala Sekolah, Guru, Tenaga Usaha)
+- Identifikasi fitur-fitur yang diperlukan
+- Perencanaan arsitektur sistem
+- Penyusunan dokumen teknis (SRS, DFD, ERD)
+- Identifikasi teknologi yang akan digunakan (Laravel, MySQL, Bootstrap)
+- Perencanaan database dan struktur data
+- Identifikasi biaya implementasi
+
+============================================
+TAHAP 2: PENGEMBANGAN SISTEM
+Timeline: Minggu 5 - 12
+============================================
+
+Aktivitas:
+- Setup environment development (XAMPP, Laravel, Composer)
+- Pembuatan database dan migration
+- Pengembangan modul autentikasi dan autorisasi
+- Pengembangan dashboard untuk Kepala Sekolah
+- Pengembangan dashboard untuk Guru
+- Pengembangan dashboard untuk Tenaga Usaha
+- Pengembangan fitur manajemen jadwal mengajar
+- Pengembangan fitur manajemen materi pembelajaran
+- Pengembangan fitur kuis dan evaluasi
+- Pengembangan fitur laporan dan statistik
+- Pengembangan sistem notifikasi email
+- Kustomisasi UI/UX sesuai kebutuhan sekolah
+- Integrasi fitur-fitur dengan database
+
+============================================
+TAHAP 3: UJI SISTEM DAN VALIDASI
+Timeline: Minggu 13 - 14
+============================================
+
+Aktivitas:
+- Pengujian fungsional sistem (functional testing)
+- Pengujian integrasi antar modul (integration testing)
+- Pengujian user acceptance (UAT) dengan user sekolah
+- Identifikasi dan perbaikan bug
+- Optimasi performa sistem
+- Testing keamanan sistem
+- Validasi dengan stakeholder (Kepala Sekolah, Guru, Tenaga Usaha)
+- Perbaikan berdasarkan feedback
+
+============================================
+TAHAP 4: DEPLOYMENT DAN GO LIVE
+Timeline: Minggu 15 - 16
+============================================
+
+Aktivitas:
+- Setup hosting/server production
+- Deploy aplikasi ke server production
+- Setup domain dan SSL certificate
+- Migrasi data dari development ke production
+- Setup backup otomatis
+- Training untuk admin sistem
+- Training untuk user (Kepala Sekolah, Guru, Tenaga Usaha)
+- Launch sistem ke user
+- Monitoring sistem pasca launch
+
+============================================
+TIMELINE RINGKAS
+============================================
+
+Tahap 1: Persiapan dan Analisis
+- Timeline: Minggu 1 - 4
+- Durasi: 4 minggu
+
+Tahap 2: Pengembangan Sistem
+- Timeline: Minggu 5 - 12
+- Durasi: 8 minggu
+
+Tahap 3: Uji Sistem dan Validasi
+- Timeline: Minggu 13 - 14
+- Durasi: 2 minggu
+
+Tahap 4: Deployment dan Go Live
+- Timeline: Minggu 15 - 16
+- Durasi: 2 minggu
+
+Total Durasi: 16 minggu (4 bulan)
+
+============================================
+VERSI UNTUK VISUAL ROADMAP (Seperti Foto)
+============================================
+
+TAHAP 1: PERSIAPAN DAN ANALISIS
+Pin: 1 (Pink)
+Timeline: Minggu 1 - 4
+Deskripsi: Analisis kebutuhan spesifik sekolah. Perencanaan sistem dan penyusunan dokumen teknis.
+
+TAHAP 2: PENGEMBANGAN SISTEM
+Pin: 2 (Purple)
+Timeline: Minggu 5 - 12
+Deskripsi: Kustomisasi dan pengembangan fitur sistem TMS menggunakan Laravel sesuai kebutuhan.
+
+TAHAP 3: UJI SISTEM DAN VALIDASI
+Pin: 3 (Teal/Green)
+Timeline: Minggu 13 - 14
+Deskripsi: Pengujian fungsional sistem dan validasi dengan stakeholder.
+
+TAHAP 4: DEPLOYMENT DAN GO LIVE
+Pin: 4 (Blue)
+Timeline: Minggu 15 - 16
+Deskripsi: Deployment sistem ke server production dan pelatihan user.
+
+============================================
+

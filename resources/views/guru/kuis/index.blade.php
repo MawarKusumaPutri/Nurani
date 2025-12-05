@@ -20,6 +20,45 @@
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Ensure sidebar content is scrollable */
+        #guru-sidebar {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        #guru-sidebar .p-4 {
+            flex-shrink: 0;
+        }
+        
+        #guru-sidebar nav {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+        }
+        
+        /* Ensure nav items are in single column */
+        .sidebar .nav {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+        
+        .sidebar .nav-link,
+        .sidebar .nav form {
+            width: 100%;
+            flex-shrink: 0;
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -164,10 +203,41 @@
                 z-index: 1061 !important;
                 transition: left 0.3s ease;
                 width: 280px;
-                max-width: 85%;
+                max-width: 80%;
                 height: 100vh;
                 overflow-y: auto !important;
+                overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
+            }
+            
+            #guru-sidebar {
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            #guru-sidebar nav {
+                max-height: calc(100vh - 250px);
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Prevent any wrapping or multi-column layout */
+            .sidebar .nav {
+                display: flex !important;
+                flex-direction: column !important;
+                flex-wrap: nowrap !important;
+                width: 100% !important;
+            }
+            
+            .sidebar .nav-link,
+            .sidebar .nav form {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 0 0 auto !important;
+            }
                 overscroll-behavior: contain !important;
                 pointer-events: auto !important;
                 background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
@@ -238,7 +308,7 @@
     <div class="container-fluid" style="position: relative; z-index: 1;">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0" id="sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
+            <div class="col-md-3 col-lg-2 sidebar p-0" id="guru-sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
                 <div class="p-4">
                     <h4 class="text-white mb-4">
                         <i class="fas fa-chalkboard-teacher me-2"></i>
@@ -286,29 +356,31 @@
                     </div>
                 </div>
                 
-                <nav class="nav flex-column px-3">
-                    <a class="nav-link" href="{{ route('guru.dashboard') }}" onclick="closeSidebar(); return true;">
+                <nav class="nav flex-column px-3 pb-4">
+                    <a class="nav-link" href="{{ route('guru.dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}" onclick="closeSidebar(); return true;">
+                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}" onclick="closeSidebar(); return true;">
+                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
                         <i class="fas fa-calendar-check me-2"></i> Presensi Guru
                     </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}" onclick="closeSidebar(); return true;">
+                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
                         <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
                     </a>
-                    <a class="nav-link" href="{{ route('guru.materi.index') }}" onclick="closeSidebar(); return true;">
+                    <a class="nav-link" href="{{ route('guru.materi.index') }}">
                         <i class="fas fa-book me-2"></i> Materi
                     </a>
-                    <a class="nav-link active" href="{{ route('guru.kuis.index') }}" onclick="closeSidebar(); return true;">
+                    <a class="nav-link active" href="{{ route('guru.kuis.index') }}">
                         <i class="fas fa-question-circle me-2"></i> Kuis
                     </a>
-                    <hr class="text-white-50">
-                    <a class="nav-link" href="{{ route('logout') }}" onclick="closeSidebar(); return true;">
-                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </form>
                 </nav>
             </div>
 
@@ -435,7 +507,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('guru-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
             const isOpen = sidebar.classList.contains('show');
             
@@ -465,7 +537,7 @@
         }
         
         function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('guru-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
             if (window.innerWidth <= 991) {
                 sidebar.classList.remove('show');
@@ -555,7 +627,7 @@
             setupNavLinks();
             
             // Setup ulang setiap kali sidebar dibuka
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('guru-sidebar');
             if (sidebar) {
                 const observer = new MutationObserver(function(mutations) {
                     if (sidebar.classList.contains('show')) {

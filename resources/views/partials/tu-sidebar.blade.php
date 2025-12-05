@@ -9,40 +9,62 @@
             @php
                 $user = Auth::user();
                 $photoUrl = null;
+                $hasPhoto = false;
                 
-                if ($user) {
-                    // SELALU ambil data fresh dari database untuk memastikan foto terbaru
-                    $freshUser = \App\Models\User::find($user->id);
-                    if ($freshUser && !empty($freshUser->photo)) {
-                        // OTOMATIS cari foto dengan default path yang benar
-                        $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'profiles/tu');
-                        
-                        // Jika masih null, coba dengan path lain
-                        if (!$photoUrl) {
-                            $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshUser->photo, 'image/profiles');
+                // Gunakan data dari session Auth::user() untuk menghindari query database tambahan
+                if ($user && !empty($user->photo)) {
+                    $photoPath = $user->photo;
+                    
+                    try {
+                        // Cek jika sudah URL lengkap
+                        if (filter_var($photoPath, FILTER_VALIDATE_URL)) {
+                            $photoUrl = $photoPath;
+                        } else {
+                            // Coba langsung dengan path yang ada
+                            // Prioritas 1: Path langsung dari database
+                            if (strpos($photoPath, 'storage/') === 0 || strpos($photoPath, '/storage/') === 0) {
+                                $photoUrl = asset($photoPath) . '?v=' . time();
+                            } 
+                            // Prioritas 2: Path relative (profiles/tu/xxx.jpg)
+                            elseif (strpos($photoPath, 'profiles/') === 0 || strpos($photoPath, 'photos/') === 0) {
+                                $photoUrl = asset('storage/' . $photoPath) . '?v=' . time();
+                            }
+                            // Prioritas 3: Coba dengan basename di berbagai folder
+                            else {
+                                $filename = basename($photoPath);
+                                $possiblePaths = [
+                                    'profiles/tu/' . $filename,
+                                    'photos/' . $filename,
+                                    'image/profiles/' . $filename,
+                                    $photoPath,
+                                ];
+                                
+                                // Coba path pertama dulu (paling umum)
+                                $photoUrl = asset('storage/' . $possiblePaths[0]) . '?v=' . time();
+                            }
                         }
-                        
-                        // Jika masih null, coba langsung dengan asset() untuk URL lengkap
-                        if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshUser->photo)) {
-                            $photoUrl = asset('storage/' . $freshUser->photo) . '?v=' . time() . '&r=' . rand(1000, 9999);
-                        }
+                    } catch (\Exception $e) {
+                        // Jika ada error, gunakan placeholder
+                        $photoUrl = null;
                     }
                 }
+                
                 $hasPhoto = $photoUrl !== null && $photoUrl !== '';
             @endphp
             <div class="mb-2" style="display: flex; justify-content: center;">
-                @if($hasPhoto && $photoUrl)
-                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 80px; height: 80px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                        <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-tu" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-tu').style.display='flex';">
-                        <div id="profile-placeholder-tu" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 80px; height: 80px; top: 0; left: 0; z-index: 1;">
-                            <i class="fas fa-user-tie fa-2x text-primary"></i>
-                        </div>
-                    </div>
-                @else
-                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 80px; height: 80px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    @if($hasPhoto && $photoUrl)
+                        <img src="{{ $photoUrl }}" 
+                             alt="Foto Profil" 
+                             id="profile-photo-img-tu" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;"
+                             onerror="this.onerror=null; this.style.display='none'; if(document.getElementById('profile-placeholder-tu')) document.getElementById('profile-placeholder-tu').style.display='flex';"
+                             loading="lazy">
+                    @endif
+                    <div id="profile-placeholder-tu" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: {{ $hasPhoto ? 'none' : 'flex' }}; width: 80px; height: 80px; top: 0; left: 0; z-index: 1;">
                         <i class="fas fa-user-tie fa-2x text-primary"></i>
                     </div>
-                @endif
+                </div>
             </div>
             <h6 class="text-white mt-2 mb-1">{{ $user->name ?? 'Tenaga Usaha' }}</h6>
             <small class="text-white-50">Tenaga Usaha</small>
@@ -52,7 +74,7 @@
         </div>
     </div>
     
-    <nav class="nav flex-column px-3">
+    <nav class="nav flex-column px-3 pb-4">
         <a href="{{ route('tu.dashboard') }}" class="nav-link {{ request()->routeIs('tu.dashboard') ? 'active' : '' }}">
             <i class="fas fa-home me-2"></i> Dashboard
         </a>

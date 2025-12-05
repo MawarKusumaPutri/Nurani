@@ -1,0 +1,159 @@
+============================================
+ROADMAP IMPLEMENTASI - FORMAT VISUAL
+============================================
+
+Untuk di-copy ke dokumen Word atau design tool:
+
+============================================
+TAHAP 1: PERSIAPAN DAN ANALISIS
+Timeline: Minggu 1 - 4
+============================================
+
+Deskripsi Aktivitas (untuk kotak merah):
+----------------------------------------
+Analisis kebutuhan spesifik sekolah (Kepala Sekolah, Guru, Tenaga Usaha).
+Perencanaan sistem dan penyusunan dokumen teknis (SRS, DFD, ERD).
+
+Detail Aktivitas:
+- Analisis kebutuhan Kepala Sekolah
+- Analisis kebutuhan Guru dan Tenaga Usaha
+- Perencanaan arsitektur sistem
+- Desain ERD dan DFD
+- Penyusunan SRS
+- Identifikasi biaya implementasi
+
+Deliverables:
+- Dokumen Analisis Kebutuhan
+- Software Requirements Specification (SRS)
+- Entity Relationship Diagram (ERD)
+- Data Flow Diagram (DFD)
+- Wireframe UI/UX
+- Rencana Anggaran
+
+============================================
+TAHAP 2: PENGEMBANGAN SISTEM
+Timeline: Minggu 5 - 12
+============================================
+
+Deskripsi Aktivitas (untuk kotak merah):
+----------------------------------------
+Kustomisasi dan pengembangan fitur sistem TMS menggunakan Laravel sesuai kebutuhan.
+
+Detail Aktivitas:
+- Setup environment dan database
+- Implementasi authentication dan authorization
+- Pengembangan dashboard Kepala Sekolah
+- Pengembangan fitur laporan dan data guru
+- Pengembangan fitur data siswa dan aktivitas guru
+- Pengembangan dashboard Guru dan jadwal mengajar
+- Pengembangan fitur materi dan kuis
+- Implementasi sistem notifikasi email
+
+Deliverables:
+- Sistem TMS lengkap dengan semua fitur
+- Database terstruktur
+- UI/UX responsif
+- Sistem autentikasi dan autorisasi
+- Sistem notifikasi email aktif
+
+============================================
+TAHAP 3: UJI SISTEM DAN VALIDASI
+Timeline: Minggu 13 - 14
+============================================
+
+Deskripsi Aktivitas (untuk kotak merah):
+----------------------------------------
+Pengujian fungsional sistem dan validasi dengan stakeholder (Kepala Sekolah, Guru, Tenaga Usaha).
+
+Detail Aktivitas:
+- Pengujian fungsional semua fitur
+- Pengujian integrasi antar modul
+- Identifikasi dan perbaikan bug
+- User Acceptance Testing (UAT) dengan Kepala Sekolah
+- User Acceptance Testing (UAT) dengan Guru
+- User Acceptance Testing (UAT) dengan Tenaga Usaha
+- Implementasi perbaikan berdasarkan feedback
+- Sign-off UAT dari stakeholder
+
+Deliverables:
+- Laporan hasil pengujian
+- Laporan hasil UAT
+- Sistem yang sudah diperbaiki
+- Sign-off UAT dari stakeholder
+
+============================================
+TAHAP 4: DEPLOYMENT DAN GO LIVE
+Timeline: Minggu 15 - 16
+============================================
+
+Deskripsi Aktivitas (untuk kotak merah):
+----------------------------------------
+Deployment sistem ke server production, pelatihan user, dan launch sistem.
+
+Detail Aktivitas:
+- Setup hosting/server production
+- Setup domain dan SSL certificate
+- Deploy aplikasi ke server production
+- Setup backup otomatis
+- Training untuk admin sistem
+- Training untuk Kepala Sekolah
+- Training untuk Guru
+- Launch sistem ke user
+- Monitoring sistem pasca launch
+
+Deliverables:
+- Sistem TMS online dan dapat diakses
+- Domain dan SSL aktif
+- Backup otomatis berjalan
+- User manual lengkap
+- Semua user sudah terlatih
+- Sistem go live sukses
+
+============================================
+TIMELINE RINGKAS
+============================================
+
+Tahap 1: Persiapan dan Analisis
+- Timeline: Minggu 1 - 4
+- Durasi: 4 minggu
+
+Tahap 2: Pengembangan Sistem
+- Timeline: Minggu 5 - 12
+- Durasi: 8 minggu
+
+Tahap 3: Uji Sistem dan Validasi
+- Timeline: Minggu 13 - 14
+- Durasi: 2 minggu
+
+Tahap 4: Deployment dan Go Live
+- Timeline: Minggu 15 - 16
+- Durasi: 2 minggu
+
+Total Durasi: 16 minggu (4 bulan)
+
+============================================
+VERSI SINGKAT UNTUK VISUAL (Seperti Foto 2)
+============================================
+
+TAHAP 1: PERSIAPAN DAN ANALISIS
+Pin: 01 (Green)
+Timeline: Minggu 1 - 4
+Deskripsi: Analisis kebutuhan spesifik sekolah (Kepala Sekolah, Guru, Tenaga Usaha). Perencanaan sistem dan penyusunan dokumen teknis (SRS, DFD, ERD).
+
+TAHAP 2: PENGEMBANGAN SISTEM
+Pin: 02 (Reddish-Orange)
+Timeline: Minggu 5 - 12
+Deskripsi: Kustomisasi dan pengembangan fitur sistem TMS menggunakan Laravel sesuai kebutuhan.
+
+TAHAP 3: UJI SISTEM DAN VALIDASI
+Pin: 03 (Green)
+Timeline: Minggu 13 - 14
+Deskripsi: Pengujian fungsional sistem dan validasi dengan stakeholder (Kepala Sekolah, Guru, Tenaga Usaha).
+
+TAHAP 4: DEPLOYMENT DAN GO LIVE
+Pin: 04 (Orange)
+Timeline: Minggu 15 - 16
+Deskripsi: Deployment sistem ke server production, pelatihan user, dan launch sistem.
+
+============================================
+

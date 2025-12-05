@@ -1,0 +1,212 @@
+============================================
+TAHAP 2: PENGEMBANGAN SISTEM - RINGKAS PER ROLE
+Timeline: Minggu 5 - 12
+============================================
+
+MINGGU 5: SETUP ENVIRONMENT DAN DATABASE
+-----------------------------------------
+- Setup Laravel, XAMPP, Composer
+- Buat database dan migration (users, guru, siswa, kelas, jadwal, materi, kuis, notifikasi)
+- Database seeder untuk data dummy
+
+MINGGU 6: AUTHENTICATION DAN AUTHORIZATION
+-------------------------------------------
+- Login, logout, password reset
+- Role-based access control (Kepala Sekolah, Guru, Tenaga Usaha)
+- Middleware untuk authorization
+
+============================================
+PENGEMBANGAN FITUR KEPALA SEKOLAH
+============================================
+
+MINGGU 7: Dashboard dan Laporan
+--------------------------------
+Dashboard:
+- Layout dengan sidebar navigation
+- Statistik overview (total guru, siswa, kelas, mata pelajaran)
+- Chart aktivitas guru (mingguan, bulanan)
+- Notifikasi terbaru
+- Quick access menu
+
+Laporan:
+- Halaman laporan dengan filter (periode, guru, kelas, mata pelajaran)
+- Statistik performa guru
+- Chart laporan (bar, line, pie)
+- Export laporan ke PDF
+- Detail laporan per guru
+
+MINGGU 8: Data Guru dan Data Siswa
+-----------------------------------
+Data Guru:
+- Daftar guru dengan search dan filter
+- Detail profil guru
+- Edit data guru (jika diizinkan)
+
+Data Siswa:
+- Daftar siswa dengan search dan filter
+- Detail profil siswa
+- Export data siswa ke Excel/CSV
+
+MINGGU 9: Aktivitas Guru
+------------------------
+- Halaman aktivitas guru dengan timeline
+- Filter aktivitas (tanggal, guru, jenis)
+- Detail aktivitas
+- Statistik aktivitas dengan chart
+
+============================================
+PENGEMBANGAN FITUR GURU
+============================================
+
+MINGGU 8: Dashboard dan Jadwal Mengajar
+----------------------------------------
+Dashboard:
+- Layout dengan sidebar navigation
+- Statistik overview (jadwal hari ini, total materi, total kuis, notifikasi baru)
+- Jadwal hari ini widget
+- Notifikasi terbaru
+
+Jadwal Mengajar:
+- Halaman jadwal dengan 2 view:
+  * List view (tabel)
+  * Calendar view (kalender)
+- Filter jadwal (hari, kelas, mata pelajaran)
+- Detail jadwal
+- Reminder dan notifikasi jadwal (1 jam sebelum)
+
+MINGGU 9: Materi dan Kuis
+--------------------------
+Materi:
+- Daftar materi dengan search dan filter
+- Upload materi (3 tipe):
+  * File (PDF, DOC, PPT, dll)
+  * Video (YouTube URL)
+  * Link (URL eksternal)
+- Edit dan hapus materi
+- Preview dan download materi
+
+Kuis:
+- Daftar kuis dengan search dan filter
+- Buat kuis (3 tipe):
+  * Pilihan Ganda (dengan soal dinamis)
+  * Esai
+  * Link Eksternal (Google Form, dll)
+- Integrasi video YouTube
+- Edit dan hapus kuis
+- Detail kuis
+
+============================================
+PENGEMBANGAN FITUR TENAGA USAHA
+============================================
+
+MINGGU 10: Dashboard dan Manajemen Data
+----------------------------------------
+Dashboard:
+- Layout dengan sidebar navigation
+- Statistik overview (total guru, siswa, kelas, mata pelajaran)
+
+Manajemen Data Guru:
+- Daftar guru dengan search dan filter
+- Tambah, edit, hapus guru
+- Upload foto guru
+- Detail profil guru
+
+Manajemen Data Siswa:
+- Daftar siswa dengan search dan filter
+- Tambah, edit, hapus siswa
+- Upload foto siswa
+- Detail profil siswa
+- Import data siswa dari Excel/CSV (opsional)
+
+Manajemen Data Kelas:
+- Daftar kelas dengan search dan filter
+- Tambah, edit, hapus kelas
+- Detail kelas dengan daftar siswa
+
+Manajemen Data Mata Pelajaran:
+- Daftar mata pelajaran dengan search
+- Tambah, edit, hapus mata pelajaran
+- Detail mata pelajaran
+
+============================================
+FITUR UMUM (SEMUA ROLE)
+============================================
+
+MINGGU 11: Notifikasi dan Profil
+---------------------------------
+Notifikasi:
+- Halaman notifikasi untuk setiap role
+- Filter notifikasi (semua, belum dibaca, sudah dibaca)
+- Mark as read / mark all as read
+- Delete notifikasi
+- Widget notifikasi di dashboard
+
+Profil:
+- Halaman profil untuk setiap role
+- Edit profil (nama, email, foto)
+- Ganti password
+
+============================================
+MINGGU 12: NOTIFIKASI EMAIL DAN FINALISASI
+============================================
+
+Notifikasi Email:
+- Setup email configuration (Gmail SMTP)
+- Email notifikasi untuk jadwal (reminder 1 jam sebelum)
+- Email notifikasi untuk kuis baru
+- Email queue untuk performa
+
+Code Review dan Refactoring:
+- Review semua code
+- Refactor code duplikat
+- Optimasi query database
+- Dokumentasi kode
+
+Testing End-to-End:
+- Test authentication dan authorization
+- Test semua fitur per role
+- Test responsive design
+- Test browser compatibility
+
+Finalisasi:
+- Final check semua fitur
+- Persiapan untuk tahap 3 (UAT)
+
+============================================
+SUMMARY FITUR PER ROLE
+============================================
+
+KEPALA SEKOLAH:
+✅ Dashboard (statistik, chart)
+✅ Laporan (filter, export PDF)
+✅ Data Guru (view, search, filter)
+✅ Data Siswa (view, search, export)
+✅ Aktivitas Guru (timeline)
+✅ Notifikasi
+✅ Profil
+
+GURU:
+✅ Dashboard (statistik, jadwal hari ini)
+✅ Jadwal Mengajar (list, calendar)
+✅ Materi (upload file/video/link)
+✅ Kuis (pilihan ganda, esai, link eksternal)
+✅ Notifikasi
+✅ Profil
+
+TENAGA USAHA:
+✅ Dashboard (statistik)
+✅ Manajemen Data Guru (CRUD)
+✅ Manajemen Data Siswa (CRUD)
+✅ Manajemen Data Kelas (CRUD)
+✅ Manajemen Data Mata Pelajaran (CRUD)
+✅ Notifikasi
+✅ Profil
+
+UMUM:
+✅ Authentication & Authorization
+✅ Notifikasi Email
+✅ Responsive Design
+✅ UI/UX Konsisten
+
+============================================
+

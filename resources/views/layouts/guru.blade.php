@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'TU Dashboard - TMS NURANI')</title>
+    <title>@yield('title', 'Guru Dashboard - TMS NURANI')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
         }
         
         /* Ensure sidebar content is scrollable */
-        #tu-sidebar {
+        #sidebar {
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -31,11 +31,11 @@
             -webkit-overflow-scrolling: touch;
         }
         
-        #tu-sidebar .p-4 {
+        #sidebar .p-4 {
             flex-shrink: 0;
         }
         
-        #tu-sidebar nav {
+        #sidebar nav {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
@@ -95,21 +95,6 @@
             transform: translateX(5px);
         }
         
-        .profile-circle {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            font-size: 40px;
-            color: white;
-            border: 3px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
         .card {
             border: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -138,17 +123,6 @@
         
         .btn-success:hover {
             background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
-        }
-        
-        .badge {
-            font-size: 0.8em;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            border-top: none;
-            font-weight: 600;
-            color: #495057;
         }
         
         .main-content {
@@ -201,14 +175,14 @@
                 -webkit-overflow-scrolling: touch;
             }
             
-            #tu-sidebar {
+            #sidebar {
                 height: 100vh;
                 overflow-y: auto;
                 overflow-x: hidden;
                 -webkit-overflow-scrolling: touch;
             }
             
-            #tu-sidebar nav {
+            #sidebar nav {
                 max-height: calc(100vh - 250px);
                 overflow-y: auto;
                 overflow-x: hidden;
@@ -246,10 +220,6 @@
             .h2 {
                 font-size: 1.5rem;
             }
-            
-            .fa-3x {
-                font-size: 2rem !important;
-            }
         }
         
         @media (max-width: 576px) {
@@ -261,25 +231,9 @@
                 flex-direction: column;
                 gap: 15px;
             }
-            
-            .btn-toolbar {
-                width: 100%;
-            }
-            
-            .btn-group {
-                width: 100%;
-            }
-            
-            .btn-group .btn {
-                width: 100%;
-            }
-            
-            .px-md-4 {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-            }
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">
@@ -292,19 +246,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
+            const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
-            if (sidebar) {
+            if (sidebar && overlay) {
                 sidebar.classList.toggle('show');
-            }
-            if (overlay) {
                 overlay.classList.toggle('show');
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar && overlay && window.innerWidth <= 991) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
             }
         }
         
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.sidebar');
+            const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.querySelector('.sidebar-toggle');
             const overlay = document.querySelector('.sidebar-overlay');
             
@@ -321,3 +282,4 @@
     @yield('scripts')
 </body>
 </html>
+
