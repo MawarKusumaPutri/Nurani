@@ -71,15 +71,15 @@
 
 <!-- Sidebar -->
 <div class="col-md-3 col-lg-2 sidebar p-0" id="guru-sidebar">
-    <div class="p-4">
-        <h4 class="text-white mb-4">
+    <div class="p-3">
+        <h4 class="text-white mb-3" style="font-size: 1.1rem;">
             <i class="fas fa-chalkboard-teacher me-2"></i>
             Dashboard Guru
         </h4>
         @if($guru)
-        <div class="text-center mb-4">
-            <div class="mb-2" style="display: flex; justify-content: center;">
-                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 80px; height: 80px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <div class="text-center mb-4" style="text-align: center;">
+            <div class="mb-2" style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 80px; height: 80px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2); background-color: white !important; background: white !important;">
                     @if($hasPhoto && $photoUrl)
                         <img src="{{ $photoUrl }}" 
                              alt="Foto Profil" 
@@ -88,16 +88,18 @@
                              onerror="this.onerror=null; this.style.display='none'; if(document.getElementById('profile-placeholder-guru')) document.getElementById('profile-placeholder-guru').style.display='flex';"
                              loading="lazy">
                     @endif
-                    <div id="profile-placeholder-guru" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: {{ $hasPhoto ? 'none' : 'flex' }}; width: 80px; height: 80px; top: 0; left: 0; z-index: 1;">
-                        <i class="fas fa-user fa-2x text-primary"></i>
+                    <div id="profile-placeholder-guru" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: {{ $hasPhoto ? 'none' : 'flex' }}; width: 80px; height: 80px; top: 0; left: 0; z-index: 1; background-color: white !important; background: white !important;">
+                        <i class="fas fa-user fa-2x" style="color: #0d6efd;"></i>
                     </div>
                 </div>
             </div>
-            <h6 class="text-white mt-2 mb-1">{{ $guru->user->name ?? 'Guru' }}</h6>
-            <small class="text-white-50">{{ $guru->mata_pelajaran ?? 'Guru' }}</small>
-            <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
-                <i class="fas fa-edit"></i> Edit Profil
-            </a>
+            <h6 class="text-white mt-2 mb-1" style="font-weight: 600; font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.25rem; color: white !important;">{{ $guru->user->name ?? 'Guru' }}</h6>
+            <div class="d-flex align-items-center justify-content-center mt-1 mb-2" style="gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; margin-bottom: 0.5rem; display: flex !important; align-items: center !important; justify-content: center !important;">
+                <small class="text-white-50" style="font-size: 0.875rem; line-height: 1.5; color: rgba(255,255,255,0.5) !important;">{{ $guru->mata_pelajaran ?? 'Guru' }}</small>
+                <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border: 1px solid rgba(0,0,0,0.2); white-space: nowrap; background-color: white !important; color: #000 !important; display: inline-flex !important; align-items: center !important; gap: 0.25rem; text-decoration: none;">
+                    <i class="fas fa-edit" style="font-size: 0.7rem;"></i> Edit Profil
+                </a>
+            </div>
         </div>
         @endif
     </div>
@@ -121,12 +123,9 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.kuis') ? 'active' : '' }}" href="{{ route('guru.kuis.index') }}">
             <i class="fas fa-question-circle me-2"></i> Kuis
         </a>
-        <form method="POST" action="{{ route('logout') }}" class="mt-3">
-            @csrf
-            <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
-                <i class="fas fa-sign-out-alt me-2"></i> Logout
-            </button>
-        </form>
+        <a href="{{ route('logout.get') }}" class="nav-link mt-3">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+        </a>
     </nav>
 </div>
 
@@ -163,12 +162,13 @@
     
     .sidebar .nav-link {
         color: rgba(255, 255, 255, 0.8);
-        padding: 12px 20px;
+        padding: 10px 15px;
         border-radius: 8px;
         margin: 4px 0;
         transition: all 0.3s ease;
         width: 100%;
         display: block;
+        font-size: 0.9rem;
     }
     
     /* Ensure nav items are in single column */
@@ -190,10 +190,91 @@
         text-align: left;
     }
     
-    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+    .sidebar .nav-link:hover {
         color: white;
         background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
+    }
+    
+    .sidebar .nav-link.active {
+        color: white !important;
+        background: rgba(129, 199, 132, 0.4) !important;
+        background-color: rgba(129, 199, 132, 0.4) !important;
+        border-left: 3px solid rgba(255, 255, 255, 0.6) !important;
+        font-weight: 600 !important;
+        transform: translateX(0) !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        border-radius: 8px !important;
+    }
+    
+    .sidebar .nav-link.active i {
+        color: white !important;
+        opacity: 1 !important;
+    }
+    
+    /* Profile Section Styling - Ensure Consistency */
+    #guru-sidebar .text-center {
+        text-align: center !important;
+    }
+    
+    #guru-sidebar .text-center h6 {
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    #guru-sidebar .text-center small {
+        color: rgba(255, 255, 255, 0.5) !important;
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    #guru-sidebar .text-center .btn {
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.5rem !important;
+        border: 1px solid rgba(0,0,0,0.2) !important;
+        white-space: nowrap !important;
+        background-color: white !important;
+        color: #000 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.25rem !important;
+        margin-top: 0 !important;
+    }
+    
+    #guru-sidebar .text-center .d-flex {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.5rem !important;
+        flex-wrap: wrap !important;
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Profile Circle - Ensure White Background */
+    #guru-sidebar .text-center .rounded-circle,
+    #guru-sidebar .text-center .bg-white,
+    #guru-sidebar .text-center .position-relative,
+    #guru-sidebar .text-center .position-absolute,
+    #guru-sidebar .text-center div[class*="rounded-circle"],
+    #guru-sidebar .text-center div[class*="bg-white"] {
+        background-color: white !important;
+        background: white !important;
+    }
+    
+    /* Ensure profile circle container is white */
+    #guru-sidebar .text-center > div > div {
+        background-color: white !important;
+        background: white !important;
+    }
+    
+    /* Profile placeholder icon container */
+    #profile-placeholder-guru {
+        background-color: white !important;
+        background: white !important;
     }
     
     /* Responsive Styles */

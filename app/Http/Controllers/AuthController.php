@@ -101,20 +101,29 @@ class AuthController extends Controller
                 ]);
             }
             
-            // Redirect berdasarkan role
-            $redirectUrl = match($role) {
+            // Redirect berdasarkan role user yang SEBENARNYA dari database (bukan dari request)
+            // Ini memastikan user di-redirect ke dashboard yang sesuai dengan role mereka
+            $userRole = $user->role; // Gunakan role dari database, bukan dari request
+            $redirectUrl = match($userRole) {
                 'guru' => route('guru.dashboard'),
                 'tu' => route('tu.dashboard'),
                 'kepala_sekolah' => route('kepala_sekolah.dashboard'),
                 default => route('guru.dashboard')
             };
             
-            // Jika request AJAX, return JSON
-            if ($request->ajax() || $request->wantsJson()) {
+            \Log::info('Login redirect:', [
+                'user_email' => $user->email,
+                'user_role' => $userRole,
+                'redirect_url' => $redirectUrl
+            ]);
+            
+            // Jika request AJAX atau memiliki header X-Requested-With, return JSON
+            if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json([
                     'success' => true,
                     'redirect' => $redirectUrl,
-                    'message' => 'Login berhasil'
+                    'message' => 'Login berhasil',
+                    'role' => $userRole
                 ]);
             }
             
@@ -135,8 +144,8 @@ class AuthController extends Controller
 
         $errorMessage = 'Email atau password tidak valid. Pastikan Anda adalah ' . $roleText . ' yang terdaftar.';
         
-        // Jika request AJAX, return JSON
-        if ($request->ajax() || $request->wantsJson()) {
+        // Jika request AJAX atau memiliki header X-Requested-With, return JSON
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'success' => false,
                 'error' => $errorMessage
@@ -184,13 +193,20 @@ class AuthController extends Controller
                 Auth::logout();
             }
             
-            // Invalidate session
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            // Invalidate session (handle jika session sudah expired)
+            try {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            } catch (\Exception $e) {
+                // Jika session sudah expired, tidak perlu invalidate lagi
+                \Log::info('Session already expired during logout');
+            }
             
-            return redirect()->route('welcome')->with('success', 'Anda telah berhasil logout.');
+            // Redirect langsung ke welcome tanpa pesan
+            return redirect()->route('welcome');
         } catch (\Exception $e) {
             // If logout fails, just redirect to welcome page
+            \Log::error('Logout error: ' . $e->getMessage());
             return redirect()->route('welcome');
         }
     }

@@ -571,6 +571,12 @@
             <h2 class="form-title">Masuk ke TMS NURANI</h2>
             <p class="form-subtitle">Silakan masukkan kredensial Anda untuk mengakses TMS</p>
             
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                </div>
+            @endif
+            
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">

@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Exclude logout and login-modal routes from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'logout',
+            'logout.get',
+            'login.modal',
+            'login-modal',
+            '/login-modal',
+            '*/login-modal',
+            'nurani/public/login-modal',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

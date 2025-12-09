@@ -17,6 +17,23 @@
             overflow-x: hidden;
         }
         
+        /* Layout - sama seperti dashboard (biarkan Bootstrap yang mengatur) */
+        /* Pastikan di desktop, konten di samping sidebar */
+        @media (min-width: 768px) {
+            .container-fluid > .row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            .col-md-3.col-lg-2 {
+                flex: 0 0 auto !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                flex: 0 0 auto !important;
+            }
+        }
+        
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
@@ -76,6 +93,10 @@
             border: none;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
         }
         .btn-primary {
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
@@ -238,11 +259,6 @@
                 max-width: 100% !important;
                 flex: 0 0 auto !important;
             }
-                overscroll-behavior: contain !important;
-                pointer-events: auto !important;
-                background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
-                background-color: #2E7D32 !important;
-            }
             
             .sidebar.show {
                 left: 0;
@@ -292,9 +308,11 @@
                 pointer-events: auto !important;
             }
             
+            /* Di mobile, konten tetap di bawah sidebar */
             .col-md-9.col-lg-10 {
-                width: 100%;
-                margin-left: 0;
+                width: 100% !important;
+                margin-left: 0 !important;
+                padding: 1rem !important;
             }
         }
     </style>
@@ -305,84 +323,10 @@
     </button>
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     
-    <div class="container-fluid" style="position: relative; z-index: 1;">
+    <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0" id="guru-sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
-                <div class="p-4">
-                    <h4 class="text-white mb-4">
-                        <i class="fas fa-chalkboard-teacher me-2"></i>
-                        Dashboard Guru
-                    </h4>
-                    <div class="text-center mb-4">
-                        @php
-                            // SELALU ambil data fresh dari database untuk memastikan foto terbaru
-                            $freshGuru = \App\Models\Guru::find($guru->id);
-                            $photoUrl = null;
-                            
-                            if ($freshGuru && !empty($freshGuru->foto)) {
-                                // OTOMATIS cari foto dengan default path yang benar
-                                $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
-                                
-                                // Jika masih null, coba dengan path lain
-                                if (!$photoUrl) {
-                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
-                                }
-                                
-                                // Jika masih null, coba langsung dengan asset() untuk URL lengkap
-                                if (!$photoUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($freshGuru->foto)) {
-                                    $photoUrl = asset('storage/' . $freshGuru->foto) . '?v=' . time() . '&r=' . rand(1000, 9999);
-                                }
-                            }
-                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
-                        @endphp
-                        @if($hasPhoto && $photoUrl)
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" id="profile-photo-img-guru-kuis" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; position: relative; z-index: 2;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('profile-placeholder-guru-kuis').style.display='flex';">
-                                <div id="profile-placeholder-guru-kuis" class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0; z-index: 1;">
-                                    <i class="fas fa-user fa-2x text-primary"></i>
-                                </div>
-                            </div>
-                        @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <i class="fas fa-user fa-2x text-primary"></i>
-                            </div>
-                        @endif
-                        <h6 class="text-white mt-2 mb-1">{{ $guru->user->name }}</h6>
-                        <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>
-                        <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
-                            <i class="fas fa-edit"></i> Edit Profil
-                        </a>
-                    </div>
-                </div>
-                
-                <nav class="nav flex-column px-3 pb-4">
-                    <a class="nav-link" href="{{ route('guru.dashboard') }}">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.jadwal.index') }}">
-                        <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
-                        <i class="fas fa-calendar-check me-2"></i> Presensi Guru
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
-                        <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.materi.index') }}">
-                        <i class="fas fa-book me-2"></i> Materi
-                    </a>
-                    <a class="nav-link active" href="{{ route('guru.kuis.index') }}">
-                        <i class="fas fa-question-circle me-2"></i> Kuis
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                        @csrf
-                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </button>
-                    </form>
-                </nav>
-            </div>
+            @include('partials.guru-sidebar')
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">
@@ -431,11 +375,11 @@
                 @endif
 
                 <!-- Action Buttons -->
-                <div class="d-flex justify-content-end gap-2 mb-4">
-                    <a href="{{ route('guru.kuis.create') }}" class="btn btn-primary">
+                <div class="d-flex justify-content-start gap-3 mb-4" style="flex-wrap: wrap;">
+                    <a href="{{ route('guru.kuis.create') }}" class="btn btn-success" style="background-color: #28a745 !important; border-color: #28a745 !important; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 500; border-radius: 0.5rem; color: white !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                         <i class="fas fa-plus me-2"></i>Tambah Kuis
                     </a>
-                    <a href="https://www.youtube.com" target="_blank" class="btn btn-danger">
+                    <a href="https://www.youtube.com" target="_blank" class="btn btn-danger" style="background-color: #dc3545 !important; border-color: #dc3545 !important; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 500; border-radius: 0.5rem; color: white !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                         <i class="fab fa-youtube me-2"></i>YouTube
                     </a>
                 </div>
@@ -445,33 +389,34 @@
                     <div class="row">
                         @foreach($kuis as $item)
                             <div class="col-md-6 col-lg-4 mb-4">
-                                <div class="card h-100">
+                                <div class="card h-100" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: none; border-radius: 0.5rem;">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $item->judul }}</h5>
-                                        <p class="text-muted small">{{ Str::limit($item->deskripsi, 80) }}</p>
+                                        <h5 class="card-title" style="font-weight: 600; color: #333;">{{ $item->judul }}</h5>
+                                        <p class="text-muted small mb-3">{{ Str::limit($item->deskripsi ?? 'Tidak ada deskripsi', 80) }}</p>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="badge bg-light text-dark">{{ $item->kelas }}</span>
-                                            <span class="badge bg-light text-dark">{{ $item->mata_pelajaran }}</span>
+                                            <span class="badge bg-primary">{{ $item->kelas }}</span>
+                                            <span class="badge bg-info text-white">{{ $item->mata_pelajaran }}</span>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
                                             <small class="text-muted">
                                                 <i class="fas fa-clock me-1"></i>
-                                                {{ $item->durasi_menit }} menit
+                                                {{ $item->durasi_menit ?? 0 }} menit
                                             </small>
                                             <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
                                                 {{ $item->created_at->format('d M Y') }}
                                             </small>
                                         </div>
-                                        @if($item->link_kuis)
+                                        @if($item->link_kuis || $item->external_quiz_url)
                                             <div class="mt-2">
-                                                <a href="{{ $item->link_kuis }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $item->link_kuis ?? $item->external_quiz_url }}" target="_blank" rel="noopener noreferrer"
                                                    class="btn btn-sm btn-outline-primary w-100">
                                                     <i class="fas fa-external-link-alt me-1"></i>Buka Link Kuis
                                                 </a>
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="card-footer bg-transparent">
+                                    <div class="card-footer bg-transparent" style="border-top: 1px solid #e9ecef;">
                                         <div class="d-flex gap-2">
                                             <a href="{{ route('guru.kuis.show', $item) }}" 
                                                class="btn btn-sm btn-outline-primary flex-grow-1">
@@ -496,8 +441,22 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $kuis->links() }}
+                    @if($kuis->hasPages())
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $kuis->links() }}
+                        </div>
+                    @endif
+                @else
+                    <!-- Empty State -->
+                    <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="card-body text-center py-5">
+                            <i class="fas fa-question-circle fa-4x text-muted mb-4" style="opacity: 0.5;"></i>
+                            <h4 class="text-muted mb-3">Belum Ada Kuis</h4>
+                            <p class="text-muted mb-4">Anda belum membuat kuis. Klik tombol "Tambah Kuis" di atas untuk membuat kuis baru.</p>
+                            <a href="{{ route('guru.kuis.create') }}" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Tambah Kuis Pertama
+                            </a>
+                        </div>
                     </div>
                 @endif
             </div>

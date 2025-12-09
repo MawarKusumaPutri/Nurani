@@ -105,12 +105,9 @@
         <a href="{{ route('tu.pengumuman.index') }}" class="nav-link {{ request()->routeIs('tu.pengumuman.*') ? 'active' : '' }}">
             <i class="fas fa-bullhorn me-2"></i> Pengumuman
         </a>
-        <form method="POST" action="{{ route('logout') }}" class="mt-3">
-            @csrf
-            <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
-                <i class="fas fa-sign-out-alt me-2"></i> Logout
-            </button>
-        </form>
+        <a href="{{ route('logout.get') }}" class="nav-link mt-3">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+        </a>
     </nav>
 </div>
 

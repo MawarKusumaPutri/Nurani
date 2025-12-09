@@ -382,72 +382,7 @@
     <div class="container-fluid" style="position: relative; z-index: 1;">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0" id="guru-sidebar" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important; background-color: #2E7D32 !important;">
-                <div class="p-4">
-                    <h4 class="text-white mb-4">
-                        <i class="fas fa-chalkboard-teacher me-2"></i>
-                        Dashboard Guru
-                    </h4>
-                    <div class="text-center mb-4">
-                        @php
-                            $freshGuru = \App\Models\Guru::find($guru->id);
-                            $photoUrl = null;
-                            
-                            if ($freshGuru && !empty($freshGuru->foto)) {
-                                $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'profiles/guru');
-                                if (!$photoUrl) {
-                                    $photoUrl = \App\Helpers\PhotoHelper::getPhotoUrl($freshGuru->foto, 'image/profiles');
-                                }
-                            }
-                            $hasPhoto = $photoUrl !== null && $photoUrl !== '';
-                        @endphp
-                        @if($hasPhoto && $photoUrl)
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px; overflow: hidden; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <img src="{{ $photoUrl }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center position-absolute" style="display: none; width: 100px; height: 100px; top: 0; left: 0;">
-                                    <i class="fas fa-user fa-2x text-primary"></i>
-                                </div>
-                            </div>
-                        @else
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                <i class="fas fa-user fa-2x text-primary"></i>
-                            </div>
-                        @endif
-                        <h6 class="text-white mt-2 mb-1">{{ $guru->user->name }}</h6>
-                        <small class="text-white-50">{{ $guru->mata_pelajaran }}</small>
-                        <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-light mt-2" style="font-size: 0.75rem;">
-                            <i class="fas fa-edit"></i> Edit Profil
-                        </a>
-                    </div>
-                </div>
-                
-                <nav class="nav flex-column px-3 pb-4">
-                    <a class="nav-link" href="{{ route('guru.dashboard') }}">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link active" href="{{ route('guru.jadwal.index') }}">
-                        <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.presensi.index') }}">
-                        <i class="fas fa-calendar-check me-2"></i> Presensi Guru
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.presensi-siswa.index') }}">
-                        <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.materi.index') }}">
-                        <i class="fas fa-book me-2"></i> Materi
-                    </a>
-                    <a class="nav-link" href="{{ route('guru.kuis.index') }}">
-                        <i class="fas fa-question-circle me-2"></i> Kuis
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                        @csrf
-                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </button>
-                    </form>
-                </nav>
-            </div>
+            @include('partials.guru-sidebar')
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4">

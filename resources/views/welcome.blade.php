@@ -1047,6 +1047,7 @@
         </div>
         </header>
 
+
     <!-- Hero Section -->
     <section class="hero-section" id="hero-section" style="position: relative; overflow: hidden;">
         <!-- Background Image dengan img tag sebagai fallback -->
@@ -1249,35 +1250,51 @@
             }
         });
 
-        // Handle form submission
+        // Function to get fresh CSRF token
+        function getCsrfToken() {
+            // Try to get from meta tag first
+            let token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            // If not found, try to get from hidden input in form
+            if (!token) {
+                token = document.querySelector('input[name="_token"]')?.value;
+            }
+            
+            // If still not found, try to get from form's CSRF token
+            if (!token) {
+                const form = document.getElementById('loginForm');
+                if (form) {
+                    const tokenInput = form.querySelector('input[name="_token"]');
+                    if (tokenInput) {
+                        token = tokenInput.value;
+                    }
+                }
+            }
+            
+            return token;
+        }
+
+        // Handle form submission - Update CSRF token sebelum submit dan biarkan form submit normal
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const role = document.getElementById('userRole').value;
-            const email = document.querySelector('input[name="email"]').value;
-            const password = document.querySelector('input[name="password"]').value;
+            // Get fresh CSRF token dari meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             
-            console.log('=== LOGIN DEBUG ===');
-            console.log('Role:', role);
-            console.log('Email:', email);
-            console.log('Password length:', password.length);
-            console.log('Form action:', this.action);
-            console.log('Form method:', this.method);
-            
-            // Update debug info
-            document.getElementById('debugRole').textContent = role;
-            document.getElementById('debugEmail').textContent = email;
-            document.getElementById('debugInfo').style.display = 'block';
+            // Update CSRF token di form jika ada
+            const tokenInput = this.querySelector('input[name="_token"]');
+            if (tokenInput && csrfToken) {
+                tokenInput.value = csrfToken;
+            }
             
             // Show loading state
             const submitBtn = document.querySelector('.btn-login');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Logging in...';
-            submitBtn.disabled = true;
+            if (submitBtn) {
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Logging in...';
+                submitBtn.disabled = true;
+            }
             
-            // Add a small delay to show loading state
-            setTimeout(() => {
-                console.log('Submitting form...');
-                // Form will submit normally
-            }, 100);
+            // Biarkan form submit normal - Route sudah di-exclude dari CSRF verification
+            // Form akan submit dengan CSRF token yang sudah di-update
         });
 
         // Handle logout with JavaScript as fallback
@@ -1458,6 +1475,7 @@
                 heroBackground.style.transform = `scale(${1.1 + scrolled * 0.0005})`;
             }
         });
+
     </script>
     </body>
 </html>
