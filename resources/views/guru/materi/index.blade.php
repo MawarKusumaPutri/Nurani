@@ -59,6 +59,80 @@
             }
         }
         
+        /* Layout - sama seperti presensi (biarkan Bootstrap yang mengatur) */
+        /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
+        @media (min-width: 768px) {
+            .container-fluid > .row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen - ULTRA VISIBLE */
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 25% !important;
+                width: 25% !important; /* col-md-3 = 25% */
+                max-width: 25% !important;
+                min-width: 250px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                flex: 0 0 75% !important;
+                width: 75% !important; /* col-md-9 = 75% */
+            }
+        }
+        
+        /* Large screen - sidebar lebih kecil - ULTRA VISIBLE */
+        @media (min-width: 992px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 16.66666667% !important;
+                width: 16.66666667% !important; /* col-lg-2 = 16.67% */
+                max-width: 16.66666667% !important;
+                min-width: 200px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                flex: 0 0 83.33333333% !important;
+                width: 83.33333333% !important; /* col-lg-10 = 83.33% */
+            }
+        }
+        
+        /* Main content - di samping sidebar (kanan) */
+        .col-md-9.col-lg-10 {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 1 !important;
+            min-height: 100vh !important;
+            padding: 1rem 1.5rem !important;
+            background-color: #ffffff !important;
+            box-sizing: border-box !important;
+        }
+        
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
@@ -66,11 +140,26 @@
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            width: auto !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
         }
         
-        /* Ensure sidebar content is scrollable */
+        /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar {
+                position: relative !important;
+                float: none !important;
+            }
+        }
+        
+        /* Ensure sidebar content is scrollable - ULTRA VISIBLE */
         #guru-sidebar {
-            display: flex;
+            display: flex !important;
             flex-direction: column;
             height: 100vh;
             overflow-y: auto;
@@ -78,6 +167,43 @@
             -webkit-overflow-scrolling: touch;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
             background-color: #2E7D32 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
+            z-index: 1000 !important;
+            width: 100% !important;
+        }
+        
+        /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+        
+        /* Pastikan konten tidak tersembunyi */
+        .col-md-9.col-lg-10 > * {
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .col-md-9.col-lg-10 h2,
+        .col-md-9.col-lg-10 .row,
+        .col-md-9.col-lg-10 .card,
+        .col-md-9.col-lg-10 .alert {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
         #guru-sidebar .p-4 {
@@ -348,6 +474,32 @@
                 overflow-y: auto !important;
                 -webkit-overflow-scrolling: touch !important;
             }
+            
+            .col-md-9.col-lg-10 {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+            
+            .col-md-3.col-lg-2.sidebar {
+                width: 100% !important;
+            }
+        }
+        
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .sidebar.col-md-3.col-lg-2,
+            #guru-sidebar.col-md-3.col-lg-2,
+            .col-md-3.col-lg-2#guru-sidebar,
+            .col-md-3.col-lg-2.sidebar#guru-sidebar {
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
         }
         
         /* Ensure sidebar is always above overlay */
@@ -537,6 +689,7 @@
             color: #495057;
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
+            display: block;
         }
         
         .search-filter-form .form-control,
@@ -545,6 +698,7 @@
             border: 1px solid #dee2e6;
             padding: 10px 15px;
             transition: all 0.3s ease;
+            width: 100%;
         }
         
         .search-filter-form .form-control:focus,
@@ -554,7 +708,8 @@
             outline: none;
         }
         
-        .search-filter-form .btn-primary {
+        .search-filter-form .btn-primary,
+        .search-filter-form .btn-success {
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
             border-radius: 8px;
@@ -562,22 +717,35 @@
             font-weight: 500;
             box-shadow: 0 2px 6px rgba(46, 125, 50, 0.3);
             transition: all 0.3s ease;
+            color: white;
         }
         
-        .search-filter-form .btn-primary:hover {
+        .search-filter-form .btn-primary:hover,
+        .search-filter-form .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
+        }
+        
+        /* Pastikan form elements sejajar horizontal */
+        .search-filter-form .d-flex {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: flex-end !important;
+        }
+        
+        .search-filter-form .gap-3 {
+            gap: 1rem !important;
         }
         
         @media (max-width: 768px) {
-            .search-filter-form .row {
-                margin: 0;
+            .search-filter-form .d-flex {
+                flex-direction: column !important;
             }
             
-            .search-filter-form .col-md-4,
-            .search-filter-form .col-md-3,
-            .search-filter-form .col-md-2 {
-                padding: 0.5rem;
+            .search-filter-form .d-flex > div {
+                width: 100% !important;
+                min-width: 100% !important;
             }
         }
     </style>
@@ -621,15 +789,15 @@
                                 @if(request('mata_pelajaran'))
                                     <input type="hidden" name="mata_pelajaran" value="{{ request('mata_pelajaran') }}">
                                 @endif
-                                <div class="row g-3">
-                                    <div class="col-md-4 col-sm-6">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-search me-1"></i>Cari Materi
+                                <div class="d-flex flex-wrap align-items-center gap-3">
+                                    <div class="flex-grow-1" style="min-width: 200px;">
+                                        <label class="form-label fw-semibold mb-1">
+                                            <i class="fas fa-search me-1"></i>Q Cari Materi
                                         </label>
                                         <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Cari materi...">
                                     </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <label class="form-label fw-semibold">
+                                    <div style="min-width: 180px;">
+                                        <label class="form-label fw-semibold mb-1">
                                             <i class="fas fa-users me-1"></i>Kelas
                                         </label>
                                         <select class="form-select" name="kelas" id="kelas-filter" onchange="this.form.submit()">
@@ -639,16 +807,16 @@
                                             <option value="9" {{ request('kelas') == '9' ? 'selected' : '' }}>Kelas 9</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <label class="form-label fw-semibold">
+                                    <div style="min-width: 180px;">
+                                        <label class="form-label fw-semibold mb-1">
                                             <i class="fas fa-tag me-1"></i>Topik
                                         </label>
                                         <input type="text" class="form-control" name="topik" value="{{ request('topik') }}" placeholder="Topik...">
                                     </div>
-                                    <div class="col-md-2 col-sm-6">
-                                        <label class="form-label fw-semibold d-block">&nbsp;</label>
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fas fa-search me-1"></i> Cari
+                                    <div style="min-width: 120px;">
+                                        <label class="form-label fw-semibold mb-1 d-block">&nbsp;</label>
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="fas fa-search me-1"></i> Q Cari
                                         </button>
                                     </div>
                                 </div>
@@ -737,9 +905,15 @@
                                                 @endif
                                             </div>
 
+                                        </div>
+                                        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ $item->created_at->format('d M Y') }}
+                                            </small>
                                             <div class="d-flex gap-2">
                                                 <a href="{{ route('guru.materi.show', $item) }}" 
-                                                   class="btn btn-sm btn-outline-primary flex-grow-1">
+                                                   class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-eye me-1"></i>Lihat
                                                 </a>
                                                 <a href="{{ route('guru.materi.edit', $item) }}" 
@@ -747,12 +921,6 @@
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             </div>
-                                        </div>
-                                        <div class="card-footer bg-transparent">
-                                            <small class="text-muted">
-                                                <i class="fas fa-calendar me-1"></i>
-                                                {{ $item->created_at->format('d M Y') }}
-                                            </small>
                                         </div>
                                     </div>
                                 </div>

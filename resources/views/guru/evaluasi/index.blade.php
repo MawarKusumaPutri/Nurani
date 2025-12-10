@@ -34,12 +34,151 @@
             background: #ffffff !important;
         }
         
+        /* Layout - sama seperti presensi (biarkan Bootstrap yang mengatur) */
+        /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
+        @media (min-width: 768px) {
+            .container-fluid > .row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen - ULTRA VISIBLE */
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 25% !important;
+                width: 25% !important; /* col-md-3 = 25% */
+                max-width: 25% !important;
+                min-width: 250px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                flex: 0 0 75% !important;
+                width: 75% !important; /* col-md-9 = 75% */
+            }
+        }
+        
+        /* Large screen - sidebar lebih kecil - ULTRA VISIBLE */
+        @media (min-width: 992px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 16.66666667% !important;
+                width: 16.66666667% !important; /* col-lg-2 = 16.67% */
+                max-width: 16.66666667% !important;
+                min-width: 200px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .col-md-9.col-lg-10 {
+                flex: 0 0 83.33333333% !important;
+                width: 83.33333333% !important; /* col-lg-10 = 83.33% */
+            }
+        }
+        
+        /* Main content - di samping sidebar (kanan) */
+        .col-md-9.col-lg-10 {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 1 !important;
+            min-height: 100vh !important;
+            padding: 1rem 1.5rem !important;
+            background-color: #ffffff !important;
+            box-sizing: border-box !important;
+        }
+        
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            width: auto !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
+        }
+        
+        /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar {
+                position: relative !important;
+                float: none !important;
+            }
+        }
+        
+        /* Ensure sidebar content is scrollable - ULTRA VISIBLE */
+        #guru-sidebar {
+            display: flex !important;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+            background-color: #2E7D32 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
+            z-index: 1000 !important;
+            width: 100% !important;
+        }
+        
+        /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+        
+        /* Pastikan konten tidak tersembunyi */
+        .col-md-9.col-lg-10 > * {
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .col-md-9.col-lg-10 h2,
+        .col-md-9.col-lg-10 .row,
+        .col-md-9.col-lg-10 .card,
+        .col-md-9.col-lg-10 .alert {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
         .btn-success {
@@ -54,11 +193,95 @@
             border-radius: 0.5rem;
             transition: transform 0.2s, box-shadow 0.2s;
             background-color: #ffffff !important;
+            height: 100%;
         }
         
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .card.h-100 {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .card-body .btn {
+            margin-top: auto;
+        }
+        
+        /* Pastikan card tampil horizontal dalam 1 baris di desktop - ULTRA AGGRESSIVE */
+        .row.g-4 {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            margin-left: -0.75rem !important;
+            margin-right: -0.75rem !important;
+        }
+        
+        .row.g-4 > [class*="col-"] {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        @media (min-width: 992px) {
+            .row.g-4 {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                flex-direction: row !important;
+                margin-left: -0.75rem !important;
+                margin-right: -0.75rem !important;
+                width: 100% !important;
+            }
+            
+            .row.g-4 > .col-lg-3,
+            .row.g-4 > .col-md-6.col-lg-3 {
+                flex: 0 0 25% !important;
+                max-width: 25% !important;
+                width: 25% !important;
+                min-width: 0 !important;
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            
+            /* Pastikan card tidak wrap dan mengisi penuh */
+            .row.g-4 > .col-lg-3 .card,
+            .row.g-4 > .col-md-6.col-lg-3 .card {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 1 1 auto !important;
+            }
+        }
+        
+        /* Di tablet, 2 kolom */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .row.g-4 {
+                display: flex !important;
+                flex-wrap: wrap !important;
+            }
+            
+            .row.g-4 > .col-md-6 {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                width: 50% !important;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .row.g-4 > [class*="col-"] {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
         }
         
         .p-4 {
@@ -99,6 +322,32 @@
             .sidebar-overlay.show {
                 display: block;
             }
+            
+            .col-md-9.col-lg-10 {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+            
+            .col-md-3.col-lg-2.sidebar {
+                width: 100% !important;
+            }
+        }
+        
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .sidebar.col-md-3.col-lg-2,
+            #guru-sidebar.col-md-3.col-lg-2,
+            .col-md-3.col-lg-2#guru-sidebar,
+            .col-md-3.col-lg-2.sidebar#guru-sidebar {
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
         }
     </style>
 </head>
@@ -124,9 +373,9 @@
                 </div>
 
                 <!-- Menu Cards -->
-                <div class="row g-4">
+                <div class="row g-4" style="display: flex !important; flex-wrap: nowrap !important; flex-direction: row !important;">
                     <!-- Rubrik Penilaian -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-flex">
                         <div class="card h-100 text-center">
                             <div class="card-body">
                                 <div class="mb-3">
@@ -142,7 +391,7 @@
                     </div>
 
                     <!-- Lembar Penilaian (LP) -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-flex">
                         <div class="card h-100 text-center">
                             <div class="card-body">
                                 <div class="mb-3">
@@ -158,7 +407,7 @@
                     </div>
 
                     <!-- Nilai Formatif & Sumatif -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-flex">
                         <div class="card h-100 text-center">
                             <div class="card-body">
                                 <div class="mb-3">
@@ -174,7 +423,7 @@
                     </div>
 
                     <!-- Rekap Hasil Belajar -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-flex">
                         <div class="card h-100 text-center">
                             <div class="card-body">
                                 <div class="mb-3">

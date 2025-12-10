@@ -157,20 +157,72 @@
 <style>
     .sidebar {
         min-height: 100vh;
-        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+        background-color: #2E7D32 !important;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        width: auto !important;
+        left: 0 !important;
+        transform: translateX(0) !important;
     }
     
-    /* Ensure sidebar content is scrollable */
+    /* Ensure sidebar content is scrollable - ULTRA VISIBLE */
     #guru-sidebar {
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         height: 100vh;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
+        background-color: #2E7D32 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        left: 0 !important;
+        transform: translateX(0) !important;
+        z-index: 1000 !important;
+        width: 100% !important;
+    }
+    
+    /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
+    @media (min-width: 768px) {
+        .col-md-3.col-lg-2.sidebar {
+            position: relative !important;
+            float: none !important;
+        }
+    }
+    
+    /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+    @media (min-width: 768px) {
+        .col-md-3.col-lg-2.sidebar,
+        #guru-sidebar {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+    
+    #guru-sidebar .p-4 {
+        flex-shrink: 0;
+    }
+    
+    #guru-sidebar nav {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
     }
     
     #guru-sidebar .p-4 {
@@ -369,7 +421,8 @@
             display: block;
         }
         
-        .sidebar {
+        .sidebar,
+        #guru-sidebar {
             position: fixed;
             top: 0;
             left: -100%;
@@ -383,11 +436,9 @@
             -webkit-overflow-scrolling: touch;
         }
         
-        #guru-sidebar {
-            height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+        .sidebar.show,
+        #guru-sidebar.show {
+            left: 0;
         }
         
         #guru-sidebar nav {
