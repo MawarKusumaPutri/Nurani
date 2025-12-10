@@ -770,15 +770,6 @@
                                 <h2 class="mb-1">Manajemen Materi</h2>
                                 <p class="text-muted mb-0">Kelola materi pembelajaran Anda</p>
                             </div>
-                            <div class="header-actions">
-                                <a href="https://www.youtube.com" target="_blank" class="youtube-btn">
-                                    <i class="fab fa-youtube me-2"></i>
-                                    <span>YouTube</span>
-                                </a>
-                                <a href="{{ route('guru.materi.create') }}" class="btn btn-success">
-                                    <i class="fas fa-plus me-2"></i> Tambah Materi
-                                </a>
-                            </div>
                         </div>
                     </div>
 
@@ -818,6 +809,18 @@
                                         <button type="submit" class="btn btn-success w-100">
                                             <i class="fas fa-search me-1"></i> Q Cari
                                         </button>
+                                    </div>
+                                    <div class="d-flex gap-2" style="min-width: 200px;">
+                                        <label class="form-label fw-semibold mb-1 d-block w-100">&nbsp;</label>
+                                        <div class="d-flex gap-2 w-100">
+                                            <a href="https://www.youtube.com" target="_blank" class="youtube-btn flex-grow-1 text-center">
+                                                <i class="fab fa-youtube me-2"></i>
+                                                <span>YouTube</span>
+                                            </a>
+                                            <a href="{{ route('guru.materi.create') }}" class="btn btn-success flex-grow-1">
+                                                <i class="fas fa-plus me-2"></i> Tambah Materi
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
