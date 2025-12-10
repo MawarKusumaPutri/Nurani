@@ -6,6 +6,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\RangkumanController;
+use App\Http\Controllers\RppController;
 use App\Http\Controllers\GuruMataPelajaranController;
 
 /*
@@ -119,6 +120,17 @@ Route::middleware('auth')->group(function () {
             Route::get('/{rangkuman}/edit', [RangkumanController::class, 'edit'])->name('edit');
             Route::put('/{rangkuman}', [RangkumanController::class, 'update'])->name('update');
             Route::delete('/{rangkuman}', [RangkumanController::class, 'destroy'])->name('destroy');
+        });
+        
+        // RPP Routes
+        Route::prefix('rpp')->name('rpp.')->group(function () {
+            Route::get('/', [RppController::class, 'index'])->name('index');
+            Route::get('/create', [RppController::class, 'create'])->name('create');
+            Route::post('/', [RppController::class, 'store'])->name('store');
+            Route::get('/{rpp}', [RppController::class, 'show'])->name('show');
+            Route::get('/{rpp}/edit', [RppController::class, 'edit'])->name('edit');
+            Route::put('/{rpp}', [RppController::class, 'update'])->name('update');
+            Route::delete('/{rpp}', [RppController::class, 'destroy'])->name('destroy');
         });
         
         // Mata Pelajaran Routes

@@ -47,6 +47,14 @@ class Guru extends Model
     }
 
     /**
+     * Get the rpp for the guru.
+     */
+    public function rpp(): HasMany
+    {
+        return $this->hasMany(Rpp::class);
+    }
+
+    /**
      * Get the rangkuman for the guru.
      */
     public function rangkuman(): HasMany

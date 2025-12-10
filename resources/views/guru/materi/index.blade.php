@@ -11,13 +11,32 @@
         html, body {
             background-color: #ffffff !important;
             background: #ffffff !important;
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100vh !important;
+        }
+        
+        html {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
         }
         
         body {
             overflow-x: hidden;
             position: relative;
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+        
+        /* Pastikan semua container memiliki background putih */
+        .container-fluid,
+        .container,
+        .row,
+        .col-md-9,
+        .col-lg-10 {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
         }
         
         /* Pastikan tombol sidebar-toggle selalu di atas semua elemen */
@@ -281,6 +300,8 @@
                 max-width: 100% !important;
                 flex: 0 0 auto !important;
             }
+            
+            .sidebar {
                 -webkit-overflow-scrolling: touch !important;
                 pointer-events: auto !important;
                 background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
@@ -781,10 +802,12 @@
                 sidebar.classList.add('show');
                 overlay.classList.add('show');
                 if (overlay) overlay.style.display = 'block';
-                // Prevent body scroll when sidebar is open
+                // Prevent body scroll when sidebar is open - TAPI tetap putih
                 document.body.style.overflow = 'hidden';
                 document.body.style.position = 'fixed';
                 document.body.style.width = '100%';
+                document.body.style.background = '#ffffff';
+                document.body.style.backgroundColor = '#ffffff';
             }
         }
         
@@ -796,6 +819,9 @@
                 overlay.classList.remove('show');
                 if (overlay) overlay.style.display = 'none';
             }
+            // Pastikan background tetap putih
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
             // Always reset body styles regardless of screen size
             document.body.style.overflow = '';
             document.body.style.position = '';
@@ -806,60 +832,78 @@
             document.body.style.backgroundColor = '#ffffff';
         }
         
-        // Robust function to setup nav links
+        // Robust function to setup nav links - TIDAK CLONE, biarkan href normal bekerja
         function setupNavLinks() {
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            const navLinks = document.querySelectorAll('.sidebar .nav-link, #guru-sidebar .nav-link');
             navLinks.forEach(function(link) {
-                // Force styles dengan !important
+                // Force styles dengan !important - PASTIKAN BISA DIKLIK
                 link.style.setProperty('pointer-events', 'auto', 'important');
                 link.style.setProperty('cursor', 'pointer', 'important');
                 link.style.setProperty('z-index', '1001', 'important');
                 link.style.setProperty('position', 'relative', 'important');
                 link.style.setProperty('display', 'block', 'important');
                 link.style.setProperty('touch-action', 'manipulation', 'important');
+                link.style.setProperty('text-decoration', 'none', 'important');
                 
-                // Remove existing listeners by cloning
-                const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
+                // Pastikan child elements tidak menghalangi
+                const children = link.querySelectorAll('*');
+                children.forEach(function(child) {
+                    child.style.setProperty('pointer-events', 'none', 'important');
+                });
                 
-                // Add click event listener
-                newLink.addEventListener('click', function(e) {
-                    console.log('Nav link clicked:', newLink.href);
-                    const href = newLink.getAttribute('href');
-                    
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
-                        closeSidebar();
-                        // Biarkan browser navigate secara normal
-                    } else {
-                        e.preventDefault();
-                        e.stopPropagation();
+                // JANGAN clone - biarkan href normal bekerja
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && href !== 'javascript:void(0)') {
+                    // Pastikan href tetap ada
+                    if (!link.href || link.href === window.location.href) {
+                        link.href = href;
                     }
-                }, { capture: false });
-                
-                // Add touch event listener untuk mobile
-                newLink.addEventListener('touchend', function(e) {
-                    console.log('Nav link touched:', newLink.href);
-                    const href = newLink.getAttribute('href');
                     
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                    // Tambahkan click handler yang MEMASTIKAN navigasi
+                    link.addEventListener('click', function(e) {
+                        console.log('✓ Nav link clicked:', href);
+                        // Biarkan browser navigate secara normal - JANGAN preventDefault
+                        closeSidebar();
+                    }, false);
+                    
+                    // Touch handler untuk mobile
+                    link.addEventListener('touchend', function(e) {
+                        console.log('✓ Nav link touched:', href);
                         closeSidebar();
                         window.location.href = href;
                         e.preventDefault();
                         return false;
-                    }
-                }, { capture: false });
+                    }, false);
+                }
             });
         }
         
-        // Ensure body has white background on page load
+        // Ensure body has white background on page load - ULTRA AGGRESSIVE
+        function forceWhiteBackground() {
+            document.documentElement.style.setProperty('background-color', '#ffffff', 'important');
+            document.documentElement.style.setProperty('background', '#ffffff', 'important');
+            document.body.style.setProperty('background-color', '#ffffff', 'important');
+            document.body.style.setProperty('background', '#ffffff', 'important');
+            document.body.style.setProperty('color', '#000000', 'important');
+            
+            // Pastikan container juga putih
+            const containers = document.querySelectorAll('.container-fluid, .container, .row, .col-md-9, .col-lg-10');
+            containers.forEach(function(container) {
+                container.style.setProperty('background-color', '#ffffff', 'important');
+                container.style.setProperty('background', '#ffffff', 'important');
+            });
+        }
+        
+        // Jalankan segera
+        forceWhiteBackground();
+        
         document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = '';
             document.body.style.position = '';
             document.body.style.width = '';
             document.body.style.height = '';
             document.body.style.top = '';
-            document.body.style.background = '#ffffff';
-            document.body.style.backgroundColor = '#ffffff';
+            forceWhiteBackground();
             
             // Setup nav links
             setupNavLinks();
@@ -877,6 +921,23 @@
                 });
             }
         });
+        
+        // Jalankan lagi setelah page load
+        window.addEventListener('load', function() {
+            forceWhiteBackground();
+            setTimeout(forceWhiteBackground, 100);
+            setTimeout(forceWhiteBackground, 500);
+        });
+        
+        // Jalankan setiap kali ada perubahan (untuk memastikan) - hanya 5 detik pertama
+        let intervalCount = 0;
+        const backgroundInterval = setInterval(function() {
+            forceWhiteBackground();
+            intervalCount++;
+            if (intervalCount >= 5) {
+                clearInterval(backgroundInterval);
+            }
+        }, 1000);
     </script>
 </body>
 </html>

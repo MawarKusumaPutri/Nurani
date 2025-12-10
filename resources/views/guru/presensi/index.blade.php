@@ -3313,40 +3313,47 @@
             
             // Robust function to setup nav links - OPTIMIZED (hanya setup sekali, tidak perlu observer)
             function setupNavLinks() {
-                const navLinks = document.querySelectorAll('.sidebar .nav-link');
+                const navLinks = document.querySelectorAll('.sidebar .nav-link, #guru-sidebar .nav-link');
                 navLinks.forEach(function(link) {
-                    // Force styles dengan !important
+                    // Force styles dengan !important - PASTIKAN BISA DIKLIK
                     link.style.setProperty('pointer-events', 'auto', 'important');
                     link.style.setProperty('cursor', 'pointer', 'important');
                     link.style.setProperty('z-index', '1001', 'important');
                     link.style.setProperty('position', 'relative', 'important');
                     link.style.setProperty('display', 'block', 'important');
                     link.style.setProperty('touch-action', 'manipulation', 'important');
+                    link.style.setProperty('text-decoration', 'none', 'important');
                     
-                    // Add click event listener (tidak perlu clone untuk performa)
-                    link.addEventListener('click', function(e) {
-                        const href = link.getAttribute('href');
-                        
-                        if (href && href !== '#' && href !== 'javascript:void(0)') {
-                            closeSidebar();
-                            // Biarkan browser navigate secara normal
-                        } else {
-                            e.preventDefault();
-                            e.stopPropagation();
+                    // Pastikan child elements tidak menghalangi
+                    const children = link.querySelectorAll('*');
+                    children.forEach(function(child) {
+                        child.style.setProperty('pointer-events', 'none', 'important');
+                    });
+                    
+                    // JANGAN clone - biarkan href normal bekerja
+                    const href = link.getAttribute('href');
+                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        // Pastikan href tetap ada
+                        if (!link.href || link.href === window.location.href) {
+                            link.href = href;
                         }
-                    }, { capture: false, once: false });
-                    
-                    // Add touch event listener untuk mobile
-                    link.addEventListener('touchend', function(e) {
-                        const href = link.getAttribute('href');
                         
-                        if (href && href !== '#' && href !== 'javascript:void(0)') {
+                        // Tambahkan click handler yang MEMASTIKAN navigasi
+                        link.addEventListener('click', function(e) {
+                            console.log('✓ Nav link clicked:', href);
+                            // Biarkan browser navigate secara normal - JANGAN preventDefault
+                            closeSidebar();
+                        }, false);
+                        
+                        // Touch handler untuk mobile
+                        link.addEventListener('touchend', function(e) {
+                            console.log('✓ Nav link touched:', href);
                             closeSidebar();
                             window.location.href = href;
                             e.preventDefault();
                             return false;
-                        }
-                    }, { capture: false, once: false });
+                        }, false);
+                    }
                 });
             }
             

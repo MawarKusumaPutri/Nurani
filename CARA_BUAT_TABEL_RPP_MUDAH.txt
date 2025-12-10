@@ -1,0 +1,69 @@
+========================================
+CARA MUDAH MEMBUAT TABEL RPP
+========================================
+
+Ada 3 cara untuk membuat tabel RPP:
+
+========================================
+CARA 1: OTOMATIS VIA BROWSER (PALING MUDAH)
+========================================
+
+1. Pastikan XAMPP Apache dan MySQL sudah running (status hijau)
+2. Buka browser
+3. Ketik URL ini di address bar:
+   http://localhost/nurani/public/BUAT_TABEL_RPP_OTOMATIS.php
+4. Tekan Enter
+5. Script akan otomatis membuat tabel RPP
+6. Jika berhasil, akan muncul pesan "✅ BERHASIL!"
+7. Klik tombol "Buka Halaman RPP" atau refresh halaman RPP
+
+ATAU
+
+Double-click file: KLIK_INI_BUAT_TABEL_RPP.bat
+File ini akan membuka browser otomatis.
+
+========================================
+CARA 2: OTOMATIS VIA COMMAND LINE
+========================================
+
+1. Double-click file: JALANKAN_MIGRATION_RPP.bat
+2. Tunggu sampai selesai
+3. Refresh halaman RPP di browser
+
+========================================
+CARA 3: MANUAL VIA PHPMYADMIN (PALING PASTI)
+========================================
+
+1. Buka phpMyAdmin: http://localhost/phpmyadmin
+2. Pilih database "nurani" di sidebar kiri
+3. Klik tab "SQL" di bagian atas
+4. Buka file "SQL_RPP_LANGSUNG.txt" dari folder proyek
+5. Copy SEMUA isinya (dari "USE nurani;" sampai akhir)
+6. Paste ke textarea SQL di phpMyAdmin
+7. Klik tombol "Go" atau "Jalankan"
+8. Pastikan muncul pesan sukses: "Table 'rpp' created successfully"
+9. Refresh halaman RPP di browser (Ctrl+F5)
+
+========================================
+VERIFIKASI
+========================================
+
+Setelah tabel dibuat, cek apakah berhasil:
+
+1. Buka phpMyAdmin: http://localhost/phpmyadmin
+2. Pilih database "nurani"
+3. Di sidebar kiri, cari tabel "rpp"
+4. Jika ada, berarti tabel berhasil dibuat!
+
+========================================
+TROUBLESHOOTING
+========================================
+
+Jika masih error:
+
+1. Pastikan XAMPP MySQL sudah running (status hijau)
+2. Pastikan database "nurani" sudah ada
+3. Jika database belum ada, buat dulu di phpMyAdmin
+4. Coba cara manual (Cara 3) - paling pasti berhasil
+
+========================================

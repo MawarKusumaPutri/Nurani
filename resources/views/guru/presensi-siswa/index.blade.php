@@ -73,17 +73,35 @@
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
             background-color: #2E7D32 !important;
         }
-        .sidebar .nav-link {
+        .sidebar .nav-link,
+        #guru-sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             padding: 12px 20px;
             border-radius: 8px;
             margin: 4px 0;
             transition: all 0.3s ease;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 10 !important;
+            position: relative !important;
+            display: block !important;
+            text-decoration: none !important;
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active,
+        #guru-sidebar .nav-link:hover,
+        #guru-sidebar .nav-link.active {
             color: white;
             background: rgba(255, 255, 255, 0.1);
             transform: translateX(5px);
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+        
+        /* Pastikan child elements tidak menghalangi */
+        .sidebar .nav-link *,
+        #guru-sidebar .nav-link * {
+            pointer-events: none !important;
         }
         .card {
             border: none;
@@ -805,46 +823,48 @@
         
         // Robust function to setup nav links
         function setupNavLinks() {
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            const navLinks = document.querySelectorAll('.sidebar .nav-link, #guru-sidebar .nav-link');
             navLinks.forEach(function(link) {
-                // Force styles dengan !important
+                // Force styles dengan !important - PASTIKAN BISA DIKLIK
                 link.style.setProperty('pointer-events', 'auto', 'important');
                 link.style.setProperty('cursor', 'pointer', 'important');
                 link.style.setProperty('z-index', '1001', 'important');
                 link.style.setProperty('position', 'relative', 'important');
                 link.style.setProperty('display', 'block', 'important');
                 link.style.setProperty('touch-action', 'manipulation', 'important');
+                link.style.setProperty('text-decoration', 'none', 'important');
                 
-                // Remove existing listeners by cloning
-                const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
+                // Pastikan child elements tidak menghalangi
+                const children = link.querySelectorAll('*');
+                children.forEach(function(child) {
+                    child.style.setProperty('pointer-events', 'none', 'important');
+                });
                 
-                // Add click event listener
-                newLink.addEventListener('click', function(e) {
-                    console.log('Nav link clicked:', newLink.href);
-                    const href = newLink.getAttribute('href');
-                    
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
-                        closeSidebar();
-                        // Biarkan browser navigate secara normal
-                    } else {
-                        e.preventDefault();
-                        e.stopPropagation();
+                // JANGAN clone - biarkan href normal bekerja
+                // Hanya pastikan href valid dan bisa diklik
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && href !== 'javascript:void(0)') {
+                    // Pastikan href tetap ada
+                    if (!link.href || link.href === window.location.href) {
+                        link.href = href;
                     }
-                }, { capture: false });
-                
-                // Add touch event listener untuk mobile
-                newLink.addEventListener('touchend', function(e) {
-                    console.log('Nav link touched:', newLink.href);
-                    const href = newLink.getAttribute('href');
                     
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
+                    // Tambahkan click handler yang MEMASTIKAN navigasi
+                    link.addEventListener('click', function(e) {
+                        console.log('✓ Nav link clicked:', href);
+                        // Biarkan browser navigate secara normal - JANGAN preventDefault
+                        closeSidebar();
+                    }, false);
+                    
+                    // Touch handler untuk mobile
+                    link.addEventListener('touchend', function(e) {
+                        console.log('✓ Nav link touched:', href);
                         closeSidebar();
                         window.location.href = href;
                         e.preventDefault();
                         return false;
-                    }
-                }, { capture: false });
+                    }, false);
+                }
             });
         }
         

@@ -1,0 +1,99 @@
+========================================
+CARA FIX ERROR TABEL RPP - PASTI BERHASIL
+========================================
+
+ERROR: Table 'nurani.rpp' doesn't exist
+
+========================================
+SOLUSI TERMUDAH DAN PASTI BERHASIL:
+========================================
+
+METODE 1: VIA PHPMYADMIN (DISARANKAN)
+
+1. Buka browser
+2. Ketik: http://localhost/phpmyadmin
+3. Di sidebar kiri, klik database "nurani"
+4. Klik tab "SQL" di bagian atas
+5. Buka file "SQL_RPP_LANGSUNG.txt" di folder ini
+6. Copy SEMUA isinya (dari "USE nurani;" sampai akhir)
+7. Paste ke textarea SQL di phpMyAdmin
+8. Klik tombol "Go" atau "Jalankan"
+9. Pastikan muncul pesan: "Table 'rpp' created successfully"
+10. Refresh halaman RPP di browser (Ctrl+F5)
+
+ATAU copy-paste SQL ini langsung:
+
+USE nurani;
+
+CREATE TABLE IF NOT EXISTS `rpp` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `guru_id` bigint(20) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `mata_pelajaran` varchar(255) NOT NULL,
+  `kelas` varchar(255) NOT NULL,
+  `semester` varchar(255) NOT NULL,
+  `pertemuan_ke` int(11) NOT NULL,
+  `alokasi_waktu` int(11) NOT NULL,
+  `sekolah` varchar(255) DEFAULT NULL,
+  `mata_pelajaran_detail` varchar(255) DEFAULT NULL,
+  `kelas_detail` varchar(255) DEFAULT NULL,
+  `semester_detail` varchar(255) DEFAULT NULL,
+  `tahun_pelajaran` varchar(255) DEFAULT NULL,
+  `ki_1` text DEFAULT NULL,
+  `ki_2` text DEFAULT NULL,
+  `ki_3` text DEFAULT NULL,
+  `ki_4` text DEFAULT NULL,
+  `kd_pengetahuan` text DEFAULT NULL,
+  `kd_keterampilan` text DEFAULT NULL,
+  `indikator_pencapaian_kompetensi` text DEFAULT NULL,
+  `tujuan_pembelajaran` text DEFAULT NULL,
+  `materi_pembelajaran` text DEFAULT NULL,
+  `materi_pembelajaran_reguler` text DEFAULT NULL,
+  `materi_pembelajaran_pengayaan` text DEFAULT NULL,
+  `materi_pembelajaran_remedial` text DEFAULT NULL,
+  `metode_pembelajaran` text DEFAULT NULL,
+  `kegiatan_pendahuluan` text DEFAULT NULL,
+  `kegiatan_inti` text DEFAULT NULL,
+  `kegiatan_penutup` text DEFAULT NULL,
+  `media_pembelajaran` text DEFAULT NULL,
+  `sumber_belajar` text DEFAULT NULL,
+  `teknik_penilaian` text DEFAULT NULL,
+  `bentuk_instrumen` text DEFAULT NULL,
+  `rubrik_penilaian` text DEFAULT NULL,
+  `kriteria_ketuntasan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rpp_guru_id_index` (`guru_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+========================================
+METODE 2: DOUBLE-CLICK FILE BAT
+========================================
+
+1. Double-click: "KLIK_INI_UNTUK_FIX_RPP.bat"
+2. Atau: "FIX_RPP_FINAL.bat"
+3. Tunggu sampai selesai
+4. Refresh halaman RPP di browser
+
+========================================
+VERIFIKASI:
+========================================
+
+Setelah menjalankan salah satu metode:
+
+1. Buka phpMyAdmin: http://localhost/phpmyadmin
+2. Pilih database "nurani"
+3. Lihat daftar tabel di sidebar kiri
+4. Pastikan tabel "rpp" ada di daftar
+5. Jika ada, refresh halaman RPP di browser (Ctrl+F5)
+
+========================================
+CATATAN PENTING:
+========================================
+
+- Pastikan MySQL sudah running di XAMPP (status hijau)
+- Pastikan database "nurani" sudah ada
+- Setelah tabel dibuat, WAJIB refresh browser (Ctrl+F5)
+
+========================================

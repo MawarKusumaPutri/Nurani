@@ -1,0 +1,67 @@
+========================================
+COPY-PASTE SQL INI KE PHPMYADMIN
+========================================
+
+1. Buka: http://localhost/phpmyadmin
+2. Pilih database: nurani
+3. Klik tab: SQL
+4. Copy-paste SQL di bawah ini
+5. Klik: Go
+
+========================================
+SQL SCRIPT:
+========================================
+
+USE nurani;
+
+CREATE TABLE IF NOT EXISTS `rpp` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `guru_id` bigint(20) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `mata_pelajaran` varchar(255) NOT NULL,
+  `kelas` varchar(255) NOT NULL,
+  `semester` varchar(255) NOT NULL,
+  `pertemuan_ke` int(11) NOT NULL,
+  `alokasi_waktu` int(11) NOT NULL,
+  `sekolah` varchar(255) DEFAULT NULL,
+  `mata_pelajaran_detail` varchar(255) DEFAULT NULL,
+  `kelas_detail` varchar(255) DEFAULT NULL,
+  `semester_detail` varchar(255) DEFAULT NULL,
+  `tahun_pelajaran` varchar(255) DEFAULT NULL,
+  `ki_1` text DEFAULT NULL,
+  `ki_2` text DEFAULT NULL,
+  `ki_3` text DEFAULT NULL,
+  `ki_4` text DEFAULT NULL,
+  `kd_pengetahuan` text DEFAULT NULL,
+  `kd_keterampilan` text DEFAULT NULL,
+  `indikator_pencapaian_kompetensi` text DEFAULT NULL,
+  `tujuan_pembelajaran` text DEFAULT NULL,
+  `materi_pembelajaran` text DEFAULT NULL,
+  `materi_pembelajaran_reguler` text DEFAULT NULL,
+  `materi_pembelajaran_pengayaan` text DEFAULT NULL,
+  `materi_pembelajaran_remedial` text DEFAULT NULL,
+  `metode_pembelajaran` text DEFAULT NULL,
+  `kegiatan_pendahuluan` text DEFAULT NULL,
+  `kegiatan_inti` text DEFAULT NULL,
+  `kegiatan_penutup` text DEFAULT NULL,
+  `media_pembelajaran` text DEFAULT NULL,
+  `sumber_belajar` text DEFAULT NULL,
+  `teknik_penilaian` text DEFAULT NULL,
+  `bentuk_instrumen` text DEFAULT NULL,
+  `rubrik_penilaian` text DEFAULT NULL,
+  `kriteria_ketuntasan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rpp_guru_id_index` (`guru_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+========================================
+SETELAH JALANKAN SQL:
+========================================
+
+1. Pastikan muncul pesan: "Table 'rpp' created successfully"
+2. Refresh halaman RPP di browser (Ctrl+F5)
+3. Atau tutup dan buka kembali browser
+
+========================================

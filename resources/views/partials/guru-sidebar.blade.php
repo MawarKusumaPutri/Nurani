@@ -31,14 +31,36 @@
                         'guru/foto/' . basename($photoPath),
                     ];
                     
-                    foreach ($possiblePaths as $path) {
-                        try {
-                            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-                                $photoUrl = asset('storage/' . $path) . '?v=' . time();
-                                break;
+                    // OPTIMIZED: Cek path yang paling mungkin dulu untuk performa lebih baik
+                    $mostLikelyPath = 'profiles/guru/' . basename($photoPath);
+                    try {
+                        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($mostLikelyPath)) {
+                            $photoUrl = asset('storage/' . $mostLikelyPath) . '?v=' . time();
+                        } else {
+                            // Cek path lain hanya jika path utama tidak ditemukan
+                            foreach ($possiblePaths as $path) {
+                                if ($path === $mostLikelyPath) continue; // Skip yang sudah dicek
+                                try {
+                                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+                                        $photoUrl = asset('storage/' . $path) . '?v=' . time();
+                                        break;
+                                    }
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
                             }
-                        } catch (\Exception $e) {
-                            continue;
+                        }
+                    } catch (\Exception $e) {
+                        // Fallback ke path lain jika error
+                        foreach ($possiblePaths as $path) {
+                            try {
+                                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+                                    $photoUrl = asset('storage/' . $path) . '?v=' . time();
+                                    break;
+                                }
+                            } catch (\Exception $e2) {
+                                continue;
+                            }
                         }
                     }
                     
@@ -123,6 +145,9 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.kuis') ? 'active' : '' }}" href="{{ route('guru.kuis.index') }}">
             <i class="fas fa-question-circle me-2"></i> Kuis
         </a>
+        <a class="nav-link {{ str_contains($currentRoute, 'guru.rpp') ? 'active' : '' }}" href="{{ route('guru.rpp.index') }}" id="rpp-nav-link" data-rpp-link="true" onclick="window.location.href='{{ route('guru.rpp.index') }}'; return true;">
+            <i class="fas fa-file-alt me-2"></i> RPP
+        </a>
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
@@ -169,6 +194,10 @@
         width: 100%;
         display: block;
         font-size: 0.9rem;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
+        position: relative !important;
     }
     
     /* Ensure nav items are in single column */
@@ -194,6 +223,75 @@
         color: white;
         background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+    
+    /* Pastikan SEMUA nav-link bisa diklik, termasuk RPP - ULTRA AGGRESSIVE */
+    .sidebar .nav-link,
+    #guru-sidebar .nav-link,
+    .nav-link {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
+        position: relative !important;
+        display: block !important;
+        text-decoration: none !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Pastikan semua child elements tidak menghalangi */
+    .sidebar .nav-link *,
+    #guru-sidebar .nav-link * {
+        pointer-events: none !important;
+    }
+    
+    /* Pastikan link RPP khususnya bisa diklik - ULTRA AGGRESSIVE */
+    #rpp-nav-link,
+    [data-rpp-link="true"],
+    .sidebar .nav-link#rpp-nav-link,
+    .sidebar .nav-link[data-rpp-link="true"],
+    .sidebar .nav-link[href*="rpp"],
+    .sidebar .nav-link[href*="RPP"],
+    a#rpp-nav-link,
+    a[data-rpp-link="true"] {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        z-index: 99999 !important;
+        position: relative !important;
+        display: block !important;
+        text-decoration: none !important;
+        user-select: none !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Pastikan tidak ada elemen yang menutupi nav-link */
+    .sidebar .nav-link *,
+    #rpp-nav-link *,
+    [data-rpp-link="true"] * {
+        pointer-events: none !important;
+    }
+    
+    /* Pastikan icon di dalam link RPP tidak menghalangi */
+    #rpp-nav-link i,
+    [data-rpp-link="true"] i,
+    .sidebar .nav-link#rpp-nav-link i {
+        pointer-events: none !important;
+    }
+    
+    /* Pastikan tidak ada overlay yang menutupi */
+    .sidebar-overlay {
+        z-index: 1 !important;
+    }
+    
+    #guru-sidebar {
+        z-index: 1000 !important;
+    }
+    
+    #rpp-nav-link {
+        z-index: 99999 !important;
     }
     
     .sidebar .nav-link.active {
@@ -378,6 +476,101 @@
             overlay.classList.toggle('show');
         }
     }
+    
+    // Pastikan link RPP bisa diklik - ULTRA AGGRESSIVE (MEMAKSA navigasi)
+    function ensureRppLinkClickable() {
+        const rppLink = document.querySelector('#rpp-nav-link, [data-rpp-link="true"], a[href*="rpp"], a[href*="RPP"]');
+        if (rppLink) {
+            console.log('✓✓✓ RPP link found:', rppLink.href);
+            
+            // Force semua style
+            rppLink.style.cssText = 'pointer-events: auto !important; cursor: pointer !important; z-index: 99999 !important; position: relative !important; display: block !important; text-decoration: none !important;';
+            
+            // Pastikan child elements tidak menghalangi
+            const children = rppLink.querySelectorAll('*');
+            children.forEach(function(child) {
+                child.style.setProperty('pointer-events', 'none', 'important');
+            });
+            
+            // Pastikan href valid
+            const hrefAttr = rppLink.getAttribute('href');
+            let rppUrl = hrefAttr || rppLink.href;
+            // Jika href relatif, buat absolute URL
+            if (rppUrl && !rppUrl.startsWith('http') && !rppUrl.startsWith('/')) {
+                rppUrl = '/' + rppUrl;
+            }
+            if (rppUrl && rppUrl !== '#' && rppUrl !== 'javascript:void(0)') {
+                rppLink.href = rppUrl;
+            } else {
+                // Fallback ke route default
+                rppUrl = '/guru/rpp';
+                rppLink.href = rppUrl;
+            }
+            
+            // HAPUS semua event listener lama dengan clone
+            const newRppLink = rppLink.cloneNode(true);
+            rppLink.parentNode.replaceChild(newRppLink, rppLink);
+            
+            // MEMAKSA navigasi dengan multiple methods
+            const finalUrl = newRppLink.getAttribute('href') || rppUrl;
+            
+            // Method 1: Direct onclick (paling kuat)
+            newRppLink.setAttribute('onclick', 'window.location.href=\'' + finalUrl + '\'; return true;');
+            
+            // Method 2: Click event (capture phase - paling awal)
+            newRppLink.addEventListener('click', function(e) {
+                console.log('✓✓✓ RPP CLICKED (capture)! Navigating to:', finalUrl);
+                e.stopImmediatePropagation();
+                window.location.href = finalUrl;
+                return false;
+            }, true);
+            
+            // Method 3: Click event (bubble phase)
+            newRppLink.addEventListener('click', function(e) {
+                console.log('✓✓✓ RPP CLICKED (bubble)! Navigating to:', finalUrl);
+                e.stopImmediatePropagation();
+                window.location.href = finalUrl;
+                return false;
+            }, false);
+            
+            // Method 4: Mousedown (sebelum click)
+            newRppLink.addEventListener('mousedown', function(e) {
+                console.log('✓✓✓ RPP MOUSEDOWN! Navigating to:', finalUrl);
+                window.location.href = finalUrl;
+                return false;
+            }, true);
+            
+            // Method 5: Touch (untuk mobile)
+            newRppLink.addEventListener('touchend', function(e) {
+                console.log('✓✓✓ RPP TOUCHED! Navigating to:', finalUrl);
+                e.preventDefault();
+                window.location.href = finalUrl;
+                return false;
+            }, true);
+        } else {
+            console.warn('⚠⚠⚠ RPP link NOT FOUND!');
+        }
+    }
+    
+    // Jalankan MULTIPLE TIMES untuk memastikan
+    function initRppLink() {
+        ensureRppLinkClickable();
+    }
+    
+    // Jalankan segera
+    initRppLink();
+    
+    // Jalankan saat DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRppLink);
+    }
+    
+    // Jalankan setelah page load
+    window.addEventListener('load', function() {
+        setTimeout(initRppLink, 50);
+        setTimeout(initRppLink, 200);
+        setTimeout(initRppLink, 500);
+    });
     
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(event) {

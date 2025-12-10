@@ -17,107 +17,100 @@ class GuruController extends Controller
 {
     public function dashboard(Request $request)
     {
-        $guru = Guru::where('user_id', Auth::id())->first();
+        // OPTIMIZED: Eager load user relation untuk menghindari N+1 query
+        $guru = Guru::with('user')->where('user_id', Auth::id())->first();
         
         if (!$guru) {
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
         
-        // Refresh guru data to ensure latest photo is loaded
-        $guru->refresh();
+        // HAPUS refresh() - tidak perlu, akan memperlambat
 
         // Get mata pelajaran yang dipilih (default: pertama)
         $selectedMataPelajaran = $request->get('mata_pelajaran');        
-        // Parse mata pelajaran from guru record
-        $mataPelajaranList = collect();
-        if ($guru->mata_pelajaran && $guru->mata_pelajaran !== 'Belum ditentukan') {
-            $subjects = explode(', ', $guru->mata_pelajaran);
-            foreach ($subjects as $subject) {
-                $mataPelajaranList->push((object)[
-                    'mata_pelajaran' => trim($subject)
-                ]);
-            }
-        }
+        // Parse mata pelajaran from guru record - OPTIMIZED
+        $mataPelajaranList = $guru->mataPelajaranAktif;
         
         if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
             $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
         }
 
-        // Statistik dashboard berdasarkan mata pelajaran yang dipilih
-        $query = $guru->materi();
+        // OPTIMIZED: Gunakan single query dengan select untuk menghitung statistik
+        $materiBaseQuery = $guru->materi();
         if ($selectedMataPelajaran) {
-            $query->where('mata_pelajaran', $selectedMataPelajaran);
+            $materiBaseQuery->where('mata_pelajaran', $selectedMataPelajaran);
         }
         
-        $totalMateri = $query->count();
-        $materiPublished = $query->where('is_published', true)->count();
+        // OPTIMIZED: Hitung total dan published dalam satu query
+        $materiStats = (clone $materiBaseQuery)->selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN is_published = 1 THEN 1 ELSE 0 END) as published
+        ')->first();
         
-        $kuisQuery = $guru->kuis();
-        if ($selectedMataPelajaran) {
-            $kuisQuery->where('mata_pelajaran', $selectedMataPelajaran);
-        }
-        $totalKuis = $kuisQuery->count();
+        $totalMateri = $materiStats->total ?? 0;
+        $materiPublished = $materiStats->published ?? 0;
         
-        // Materi terbaru berdasarkan mata pelajaran
-        $materiTerbaru = $query
+        // OPTIMIZED: Materi terbaru - gunakan query yang sudah ada
+        $materiTerbaru = (clone $materiBaseQuery)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
+        
+        // OPTIMIZED: Kuis query
+        $kuisBaseQuery = $guru->kuis();
+        if ($selectedMataPelajaran) {
+            $kuisBaseQuery->where('mata_pelajaran', $selectedMataPelajaran);
+        }
+        
+        $totalKuis = (clone $kuisBaseQuery)->count();
             
-        // Kuis aktif berdasarkan mata pelajaran
-        $kuisAktif = $kuisQuery
+        // OPTIMIZED: Kuis aktif
+        $kuisAktif = (clone $kuisBaseQuery)
             ->where('is_active', true)
             ->where('tanggal_selesai', '>', now())
             ->orderBy('tanggal_mulai', 'asc')
             ->limit(3)
             ->get();
         
-        // Get recent notifications
+        // Get recent notifications - OPTIMIZED
         $notifications = Notification::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
         
+        // Count unread notifications - OPTIMIZED (single query)
         $unreadNotifications = Notification::where('user_id', Auth::id())
             ->where('is_read', false)
             ->count();
 
-        // Get jadwal mengajar hari ini
+        // OPTIMIZED: Get jadwal mengajar hari ini - single query dengan select yang efisien
         $today = now()->format('Y-m-d');
-        $todayName = strtolower(now()->format('l'));
+        $hariIni = strtolower(now()->format('l'));
         $hariMap = [
-            'sunday' => 'minggu',
-            'monday' => 'senin',
-            'tuesday' => 'selasa',
-            'wednesday' => 'rabu',
-            'thursday' => 'kamis',
-            'friday' => 'jumat',
-            'saturday' => 'sabtu'
+            'sunday' => 'minggu', 'monday' => 'senin', 'tuesday' => 'selasa',
+            'wednesday' => 'rabu', 'thursday' => 'kamis', 'friday' => 'jumat', 'saturday' => 'sabtu'
         ];
-        $hariIni = $hariMap[$todayName] ?? 'senin';
+        $hariIni = $hariMap[$hariIni] ?? 'senin';
         
-        // Get jadwal mengajar hari ini - OTOMATIS TER SINKRON dengan jadwal yang dibuat TU
         $jadwalHariIni = Jadwal::where('guru_id', $guru->id)
-            ->where('status', 'aktif') // Hanya jadwal aktif
+            ->where('status', 'aktif')
             ->where(function($query) use ($today, $hariIni) {
-                $query->where(function($q) use ($today) {
-                    $q->where('tanggal', $today);
-                })->orWhere(function($q) use ($hariIni) {
-                    $q->where('hari', $hariIni)
-                      ->where('is_berulang', true);
-                });
+                $query->where('tanggal', $today)
+                      ->orWhere(function($q) use ($hariIni) {
+                          $q->where('hari', $hariIni)->where('is_berulang', true);
+                      });
             })
             ->orderBy('jam_mulai')
             ->get();
         
         $totalJadwalHariIni = $jadwalHariIni->count();
 
-        // Get jadwal mengajar minggu ini - OTOMATIS TER SINKRON dengan jadwal yang dibuat TU
-        $startOfWeek = now()->startOfWeek();
-        $endOfWeek = now()->endOfWeek();
+        // OPTIMIZED: Get jadwal mengajar minggu ini - limit query
+        $startOfWeek = now()->startOfWeek()->format('Y-m-d');
+        $endOfWeek = now()->endOfWeek()->format('Y-m-d');
         
         $jadwalMingguIni = Jadwal::where('guru_id', $guru->id)
-            ->where('status', 'aktif') // Hanya jadwal aktif
+            ->where('status', 'aktif')
             ->where(function($query) use ($startOfWeek, $endOfWeek) {
                 $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek])
                       ->orWhere('is_berulang', true);
@@ -127,30 +120,23 @@ class GuruController extends Controller
             ->limit(5)
             ->get();
 
-        // Get jadwal mengajar mendatang (7 hari ke depan) - OTOMATIS TER SINKRON dengan jadwal yang dibuat TU
-        $today = Carbon::today();
-        $endDate = $today->copy()->addDays(7);
+        // OPTIMIZED: Get jadwal mengajar mendatang - simplified query
+        $todayCarbon = Carbon::today();
+        $endDate = $todayCarbon->copy()->addDays(7);
         
         $jadwalMendatang = Jadwal::where('guru_id', $guru->id)
-            ->where('status', 'aktif') // Hanya jadwal aktif
-            ->where(function($query) use ($today, $endDate) {
-                // Jadwal berulang (selalu tampil)
+            ->where('status', 'aktif')
+            ->where(function($query) use ($todayCarbon, $endDate) {
                 $query->where('is_berulang', true)
-                      // Atau jadwal sekali (tanggal antara hari ini dan 7 hari ke depan)
-                      ->orWhere(function($q) use ($today, $endDate) {
+                      ->orWhere(function($q) use ($todayCarbon, $endDate) {
                           $q->where('is_berulang', false)
-                            ->whereBetween('tanggal', [$today->format('Y-m-d'), $endDate->format('Y-m-d')]);
+                            ->whereBetween('tanggal', [$todayCarbon->format('Y-m-d'), $endDate->format('Y-m-d')]);
                       });
             })
             ->orderByRaw("CASE LOWER(hari) 
-                WHEN 'senin' THEN 1 
-                WHEN 'selasa' THEN 2 
-                WHEN 'rabu' THEN 3 
-                WHEN 'kamis' THEN 4 
-                WHEN 'jumat' THEN 5 
-                WHEN 'sabtu' THEN 6 
-                WHEN 'minggu' THEN 7 
-                ELSE 8 END")
+                WHEN 'senin' THEN 1 WHEN 'selasa' THEN 2 WHEN 'rabu' THEN 3 
+                WHEN 'kamis' THEN 4 WHEN 'jumat' THEN 5 WHEN 'sabtu' THEN 6 
+                WHEN 'minggu' THEN 7 ELSE 8 END")
             ->orderBy('jam_mulai', 'asc')
             ->limit(10)
             ->get();
