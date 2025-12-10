@@ -107,6 +107,53 @@
         .badge-alfa { background: #dc3545; color: white; }
         .table-responsive {
             border-radius: 10px;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        /* Pastikan form presensi siswa full width - ULTRA WIDE */
+        #presensiForm,
+        #presensiForm .card,
+        #presensiForm .card-body,
+        #presensiForm .table-responsive,
+        #presensiForm .table {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        /* Pastikan card form presensi siswa full width */
+        .card:has(#presensiForm),
+        .card:has(.table-responsive:has(.table)) {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        /* Pastikan table menggunakan seluruh lebar yang tersedia */
+        #presensiForm .table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: auto !important;
+        }
+        
+        /* Pastikan kolom Keterangan menggunakan lebar maksimal */
+        #presensiForm .table th:last-child,
+        #presensiForm .table td:last-child {
+            width: auto !important;
+            min-width: 300px !important;
+        }
+        
+        /* Pastikan input keterangan full width */
+        #presensiForm .table td:last-child input[type="text"] {
+            width: 100% !important;
+            min-width: 250px !important;
+        }
+        
+        /* Pastikan select status konsisten ukurannya */
+        #presensiForm .table td select.form-select {
+            width: 100% !important;
+            min-width: 120px !important;
         }
         .form-select:focus, .form-control:focus {
             border-color: #2E7D32;
@@ -327,6 +374,115 @@
                 margin-left: 0;
             }
         }
+        
+        /* Pastikan konten muncul di samping sidebar */
+        .container-fluid > .row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+        }
+        
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2 {
+                flex: 0 0 auto !important;
+            }
+            .col-md-9.col-lg-10 {
+                flex: 0 0 auto !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: auto !important;
+                max-width: none !important;
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+        }
+        
+        /* Pastikan card form presensi siswa full width */
+        .card:has(#presensiForm),
+        .card:has(.table-responsive:has(.table)) {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        /* Pastikan table full width */
+        #presensiForm .table-responsive,
+        #presensiForm .table {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        /* Pastikan semua kolom table menggunakan lebar yang sesuai */
+        #presensiForm .table th,
+        #presensiForm .table td {
+            white-space: normal !important;
+        }
+        
+        #presensiForm .table td:last-child input {
+            width: 100% !important;
+        }
+        
+        /* Pastikan card-body tidak memiliki padding yang membatasi */
+        .card:has(#presensiForm) .card-body {
+            padding: 1.5rem !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Pastikan container-fluid dan row menggunakan lebar penuh */
+        .container-fluid {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        
+        .container-fluid > .row {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        
+        /* Pastikan table menggunakan seluruh lebar */
+        #presensiForm .table-responsive {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        
+        /* Pastikan semua konten terlihat */
+        .col-md-9.col-lg-10,
+        .col-md-9.col-lg-10 > *,
+        .col-md-9.col-lg-10 .card,
+        .col-md-9.col-lg-10 .card-body,
+        .col-md-9.col-lg-10 .table,
+        .col-md-9.col-lg-10 .alert,
+        .col-md-9.col-lg-10 form,
+        .col-md-9.col-lg-10 h2,
+        .col-md-9.col-lg-10 p {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .col-md-9.col-lg-10 .d-flex {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .col-md-9.col-lg-10 .row {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
 <body>
@@ -341,14 +497,14 @@
             @include('partials.guru-sidebar')
 
             <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="col-md-9 col-lg-10 p-4" style="display: block !important; visibility: visible !important; opacity: 1 !important; width: auto !important; flex: 0 0 auto !important; padding-left: 1.5rem !important; padding-right: 1.5rem !important;">
+                <div class="d-flex justify-content-between align-items-center mb-4" style="display: flex !important; visibility: visible !important; opacity: 1 !important;">
                     <div>
-                        <h2 class="mb-1">
+                        <h2 class="mb-1" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                             <i class="fas fa-user-graduate me-2 text-primary"></i>
                             Presensi Siswa
                         </h2>
-                        <p class="text-muted mb-0">Kelola presensi siswa untuk berbagai kelas dan tanggal</p>
+                        <p class="text-muted mb-0" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Kelola presensi siswa untuk berbagai kelas dan tanggal</p>
                     </div>
                 </div>
 
@@ -367,28 +523,28 @@
                 @endif
 
                 <!-- Filter Section -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <form method="GET" action="{{ route('guru.presensi-siswa.index') }}" class="row g-3">
-                            <div class="col-md-3">
-                                <label class="form-label">Pilih Kelas</label>
-                                <select name="kelas" class="form-select" onchange="this.form.submit()">
+                <div class="card mb-4" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important;">
+                    <div class="card-body" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                        <form method="GET" action="{{ route('guru.presensi-siswa.index') }}" class="row g-3" style="display: flex !important; visibility: visible !important; opacity: 1 !important;">
+                            <div class="col-md-3" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                <label class="form-label" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Pilih Kelas</label>
+                                <select name="kelas" class="form-select" onchange="this.form.submit()" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                                     <option value="7" {{ $selectedKelas == '7' ? 'selected' : '' }}>Kelas 7</option>
                                     <option value="8" {{ $selectedKelas == '8' ? 'selected' : '' }}>Kelas 8</option>
                                     <option value="9" {{ $selectedKelas == '9' ? 'selected' : '' }}>Kelas 9</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Pilih Tanggal</label>
-                                <input type="date" name="tanggal" class="form-control" value="{{ $selectedTanggal }}" onchange="this.form.submit()">
+                            <div class="col-md-3" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                <label class="form-label" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Pilih Tanggal</label>
+                                <input type="date" name="tanggal" class="form-control" value="{{ $selectedTanggal }}" onchange="this.form.submit()" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">&nbsp;</label>
-                                <div>
-                                    <button type="submit" class="btn btn-primary">
+                            <div class="col-md-6" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                <label class="form-label" style="display: block !important; visibility: visible !important; opacity: 1 !important;">&nbsp;</label>
+                                <div style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                    <button type="submit" class="btn btn-primary" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
                                         <i class="fas fa-filter me-2"></i> Filter
                                     </button>
-                                    <a href="{{ route('guru.presensi-siswa.index') }}" class="btn btn-outline-secondary">
+                                    <a href="{{ route('guru.presensi-siswa.index') }}" class="btn btn-outline-secondary" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
                                         <i class="fas fa-redo me-2"></i> Reset
                                     </a>
                                 </div>
@@ -399,39 +555,39 @@
 
                 <!-- Presensi Form -->
                 @if(isset($siswas) && $siswas->count() > 0)
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
+                <div class="card mb-4" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important; width: 100% !important; max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; box-sizing: border-box !important;">
+                    <div class="card-header bg-primary text-white" style="display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; box-sizing: border-box !important;">
+                        <h5 class="mb-0" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                             <i class="fas fa-edit me-2"></i>
                             Form Presensi Siswa - Kelas {{ $selectedKelas }}
                         </h5>
                     </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('guru.presensi-siswa.store') }}" id="presensiForm">
+                    <div class="card-body" style="display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 1.5rem !important; box-sizing: border-box !important;">
+                        <form method="POST" action="{{ route('guru.presensi-siswa.store') }}" id="presensiForm" style="width: 100% !important; max-width: 100% !important;">
                             @csrf
                             <input type="hidden" name="kelas" value="{{ $selectedKelas }}">
                             <input type="hidden" name="tanggal" value="{{ $selectedTanggal }}">
 
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th width="5%">No</th>
-                                            <th width="15%">NIS</th>
-                                            <th width="25%">Nama Siswa</th>
-                                            <th width="20%">Status</th>
-                                            <th width="35%">Keterangan</th>
+                            <div class="table-responsive" style="display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; overflow-x: auto !important; margin-left: 0 !important; margin-right: 0 !important; box-sizing: border-box !important;">
+                                <table class="table table-hover" style="display: table !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; table-layout: auto !important; margin: 0 !important; box-sizing: border-box !important;">
+                                    <thead style="display: table-header-group !important; visibility: visible !important; opacity: 1 !important; width: 100% !important;">
+                                        <tr style="display: table-row !important; visibility: visible !important; opacity: 1 !important; width: 100% !important;">
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 5% !important; min-width: 50px !important; padding: 0.75rem !important;">No</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 12% !important; min-width: 100px !important; padding: 0.75rem !important;">NIS</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 25% !important; min-width: 200px !important; padding: 0.75rem !important;">Nama Siswa</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 18% !important; min-width: 150px !important; padding: 0.75rem !important;">Status</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">Keterangan</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody style="display: table-row-group !important; visibility: visible !important; opacity: 1 !important;">
                                         @foreach($siswas as $index => $siswa)
                                             @php
                                                 $existingPresensi = $presensiHariIni->get($siswa->id);
                                             @endphp
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{ $siswa->nis }}</td>
-                                                <td>
+                                            <tr style="width: 100% !important;">
+                                                <td style="width: 5% !important; min-width: 50px !important; padding: 0.75rem !important;">{{ $index + 1 }}</td>
+                                                <td style="width: 12% !important; min-width: 100px !important; padding: 0.75rem !important;">{{ $siswa->nis }}</td>
+                                                <td style="width: 25% !important; min-width: 200px !important; padding: 0.75rem !important;">
                                                     <strong>{{ $siswa->nama }}</strong>
                                                     @if($existingPresensi)
                                                         <br><small class="text-muted">
@@ -440,19 +596,20 @@
                                                         </small>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td style="width: 18% !important; min-width: 150px !important; padding: 0.75rem !important;">
                                                     <input type="hidden" name="siswa_id[]" value="{{ $siswa->id }}">
-                                                    <select name="status[]" class="form-select form-select-sm" required>
+                                                    <select name="status[]" class="form-select form-select-sm" required style="width: 100% !important; min-width: 120px !important; box-sizing: border-box !important;">
                                                         <option value="hadir" {{ $existingPresensi && $existingPresensi->status == 'hadir' ? 'selected' : '' }}>Hadir</option>
                                                         <option value="sakit" {{ $existingPresensi && $existingPresensi->status == 'sakit' ? 'selected' : '' }}>Sakit</option>
                                                         <option value="izin" {{ $existingPresensi && $existingPresensi->status == 'izin' ? 'selected' : '' }}>Izin</option>
                                                         <option value="alfa" {{ $existingPresensi && $existingPresensi->status == 'alfa' ? 'selected' : '' }}>Alfa</option>
                                                     </select>
                                                 </td>
-                                                <td>
+                                                <td style="width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">
                                                     <input type="text" name="keterangan[]" class="form-control form-control-sm" 
                                                            placeholder="Keterangan (opsional)" 
-                                                           value="{{ $existingPresensi ? $existingPresensi->keterangan : '' }}">
+                                                           value="{{ $existingPresensi ? $existingPresensi->keterangan : '' }}"
+                                                           style="width: 100% !important; min-width: 300px !important; box-sizing: border-box !important;">
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -460,8 +617,8 @@
                                 </table>
                             </div>
 
-                            <div class="d-flex justify-content-end mt-3">
-                                <button type="submit" class="btn btn-primary btn-lg">
+                            <div class="d-flex justify-content-end mt-3" style="display: flex !important; visibility: visible !important; opacity: 1 !important;">
+                                <button type="submit" class="btn btn-primary btn-lg" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
                                     <i class="fas fa-save me-2"></i> Simpan Presensi
                                 </button>
                             </div>
@@ -469,7 +626,7 @@
                     </div>
                 </div>
                 @else
-                <div class="alert alert-info">
+                <div class="alert alert-info" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                     <i class="fas fa-info-circle me-2"></i>
                     Pilih kelas terlebih dahulu untuk melihat daftar siswa.
                 </div>
@@ -477,7 +634,7 @@
 
                 <!-- Presensi History -->
                 @if(isset($presensiHistory) && $presensiHistory->count() > 0)
-                <div class="card">
+                <div class="card" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
                     <div class="card-header bg-info text-white">
                         <h5 class="mb-0">
                             <i class="fas fa-history me-2"></i>
@@ -695,9 +852,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             setupNavLinks();
             
+            // Pastikan semua konten muncul
+            const mainContent = document.querySelector('.col-md-9.col-lg-10');
+            if (mainContent) {
+                mainContent.style.setProperty('display', 'block', 'important');
+                mainContent.style.setProperty('visibility', 'visible', 'important');
+                mainContent.style.setProperty('opacity', '1', 'important');
+                
+                // Pastikan semua child elements juga terlihat
+                const allChildren = mainContent.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    if (window.getComputedStyle(child).display === 'none') {
+                        child.style.setProperty('display', 'block', 'important');
+                    }
+                    child.style.setProperty('visibility', 'visible', 'important');
+                    child.style.setProperty('opacity', '1', 'important');
+                });
+            }
+            
             // Setup ulang setelah sidebar dibuka
             const observer = new MutationObserver(function(mutations) {
                 setupNavLinks();
+                
+                // Pastikan konten tetap terlihat
+                if (mainContent) {
+                    mainContent.style.setProperty('display', 'block', 'important');
+                    mainContent.style.setProperty('visibility', 'visible', 'important');
+                    mainContent.style.setProperty('opacity', '1', 'important');
+                }
             });
             
             const sidebar = document.getElementById('guru-sidebar');

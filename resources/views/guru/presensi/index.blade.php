@@ -18,34 +18,62 @@
         }
         
         /* Layout - sama seperti dashboard (biarkan Bootstrap yang mengatur) */
-        /* Pastikan di desktop, konten di samping sidebar */
+        /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
         @media (min-width: 768px) {
             .container-fluid > .row {
                 display: flex !important;
                 flex-wrap: nowrap !important;
             }
             
-            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen */
-            .col-md-3.col-lg-2.sidebar {
-                flex: 0 0 auto !important;
+            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen - ULTRA VISIBLE */
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 25% !important;
                 width: 25% !important; /* col-md-3 = 25% */
                 max-width: 25% !important;
+                min-width: 250px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
             }
             
             .col-md-9.col-lg-10 {
-                flex: 0 0 auto !important;
+                flex: 0 0 75% !important;
                 width: 75% !important; /* col-md-9 = 75% */
             }
         }
         
-        /* Large screen - sidebar lebih kecil */
+            /* Large screen - sidebar lebih kecil - ULTRA VISIBLE */
         @media (min-width: 992px) {
-            .col-md-3.col-lg-2.sidebar {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 16.66666667% !important;
                 width: 16.66666667% !important; /* col-lg-2 = 16.67% */
                 max-width: 16.66666667% !important;
+                min-width: 200px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
             }
             
             .col-md-9.col-lg-10 {
+                flex: 0 0 83.33333333% !important;
                 width: 83.33333333% !important; /* col-lg-10 = 83.33% */
             }
         }
@@ -104,6 +132,64 @@
         #tugas-section {
             margin-bottom: 1rem !important;
             transition: all 0.3s ease !important;
+        }
+        
+        /* PASTIKAN CONTAINER DAN WRAPPER BISA DITAMPILKAN */
+        #tugas-kelas-container {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        
+        #tugas-kelas-container[style*="display: block"],
+        #tugas-kelas-container.show,
+        #tugas-kelas-container[style*="display:block"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        .tugas-kelas-wrapper {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        
+        .tugas-kelas-wrapper[style*="display: block"],
+        .tugas-kelas-wrapper[style*="display:block"],
+        .tugas-kelas-wrapper.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            height: auto !important;
+            overflow: visible !important;
+            background-color: #f8f9fa !important;
+        }
+        
+        /* Pastikan semua element di dalam wrapper visible */
+        .tugas-kelas-wrapper[style*="display: block"] *,
+        .tugas-kelas-wrapper[style*="display:block"] *,
+        .tugas-kelas-wrapper.show * {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Pastikan input dan textarea di dalam wrapper visible */
+        .tugas-kelas-wrapper[style*="display: block"] input,
+        .tugas-kelas-wrapper[style*="display: block"] textarea,
+        .tugas-kelas-wrapper[style*="display: block"] label,
+        .tugas-kelas-wrapper[style*="display: block"] button,
+        .tugas-kelas-wrapper[style*="display:block"] input,
+        .tugas-kelas-wrapper[style*="display:block"] textarea,
+        .tugas-kelas-wrapper[style*="display:block"] label,
+        .tugas-kelas-wrapper[style*="display:block"] button {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
         /* Styling untuk section tugas ketika muncul */
@@ -166,6 +252,7 @@
             flex: 0 0 33.333333% !important;
             width: 33.333333% !important;
             max-width: 33.333333% !important;
+            min-width: 200px !important; /* Tambahkan min-width agar tidak terlalu sempit */
             padding-left: 10px !important;
             padding-right: 10px !important;
             float: none !important;
@@ -184,10 +271,20 @@
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
+            padding: 1rem !important; /* Perbesar padding dari 0.75rem */
         }
         
         #tugas-section .tugas-textarea {
             flex: 1 !important;
+            font-size: 1rem !important; /* Perbesar font dari 0.875rem */
+            line-height: 1.5 !important; /* Tambahkan line-height untuk readability */
+            min-height: 120px !important; /* Tambahkan min-height agar lebih tinggi */
+            padding: 0.75rem !important; /* Tambahkan padding untuk spacing */
+            width: 100% !important; /* Pastikan lebar penuh */
+            box-sizing: border-box !important; /* Pastikan padding tidak menambah lebar */
+            word-wrap: break-word !important; /* Pastikan text wrap dengan baik */
+            overflow-wrap: break-word !important; /* Pastikan text wrap dengan baik */
+            white-space: pre-wrap !important; /* Preserve whitespace tapi wrap text */
         }
         
         /* Di mobile, tetap vertikal */
@@ -365,6 +462,13 @@
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            width: auto !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
         }
         
         /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
@@ -375,9 +479,9 @@
             }
         }
         
-        /* Ensure sidebar content is scrollable */
+        /* Ensure sidebar content is scrollable - ULTRA VISIBLE */
         #guru-sidebar {
-            display: flex;
+            display: flex !important;
             flex-direction: column;
             height: 100vh;
             overflow-y: auto;
@@ -385,6 +489,28 @@
             -webkit-overflow-scrolling: touch;
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
             background-color: #2E7D32 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: 0 !important;
+            transform: translateX(0) !important;
+            z-index: 1000 !important;
+            width: 100% !important;
+        }
+        
+        /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
         }
         
         #guru-sidebar .p-4 {
@@ -445,23 +571,31 @@
             border-radius: 8px;
         }
         .presensi-type-card {
-            cursor: pointer;
+            cursor: pointer !important;
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
             border: 2px solid #e0e0e0 !important;
-            height: 100% !important;
-            position: relative !important;
-            z-index: 1 !important;
-            overflow: visible !important;
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
             width: 100% !important;
             max-width: 100% !important;
+            position: relative !important;
+            z-index: 10 !important;
+            overflow: visible !important;
             box-sizing: border-box !important;
+            pointer-events: auto !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
             margin: 0 !important;
             padding: 0 !important;
             flex: 0 0 auto !important;
             transform: none !important;
             scale: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         
         /* Pastikan card jenis presensi tidak menggunakan float */
@@ -474,21 +608,52 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
             z-index: 2 !important;
             border: 2px solid #e0e0e0 !important;
-            width: 100% !important;
-            height: 100% !important;
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
+            width: 100% !important;
             box-sizing: border-box !important;
             scale: 1 !important;
         }
         .presensi-type-card.active {
             border: 2px solid #2E7D32 !important;
             background: #F0F4F0 !important;
-            /* Pastikan ukuran tetap sama - TIDAK BERUBAH */
-            width: 100% !important;
-            height: 100% !important;
+            /* Pastikan ukuran tetap sama - TIDAK BERUBAH SAMA SEKALI - ULTRA FIXED */
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            transform: none !important;
+            scale: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        /* Override semua kemungkinan perubahan ukuran - ULTRA AGGRESSIVE */
+        .presensi-type-card.active,
+        .presensi-type-card:not(.active),
+        .presensi-type-card:hover.active,
+        .presensi-type-card:hover:not(.active),
+        #card-hadir,
+        #card-sakit,
+        #card-izin,
+        #card-hadir.active,
+        #card-sakit.active,
+        #card-izin.active,
+        #card-hadir:not(.active),
+        #card-sakit:not(.active),
+        #card-izin:not(.active),
+        #card-hadir:hover,
+        #card-sakit:hover,
+        #card-izin:hover {
+            height: 100px !important;
+            min-height: 100px !important;
+            max-height: 100px !important;
+            width: 100% !important;
             box-sizing: border-box !important;
             transform: none !important;
             scale: 1 !important;
@@ -496,9 +661,46 @@
             padding: 0 !important;
         }
         
-        /* Perkecil ukuran card jenis presensi */
+        /* Pastikan card-body juga konsisten */
+        #card-hadir .card-body,
+        #card-sakit .card-body,
+        #card-izin .card-body,
+        #card-hadir.active .card-body,
+        #card-sakit.active .card-body,
+        #card-izin.active .card-body {
+            padding: 0.5rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Perkecil ukuran card jenis presensi - konsisten untuk semua */
         .presensi-type-card .card-body {
             padding: 0.5rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Pastikan card-body di semua state memiliki ukuran yang sama */
+        .presensi-type-card.active .card-body,
+        .presensi-type-card:not(.active) .card-body {
+            padding: 0.5rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 100% !important;
+            box-sizing: border-box !important;
         }
         
         .presensi-type-card i.fa-3x,
@@ -522,47 +724,58 @@
             align-items: stretch !important;
         }
         
-        /* Pastikan card di dalam col memiliki ukuran yang sama */
+        /* Pastikan card di dalam col memiliki ukuran yang sama - FIXED HEIGHT */
         .jenis-presensi-col > .presensi-type-card {
             width: 100% !important;
-            height: 100% !important;
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
         }
         
-        /* Pastikan semua card jenis presensi memiliki ukuran yang sama - FIXED SIZE */
+        /* Pastikan semua card jenis presensi memiliki ukuran yang sama - FIXED SIZE ABSOLUTE - ULTRA AGGRESSIVE */
         #card-hadir,
         #card-sakit,
-        #card-izin {
+        #card-izin,
+        #card-hadir.active,
+        #card-sakit.active,
+        #card-izin.active,
+        #card-hadir:not(.active),
+        #card-sakit:not(.active),
+        #card-izin:not(.active) {
             width: 100% !important;
-            height: 100% !important;
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
             box-sizing: border-box !important;
-            border: 2px solid #e0e0e0 !important;
             margin: 0 !important;
             padding: 0 !important;
             flex: 0 0 auto !important;
             transform: none !important;
             scale: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
         }
         
+        /* Border untuk unselected */
+        #card-hadir:not(.active),
+        #card-sakit:not(.active),
+        #card-izin:not(.active) {
+            border: 2px solid #e0e0e0 !important;
+        }
+        
+        /* Border dan background untuk selected */
         #card-hadir.active,
         #card-sakit.active,
         #card-izin.active {
             border: 2px solid #2E7D32 !important;
             background: #F0F4F0 !important;
-            /* Ukuran tetap sama - TIDAK BERUBAH SAMA SEKALI */
+            /* Ukuran tetap sama - TIDAK BERUBAH SAMA SEKALI - ABSOLUTE FIXED */
             width: 100% !important;
-            height: 100% !important;
+            height: 100px !important;
             min-height: 100px !important;
             max-height: 100px !important;
-            box-sizing: border-box !important;
-            transform: none !important;
-            scale: 1 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            flex: 0 0 auto !important;
         }
         
         /* Tambahkan gap kecil antar card */
@@ -577,19 +790,60 @@
             width: 100% !important;
         }
         
-        /* Pastikan semua card jenis presensi tidak tertutup */
+        /* Pastikan semua card jenis presensi tidak tertutup dan BISA DIKLIK - ULTRA AGGRESSIVE */
         #card-hadir,
         #card-sakit,
-        #card-izin {
+        #card-izin,
+        .presensi-type-card,
+        div#card-hadir,
+        div#card-sakit,
+        div#card-izin,
+        div.presensi-type-card {
             position: relative !important;
-            z-index: 1 !important;
+            z-index: 999 !important;
             overflow: visible !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            touch-action: manipulation !important;
         }
         
-        /* Pastikan card-body tidak memotong konten */
+        /* Pastikan card-body tidak memotong konten dan tidak memblokir klik */
         .presensi-type-card .card-body {
             overflow: visible !important;
             position: relative !important;
+            pointer-events: none !important;
+        }
+        
+        /* Pastikan card bisa diklik saat hover dan active - ULTRA AGGRESSIVE */
+        #card-hadir:hover,
+        #card-sakit:hover,
+        #card-izin:hover,
+        .presensi-type-card:hover,
+        div#card-hadir:hover,
+        div#card-sakit:hover,
+        div#card-izin:hover {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 999 !important;
+            transform: scale(1.02) !important;
+            transition: transform 0.2s ease !important;
+        }
+        
+        #card-hadir:active,
+        #card-sakit:active,
+        #card-izin:active,
+        .presensi-type-card:active,
+        div#card-hadir:active,
+        div#card-sakit:active,
+        div#card-izin:active {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 999 !important;
+            transform: scale(0.98) !important;
         }
         
         /* Pastikan container card tidak memotong */
@@ -745,6 +999,79 @@
         .badge-approved { background: #28a745; }
         .badge-rejected { background: #dc3545; }
         
+        /* Sembunyikan section Riwayat Presensi dan Status Presensi Hari Ini secara default - ULTRA AGGRESSIVE */
+        #riwayat-presensi-section,
+        #status-presensi-hari-ini {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Tampilkan section Riwayat Presensi setelah submit - ULTRA AGGRESSIVE */
+        #riwayat-presensi-section.show,
+        #riwayat-presensi-section[data-show="true"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            margin: 1rem 0 !important;
+            padding: inherit !important;
+        }
+        
+        /* Tampilkan Status Presensi Hari Ini setelah submit - ULTRA AGGRESSIVE */
+        #status-presensi-hari-ini.show,
+        #status-presensi-hari-ini[data-show="true"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            left: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            margin: 1rem 0 !important;
+            padding: inherit !important;
+        }
+        
+        /* Styling untuk tombol Kirim Presensi dan Batal */
+        #presensiForm button[type="submit"],
+        #presensiForm button.btn-primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        #presensiForm button[type="submit"]:hover,
+        #presensiForm button.btn-primary:hover {
+            background: linear-gradient(135deg, #218838 0%, #1ea080 100%) !important;
+            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4) !important;
+            transform: translateY(-2px) !important;
+        }
+        
+        #presensiForm button.btn-secondary {
+            background: #6c757d !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        #presensiForm button.btn-secondary:hover {
+            background: #5a6268 !important;
+            box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4) !important;
+            transform: translateY(-2px) !important;
+        }
+        
         /* Responsive Styles */
         .sidebar-toggle {
             display: none !important;
@@ -875,6 +1202,55 @@
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
             }
+        }
+        
+        /* PASTIKAN DI DESKTOP SIDEBAR TIDAK TERSEMBUNYI - OVERRIDE MOBILE CSS */
+        @media (min-width: 992px) {
+            .sidebar,
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                width: 16.66666667% !important;
+                max-width: 16.66666667% !important;
+                min-width: 200px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                flex: 0 0 16.66666667% !important;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 991px) {
+            .sidebar,
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                width: 25% !important;
+                max-width: 25% !important;
+                min-width: 250px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                flex: 0 0 25% !important;
+            }
             
             #guru-sidebar {
                 height: 100vh;
@@ -965,6 +1341,82 @@
             
             .col-md-3.col-lg-2.sidebar {
                 width: 100% !important;
+            }
+        }
+        
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
+        @media (min-width: 768px) {
+            .sidebar.col-md-3.col-lg-2,
+            #guru-sidebar.col-md-3.col-lg-2,
+            .col-md-3.col-lg-2#guru-sidebar,
+            .col-md-3.col-lg-2.sidebar#guru-sidebar {
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+        
+        /* PASTIKAN SIDEBAR TERLIHAT DI DESKTOP - ULTRA AGGRESSIVE - OVERRIDE SEMUA - FINAL FIX */
+        @media (min-width: 768px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar,
+            div.col-md-3.col-lg-2.sidebar,
+            div#guru-sidebar,
+            .sidebar.col-md-3.col-lg-2,
+            .sidebar#guru-sidebar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                top: auto !important;
+                transform: translateX(0) !important;
+                transition: none !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                width: 25% !important;
+                min-width: 250px !important;
+                max-width: 25% !important;
+                flex: 0 0 25% !important;
+                z-index: 1000 !important;
+                height: auto !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+            }
+            
+            @media (min-width: 992px) {
+                .col-md-3.col-lg-2.sidebar,
+                #guru-sidebar,
+                div.col-md-3.col-lg-2.sidebar,
+                div#guru-sidebar,
+                .sidebar.col-md-3.col-lg-2,
+                .sidebar#guru-sidebar {
+                    width: 16.66666667% !important;
+                    min-width: 200px !important;
+                    max-width: 16.66666667% !important;
+                    flex: 0 0 16.66666667% !important;
+                    display: flex !important;
+                }
+            }
+            
+            .col-md-9.col-lg-10 {
+                width: 75% !important;
+                margin-left: 0 !important;
+                flex: 0 0 75% !important;
+            }
+            
+            @media (min-width: 992px) {
+                .col-md-9.col-lg-10 {
+                    width: 83.33333333% !important;
+                    flex: 0 0 83.33333333% !important;
+                }
             }
         }
     </style>
@@ -1069,8 +1521,8 @@
                                         </small>
                                         <div class="row" id="jenis-presensi-row" style="display: flex !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; margin-left: auto !important; margin-right: auto !important; overflow: visible !important; width: auto !important; max-width: 90% !important; gap: 10px;">
                                             <div class="col-md-4 jenis-presensi-col" style="flex: 0 0 25% !important; width: 25% !important; max-width: 25% !important; min-width: 25% !important; padding-left: 10px !important; padding-right: 10px !important; overflow: visible !important; float: none !important; display: flex !important; align-items: stretch !important; box-sizing: border-box !important;">
-                                                <div class="card presensi-type-card mb-2" onclick="selectPresensiType('hadir')" id="card-hadir" style="height: 100% !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 1 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important;">
-                                                    <div class="card-body text-center" style="padding: 0.5rem !important;">
+                                                <div class="card presensi-type-card mb-2" onclick="(function(){try{if(window.selectPresensiType){window.selectPresensiType('hadir');}else{console.error('selectPresensiType not found');}}catch(e){console.error('Error:',e);}})();return false;" id="card-hadir" style="height: 100px !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 9999 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; pointer-events: auto !important; user-select: none !important; -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important;">
+                                                    <div class="card-body text-center" style="padding: 0.5rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 100% !important; pointer-events: none !important;">
                                                         <i class="fas fa-check-circle text-success mb-1" style="font-size: 1.5rem !important;"></i>
                                                         <h6 style="font-size: 0.85rem !important; margin-bottom: 0 !important;">Hadir</h6>
                                                         <input type="radio" name="jenis" value="hadir" id="jenis-hadir" class="d-none" {{ old('jenis', 'hadir') === 'hadir' ? 'checked' : '' }}>
@@ -1078,8 +1530,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 jenis-presensi-col" style="flex: 0 0 25% !important; width: 25% !important; max-width: 25% !important; min-width: 25% !important; padding-left: 10px !important; padding-right: 10px !important; overflow: visible !important; float: none !important; display: flex !important; align-items: stretch !important; box-sizing: border-box !important;">
-                                                <div class="card presensi-type-card mb-2" onclick="selectPresensiType('sakit')" id="card-sakit" style="height: 100% !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 1 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important;">
-                                                    <div class="card-body text-center" style="padding: 0.5rem !important;">
+                                                <div class="card presensi-type-card mb-2" onclick="(function(){try{if(window.selectPresensiType){window.selectPresensiType('sakit');}else{console.error('selectPresensiType not found');}}catch(e){console.error('Error:',e);}})();return false;" id="card-sakit" style="height: 100px !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 9999 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; pointer-events: auto !important; user-select: none !important; -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important;">
+                                                    <div class="card-body text-center" style="padding: 0.5rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 100% !important; pointer-events: none !important;">
                                                         <i class="fas fa-user-injured text-danger mb-1" style="font-size: 1.5rem !important;"></i>
                                                         <h6 style="font-size: 0.85rem !important; margin-bottom: 0 !important;">Sakit</h6>
                                                         <input type="radio" name="jenis" value="sakit" id="jenis-sakit" class="d-none" {{ old('jenis') === 'sakit' ? 'checked' : '' }}>
@@ -1087,8 +1539,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 jenis-presensi-col" style="flex: 0 0 25% !important; width: 25% !important; max-width: 25% !important; min-width: 25% !important; padding-left: 10px !important; padding-right: 10px !important; overflow: visible !important; float: none !important; display: flex !important; align-items: stretch !important; box-sizing: border-box !important;">
-                                                <div class="card presensi-type-card mb-2" onclick="selectPresensiType('izin')" id="card-izin" style="height: 100% !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 1 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important;">
-                                                    <div class="card-body text-center" style="padding: 0.5rem !important;">
+                                                <div class="card presensi-type-card mb-2" onclick="(function(){try{if(window.selectPresensiType){window.selectPresensiType('izin');}else{console.error('selectPresensiType not found');}}catch(e){console.error('Error:',e);}})();return false;" id="card-izin" style="height: 100px !important; width: 100% !important; min-height: 100px !important; max-height: 100px !important; position: relative !important; z-index: 9999 !important; overflow: visible !important; box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; border: 2px solid #e0e0e0 !important; transform: none !important; scale: 1 !important; flex: 0 0 auto !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; pointer-events: auto !important; user-select: none !important; -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important;">
+                                                    <div class="card-body text-center" style="padding: 0.5rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 100% !important; pointer-events: none !important;">
                                                         <i class="fas fa-file-alt text-warning mb-1" style="font-size: 1.5rem !important;"></i>
                                                         <h6 style="font-size: 0.85rem !important; margin-bottom: 0 !important;">Izin</h6>
                                                         <input type="radio" name="jenis" value="izin" id="jenis-izin" class="d-none" {{ old('jenis') === 'izin' ? 'checked' : '' }}>
@@ -1098,44 +1550,43 @@
                                         </div>
                                     </div>
 
-                                    <div id="jam-section" class="row mb-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Jam Masuk <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="time" name="jam_masuk" class="form-control" 
-                                               id="jam_masuk" value="{{ old('jam_masuk') }}" required>
-                                        <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_masuk')" title="Gunakan waktu saat ini">
-                                            <i class="fas fa-clock"></i> Sekarang
-                                        </button>
-                                    </div>
-                                    <small class="text-muted">
-                                        <i class="fas fa-info-circle"></i> 
-                                        <span id="jamMasukInfo">Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini</span>
-                                        <span id="jamMasukSakitInfo" style="display: none;">Jam masuk akan otomatis terisi untuk menunjukkan waktu mulai sakit</span>
-                                    </small>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Jam Keluar</label>
-                                    <div class="input-group">
-                                        <input type="time" name="jam_keluar" class="form-control" 
-                                               id="jam_keluar" value="{{ old('jam_keluar') }}">
-                                        <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_keluar')" title="Gunakan waktu saat ini">
-                                            <i class="fas fa-clock"></i> Sekarang
-                                        </button>
-                                    </div>
-                                    <small class="text-muted">
-                                        <i class="fas fa-info-circle"></i> Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini
-                                    </small>
-                                </div>
-                            </div>
-
+                                    <div id="jam-section" class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Jam Masuk <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="time" name="jam_masuk" class="form-control" 
+                                                       id="jam_masuk" value="{{ old('jam_masuk') }}" required>
+                                                <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_masuk')" title="Gunakan waktu saat ini">
+                                                    <i class="fas fa-clock"></i> Sekarang
+                                                </button>
+                                            </div>
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle"></i> 
+                                                <span id="jamMasukInfo">Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini</span>
+                                                <span id="jamMasukSakitInfo" style="display: none;">Jam masuk akan otomatis terisi untuk menunjukkan waktu mulai sakit</span>
+                                            </small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Jam Keluar</label>
+                                            <div class="input-group">
+                                                <input type="time" name="jam_keluar" class="form-control" 
+                                                       id="jam_keluar" value="{{ old('jam_keluar') }}">
+                                                <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_keluar')" title="Gunakan waktu saat ini">
+                                                    <i class="fas fa-clock"></i> Sekarang
+                                                </button>
+                                            </div>
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle"></i> Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini
+                                            </small>
+                                        </div>
                                     </div>
 
-                                    <div class="d-flex gap-2 mt-3">
-                                        <button type="submit" class="btn btn-primary">
+                                    <!-- Tombol Aksi -->
+                                    <div class="d-flex gap-3 mt-4 mb-3" style="justify-content: flex-start; align-items: center; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                                        <button type="submit" class="btn btn-primary btn-lg" id="btnKirimPresensi" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 180px; display: block !important; visibility: visible !important; opacity: 1 !important;">
                                             <i class="fas fa-paper-plane me-2"></i>Kirim Presensi
                                         </button>
-                                        <button type="button" class="btn btn-secondary" onclick="togglePresensiForm()">
+                                        <button type="button" class="btn btn-secondary btn-lg" id="btnBatalPresensi" onclick="togglePresensiForm()" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px; display: block !important; visibility: visible !important; opacity: 1 !important;">
                                             <i class="fas fa-times me-2"></i>Batal
                                         </button>
                                     </div>
@@ -1199,7 +1650,7 @@
 
                                             <!-- Tugas Pengganti untuk Sakit dan Izin -->
                                             <div id="tugas-section" class="mb-3" style="display: none; transition: all 0.3s ease;">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div>
                                         <label class="form-label mb-1">
                                             Tugas Pengganti Untuk Siswa <span class="text-danger">*</span>
@@ -1213,56 +1664,186 @@
                                         <i class="fas fa-book me-1"></i> Wajib saat sakit/izin
                                     </span>
                                 </div>
-                                <div class="row g-3" style="display: flex; flex-wrap: nowrap; margin-left: -10px; margin-right: -10px;">
-                                    <div class="col-md-4" style="flex: 0 0 33.333333%; width: 33.333333%; max-width: 33.333333%; padding-left: 10px; padding-right: 10px; display: block;">
-                                        <div class="card border-success shadow-sm h-100" style="height: 100%;">
-                                            <div class="card-header bg-success text-white py-1" style="padding: 0.5rem 1rem;">
-                                                <strong style="font-size: 0.9rem;">Kelas 7</strong>
+                                
+                                <!-- Dropdown untuk memilih kelas -->
+                                <div class="mb-3">
+                                    <label for="pilih-kelas-tugas" class="form-label">
+                                        <i class="fas fa-graduation-cap me-2"></i>Pilih Kelas <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="pilih-kelas-tugas" class="form-select form-select-lg" style="font-size: 1rem !important; padding: 0.75rem !important;" onchange="if(typeof tampilkanKolomTugas === 'function') { tampilkanKolomTugas(this.value); } else if(typeof window.tampilkanKolomTugas === 'function') { window.tampilkanKolomTugas(this.value); } else { console.error('tampilkanKolomTugas not found'); }">
+                                        <option value="">-- Pilih Kelas --</option>
+                                        <option value="7">Kelas 7</option>
+                                        <option value="8">Kelas 8</option>
+                                        <option value="9">Kelas 9</option>
+                                    </select>
+                                    <small class="text-muted d-block mt-1" style="font-size: 0.875rem;">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Pilih kelas yang akan diberikan tugas, kemudian isi instruksi tugas di bawah.
+                                    </small>
+                                </div>
+                                
+                                <!-- Container untuk textarea dinamis berdasarkan kelas yang dipilih -->
+                                <div id="tugas-kelas-container" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
+                                    <!-- Kelas 7 -->
+                                    <div id="tugas-kelas-7-wrapper" class="tugas-kelas-wrapper mb-4 p-3 border rounded" style="display: none !important; visibility: hidden !important; opacity: 0 !important; background-color: #f8f9fa;">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-book me-2 text-success"></i>Tugas untuk Kelas 7
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(typeof hapusTugasKelas === 'function') { hapusTugasKelas(7); } else if(typeof window.hapusTugasKelas === 'function') { window.hapusTugasKelas(7); } else { console.error('hapusTugasKelas not found'); } return false;">
+                                                <i class="fas fa-times me-1"></i>Hapus
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Detail Tugas - Kolom untuk informasi detail -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_halaman_7" class="form-label">
+                                                    <i class="fas fa-file-alt me-1"></i>Halaman <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_halaman_7" id="detail_halaman_7" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Hal. 15-20, Hal. 25, Hal. 30-35"
+                                                       value="{{ old('detail_halaman_7') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Hal. 15-20 atau Hal. 25</small>
                                             </div>
-                                            <div class="card-body" style="padding: 0.75rem;">
-                                                <textarea name="tugas_kelas_7" id="tugas_kelas_7" rows="3"
-                                                          class="form-control tugas-textarea @error('tugas_kelas_7') is-invalid @enderror"
-                                                          placeholder="Contoh: Kerjakan LKS hal. 15-20 dan rangkum materi bab 2." style="font-size: 0.875rem; resize: vertical;">{{ old('tugas_kelas_7') }}</textarea>
-                                                @error('tugas_kelas_7')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_bab_7" class="form-label">
+                                                    <i class="fas fa-bookmark me-1"></i>Bab/Materi <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_bab_7" id="detail_bab_7" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Bab 2, Materi Persamaan Linear"
+                                                       value="{{ old('detail_bab_7') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Bab 2 atau Materi Persamaan Linear</small>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4" style="flex: 0 0 33.333333%; width: 33.333333%; max-width: 33.333333%; padding-left: 10px; padding-right: 10px; display: block;">
-                                        <div class="card border-success shadow-sm h-100" style="height: 100%;">
-                                            <div class="card-header bg-success text-white py-1" style="padding: 0.5rem 1rem;">
-                                                <strong style="font-size: 0.9rem;">Kelas 8</strong>
-                                            </div>
-                                            <div class="card-body" style="padding: 0.75rem;">
-                                                <textarea name="tugas_kelas_8" id="tugas_kelas_8" rows="3"
-                                                          class="form-control tugas-textarea @error('tugas_kelas_8') is-invalid @enderror"
-                                                          placeholder="Contoh: Buat catatan materi baru dan kerjakan latihan 3." style="font-size: 0.875rem; resize: vertical;">{{ old('tugas_kelas_8') }}</textarea>
-                                                @error('tugas_kelas_8')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
+                                        
+                                        <!-- Instruksi Tugas -->
+                                        <div class="mb-3">
+                                            <label for="tugas_kelas_7" class="form-label">
+                                                Instruksi Tugas <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea name="tugas_kelas_7" id="tugas_kelas_7" rows="5"
+                                                      class="form-control tugas-textarea @error('tugas_kelas_7') is-invalid @enderror"
+                                                      placeholder="Contoh: Kerjakan LKS hal. 15-20 dan rangkum materi bab 2. Kumpulkan tugas pada hari Senin." 
+                                                      style="font-size: 1rem !important; resize: vertical; min-height: 120px !important; line-height: 1.5 !important; padding: 0.75rem !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: pre-wrap !important; width: 100% !important;">{{ old('tugas_kelas_7') }}</textarea>
+                                            @error('tugas_kelas_7')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-4" style="flex: 0 0 33.333333%; width: 33.333333%; max-width: 33.333333%; padding-left: 10px; padding-right: 10px; display: block;">
-                                        <div class="card border-success shadow-sm h-100" style="height: 100%;">
-                                            <div class="card-header bg-success text-white py-1" style="padding: 0.5rem 1rem;">
-                                                <strong style="font-size: 0.9rem;">Kelas 9</strong>
+                                    
+                                    <!-- Kelas 8 -->
+                                    <div id="tugas-kelas-8-wrapper" class="tugas-kelas-wrapper mb-4 p-3 border rounded" style="display: none !important; visibility: hidden !important; opacity: 0 !important; background-color: #f8f9fa;">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-book me-2 text-success"></i>Tugas untuk Kelas 8
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(typeof hapusTugasKelas === 'function') { hapusTugasKelas(8); } else if(typeof window.hapusTugasKelas === 'function') { window.hapusTugasKelas(8); } else { console.error('hapusTugasKelas not found'); } return false;">
+                                                <i class="fas fa-times me-1"></i>Hapus
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Detail Tugas - Kolom untuk informasi detail -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_halaman_8" class="form-label">
+                                                    <i class="fas fa-file-alt me-1"></i>Halaman <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_halaman_8" id="detail_halaman_8" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Hal. 15-20, Hal. 25, Hal. 30-35"
+                                                       value="{{ old('detail_halaman_8') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Hal. 15-20 atau Hal. 25</small>
                                             </div>
-                                            <div class="card-body" style="padding: 0.75rem;">
-                                                <textarea name="tugas_kelas_9" id="tugas_kelas_9" rows="3"
-                                                          class="form-control tugas-textarea @error('tugas_kelas_9') is-invalid @enderror"
-                                                          placeholder="Contoh: Selesaikan paket ujian bab 4 dan kumpulkan besok." style="font-size: 0.875rem; resize: vertical;">{{ old('tugas_kelas_9') }}</textarea>
-                                                @error('tugas_kelas_9')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_bab_8" class="form-label">
+                                                    <i class="fas fa-bookmark me-1"></i>Bab/Materi <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_bab_8" id="detail_bab_8" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Bab 2, Materi Persamaan Linear"
+                                                       value="{{ old('detail_bab_8') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Bab 2 atau Materi Persamaan Linear</small>
                                             </div>
+                                        </div>
+                                        
+                                        <!-- Instruksi Tugas -->
+                                        <div class="mb-3">
+                                            <label for="tugas_kelas_8" class="form-label">
+                                                Instruksi Tugas <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea name="tugas_kelas_8" id="tugas_kelas_8" rows="5"
+                                                      class="form-control tugas-textarea @error('tugas_kelas_8') is-invalid @enderror"
+                                                      placeholder="Contoh: Buat catatan materi baru dan kerjakan latihan 3. Presentasikan hasil pada pertemuan berikutnya." 
+                                                      style="font-size: 1rem !important; resize: vertical; min-height: 120px !important; line-height: 1.5 !important; padding: 0.75rem !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: pre-wrap !important; width: 100% !important;">{{ old('tugas_kelas_8') }}</textarea>
+                                            @error('tugas_kelas_8')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Kelas 9 -->
+                                    <div id="tugas-kelas-9-wrapper" class="tugas-kelas-wrapper mb-4 p-3 border rounded" style="display: none !important; visibility: hidden !important; opacity: 0 !important; background-color: #f8f9fa;">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-book me-2 text-success"></i>Tugas untuk Kelas 9
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(typeof hapusTugasKelas === 'function') { hapusTugasKelas(9); } else if(typeof window.hapusTugasKelas === 'function') { window.hapusTugasKelas(9); } else { console.error('hapusTugasKelas not found'); } return false;">
+                                                <i class="fas fa-times me-1"></i>Hapus
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Detail Tugas - Kolom untuk informasi detail -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_halaman_9" class="form-label">
+                                                    <i class="fas fa-file-alt me-1"></i>Halaman <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_halaman_9" id="detail_halaman_9" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Hal. 15-20, Hal. 25, Hal. 30-35"
+                                                       value="{{ old('detail_halaman_9') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Hal. 15-20 atau Hal. 25</small>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label for="detail_bab_9" class="form-label">
+                                                    <i class="fas fa-bookmark me-1"></i>Bab/Materi <small class="text-muted">(Opsional)</small>
+                                                </label>
+                                                <input type="text" name="detail_bab_9" id="detail_bab_9" 
+                                                       class="form-control" 
+                                                       placeholder="Contoh: Bab 2, Materi Persamaan Linear"
+                                                       value="{{ old('detail_bab_9') }}"
+                                                       style="font-size: 1rem !important; padding: 0.75rem !important;">
+                                                <small class="text-muted">Contoh: Bab 2 atau Materi Persamaan Linear</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Instruksi Tugas -->
+                                        <div class="mb-3">
+                                            <label for="tugas_kelas_9" class="form-label">
+                                                Instruksi Tugas <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea name="tugas_kelas_9" id="tugas_kelas_9" rows="5"
+                                                      class="form-control tugas-textarea @error('tugas_kelas_9') is-invalid @enderror"
+                                                      placeholder="Contoh: Selesaikan paket ujian bab 4 dan kumpulkan besok. Pastikan semua soal dikerjakan dengan lengkap." 
+                                                      style="font-size: 1rem !important; resize: vertical; min-height: 120px !important; line-height: 1.5 !important; padding: 0.75rem !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: pre-wrap !important; width: 100% !important;">{{ old('tugas_kelas_9') }}</textarea>
+                                            @error('tugas_kelas_9')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
-                                <small class="text-muted d-block mt-1" style="font-size: 0.8rem;">
+                                
+                                <small class="text-muted d-block mt-2" style="font-size: 0.875rem;">
                                     <i class="fas fa-lightbulb me-1 text-warning"></i>
-                                    Kosongkan kelas yang tidak membutuhkan tugas. Sistem akan otomatis menyimpan kelas yang diisi saja.
+                                    Anda bisa memilih dan mengisi tugas untuk beberapa kelas. Minimal isi salah satu kelas.
                                 </small>
                                             </div>
                                         </div>
@@ -1279,9 +1860,9 @@
                     </div>
                 </div>
                 
-                <!-- Status Presensi Hari Ini -->
+                <!-- Status Presensi Hari Ini - Sembunyikan secara default, muncul setelah submit -->
                 @if($todayPresensi)
-                <div class="alert alert-{{ $todayPresensi->status_verifikasi === 'pending' ? 'warning' : ($todayPresensi->status_verifikasi === 'approved' ? 'success' : 'danger') }}">
+                <div class="alert alert-{{ $todayPresensi->status_verifikasi === 'pending' ? 'warning' : ($todayPresensi->status_verifikasi === 'approved' ? 'success' : 'danger') }}" id="status-presensi-hari-ini" style="display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important;">
                     <i class="fas fa-{{ $todayPresensi->status_verifikasi === 'pending' ? 'clock' : ($todayPresensi->status_verifikasi === 'approved' ? 'check-circle' : 'times-circle') }} me-2"></i>
                     Anda sudah melakukan presensi untuk <strong>hari ini ({{ $todayPresensi->tanggal->format('d/m/Y') }})</strong> sebagai <strong>{{ ucfirst($todayPresensi->jenis) }}</strong>.
                     <br><strong>Status:</strong> 
@@ -1338,9 +1919,10 @@
                     @endif
                 </div>
                 @endif
-
-                <!-- Presensi History -->
-                <div class="card mt-4">
+                
+                <!-- Presensi History - Dipindahkan ke sini agar muncul setelah form presensi dan status -->
+                <!-- Sembunyikan secara default, hanya muncul setelah klik "Kirim Presensi" -->
+                <div class="card mt-4" id="riwayat-presensi-section" style="display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important; height: 0 !important; overflow: hidden !important;">
                     <div class="card-header bg-light">
                         <h5 class="mb-0">
                             <i class="fas fa-history me-2"></i>Riwayat Presensi (30 Hari Terakhir)
@@ -1470,6 +2052,599 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============================================
+        // FUNGSI UTAMA - DITETAPKAN SEBELUM SEMUA KODE LAINNYA
+        // ============================================
+        
+        // Fungsi untuk menampilkan kolom tugas - SIMPLE & DIRECT
+        // PASTIKAN FUNGSI INI DITETAPKAN PERTAMA KALI
+        function tampilkanKolomTugas(kelas) {
+            console.log('=== tampilkanKolomTugas CALLED ===', kelas);
+            
+            // Jika kelas kosong, sembunyikan semua wrapper
+            if (!kelas || kelas === '') {
+                console.log('Kelas kosong, sembunyikan semua wrapper');
+                const semuaWrapper = document.querySelectorAll('.tugas-kelas-wrapper');
+                semuaWrapper.forEach(w => {
+                    w.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                    w.style.setProperty('display', 'none', 'important');
+                    w.style.setProperty('visibility', 'hidden', 'important');
+                    w.style.setProperty('opacity', '0', 'important');
+                    w.classList.add('d-none');
+                    w.setAttribute('hidden', 'true');
+                });
+                
+                const container = document.getElementById('tugas-kelas-container');
+                if (container) {
+                    container.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                    container.classList.add('d-none');
+                    container.setAttribute('hidden', 'true');
+                }
+                return;
+            }
+            
+            // Pastikan tugas section tampil
+            const tugasSection = document.getElementById('tugas-section');
+            if (tugasSection) {
+                tugasSection.style.setProperty('display', 'block', 'important');
+                tugasSection.style.setProperty('visibility', 'visible', 'important');
+                tugasSection.style.setProperty('opacity', '1', 'important');
+            }
+            
+            // SEMBUNYIKAN SEMUA WRAPPER TERLEBIH DAHULU
+            const semuaWrapper = document.querySelectorAll('.tugas-kelas-wrapper');
+            console.log('Sembunyikan semua wrapper:', semuaWrapper.length);
+            semuaWrapper.forEach(w => {
+                const kelasWrapper = w.id.replace('tugas-kelas-', '').replace('-wrapper', '');
+                if (kelasWrapper !== kelas) {
+                    // Sembunyikan wrapper yang bukan kelas yang dipilih
+                    w.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                    w.style.setProperty('display', 'none', 'important');
+                    w.style.setProperty('visibility', 'hidden', 'important');
+                    w.style.setProperty('opacity', '0', 'important');
+                    w.classList.add('d-none');
+                    w.setAttribute('hidden', 'true');
+                    console.log('✓ Hidden wrapper:', w.id);
+                }
+            });
+            
+            // Tampilkan wrapper untuk kelas yang dipilih
+            const wrapper = document.getElementById('tugas-kelas-' + kelas + '-wrapper');
+            const container = document.getElementById('tugas-kelas-container');
+            
+            console.log('Wrapper ID:', 'tugas-kelas-' + kelas + '-wrapper');
+            console.log('Wrapper found:', !!wrapper);
+            console.log('Container found:', !!container);
+            
+            if (wrapper) {
+                // Tampilkan wrapper - ULTRA AGGRESSIVE
+                wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                wrapper.style.setProperty('display', 'block', 'important');
+                wrapper.style.setProperty('visibility', 'visible', 'important');
+                wrapper.style.setProperty('opacity', '1', 'important');
+                wrapper.style.setProperty('position', 'relative', 'important');
+                wrapper.style.setProperty('background-color', '#f8f9fa', 'important');
+                wrapper.classList.remove('d-none');
+                wrapper.removeAttribute('hidden');
+                
+                // Pastikan semua child element juga visible
+                const allChildren = wrapper.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+                        child.style.setProperty('display', '', 'important');
+                        child.style.setProperty('visibility', 'visible', 'important');
+                        child.style.setProperty('opacity', '1', 'important');
+                    }
+                });
+                
+                console.log('✓ Wrapper displayed', wrapper.offsetHeight, wrapper.offsetWidth);
+                console.log('Wrapper computed style:', window.getComputedStyle(wrapper).display);
+            } else {
+                console.error('✗ Wrapper not found:', 'tugas-kelas-' + kelas + '-wrapper');
+                // Debug: cari semua element dengan id yang mengandung tugas-kelas
+                const allElements = document.querySelectorAll('[id*="tugas-kelas"]');
+                console.log('All tugas-kelas elements found:', allElements.length);
+                allElements.forEach(el => {
+                    console.log('  -', el.id, el.tagName, 'display:', window.getComputedStyle(el).display);
+                });
+            }
+            
+            if (container) {
+                // Tampilkan container - ULTRA AGGRESSIVE
+                container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                container.style.setProperty('display', 'block', 'important');
+                container.style.setProperty('visibility', 'visible', 'important');
+                container.style.setProperty('opacity', '1', 'important');
+                container.style.setProperty('position', 'relative', 'important');
+                container.classList.remove('d-none');
+                container.removeAttribute('hidden');
+                
+                // Pastikan parent juga visible
+                const parent = container.parentElement;
+                if (parent) {
+                    parent.style.setProperty('display', 'block', 'important');
+                    parent.style.setProperty('visibility', 'visible', 'important');
+                    parent.style.setProperty('opacity', '1', 'important');
+                }
+                
+                console.log('✓ Container displayed', container.offsetHeight, container.offsetWidth);
+                console.log('Container computed style:', window.getComputedStyle(container).display);
+            } else {
+                console.error('✗ Container not found');
+            }
+            
+            // JANGAN RESET DROPDOWN - biarkan user melihat pilihan mereka
+            // Scroll ke wrapper
+            if (wrapper) {
+                setTimeout(() => {
+                    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 200);
+            }
+        }
+        
+        // Fungsi untuk menghapus tugas kelas - SIMPLE & DIRECT
+        function hapusTugasKelas(kelas) {
+            console.log('=== hapusTugasKelas CALLED ===', kelas);
+            
+            if (!kelas) {
+                console.log('Kelas kosong, return');
+                return;
+            }
+            
+            const wrapper = document.getElementById('tugas-kelas-' + kelas + '-wrapper');
+            const textarea = document.getElementById('tugas_kelas_' + kelas);
+            const halamanInput = document.getElementById('detail_halaman_' + kelas);
+            const babInput = document.getElementById('detail_bab_' + kelas);
+            
+            console.log('Wrapper found:', !!wrapper);
+            console.log('Textarea found:', !!textarea);
+            console.log('Halaman input found:', !!halamanInput);
+            console.log('Bab input found:', !!babInput);
+            
+            if (wrapper) {
+                // Hapus isi textarea
+                if (textarea) {
+                    textarea.value = '';
+                    console.log('✓ Textarea cleared');
+                }
+                
+                // Hapus isi input halaman dan bab
+                if (halamanInput) {
+                    halamanInput.value = '';
+                    console.log('✓ Halaman input cleared');
+                }
+                if (babInput) {
+                    babInput.value = '';
+                    console.log('✓ Bab input cleared');
+                }
+                
+                // Sembunyikan wrapper - ULTRA AGGRESSIVE
+                wrapper.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                wrapper.style.setProperty('display', 'none', 'important');
+                wrapper.style.setProperty('visibility', 'hidden', 'important');
+                wrapper.style.setProperty('opacity', '0', 'important');
+                wrapper.classList.add('d-none');
+                wrapper.setAttribute('hidden', 'true');
+                
+                console.log('✓ Wrapper hidden');
+                
+                // Reset dropdown jika semua kelas sudah dihapus
+                const semuaWrapper = document.querySelectorAll('.tugas-kelas-wrapper');
+                let semuaVisible = false;
+                
+                semuaWrapper.forEach(w => {
+                    const display = window.getComputedStyle(w).display;
+                    const visibility = window.getComputedStyle(w).visibility;
+                    const opacity = window.getComputedStyle(w).opacity;
+                    
+                    if (display === 'block' && visibility === 'visible' && opacity !== '0') {
+                        semuaVisible = true;
+                    }
+                });
+                
+                console.log('Semua wrapper visible?', semuaVisible);
+                
+                if (!semuaVisible) {
+                    const container = document.getElementById('tugas-kelas-container');
+                    if (container) {
+                        container.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                        container.style.setProperty('display', 'none', 'important');
+                        container.style.setProperty('visibility', 'hidden', 'important');
+                        container.style.setProperty('opacity', '0', 'important');
+                        container.classList.add('d-none');
+                        container.setAttribute('hidden', 'true');
+                        console.log('✓ Container hidden (all classes removed)');
+                    }
+                    const dropdown = document.getElementById('pilih-kelas-tugas');
+                    if (dropdown) {
+                        dropdown.value = '';
+                        console.log('✓ Dropdown reset');
+                    }
+                }
+            } else {
+                console.error('✗ Wrapper not found:', 'tugas-kelas-' + kelas + '-wrapper');
+            }
+            
+            console.log('=== hapusTugasKelas COMPLETED ===');
+        }
+        
+        // Assign ke window untuk akses global
+        window.tampilkanKolomTugas = tampilkanKolomTugas;
+        window.hapusTugasKelas = hapusTugasKelas;
+        
+        // Pastikan fungsi bisa diakses dari inline onclick
+        console.log('tampilkanKolomTugas function defined:', typeof window.tampilkanKolomTugas);
+        console.log('hapusTugasKelas function defined:', typeof window.hapusTugasKelas);
+        
+        // PASTIKAN FUNGSI INI DITETAPKAN SEBELUM SEMUA KODE LAINNYA - PENTING!
+        // Definisikan fungsi selectPresensiType sebagai GLOBAL FUNCTION yang bisa diakses dari mana saja
+        window.selectPresensiType = function(type) {
+            console.log('=== selectPresensiType CALLED ===', type);
+            
+            if (!type) {
+                console.error('selectPresensiType: type is required');
+                return;
+            }
+            
+            // Pastikan card bisa diklik
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                    card.style.setProperty('z-index', '9999', 'important');
+                }
+            });
+            
+            // Remove active class from all cards
+            const allCards = ['card-hadir', 'card-sakit', 'card-izin'];
+            allCards.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.classList.remove('active');
+                    card.style.setProperty('width', '100%', 'important');
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                }
+            });
+            
+            // Uncheck all radios
+            document.querySelectorAll('input[name="jenis"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Activate selected card and radio
+            const selectedCard = document.getElementById('card-' + type);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+                const radio = document.getElementById('jenis-' + type);
+                if (radio) {
+                    radio.checked = true;
+                }
+                
+                // Pastikan ukuran tetap sama
+                selectedCard.style.setProperty('width', '100%', 'important');
+                selectedCard.style.setProperty('height', '100px', 'important');
+                selectedCard.style.setProperty('min-height', '100px', 'important');
+                selectedCard.style.setProperty('max-height', '100px', 'important');
+            }
+            
+            // Show/hide sections based on type
+            const jamSection = document.getElementById('jam-section');
+            const keteranganSection = document.getElementById('keterangan-section');
+            const jamMasuk = document.getElementById('jam_masuk');
+            const keterangan = document.getElementById('keterangan');
+            const tugasSection = document.getElementById('tugas-section');
+            const suratSakitSection = document.getElementById('surat-sakit-section');
+            const presensiSidebar = document.getElementById('presensi-sidebar');
+            const formMainSection = document.getElementById('form-main-section');
+            
+            if (type === 'hadir') {
+                if (jamSection) jamSection.style.display = 'block';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = true;
+                if (keterangan) keterangan.required = false;
+                if (jamMasuk && !jamMasuk.value) {
+                    if (window.setCurrentTime) window.setCurrentTime('jam_masuk');
+                }
+                // SEMBUNYIKAN tugas section dan sidebar untuk HADIR
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'none', 'important');
+                    tugasSection.style.setProperty('visibility', 'hidden', 'important');
+                    tugasSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'none', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'hidden', 'important');
+                    presensiSidebar.style.setProperty('opacity', '0', 'important');
+                }
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) suratSakitInput.value = '';
+                    if (window.clearSuratSakit) window.clearSuratSakit();
+                }
+                // Gunakan layout 1 kolom penuh untuk HADIR (karena tidak ada sidebar)
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-7');
+                    formMainSection.classList.add('col-lg-12');
+                }
+            } else if (type === 'izin') {
+                if (jamSection) jamSection.style.display = 'none';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'block', 'important');
+                    keteranganSection.style.setProperty('visibility', 'visible', 'important');
+                    keteranganSection.style.setProperty('opacity', '1', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = false;
+                if (keterangan) keterangan.required = true;
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                }
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                }
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) suratSakitInput.value = '';
+                    if (window.clearSuratSakit) window.clearSuratSakit();
+                }
+            } else { // sakit
+                if (jamSection) jamSection.style.display = 'block';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = true;
+                if (keterangan) keterangan.required = false;
+                if (jamMasuk && !jamMasuk.value) {
+                    if (window.setCurrentTime) window.setCurrentTime('jam_masuk');
+                }
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                }
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                }
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'block', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'visible', 'important');
+                    suratSakitSection.style.setProperty('opacity', '1', 'important');
+                }
+            }
+            
+            // Pastikan ukuran card tetap konsisten
+            if (window.ensureConsistentCardSize) {
+                window.ensureConsistentCardSize();
+            }
+            
+            // Pastikan semua card tetap bisa diklik
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                    card.style.setProperty('z-index', '9999', 'important');
+                }
+            });
+            
+            console.log('=== selectPresensiType COMPLETED ===', type);
+        };
+        
+        // Definisikan fungsi-fungsi pendukung juga
+        window.setCurrentTime = function(fieldId) {
+            try {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = hours + ':' + minutes;
+                
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.value = currentTime;
+                    
+                    // Visual feedback
+                    field.style.backgroundColor = '#d4edda';
+                    field.style.transition = 'background-color 0.3s ease';
+                    setTimeout(() => {
+                        field.style.backgroundColor = '';
+                    }, 500);
+                    
+                    // Show notification
+                    const notification = document.createElement('div');
+                    notification.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                    notification.style.top = '20px';
+                    notification.style.right = '20px';
+                    notification.style.zIndex = '9999';
+                    notification.style.minWidth = '250px';
+                    notification.innerHTML = '<i class="fas fa-check-circle me-2"></i>Waktu otomatis terisi: <strong>' + currentTime + '</strong><button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+                    document.body.appendChild(notification);
+                    
+                    // Auto dismiss notification after 3 seconds
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 3000);
+                }
+            } catch (e) {
+                console.error('Error in setCurrentTime:', e);
+            }
+        };
+        
+        window.clearSuratSakit = function() {
+            const suratSakitInput = document.getElementById('surat_sakit');
+            const previewDiv = document.getElementById('surat-sakit-preview');
+            if (suratSakitInput) {
+                suratSakitInput.value = '';
+            }
+            if (previewDiv) {
+                previewDiv.style.display = 'none';
+            }
+        };
+        
+        window.ensureConsistentCardSize = function() {
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('width', '100%', 'important');
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                    card.style.setProperty('box-sizing', 'border-box', 'important');
+                    card.style.setProperty('transform', 'none', 'important');
+                    card.style.setProperty('scale', '1', 'important');
+                    card.style.setProperty('margin', '0', 'important');
+                    card.style.setProperty('padding', '0', 'important');
+                    card.style.setProperty('flex', '0 0 auto', 'important');
+                    card.style.setProperty('display', 'flex', 'important');
+                    card.style.setProperty('align-items', 'center', 'important');
+                    card.style.setProperty('justify-content', 'center', 'important');
+                    card.style.height = '100px';
+                    card.style.minHeight = '100px';
+                    card.style.maxHeight = '100px';
+                }
+            });
+        };
+        
+        // Fungsi tampilkanKolomTugas sudah didefinisikan di script pertama di atas
+        // Tidak perlu didefinisikan lagi di sini
+        
+        // Pastikan fungsi ini bisa diakses langsung juga (untuk kompatibilitas)
+        function selectPresensiType(type) {
+            if (window.selectPresensiType && typeof window.selectPresensiType === 'function') {
+                window.selectPresensiType(type);
+            } else {
+                console.error('window.selectPresensiType is not available!');
+            }
+        }
+        
+        console.log('tampilkanKolomTugas function defined:', typeof window.tampilkanKolomTugas);
+        console.log('selectPresensiType function defined:', typeof window.selectPresensiType);
+        console.log('setCurrentTime function defined:', typeof window.setCurrentTime);
+        console.log('clearSuratSakit function defined:', typeof window.clearSuratSakit);
+        console.log('ensureConsistentCardSize function defined:', typeof window.ensureConsistentCardSize);
+        
+        // Fungsi untuk menampilkan textarea berdasarkan kelas yang dipilih - ULTRA AGGRESSIVE
+        // PASTIKAN FUNGSI INI DITETAPKAN SEBELUM DOMContentLoaded
+        window.tampilkanTugasKelas = function(kelas) {
+            console.log('=== tampilkanTugasKelas CALLED ===', kelas);
+            const wrapperId = 'tugas-kelas-' + kelas + '-wrapper';
+            const wrapper = document.getElementById(wrapperId);
+            const container = document.getElementById('tugas-kelas-container');
+            
+            console.log('wrapper ID:', wrapperId);
+            console.log('wrapper found:', !!wrapper);
+            console.log('container found:', !!container);
+            
+            if (wrapper) {
+                // Tampilkan wrapper dengan style yang jelas - ULTRA AGGRESSIVE
+                wrapper.style.setProperty('display', 'block', 'important');
+                wrapper.style.setProperty('visibility', 'visible', 'important');
+                wrapper.style.setProperty('opacity', '1', 'important');
+                wrapper.style.setProperty('position', 'relative', 'important');
+                wrapper.style.setProperty('z-index', '10', 'important');
+                wrapper.style.removeProperty('height');
+                wrapper.style.removeProperty('overflow');
+                wrapper.style.removeProperty('left');
+                wrapper.style.removeProperty('top');
+                
+                // Pastikan semua child element juga visible
+                const allChildren = wrapper.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+                        child.style.setProperty('display', '', 'important');
+                        child.style.setProperty('visibility', 'visible', 'important');
+                        child.style.setProperty('opacity', '1', 'important');
+                    }
+                });
+                
+                // Pastikan input dan textarea juga visible
+                const inputs = wrapper.querySelectorAll('input, textarea, label, button, select');
+                inputs.forEach(input => {
+                    input.style.setProperty('display', '', 'important');
+                    input.style.setProperty('visibility', 'visible', 'important');
+                    input.style.setProperty('opacity', '1', 'important');
+                });
+                
+                console.log('Wrapper displayed successfully');
+            } else {
+                console.error('Wrapper not found! ID:', wrapperId);
+                // Coba cari dengan cara lain
+                const allWrappers = document.querySelectorAll('[id*="tugas-kelas"]');
+                console.log('All tugas-kelas elements found:', allWrappers.length);
+                allWrappers.forEach(w => console.log('Found:', w.id));
+            }
+            
+            if (container) {
+                // Tampilkan container - ULTRA AGGRESSIVE
+                container.style.setProperty('display', 'block', 'important');
+                container.style.setProperty('visibility', 'visible', 'important');
+                container.style.setProperty('opacity', '1', 'important');
+                container.style.setProperty('position', 'relative', 'important');
+                container.style.removeProperty('height');
+                container.style.removeProperty('overflow');
+                container.style.removeProperty('left');
+                container.style.removeProperty('top');
+                
+                // Pastikan container tidak tersembunyi oleh parent
+                const containerParent = container.parentElement;
+                if (containerParent) {
+                    containerParent.style.setProperty('display', 'block', 'important');
+                    containerParent.style.setProperty('visibility', 'visible', 'important');
+                    containerParent.style.setProperty('opacity', '1', 'important');
+                }
+                
+                console.log('Container displayed successfully');
+            } else {
+                console.error('Container not found!');
+            }
+            
+            // Scroll ke textarea yang baru ditampilkan
+            if (wrapper) {
+                setTimeout(() => {
+                    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 200);
+            }
+            
+            console.log('=== tampilkanTugasKelas COMPLETED ===');
+        };
+        
+        // Fungsi untuk menghapus tugas kelas
+        // Fungsi hapusTugasKelas sudah didefinisikan di script pertama di atas
+        // Tidak perlu didefinisikan lagi di sini
+        
+    </script>
+    <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('guru-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
@@ -1518,371 +2693,22 @@
             document.body.style.backgroundColor = '#ffffff';
         }
         
-        // Ensure body has white background on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.width = '';
-            document.body.style.height = '';
-            document.body.style.top = '';
-            document.body.style.background = '#ffffff';
-            document.body.style.backgroundColor = '#ffffff';
-        });
+        // OPTIMIZED: Gabungkan semua DOMContentLoaded menjadi satu untuk performa lebih baik
+        // DEFINE FUNGSI UTAMA SEBELUM DOMContentLoaded - PENTING UNTUK PERFORMANCE!
+        // Pastikan semua fungsi bisa diakses dari onclick attribute
         
-        // Close sidebar when clicking outside on mobile
-        const overlay = document.querySelector('.sidebar-overlay');
-        if (overlay) {
-            overlay.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeSidebar();
-            });
-        }
-        
-        // Robust function to setup nav links
-        function setupNavLinks() {
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
-            navLinks.forEach(function(link) {
-                // Force styles dengan !important
-                link.style.setProperty('pointer-events', 'auto', 'important');
-                link.style.setProperty('cursor', 'pointer', 'important');
-                link.style.setProperty('z-index', '1001', 'important');
-                link.style.setProperty('position', 'relative', 'important');
-                link.style.setProperty('display', 'block', 'important');
-                link.style.setProperty('touch-action', 'manipulation', 'important');
-                
-                // Remove existing listeners by cloning
-                const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
-                
-                // Add click event listener
-                newLink.addEventListener('click', function(e) {
-                    console.log('Nav link clicked:', newLink.href);
-                    const href = newLink.getAttribute('href');
-                    
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
-                        closeSidebar();
-                        // Biarkan browser navigate secara normal
-                    } else {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                }, { capture: false });
-                
-                // Add touch event listener untuk mobile
-                newLink.addEventListener('touchend', function(e) {
-                    console.log('Nav link touched:', newLink.href);
-                    const href = newLink.getAttribute('href');
-                    
-                    if (href && href !== '#' && href !== 'javascript:void(0)') {
-                        closeSidebar();
-                        window.location.href = href;
-                        e.preventDefault();
-                        return false;
-                    }
-                }, { capture: false });
-            });
-        }
-        
-        // Setup nav links saat DOM ready
-        document.addEventListener('DOMContentLoaded', function() {
-            setupNavLinks();
-            
-            // Setup ulang setelah sidebar dibuka
-            const observer = new MutationObserver(function(mutations) {
-                setupNavLinks();
-            });
-            
-            const sidebar = document.getElementById('guru-sidebar');
-            if (sidebar) {
-                observer.observe(sidebar, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        });
-        
-        // Existing presensi functions
-        const defaultPresensiType = @json(old('jenis', 'hadir'));
-        const formHasErrors = @json($errors->any());
-        
-        // Function to ensure all presensi cards have consistent size - AGGRESSIVE
-        function ensureConsistentCardSize() {
-            const allCards = document.querySelectorAll('.presensi-type-card');
-            allCards.forEach(card => {
-                card.style.setProperty('width', '100%', 'important');
-                card.style.setProperty('height', '100%', 'important');
-                card.style.setProperty('min-height', '100px', 'important');
-                card.style.setProperty('max-height', '100px', 'important');
-                card.style.setProperty('box-sizing', 'border-box', 'important');
-                card.style.setProperty('transform', 'none', 'important');
-                card.style.setProperty('scale', '1', 'important');
-                card.style.setProperty('margin', '0', 'important');
-                card.style.setProperty('padding', '0', 'important');
-                card.style.setProperty('flex', '0 0 auto', 'important');
-            });
-        }
-
-        function selectPresensiType(type) {
-            // Remove active class from all cards dan pastikan ukuran tetap sama - AGGRESSIVE
-            document.querySelectorAll('.presensi-type-card').forEach(card => {
-                card.classList.remove('active');
-                // Pastikan ukuran tetap sama untuk semua card - FORCE
-                card.style.setProperty('width', '100%', 'important');
-                card.style.setProperty('height', '100%', 'important');
-                card.style.setProperty('min-height', '100px', 'important');
-                card.style.setProperty('max-height', '100px', 'important');
-                card.style.setProperty('box-sizing', 'border-box', 'important');
-                card.style.setProperty('transform', 'none', 'important');
-                card.style.setProperty('scale', '1', 'important');
-                card.style.setProperty('margin', '0', 'important');
-                card.style.setProperty('padding', '0', 'important');
-                card.style.setProperty('flex', '0 0 auto', 'important');
-            });
-            
-            // Uncheck all radios
-            document.querySelectorAll('input[name="jenis"]').forEach(radio => {
-                radio.checked = false;
-            });
-            
-            // Activate selected card and radio - pastikan ukuran tetap sama - FORCE
-            const selectedCard = document.getElementById('card-' + type);
-            selectedCard.classList.add('active');
-            document.getElementById('jenis-' + type).checked = true;
-            
-            // Pastikan ukuran card yang dipilih tetap sama - FORCE
-            selectedCard.style.setProperty('width', '100%', 'important');
-            selectedCard.style.setProperty('height', '100%', 'important');
-            selectedCard.style.setProperty('min-height', '100px', 'important');
-            selectedCard.style.setProperty('max-height', '100px', 'important');
-            selectedCard.style.setProperty('box-sizing', 'border-box', 'important');
-            selectedCard.style.setProperty('transform', 'none', 'important');
-            selectedCard.style.setProperty('scale', '1', 'important');
-            selectedCard.style.setProperty('margin', '0', 'important');
-            selectedCard.style.setProperty('padding', '0', 'important');
-            selectedCard.style.setProperty('flex', '0 0 auto', 'important');
-            
-            // Show/hide sections based on type
-            const jamSection = document.getElementById('jam-section');
-            const keteranganSection = document.getElementById('keterangan-section');
-            const jamMasuk = document.getElementById('jam_masuk');
-            const keterangan = document.getElementById('keterangan');
-            const tugasSection = document.getElementById('tugas-section');
-            const suratSakitSection = document.getElementById('surat-sakit-section');
-            const presensiSidebar = document.getElementById('presensi-sidebar');
-            const formMainSection = document.getElementById('form-main-section');
-            const tugasTextareas = document.querySelectorAll('.tugas-textarea');
-            const requiresTugas = (type === 'sakit' || type === 'izin');
-            const requiresSuratSakit = (type === 'sakit'); // Hanya untuk sakit, bukan izin
-            
-            // Tampilkan/sembunyikan sidebar berdasarkan jenis presensi - FORCE DISPLAY
-            if (presensiSidebar) {
-                if (type === 'sakit' || type === 'izin') {
-                    presensiSidebar.style.setProperty('display', 'block', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
-                    presensiSidebar.style.setProperty('opacity', '1', 'important');
-                    if (formMainSection) {
-                        formMainSection.classList.remove('col-lg-12');
-                        formMainSection.classList.add('col-lg-7');
-                        formMainSection.style.setProperty('width', 'auto', 'important');
-                        formMainSection.style.setProperty('flex', '0 0 58.333333%', 'important');
-                    }
-                } else {
-                    presensiSidebar.style.setProperty('display', 'none', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'hidden', 'important');
-                    presensiSidebar.style.setProperty('opacity', '0', 'important');
-                    if (formMainSection) {
-                        formMainSection.classList.remove('col-lg-7');
-                        formMainSection.classList.add('col-lg-12');
-                        formMainSection.style.setProperty('width', '100%', 'important');
-                        formMainSection.style.setProperty('flex', '0 0 100%', 'important');
-                    }
-                }
-            }
-            
-            // Pastikan section tugas muncul dengan jelas untuk sakit dan izin
-            if (tugasSection) {
-                if (requiresTugas) {
-                    tugasSection.style.display = 'block';
-                    tugasSection.style.visibility = 'visible';
-                    tugasSection.style.opacity = '1';
-                    // Scroll ke section tugas untuk memastikan user melihatnya
-                    setTimeout(() => {
-                        tugasSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }, 100);
-                } else {
-                    tugasSection.style.display = 'none';
-                    tugasTextareas.forEach(textarea => textarea.value = '');
-                }
-            }
-            
-            // Show/hide surat sakit section
-            if (suratSakitSection) {
-                suratSakitSection.style.display = requiresSuratSakit ? 'block' : 'none';
-                if (!requiresSuratSakit) {
-                    const suratSakitInput = document.getElementById('surat_sakit');
-                    if (suratSakitInput) {
-                        suratSakitInput.value = '';
-                    }
-                    clearSuratSakit();
-                }
-            }
-            
-            if (type === 'hadir') {
-                jamSection.style.display = 'block';
-                keteranganSection.style.display = 'none';
-                jamMasuk.required = true;
-                keterangan.required = false;
-                // Auto-fill jam masuk saat pilih hadir
-                if (!jamMasuk.value) {
-                    setCurrentTime('jam_masuk');
-                }
-                if (tugasSection) {
-                    tugasSection.style.display = 'none';
-                }
-                if (presensiSidebar) {
-                    presensiSidebar.style.setProperty('display', 'none', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'hidden', 'important');
-                }
-                if (formMainSection) {
-                    formMainSection.classList.remove('col-lg-7');
-                    formMainSection.classList.add('col-lg-12');
-                    formMainSection.style.setProperty('width', '100%', 'important');
-                    formMainSection.style.setProperty('flex', '0 0 100%', 'important');
-                }
-            } else if (type === 'izin') {
-                jamSection.style.display = 'none';
-                keteranganSection.style.display = 'block';
-                jamMasuk.required = false;
-                keterangan.required = true;
-                // Tampilkan sidebar untuk izin - FORCE
-                if (presensiSidebar) {
-                    presensiSidebar.style.setProperty('display', 'block', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
-                    presensiSidebar.style.setProperty('opacity', '1', 'important');
-                }
-                if (formMainSection) {
-                    formMainSection.classList.remove('col-lg-12');
-                    formMainSection.classList.add('col-lg-7');
-                    formMainSection.style.setProperty('width', 'auto', 'important');
-                    formMainSection.style.setProperty('flex', '0 0 58.333333%', 'important');
-                }
-                // Pastikan section tugas muncul untuk izin
-                if (tugasSection) {
-                    tugasSection.style.display = 'block';
-                    tugasSection.style.visibility = 'visible';
-                    tugasSection.style.opacity = '1';
-                    tugasSection.classList.add('highlight-izin');
-                    tugasSection.classList.remove('highlight-sakit');
-                }
-                // Surat sakit tidak diperlukan untuk izin
-                if (suratSakitSection) {
-                    suratSakitSection.style.display = 'none';
-                    const suratSakitInput = document.getElementById('surat_sakit');
-                    if (suratSakitInput) {
-                        suratSakitInput.value = '';
-                    }
-                    clearSuratSakit();
-                }
-            } else { // sakit
-                jamSection.style.display = 'block';
-                keteranganSection.style.display = 'none';
-                jamMasuk.required = true;
-                keterangan.required = false;
-                // Auto-fill jam masuk saat pilih sakit agar TU tahu kapan mulai sakit
-                if (!jamMasuk.value) {
-                    setCurrentTime('jam_masuk');
-                }
-                // Update info text
-                document.getElementById('jamMasukInfo').style.display = 'none';
-                document.getElementById('jamMasukSakitInfo').style.display = 'inline';
-                // Tampilkan sidebar untuk sakit - FORCE
-                if (presensiSidebar) {
-                    presensiSidebar.style.setProperty('display', 'block', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
-                    presensiSidebar.style.setProperty('opacity', '1', 'important');
-                }
-                if (formMainSection) {
-                    formMainSection.classList.remove('col-lg-12');
-                    formMainSection.classList.add('col-lg-7');
-                    formMainSection.style.setProperty('width', 'auto', 'important');
-                    formMainSection.style.setProperty('flex', '0 0 58.333333%', 'important');
-                }
-                // Pastikan section tugas muncul untuk sakit
-                if (tugasSection) {
-                    tugasSection.style.display = 'block';
-                    tugasSection.style.visibility = 'visible';
-                    tugasSection.style.opacity = '1';
-                    tugasSection.classList.add('highlight-sakit');
-                    tugasSection.classList.remove('highlight-izin');
-                }
-                if (suratSakitSection) {
-                    suratSakitSection.style.display = 'block';
-                }
-            }
-            
-            // Reset info text for hadir
-            if (type === 'hadir') {
-                document.getElementById('jamMasukInfo').style.display = 'inline';
-                document.getElementById('jamMasukSakitInfo').style.display = 'none';
-            } else if (type === 'izin') {
-                document.getElementById('jamMasukInfo').style.display = 'none';
-                document.getElementById('jamMasukSakitInfo').style.display = 'none';
-            }
-            
-            // Pastikan ukuran card tetap konsisten setelah perubahan - MULTIPLE CHECKS
-            setTimeout(() => {
-                ensureConsistentCardSize();
-            }, 10);
-            setTimeout(() => {
-                ensureConsistentCardSize();
-            }, 50);
-            setTimeout(() => {
-                ensureConsistentCardSize();
-            }, 100);
-            setTimeout(() => {
-                ensureConsistentCardSize();
-            }, 200);
-            
-            // Pastikan sidebar benar-benar muncul untuk sakit dan izin
-            if ((type === 'sakit' || type === 'izin') && presensiSidebar) {
-                setTimeout(() => {
-                    presensiSidebar.style.setProperty('display', 'block', 'important');
-                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
-                    presensiSidebar.style.setProperty('opacity', '1', 'important');
-                }, 50);
-            }
-        }
-        
-        // Function to close presensi sidebar
-        function closePresensiSidebar() {
-            const sidebar = document.getElementById('presensi-sidebar');
-            const formMainSection = document.getElementById('form-main-section');
-            if (sidebar) {
-                sidebar.style.display = 'none';
-            }
-            if (formMainSection) {
-                formMainSection.classList.remove('col-lg-7');
-                formMainSection.classList.add('col-lg-12');
-            }
-        }
-
-        // Function to get current time in HH:mm format
-        function getCurrentTime() {
+        // Function to set current time
+        function setCurrentTime(fieldId) {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            return hours + ':' + minutes;
-        }
-
-        // Function to set current time to input field
-        function setCurrentTime(fieldId) {
+            const currentTime = hours + ':' + minutes;
+            
             const field = document.getElementById(fieldId);
             if (field) {
-                const currentTime = getCurrentTime();
                 field.value = currentTime;
                 
-                // Visual feedback (green flash)
+                // Visual feedback
                 field.style.backgroundColor = '#d4edda';
                 field.style.transition = 'background-color 0.3s ease';
                 setTimeout(() => {
@@ -1907,6 +2733,1176 @@
                 }, 3000);
             }
         }
+        
+        // Function to ensure consistent card size
+        function ensureConsistentCardSize() {
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('width', '100%', 'important');
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                    card.style.setProperty('box-sizing', 'border-box', 'important');
+                    card.style.setProperty('transform', 'none', 'important');
+                    card.style.setProperty('scale', '1', 'important');
+                    card.style.setProperty('margin', '0', 'important');
+                    card.style.setProperty('padding', '0', 'important');
+                    card.style.setProperty('flex', '0 0 auto', 'important');
+                    card.style.setProperty('display', 'flex', 'important');
+                    card.style.setProperty('align-items', 'center', 'important');
+                    card.style.setProperty('justify-content', 'center', 'important');
+                    card.style.height = '100px';
+                    card.style.minHeight = '100px';
+                    card.style.maxHeight = '100px';
+                }
+            });
+        }
+        
+        // Function to clear surat sakit
+        function clearSuratSakit() {
+            const suratSakitInput = document.getElementById('surat_sakit');
+            const previewDiv = document.getElementById('surat-sakit-preview');
+            if (suratSakitInput) {
+                suratSakitInput.value = '';
+            }
+            if (previewDiv) {
+                previewDiv.style.display = 'none';
+            }
+        }
+        
+        // FUNGSI selectPresensiType SUDAH DIDEFINISIKAN DI ATAS (di script pertama)
+        // Gunakan window.selectPresensiType yang sudah didefinisikan di atas
+        // Tidak perlu didefinisikan lagi di sini
+            console.log('selectPresensiType called with:', type);
+            if (!type) {
+                console.error('selectPresensiType: type is required');
+                return;
+            }
+            
+            // Pastikan card bisa diklik sebelum memproses - ULTRA AGGRESSIVE
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                    card.style.setProperty('z-index', '999', 'important');
+                    card.style.setProperty('position', 'relative', 'important');
+                }
+            });
+            
+            // Remove active class from all cards dan pastikan ukuran tetap sama
+            const allCards = ['card-hadir', 'card-sakit', 'card-izin'];
+            allCards.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.classList.remove('active');
+                    // Pastikan ukuran tetap sama untuk semua card
+                    card.style.setProperty('width', '100%', 'important');
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                    card.style.setProperty('box-sizing', 'border-box', 'important');
+                    card.style.setProperty('transform', 'none', 'important');
+                    card.style.setProperty('scale', '1', 'important');
+                    card.style.setProperty('margin', '0', 'important');
+                    card.style.setProperty('padding', '0', 'important');
+                    card.style.setProperty('flex', '0 0 auto', 'important');
+                    card.style.setProperty('display', 'flex', 'important');
+                    card.style.setProperty('align-items', 'center', 'important');
+                    card.style.setProperty('justify-content', 'center', 'important');
+                    card.style.height = '100px';
+                    card.style.minHeight = '100px';
+                    card.style.maxHeight = '100px';
+                }
+            });
+            
+            // Uncheck all radios
+            document.querySelectorAll('input[name="jenis"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Activate selected card and radio
+            const selectedCard = document.getElementById('card-' + type);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+                const radio = document.getElementById('jenis-' + type);
+                if (radio) {
+                    radio.checked = true;
+                }
+                
+                // Pastikan ukuran card yang dipilih tetap sama
+                selectedCard.style.setProperty('width', '100%', 'important');
+                selectedCard.style.setProperty('height', '100px', 'important');
+                selectedCard.style.setProperty('min-height', '100px', 'important');
+                selectedCard.style.setProperty('max-height', '100px', 'important');
+                selectedCard.style.setProperty('box-sizing', 'border-box', 'important');
+                selectedCard.style.setProperty('transform', 'none', 'important');
+                selectedCard.style.setProperty('scale', '1', 'important');
+                selectedCard.style.setProperty('margin', '0', 'important');
+                selectedCard.style.setProperty('padding', '0', 'important');
+                selectedCard.style.setProperty('flex', '0 0 auto', 'important');
+                selectedCard.style.setProperty('display', 'flex', 'important');
+                selectedCard.style.setProperty('align-items', 'center', 'important');
+                selectedCard.style.setProperty('justify-content', 'center', 'important');
+                selectedCard.style.height = '100px';
+                selectedCard.style.minHeight = '100px';
+                selectedCard.style.maxHeight = '100px';
+            }
+            
+            // Show/hide sections based on type
+            const jamSection = document.getElementById('jam-section');
+            const keteranganSection = document.getElementById('keterangan-section');
+            const jamMasuk = document.getElementById('jam_masuk');
+            const keterangan = document.getElementById('keterangan');
+            const tugasSection = document.getElementById('tugas-section');
+            const suratSakitSection = document.getElementById('surat-sakit-section');
+            const presensiSidebar = document.getElementById('presensi-sidebar');
+            const formMainSection = document.getElementById('form-main-section');
+            
+            // LOGIKA UTAMA: Tampilkan/sembunyikan section berdasarkan jenis presensi
+            if (type === 'hadir') {
+                // HADIR: Tampilkan jam masuk, SEMBUNYIKAN tugas section dan sidebar
+                if (jamSection) jamSection.style.display = 'block';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = true;
+                if (keterangan) keterangan.required = false;
+                // Auto-fill jam masuk saat pilih hadir
+                if (jamMasuk && !jamMasuk.value && typeof setCurrentTime === 'function') {
+                    setCurrentTime('jam_masuk');
+                }
+                // SEMBUNYIKAN tugas section untuk HADIR (tidak perlu tugas pengganti)
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'none', 'important');
+                    tugasSection.style.setProperty('visibility', 'hidden', 'important');
+                    tugasSection.style.setProperty('opacity', '0', 'important');
+                }
+                // SEMBUNYIKAN sidebar untuk HADIR (tidak perlu informasi tambahan)
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'none', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'hidden', 'important');
+                    presensiSidebar.style.setProperty('opacity', '0', 'important');
+                }
+                // SEMBUNYIKAN surat sakit section untuk HADIR
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) suratSakitInput.value = '';
+                    if (typeof clearSuratSakit === 'function') clearSuratSakit();
+                }
+                // Gunakan layout 1 kolom penuh untuk HADIR (karena tidak ada sidebar)
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-7');
+                    formMainSection.classList.add('col-lg-12');
+                }
+            } else if (type === 'izin') {
+                // IZIN: Tampilkan keterangan, tugas, dan sidebar
+                if (jamSection) jamSection.style.display = 'none';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'block', 'important');
+                    keteranganSection.style.setProperty('visibility', 'visible', 'important');
+                    keteranganSection.style.setProperty('opacity', '1', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = false;
+                if (keterangan) keterangan.required = true;
+                // Tampilkan sidebar untuk izin
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                }
+                // TAMPILKAN section tugas untuk izin
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                }
+                // Surat sakit tidak diperlukan untuk izin
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) suratSakitInput.value = '';
+                    if (typeof clearSuratSakit === 'function') clearSuratSakit();
+                }
+            } else { // sakit
+                // SAKIT: Tampilkan jam masuk, tugas, surat sakit, dan sidebar
+                if (jamSection) jamSection.style.display = 'block';
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) jamMasuk.required = true;
+                if (keterangan) keterangan.required = false;
+                // Auto-fill jam masuk saat pilih sakit
+                if (jamMasuk && !jamMasuk.value && typeof setCurrentTime === 'function') {
+                    setCurrentTime('jam_masuk');
+                }
+                // Tampilkan sidebar untuk sakit
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                }
+                // TAMPILKAN section tugas untuk sakit
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                }
+                // Tampilkan surat sakit section untuk sakit
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'block', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'visible', 'important');
+                    suratSakitSection.style.setProperty('opacity', '1', 'important');
+                }
+            }
+            
+            // Pastikan ukuran card tetap konsisten setelah perubahan
+            if (typeof ensureConsistentCardSize === 'function') {
+                ensureConsistentCardSize();
+            }
+            
+            // Pastikan semua card tetap bisa diklik setelah perubahan
+            const allCardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            allCardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                    card.style.setProperty('z-index', '999', 'important');
+                    card.style.setProperty('position', 'relative', 'important');
+                }
+            });
+        }
+        
+        // Pastikan fungsi-fungsi bisa diakses secara global
+        window.setCurrentTime = setCurrentTime;
+        window.clearSuratSakit = clearSuratSakit;
+        window.ensureConsistentCardSize = ensureConsistentCardSize;
+        
+        // selectPresensiType sudah didefinisikan di script pertama, tidak perlu duplikasi
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure body has white background on page load
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+            document.body.style.top = '';
+            document.body.style.background = '#ffffff';
+            document.body.style.backgroundColor = '#ffffff';
+            
+            // Setup dropdown untuk memilih kelas tugas - ULTRA AGGRESSIVE & DIRECT
+            function setupDropdownTugas() {
+                const pilihKelasDropdown = document.getElementById('pilih-kelas-tugas');
+                if (pilihKelasDropdown) {
+                    console.log('=== SETUP DROPDOWN TUGAS ===');
+                    
+                    // Hapus semua event listener lama
+                    const newDropdown = pilihKelasDropdown.cloneNode(true);
+                    pilihKelasDropdown.parentNode.replaceChild(newDropdown, pilihKelasDropdown);
+                    
+                    // Tambahkan event listener langsung - TIDAK PAKAI FUNGSI, LANGSUNG TAMPILKAN
+                    newDropdown.addEventListener('change', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const kelasTerpilih = this.value;
+                        console.log('=== DROPDOWN CHANGED ===', kelasTerpilih);
+                        
+                        if (kelasTerpilih) {
+                            // Gunakan fungsi tampilkanKolomTugas yang sudah didefinisikan
+                            if (typeof tampilkanKolomTugas === 'function') {
+                                tampilkanKolomTugas(kelasTerpilih);
+                            } else if (window.tampilkanKolomTugas && typeof window.tampilkanKolomTugas === 'function') {
+                                window.tampilkanKolomTugas(kelasTerpilih);
+                            } else {
+                                // Fallback langsung
+                                const tugasSection = document.getElementById('tugas-section');
+                                if (tugasSection) {
+                                    tugasSection.style.setProperty('display', 'block', 'important');
+                                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                                    tugasSection.style.setProperty('opacity', '1', 'important');
+                                }
+                                
+                                const wrapper = document.getElementById('tugas-kelas-' + kelasTerpilih + '-wrapper');
+                                const container = document.getElementById('tugas-kelas-container');
+                                
+                                if (wrapper) {
+                                    wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                                }
+                                
+                                if (container) {
+                                    container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                                }
+                            }
+                            
+                            if (wrapper) {
+                                // Tampilkan wrapper - ULTRA AGGRESSIVE
+                                wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 10 !important; background-color: #f8f9fa !important;';
+                                
+                                // Hapus semua style yang menyembunyikan
+                                wrapper.style.removeProperty('height');
+                                wrapper.style.removeProperty('overflow');
+                                wrapper.style.removeProperty('left');
+                                wrapper.style.removeProperty('top');
+                                wrapper.style.removeProperty('max-height');
+                                wrapper.style.removeProperty('min-height');
+                                
+                                // Pastikan semua child visible - SEMUA ELEMENT
+                                const allElements = wrapper.querySelectorAll('*');
+                                allElements.forEach(el => {
+                                    if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+                                        el.style.setProperty('display', '', 'important');
+                                        el.style.setProperty('visibility', 'visible', 'important');
+                                        el.style.setProperty('opacity', '1', 'important');
+                                    }
+                                });
+                                
+                                // Pastikan input, textarea, label, button, select visible
+                                const allInputs = wrapper.querySelectorAll('input, textarea, label, button, select, div, h6, small');
+                                allInputs.forEach(el => {
+                                    el.style.setProperty('display', '', 'important');
+                                    el.style.setProperty('visibility', 'visible', 'important');
+                                    el.style.setProperty('opacity', '1', 'important');
+                                });
+                                
+                                // Force remove d-none class jika ada
+                                wrapper.classList.remove('d-none');
+                                
+                                console.log('Wrapper displayed!', wrapper.offsetHeight, wrapper.offsetWidth);
+                            } else {
+                                console.error('WRAPPER NOT FOUND!', wrapperId);
+                                // Coba cari semua wrapper
+                                const allWrappers = document.querySelectorAll('[id*="tugas-kelas"]');
+                                console.log('All tugas-kelas elements:', allWrappers.length);
+                                allWrappers.forEach(w => console.log('Found:', w.id, w.style.display, w.offsetHeight));
+                            }
+                            
+                            if (container) {
+                                // Tampilkan container - ULTRA AGGRESSIVE
+                                container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                                
+                                // Hapus semua style yang menyembunyikan
+                                container.style.removeProperty('height');
+                                container.style.removeProperty('overflow');
+                                container.style.removeProperty('left');
+                                container.style.removeProperty('top');
+                                container.style.removeProperty('max-height');
+                                container.style.removeProperty('min-height');
+                                
+                                // Force remove d-none class jika ada
+                                container.classList.remove('d-none');
+                                
+                                console.log('Container displayed!', container.offsetHeight, container.offsetWidth);
+                            }
+                            
+                            // Scroll ke wrapper
+                            if (wrapper) {
+                                setTimeout(() => {
+                                    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                }, 200);
+                            }
+                            
+                            // Reset dropdown setelah memilih (agar bisa pilih lagi)
+                            setTimeout(() => {
+                                this.value = '';
+                            }, 100);
+                        }
+                    }, true); // Use capture phase
+                    
+                    // Juga tambahkan onclick sebagai backup - ULTRA AGGRESSIVE
+                    newDropdown.onchange = function() {
+                        const kelasTerpilih = this.value;
+                        console.log('=== onchange backup called ===', kelasTerpilih);
+                        if (kelasTerpilih) {
+                            // PASTIKAN TUGAS SECTION TAMPIL
+                            const tugasSection = document.getElementById('tugas-section');
+                            if (tugasSection) {
+                                tugasSection.style.setProperty('display', 'block', 'important');
+                                tugasSection.style.setProperty('visibility', 'visible', 'important');
+                                tugasSection.style.setProperty('opacity', '1', 'important');
+                            }
+                            
+                            const wrapper = document.getElementById('tugas-kelas-' + kelasTerpilih + '-wrapper');
+                            const container = document.getElementById('tugas-kelas-container');
+                            
+                            if (wrapper) {
+                                wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                                wrapper.classList.remove('d-none');
+                                wrapper.removeAttribute('hidden');
+                                console.log('Wrapper displayed via onchange backup', wrapper.offsetHeight);
+                            } else {
+                                console.error('Wrapper not found in backup!', 'tugas-kelas-' + kelasTerpilih + '-wrapper');
+                            }
+                            
+                            if (container) {
+                                container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                                container.classList.remove('d-none');
+                                container.removeAttribute('hidden');
+                                console.log('Container displayed via onchange backup', container.offsetHeight);
+                            } else {
+                                console.error('Container not found in backup!');
+                            }
+                            
+                            setTimeout(() => this.value = '', 100);
+                        }
+                    };
+                    
+                    // Juga tambahkan event listener dengan once:false untuk memastikan
+                    newDropdown.addEventListener('change', function() {
+                        console.log('Additional change listener triggered');
+                    }, { once: false, capture: true });
+                    
+                    console.log('Dropdown setup completed');
+                } else {
+                    console.error('Dropdown pilih-kelas-tugas NOT FOUND!');
+                }
+            }
+            
+            // Setup dropdown saat DOM ready
+            setupDropdownTugas();
+            
+            // Setup lagi setelah delay untuk memastikan - MULTIPLE TIMES
+            setTimeout(setupDropdownTugas, 50);
+            setTimeout(setupDropdownTugas, 100);
+            setTimeout(setupDropdownTugas, 200);
+            setTimeout(setupDropdownTugas, 500);
+            setTimeout(setupDropdownTugas, 1000);
+            
+            // Test langsung: coba tampilkan wrapper jika ada old value
+            setTimeout(function() {
+                // Sembunyikan semua wrapper terlebih dahulu
+                const semuaWrapper = document.querySelectorAll('.tugas-kelas-wrapper');
+                semuaWrapper.forEach(w => {
+                    w.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                    w.style.setProperty('display', 'none', 'important');
+                    w.style.setProperty('visibility', 'hidden', 'important');
+                    w.style.setProperty('opacity', '0', 'important');
+                    w.classList.add('d-none');
+                    w.setAttribute('hidden', 'true');
+                });
+                
+                // Cek old values dan tampilkan hanya yang memiliki value
+                const oldTugas7 = document.getElementById('tugas_kelas_7');
+                const oldTugas8 = document.getElementById('tugas_kelas_8');
+                const oldTugas9 = document.getElementById('tugas_kelas_9');
+                
+                const container = document.getElementById('tugas-kelas-container');
+                let adaYangVisible = false;
+                
+                if (oldTugas7 && oldTugas7.value) {
+                    console.log('Found old value for kelas 7, displaying wrapper');
+                    const wrapper = document.getElementById('tugas-kelas-7-wrapper');
+                    if (wrapper) {
+                        wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                        wrapper.style.setProperty('display', 'block', 'important');
+                        wrapper.style.setProperty('visibility', 'visible', 'important');
+                        wrapper.style.setProperty('opacity', '1', 'important');
+                        wrapper.classList.remove('d-none');
+                        wrapper.removeAttribute('hidden');
+                        adaYangVisible = true;
+                    }
+                }
+                if (oldTugas8 && oldTugas8.value) {
+                    console.log('Found old value for kelas 8, displaying wrapper');
+                    const wrapper = document.getElementById('tugas-kelas-8-wrapper');
+                    if (wrapper) {
+                        wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                        wrapper.style.setProperty('display', 'block', 'important');
+                        wrapper.style.setProperty('visibility', 'visible', 'important');
+                        wrapper.style.setProperty('opacity', '1', 'important');
+                        wrapper.classList.remove('d-none');
+                        wrapper.removeAttribute('hidden');
+                        adaYangVisible = true;
+                    }
+                }
+                if (oldTugas9 && oldTugas9.value) {
+                    console.log('Found old value for kelas 9, displaying wrapper');
+                    const wrapper = document.getElementById('tugas-kelas-9-wrapper');
+                    if (wrapper) {
+                        wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #f8f9fa !important;';
+                        wrapper.style.setProperty('display', 'block', 'important');
+                        wrapper.style.setProperty('visibility', 'visible', 'important');
+                        wrapper.style.setProperty('opacity', '1', 'important');
+                        wrapper.classList.remove('d-none');
+                        wrapper.removeAttribute('hidden');
+                        adaYangVisible = true;
+                    }
+                }
+                
+                // Tampilkan container hanya jika ada wrapper yang visible
+                if (container) {
+                    if (adaYangVisible) {
+                        container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                        container.style.setProperty('display', 'block', 'important');
+                        container.style.setProperty('visibility', 'visible', 'important');
+                        container.style.setProperty('opacity', '1', 'important');
+                        container.classList.remove('d-none');
+                        container.removeAttribute('hidden');
+                    } else {
+                        container.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                        container.classList.add('d-none');
+                        container.setAttribute('hidden', 'true');
+                    }
+                }
+            }, 200);
+            
+            // Test manual: buat fungsi global untuk test dari console
+            window.testTampilkanTugas = function(kelas) {
+                console.log('=== TEST TAMPILKAN TUGAS ===', kelas);
+                const wrapper = document.getElementById('tugas-kelas-' + kelas + '-wrapper');
+                const container = document.getElementById('tugas-kelas-container');
+                console.log('Wrapper:', wrapper);
+                console.log('Container:', container);
+                if (wrapper) {
+                    wrapper.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                    console.log('Wrapper style applied');
+                }
+                if (container) {
+                    container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                    console.log('Container style applied');
+                }
+            };
+            
+            console.log('Test function created: window.testTampilkanTugas(kelas) - contoh: testTampilkanTugas("7")');
+            
+            // Jika ada old value, tampilkan textarea yang sudah terisi
+            const oldTugas7 = document.getElementById('tugas_kelas_7');
+            const oldTugas8 = document.getElementById('tugas_kelas_8');
+            const oldTugas9 = document.getElementById('tugas_kelas_9');
+            
+            if (oldTugas7 && oldTugas7.value) {
+                if (window.tampilkanTugasKelas) window.tampilkanTugasKelas('7');
+            }
+            if (oldTugas8 && oldTugas8.value) {
+                if (window.tampilkanTugasKelas) window.tampilkanTugasKelas('8');
+            }
+            if (oldTugas9 && oldTugas9.value) {
+                if (window.tampilkanTugasKelas) window.tampilkanTugasKelas('9');
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Robust function to setup nav links - OPTIMIZED (hanya setup sekali, tidak perlu observer)
+            function setupNavLinks() {
+                const navLinks = document.querySelectorAll('.sidebar .nav-link');
+                navLinks.forEach(function(link) {
+                    // Force styles dengan !important
+                    link.style.setProperty('pointer-events', 'auto', 'important');
+                    link.style.setProperty('cursor', 'pointer', 'important');
+                    link.style.setProperty('z-index', '1001', 'important');
+                    link.style.setProperty('position', 'relative', 'important');
+                    link.style.setProperty('display', 'block', 'important');
+                    link.style.setProperty('touch-action', 'manipulation', 'important');
+                    
+                    // Add click event listener (tidak perlu clone untuk performa)
+                    link.addEventListener('click', function(e) {
+                        const href = link.getAttribute('href');
+                        
+                        if (href && href !== '#' && href !== 'javascript:void(0)') {
+                            closeSidebar();
+                            // Biarkan browser navigate secara normal
+                        } else {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    }, { capture: false, once: false });
+                    
+                    // Add touch event listener untuk mobile
+                    link.addEventListener('touchend', function(e) {
+                        const href = link.getAttribute('href');
+                        
+                        if (href && href !== '#' && href !== 'javascript:void(0)') {
+                            closeSidebar();
+                            window.location.href = href;
+                            e.preventDefault();
+                            return false;
+                        }
+                    }, { capture: false, once: false });
+                });
+            }
+            
+            // Setup nav links sekali saja (tidak perlu observer untuk performa)
+            setupNavLinks();
+            
+            // PASTIKAN SIDEBAR TERLIHAT DI DESKTOP - ULTRA AGGRESSIVE
+            function ensureSidebarVisible() {
+                const sidebar = document.getElementById('guru-sidebar');
+                if (sidebar) {
+                    if (window.innerWidth >= 768) {
+                        // Desktop: Pastikan sidebar terlihat penuh - OVERRIDE SEMUA
+                        sidebar.style.setProperty('display', 'flex', 'important');
+                        sidebar.style.setProperty('visibility', 'visible', 'important');
+                        sidebar.style.setProperty('opacity', '1', 'important');
+                        sidebar.style.setProperty('position', 'relative', 'important');
+                        sidebar.style.setProperty('left', '0', 'important');
+                        sidebar.style.setProperty('top', 'auto', 'important');
+                        sidebar.style.setProperty('transform', 'translateX(0)', 'important');
+                        sidebar.style.setProperty('transition', 'none', 'important');
+                        
+                        if (window.innerWidth >= 992) {
+                            // Large screen
+                            sidebar.style.setProperty('width', '16.66666667%', 'important');
+                            sidebar.style.setProperty('max-width', '16.66666667%', 'important');
+                            sidebar.style.setProperty('min-width', '200px', 'important');
+                            sidebar.style.setProperty('flex', '0 0 16.66666667%', 'important');
+                        } else {
+                            // Medium screen
+                            sidebar.style.setProperty('width', '25%', 'important');
+                            sidebar.style.setProperty('max-width', '25%', 'important');
+                            sidebar.style.setProperty('min-width', '250px', 'important');
+                            sidebar.style.setProperty('flex', '0 0 25%', 'important');
+                        }
+                        
+                        sidebar.style.setProperty('margin-left', '0', 'important');
+                        sidebar.style.setProperty('margin-right', '0', 'important');
+                        sidebar.style.setProperty('padding-left', '0', 'important');
+                        sidebar.style.setProperty('padding-right', '0', 'important');
+                        sidebar.style.setProperty('z-index', '1000', 'important');
+                        sidebar.classList.remove('show'); // Remove show class yang mungkin menyembunyikan
+                        
+                        // Pastikan parent row juga menggunakan flex
+                        const sidebarParent = sidebar.closest('.row');
+                        if (sidebarParent) {
+                            sidebarParent.style.setProperty('display', 'flex', 'important');
+                            sidebarParent.style.setProperty('flex-wrap', 'nowrap', 'important');
+                        }
+                        
+                        // Pastikan container-fluid juga menggunakan flex
+                        const container = sidebar.closest('.container-fluid');
+                        if (container) {
+                            const row = container.querySelector('.row');
+                            if (row) {
+                                row.style.setProperty('display', 'flex', 'important');
+                                row.style.setProperty('flex-wrap', 'nowrap', 'important');
+                            }
+                        }
+                    } else {
+                        // Mobile: Pastikan sidebar tersembunyi (kecuali dengan class show)
+                        if (!sidebar.classList.contains('show')) {
+                            sidebar.style.setProperty('left', '-100%', 'important');
+                        }
+                    }
+                }
+            }
+            
+            // Panggil fungsi saat page load - OPTIMIZED (hanya 2 kali)
+            ensureSidebarVisible();
+            setTimeout(ensureSidebarVisible, 100);
+            
+            // Pastikan sidebar terlihat saat window resize
+            window.addEventListener('resize', function() {
+                ensureSidebarVisible();
+            });
+            
+            // Observer untuk memastikan sidebar tetap terlihat - OPTIMIZED (debounced)
+            if (window.innerWidth >= 768) {
+                let sidebarResizeTimeout;
+                const debouncedEnsureSidebar = () => {
+                    clearTimeout(sidebarResizeTimeout);
+                    sidebarResizeTimeout = setTimeout(ensureSidebarVisible, 100);
+                };
+                
+                const sidebarObserver = new MutationObserver(debouncedEnsureSidebar);
+                
+                const sidebar = document.getElementById('guru-sidebar');
+                if (sidebar) {
+                    sidebarObserver.observe(sidebar, {
+                        attributes: true,
+                        attributeFilter: ['style', 'class']
+                    });
+                }
+            }
+            
+            // PASTIKAN CARD PRESENSI BISA DIKLIK - ULTRA AGGRESSIVE FIX
+            function ensureCardsClickable() {
+                const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+                cardIds.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    if (card) {
+                        // Pastikan card bisa diklik - ULTRA AGGRESSIVE
+                        card.style.setProperty('pointer-events', 'auto', 'important');
+                        card.style.setProperty('cursor', 'pointer', 'important');
+                        card.style.setProperty('z-index', '999', 'important');
+                        card.style.setProperty('position', 'relative', 'important');
+                        card.style.setProperty('user-select', 'none', 'important');
+                        card.style.setProperty('-webkit-user-select', 'none', 'important');
+                        card.style.setProperty('-moz-user-select', 'none', 'important');
+                        card.style.setProperty('-ms-user-select', 'none', 'important');
+                        
+                        // Pastikan onclick attribute ada - SEDERHANA DAN LANGSUNG
+                        const type = cardId.replace('card-', '');
+                        card.setAttribute('onclick', 'window.selectPresensiType("' + type + '"); return false;');
+                        
+                        // Tambahkan event listener sebagai backup - SEDERHANA DAN LANGSUNG
+                        const clickHandler = function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            console.log('Card clicked via listener:', type);
+                            
+                            // Panggil fungsi langsung
+                            if (window.selectPresensiType && typeof window.selectPresensiType === 'function') {
+                                window.selectPresensiType(type);
+                            } else {
+                                console.error('window.selectPresensiType is not a function!', typeof window.selectPresensiType);
+                                alert('Error: selectPresensiType function not found. Please refresh the page.');
+                            }
+                            return false;
+                        };
+                        
+                        // Hapus semua listener lama dengan clone
+                        const newCard = card.cloneNode(true);
+                        card.parentNode.replaceChild(newCard, card);
+                        
+                        // Tambahkan listener baru ke card yang baru
+                        newCard.addEventListener('click', clickHandler, true);
+                        newCard.addEventListener('click', clickHandler, false);
+                        newCard.addEventListener('mousedown', clickHandler, true);
+                        newCard.addEventListener('touchstart', function(e) {
+                            e.preventDefault();
+                            clickHandler(e);
+                        }, true);
+                        
+                        // Pastikan onclick juga bekerja
+                        newCard.onclick = function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (window.selectPresensiType && typeof window.selectPresensiType === 'function') {
+                                window.selectPresensiType(type);
+                            }
+                            return false;
+                        };
+                        
+                        // Update onclick attribute juga
+                        newCard.setAttribute('onclick', 'window.selectPresensiType("' + type + '"); return false;');
+                    }
+                });
+            }
+            
+            // Panggil fungsi untuk memastikan card bisa diklik - MULTIPLE TIMES untuk memastikan
+            ensureCardsClickable();
+            setTimeout(ensureCardsClickable, 50);
+            setTimeout(ensureCardsClickable, 100);
+            setTimeout(ensureCardsClickable, 200);
+            setTimeout(ensureCardsClickable, 500);
+            setTimeout(ensureCardsClickable, 1000);
+            
+            // Pastikan fungsi selectPresensiType bisa diakses sebelum memanggil initializePresensiForm
+            console.log('=== CHECKING selectPresensiType ===');
+            console.log('window.selectPresensiType type:', typeof window.selectPresensiType);
+            console.log('window.selectPresensiType value:', window.selectPresensiType);
+            if (typeof window.selectPresensiType !== 'function') {
+                console.error('CRITICAL: window.selectPresensiType is not a function!', typeof window.selectPresensiType);
+                alert('Error: selectPresensiType function is not available. Please refresh the page.');
+            } else {
+                console.log('✓ window.selectPresensiType is accessible and is a function');
+                // Test call
+                try {
+                    console.log('Testing selectPresensiType with "hadir"...');
+                    // window.selectPresensiType('hadir'); // Jangan panggil otomatis, hanya test
+                } catch (e) {
+                    console.error('Error testing selectPresensiType:', e);
+                }
+            }
+            
+            // Initialize semua fungsi lainnya
+            initializePresensiForm();
+            handleSuratSakitPreview();
+            
+            // PASTIKAN section riwayat dan status tersembunyi saat pertama kali load - ULTRA AGGRESSIVE
+            const riwayatSection = document.getElementById('riwayat-presensi-section');
+            const statusSection = document.getElementById('status-presensi-hari-ini');
+            
+            function forceHideSections() {
+                if (riwayatSection) {
+                    riwayatSection.style.setProperty('display', 'none', 'important');
+                    riwayatSection.style.setProperty('visibility', 'hidden', 'important');
+                    riwayatSection.style.setProperty('opacity', '0', 'important');
+                    riwayatSection.style.setProperty('position', 'absolute', 'important');
+                    riwayatSection.style.setProperty('left', '-9999px', 'important');
+                    riwayatSection.style.setProperty('height', '0', 'important');
+                    riwayatSection.style.setProperty('overflow', 'hidden', 'important');
+                    riwayatSection.style.setProperty('margin', '0', 'important');
+                    riwayatSection.style.setProperty('padding', '0', 'important');
+                    riwayatSection.removeAttribute('data-show');
+                    riwayatSection.classList.remove('show');
+                }
+                
+                if (statusSection) {
+                    statusSection.style.setProperty('display', 'none', 'important');
+                    statusSection.style.setProperty('visibility', 'hidden', 'important');
+                    statusSection.style.setProperty('opacity', '0', 'important');
+                    statusSection.style.setProperty('position', 'absolute', 'important');
+                    statusSection.style.setProperty('left', '-9999px', 'important');
+                    statusSection.style.setProperty('height', '0', 'important');
+                    statusSection.style.setProperty('overflow', 'hidden', 'important');
+                    statusSection.style.setProperty('margin', '0', 'important');
+                    statusSection.style.setProperty('padding', '0', 'important');
+                    statusSection.removeAttribute('data-show');
+                    statusSection.classList.remove('show');
+                }
+            }
+            
+            // Paksa sembunyikan section saat page load
+            forceHideSections();
+            
+            // Paksa sembunyikan lagi setelah delay untuk memastikan - OPTIMIZED (langsung)
+            forceHideSections();
+            
+            // Initialize riwayat presensi (akan menampilkan jika ada session success)
+            initializeRiwayatPresensi();
+        });
+        
+        // FUNGSI selectPresensiType SUDAH DIDEFINISIKAN DI ATAS (sebelum DOMContentLoaded)
+        // Tidak perlu didefinisikan lagi di sini
+            console.log('selectPresensiType called with:', type);
+            if (!type) {
+                console.error('selectPresensiType: type is required');
+                return;
+            }
+            
+            // Pastikan card bisa diklik sebelum memproses
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                }
+            });
+            
+            // Remove active class from all cards dan pastikan ukuran tetap sama - ULTRA AGGRESSIVE FIXED HEIGHT
+            const allCards = ['card-hadir', 'card-sakit', 'card-izin'];
+            allCards.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.classList.remove('active');
+                    // Pastikan ukuran tetap sama untuk semua card - FORCE FIXED HEIGHT
+                    card.style.setProperty('width', '100%', 'important');
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                    card.style.setProperty('box-sizing', 'border-box', 'important');
+                    card.style.setProperty('transform', 'none', 'important');
+                    card.style.setProperty('scale', '1', 'important');
+                    card.style.setProperty('margin', '0', 'important');
+                    card.style.setProperty('padding', '0', 'important');
+                    card.style.setProperty('flex', '0 0 auto', 'important');
+                    card.style.setProperty('display', 'flex', 'important');
+                    card.style.setProperty('align-items', 'center', 'important');
+                    card.style.setProperty('justify-content', 'center', 'important');
+                    // Force computed style
+                    card.style.height = '100px';
+                    card.style.minHeight = '100px';
+                    card.style.maxHeight = '100px';
+                }
+            });
+            
+            // Uncheck all radios
+            document.querySelectorAll('input[name="jenis"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Activate selected card and radio - pastikan ukuran tetap sama - FORCE FIXED HEIGHT
+            const selectedCard = document.getElementById('card-' + type);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+                const radio = document.getElementById('jenis-' + type);
+                if (radio) {
+                    radio.checked = true;
+                }
+                
+                // Pastikan ukuran card yang dipilih tetap sama - FORCE FIXED HEIGHT
+                selectedCard.style.setProperty('width', '100%', 'important');
+                selectedCard.style.setProperty('height', '100px', 'important');
+                selectedCard.style.setProperty('min-height', '100px', 'important');
+                selectedCard.style.setProperty('max-height', '100px', 'important');
+                selectedCard.style.setProperty('box-sizing', 'border-box', 'important');
+                selectedCard.style.setProperty('transform', 'none', 'important');
+                selectedCard.style.setProperty('scale', '1', 'important');
+                selectedCard.style.setProperty('margin', '0', 'important');
+                selectedCard.style.setProperty('padding', '0', 'important');
+                selectedCard.style.setProperty('flex', '0 0 auto', 'important');
+                selectedCard.style.setProperty('display', 'flex', 'important');
+                selectedCard.style.setProperty('align-items', 'center', 'important');
+                selectedCard.style.setProperty('justify-content', 'center', 'important');
+                // Force computed style
+                selectedCard.style.height = '100px';
+                selectedCard.style.minHeight = '100px';
+                selectedCard.style.maxHeight = '100px';
+            }
+            
+            // Show/hide sections based on type
+            const jamSection = document.getElementById('jam-section');
+            const keteranganSection = document.getElementById('keterangan-section');
+            const jamMasuk = document.getElementById('jam_masuk');
+            const keterangan = document.getElementById('keterangan');
+            const tugasSection = document.getElementById('tugas-section');
+            const suratSakitSection = document.getElementById('surat-sakit-section');
+            const presensiSidebar = document.getElementById('presensi-sidebar');
+            const formMainSection = document.getElementById('form-main-section');
+            const tugasTextareas = document.querySelectorAll('.tugas-textarea');
+            const requiresTugas = (type === 'sakit' || type === 'izin');
+            const requiresSuratSakit = (type === 'sakit'); // Hanya untuk sakit, bukan izin
+            
+            // LOGIKA UTAMA: Tampilkan/sembunyikan section berdasarkan jenis presensi
+            // HAPUS logika sidebar di sini karena akan di-handle di masing-masing kondisi type
+            if (type === 'hadir') {
+                // HADIR: Tampilkan jam masuk dan TUGAS SECTION (seperti foto 1)
+                if (jamSection) {
+                    jamSection.style.display = 'block';
+                }
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) {
+                    jamMasuk.required = true;
+                }
+                if (keterangan) {
+                    keterangan.required = false;
+                }
+                // Auto-fill jam masuk saat pilih hadir
+                if (jamMasuk && !jamMasuk.value) {
+                    setCurrentTime('jam_masuk');
+                }
+                // SEMBUNYIKAN tugas section untuk HADIR (tidak perlu tugas pengganti)
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'none', 'important');
+                    tugasSection.style.setProperty('visibility', 'hidden', 'important');
+                    tugasSection.style.setProperty('opacity', '0', 'important');
+                    tugasSection.classList.remove('highlight-sakit');
+                    tugasSection.classList.remove('highlight-izin');
+                }
+                // SEMBUNYIKAN sidebar untuk HADIR (tidak perlu informasi tambahan)
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'none', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'hidden', 'important');
+                    presensiSidebar.style.setProperty('opacity', '0', 'important');
+                }
+                // SEMBUNYIKAN surat sakit section untuk HADIR
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) {
+                        suratSakitInput.value = '';
+                    }
+                    clearSuratSakit();
+                }
+                // Gunakan layout 1 kolom penuh untuk HADIR (karena tidak ada sidebar)
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-7');
+                    formMainSection.classList.add('col-lg-12');
+                    formMainSection.style.setProperty('width', '100%', 'important');
+                    formMainSection.style.setProperty('flex', '0 0 100%', 'important');
+                }
+            } else if (type === 'izin') {
+                // IZIN: Tampilkan keterangan, tugas, dan sidebar
+                if (jamSection) {
+                    jamSection.style.display = 'none';
+                }
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'block', 'important');
+                    keteranganSection.style.setProperty('visibility', 'visible', 'important');
+                    keteranganSection.style.setProperty('opacity', '1', 'important');
+                }
+                if (jamMasuk) {
+                    jamMasuk.required = false;
+                }
+                if (keterangan) {
+                    keterangan.required = true;
+                }
+                // Tampilkan sidebar untuk izin - FORCE
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                    formMainSection.style.setProperty('width', 'auto', 'important');
+                    formMainSection.style.setProperty('flex', '0 0 58.333333%', 'important');
+                }
+                // TAMPILKAN section tugas untuk izin - FORCE
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                    tugasSection.classList.add('highlight-izin');
+                    tugasSection.classList.remove('highlight-sakit');
+                    // Scroll ke section tugas untuk memastikan user melihatnya
+                    setTimeout(() => {
+                        tugasSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+                // Surat sakit tidak diperlukan untuk izin
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'none', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'hidden', 'important');
+                    suratSakitSection.style.setProperty('opacity', '0', 'important');
+                    const suratSakitInput = document.getElementById('surat_sakit');
+                    if (suratSakitInput) {
+                        suratSakitInput.value = '';
+                    }
+                    clearSuratSakit();
+                }
+            } else { // sakit
+                // SAKIT: Tampilkan jam masuk, tugas, surat sakit, dan sidebar (TIDAK tampilkan keterangan)
+                if (jamSection) {
+                    jamSection.style.display = 'block';
+                }
+                if (keteranganSection) {
+                    keteranganSection.style.setProperty('display', 'none', 'important');
+                    keteranganSection.style.setProperty('visibility', 'hidden', 'important');
+                    keteranganSection.style.setProperty('opacity', '0', 'important');
+                }
+                if (jamMasuk) {
+                    jamMasuk.required = true;
+                }
+                if (keterangan) {
+                    keterangan.required = false;
+                }
+                // Auto-fill jam masuk saat pilih sakit agar TU tahu kapan mulai sakit
+                if (jamMasuk && !jamMasuk.value) {
+                    setCurrentTime('jam_masuk');
+                }
+                // Update info text
+                if (document.getElementById('jamMasukInfo')) {
+                    document.getElementById('jamMasukInfo').style.display = 'none';
+                }
+                if (document.getElementById('jamMasukSakitInfo')) {
+                    document.getElementById('jamMasukSakitInfo').style.display = 'inline';
+                }
+                // Tampilkan sidebar untuk sakit - FORCE
+                if (presensiSidebar) {
+                    presensiSidebar.style.setProperty('display', 'block', 'important');
+                    presensiSidebar.style.setProperty('visibility', 'visible', 'important');
+                    presensiSidebar.style.setProperty('opacity', '1', 'important');
+                }
+                if (formMainSection) {
+                    formMainSection.classList.remove('col-lg-12');
+                    formMainSection.classList.add('col-lg-7');
+                    formMainSection.style.setProperty('width', 'auto', 'important');
+                    formMainSection.style.setProperty('flex', '0 0 58.333333%', 'important');
+                }
+                // TAMPILKAN section tugas untuk sakit - FORCE
+                if (tugasSection) {
+                    tugasSection.style.setProperty('display', 'block', 'important');
+                    tugasSection.style.setProperty('visibility', 'visible', 'important');
+                    tugasSection.style.setProperty('opacity', '1', 'important');
+                    tugasSection.classList.add('highlight-sakit');
+                    tugasSection.classList.remove('highlight-izin');
+                    // Scroll ke section tugas untuk memastikan user melihatnya
+                    setTimeout(() => {
+                        tugasSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+                // Tampilkan surat sakit section untuk sakit
+                if (suratSakitSection) {
+                    suratSakitSection.style.setProperty('display', 'block', 'important');
+                    suratSakitSection.style.setProperty('visibility', 'visible', 'important');
+                    suratSakitSection.style.setProperty('opacity', '1', 'important');
+                }
+            }
+            
+            // Reset info text for hadir
+            if (type === 'hadir') {
+                if (document.getElementById('jamMasukInfo')) {
+                    document.getElementById('jamMasukInfo').style.display = 'inline';
+                }
+                if (document.getElementById('jamMasukSakitInfo')) {
+                    document.getElementById('jamMasukSakitInfo').style.display = 'none';
+                }
+            } else if (type === 'izin') {
+                if (document.getElementById('jamMasukInfo')) {
+                    document.getElementById('jamMasukInfo').style.display = 'none';
+                }
+                if (document.getElementById('jamMasukSakitInfo')) {
+                    document.getElementById('jamMasukSakitInfo').style.display = 'none';
+                }
+            }
+            
+            // Pastikan ukuran card tetap konsisten setelah perubahan - OPTIMIZED (langsung, tanpa setTimeout)
+            if (typeof ensureConsistentCardSize === 'function') {
+                ensureConsistentCardSize();
+            }
+            
+            // Pastikan semua card tetap bisa diklik setelah perubahan
+            const allCardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            allCardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.style.setProperty('pointer-events', 'auto', 'important');
+                    card.style.setProperty('cursor', 'pointer', 'important');
+                    card.style.setProperty('z-index', '999', 'important');
+                    card.style.setProperty('position', 'relative', 'important');
+                }
+            });
+        }
+        
+        // FUNGSI selectPresensiType SUDAH DI-ASSIGN KE WINDOW DI ATAS (sebelum DOMContentLoaded)
+        // Tidak perlu duplikasi di sini
+        
+        // Existing presensi functions
+        const defaultPresensiType = @json(old('jenis', 'hadir'));
+        const formHasErrors = @json($errors->any());
+        
+        // Function to close presensi sidebar
+        function closePresensiSidebar() {
+            const sidebar = document.getElementById('presensi-sidebar');
+            const formMainSection = document.getElementById('form-main-section');
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+            if (formMainSection) {
+                formMainSection.classList.remove('col-lg-7');
+                formMainSection.classList.add('col-lg-12');
+            }
+        }
+
+        // Function to get current time in HH:mm format
+        function getCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            return hours + ':' + minutes;
+        }
+
+        // FUNGSI setCurrentTime SUDAH DIDEFINISIKAN DI ATAS (sebelum DOMContentLoaded)
+        // Tidak perlu didefinisikan lagi di sini
 
         // Function to toggle presensi form
         function togglePresensiForm() {
@@ -1923,7 +3919,27 @@
                 
                 // Reset form
                 document.getElementById('presensiForm').reset();
+                // Reset semua textarea tugas
                 document.querySelectorAll('.tugas-textarea').forEach(textarea => textarea.value = '');
+                
+                // Reset semua input detail halaman dan bab
+                document.querySelectorAll('[id^="detail_halaman_"]').forEach(input => input.value = '');
+                document.querySelectorAll('[id^="detail_bab_"]').forEach(input => input.value = '');
+                
+                // Sembunyikan semua wrapper tugas kelas
+                document.querySelectorAll('.tugas-kelas-wrapper').forEach(wrapper => {
+                    wrapper.style.display = 'none';
+                });
+                
+                // Sembunyikan container dan reset dropdown
+                const container = document.getElementById('tugas-kelas-container');
+                if (container) {
+                    container.style.display = 'none';
+                }
+                const dropdown = document.getElementById('pilih-kelas-tugas');
+                if (dropdown) {
+                    dropdown.value = '';
+                }
                 
                 // Set tanggal default to today
                 document.getElementById('tanggalPresensi').value = '{{ date('Y-m-d') }}';
@@ -1943,8 +3959,9 @@
             }
         }
 
-        // Initialize - set hadir as default active and auto-fill jam masuk
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize - set hadir as default active and auto-fill jam masuk (OPTIMIZED: gabung dengan DOMContentLoaded utama)
+        // Pindahkan ke DOMContentLoaded utama di atas untuk performa
+        function initializePresensiForm() {
             const formCard = document.getElementById('presensiFormCard');
             const btnTutup = document.getElementById('btnTutupForm');
             const hasErrors = @json($errors->any());
@@ -1967,31 +3984,83 @@
             
             selectPresensiType(defaultType);
             
-            // Pastikan ukuran card konsisten setelah memilih jenis presensi - MULTIPLE CHECKS
+            // Pastikan ukuran card konsisten setelah memilih jenis presensi - OPTIMIZED (hanya 1x check)
             setTimeout(() => {
                 ensureConsistentCardSize();
-            }, 50);
-            setTimeout(() => {
-                ensureConsistentCardSize();
+                document.querySelectorAll('#card-hadir, #card-sakit, #card-izin').forEach(card => {
+                    card.style.setProperty('height', '100px', 'important');
+                    card.style.setProperty('min-height', '100px', 'important');
+                    card.style.setProperty('max-height', '100px', 'important');
+                });
             }, 100);
-            setTimeout(() => {
-                ensureConsistentCardSize();
-            }, 200);
             
-            // Monitor perubahan dan pastikan ukuran tetap sama
-            const observer = new MutationObserver(function(mutations) {
+            // Optimized: Monitor perubahan dengan debounce untuk performa lebih baik
+            let resizeTimeout;
+            const forceAllCardsSize = () => {
                 ensureConsistentCardSize();
-            });
+                const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+                cardIds.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    if (card) {
+                        card.style.setProperty('height', '100px', 'important');
+                        card.style.setProperty('min-height', '100px', 'important');
+                        card.style.setProperty('max-height', '100px', 'important');
+                        card.style.height = '100px';
+                        card.style.minHeight = '100px';
+                        card.style.maxHeight = '100px';
+                    }
+                });
+            };
             
+            // Debounced observer untuk mengurangi overhead
+            const debouncedForceSize = () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(forceAllCardsSize, 50);
+            };
+            
+            const observer = new MutationObserver(debouncedForceSize);
+            
+            // MutationObserver untuk jenis-presensi-row - DISABLED untuk performa
+            // Layout sudah di-set via CSS, tidak perlu monitor terus-menerus
+            /*
             const jenisPresensiRow = document.getElementById('jenis-presensi-row');
             if (jenisPresensiRow) {
                 observer.observe(jenisPresensiRow, {
-                    childList: true,
-                    subtree: true,
+                    childList: false, // Hanya monitor attributes, bukan childList
+                    subtree: false, // Tidak perlu subtree untuk performa
                     attributes: true,
                     attributeFilter: ['style', 'class']
                 });
             }
+            */
+            
+            // Monitor setiap card secara individual - OPTIMIZED (hanya 1 observer per card) - DISABLED untuk performa
+            // MutationObserver untuk card size di-disable untuk meningkatkan performa
+            // Ukuran card sudah di-set via CSS dan inline style, tidak perlu monitor terus-menerus
+            /*
+            const cardIds = ['card-hadir', 'card-sakit', 'card-izin'];
+            cardIds.forEach(cardId => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    const cardObserver = new MutationObserver(function(mutations) {
+                        // Debounce untuk mengurangi overhead
+                        clearTimeout(resizeTimeout);
+                        resizeTimeout = setTimeout(() => {
+                            card.style.setProperty('height', '100px', 'important');
+                            card.style.setProperty('min-height', '100px', 'important');
+                            card.style.setProperty('max-height', '100px', 'important');
+                            card.style.height = '100px';
+                            card.style.minHeight = '100px';
+                            card.style.maxHeight = '100px';
+                        }, 50);
+                    });
+                    cardObserver.observe(card, {
+                        attributes: true,
+                        attributeFilter: ['style', 'class']
+                    });
+                }
+            });
+            */
 
             if (defaultType === 'hadir' && formCard && (formCard.style.display === 'block' || hasErrors)) {
                 const jamMasuk = document.getElementById('jam_masuk');
@@ -1999,8 +4068,10 @@
                     setCurrentTime('jam_masuk');
                 }
             }
-        });
-
+        }
+        
+        // initializePresensiForm sudah dipanggil di DOMContentLoaded utama di atas
+        
         // Function to handle surat sakit file preview
         function handleSuratSakitPreview() {
             const suratSakitInput = document.getElementById('surat_sakit');
@@ -2042,31 +4113,22 @@
             }
         }
         
-        // Function to clear surat sakit
-        function clearSuratSakit() {
-            const suratSakitInput = document.getElementById('surat_sakit');
-            const previewDiv = document.getElementById('surat-sakit-preview');
-            if (suratSakitInput) {
-                suratSakitInput.value = '';
-            }
-            if (previewDiv) {
-                previewDiv.style.display = 'none';
-            }
-        }
-        
-        // Initialize surat sakit preview handler
-        document.addEventListener('DOMContentLoaded', function() {
-            handleSuratSakitPreview();
-        });
+        // Initialize surat sakit preview handler (OPTIMIZED: sudah dipanggil di DOMContentLoaded utama)
 
-        // Auto-refresh status every 10 seconds if there's pending presensi
+        // Auto-refresh status - DISABLED untuk performa (user bisa refresh manual jika perlu)
+        // setInterval disabled untuk meningkatkan performa loading
+        // Jika perlu auto-refresh, user bisa refresh manual atau gunakan browser refresh
+        /*
         @if($todayPresensi && $todayPresensi->status_verifikasi === 'pending')
         setInterval(function() {
-            // Check if status has changed
+            // Check if status has changed - hanya jika tab masih aktif
+            if (document.hidden) return; // Skip jika tab tidak aktif
+            
             fetch('{{ route("guru.presensi.index") }}', {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
-                }
+                },
+                cache: 'no-cache' // Pastikan tidak cache
             })
             .then(response => response.text())
             .then(html => {
@@ -2076,8 +4138,148 @@
                 }
             })
             .catch(err => console.log('Auto-refresh error:', err));
-        }, 10000); // Check every 10 seconds
+        }, 30000); // Check every 30 seconds (diperlambat untuk performa)
         @endif
+        */
+
+        // Tampilkan section Riwayat Presensi dan Status Presensi Hari Ini setelah form submit berhasil
+        function initializeRiwayatPresensi() {
+            // Fungsi untuk menampilkan status presensi hari ini dan riwayat - ULTRA AGGRESSIVE
+            function showPresensiSections() {
+                // Tampilkan Status Presensi Hari Ini
+                const statusSection = document.getElementById('status-presensi-hari-ini');
+                if (statusSection) {
+                    statusSection.style.setProperty('display', 'block', 'important');
+                    statusSection.style.setProperty('visibility', 'visible', 'important');
+                    statusSection.style.setProperty('opacity', '1', 'important');
+                    statusSection.style.setProperty('position', 'relative', 'important');
+                    statusSection.style.setProperty('left', 'auto', 'important');
+                    statusSection.style.setProperty('height', 'auto', 'important');
+                    statusSection.style.setProperty('overflow', 'visible', 'important');
+                    statusSection.style.setProperty('margin', '1rem 0', 'important');
+                    statusSection.style.setProperty('padding', 'inherit', 'important');
+                    statusSection.setAttribute('data-show', 'true');
+                    statusSection.classList.add('show');
+                }
+                
+                // Tampilkan Riwayat Presensi
+                const riwayatSection = document.getElementById('riwayat-presensi-section');
+                if (riwayatSection) {
+                    riwayatSection.style.setProperty('display', 'block', 'important');
+                    riwayatSection.style.setProperty('visibility', 'visible', 'important');
+                    riwayatSection.style.setProperty('opacity', '1', 'important');
+                    riwayatSection.style.setProperty('position', 'relative', 'important');
+                    riwayatSection.style.setProperty('left', 'auto', 'important');
+                    riwayatSection.style.setProperty('height', 'auto', 'important');
+                    riwayatSection.style.setProperty('overflow', 'visible', 'important');
+                    riwayatSection.style.setProperty('margin', '1rem 0', 'important');
+                    riwayatSection.style.setProperty('padding', 'inherit', 'important');
+                    riwayatSection.setAttribute('data-show', 'true');
+                    riwayatSection.classList.add('show');
+                    
+                    // Scroll ke section status dengan smooth - OPTIMIZED (langsung)
+                    requestAnimationFrame(() => {
+                        if (statusSection) {
+                            statusSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                }
+            }
+            
+            // Pastikan section tersembunyi saat page load - ULTRA AGGRESSIVE
+            function hidePresensiSections() {
+                const statusSection = document.getElementById('status-presensi-hari-ini');
+                const riwayatSection = document.getElementById('riwayat-presensi-section');
+                
+                if (statusSection) {
+                    statusSection.style.setProperty('display', 'none', 'important');
+                    statusSection.style.setProperty('visibility', 'hidden', 'important');
+                    statusSection.style.setProperty('opacity', '0', 'important');
+                    statusSection.style.setProperty('position', 'absolute', 'important');
+                    statusSection.style.setProperty('left', '-9999px', 'important');
+                    statusSection.style.setProperty('height', '0', 'important');
+                    statusSection.style.setProperty('overflow', 'hidden', 'important');
+                    statusSection.removeAttribute('data-show');
+                    statusSection.classList.remove('show');
+                }
+                
+                if (riwayatSection) {
+                    riwayatSection.style.setProperty('display', 'none', 'important');
+                    riwayatSection.style.setProperty('visibility', 'hidden', 'important');
+                    riwayatSection.style.setProperty('opacity', '0', 'important');
+                    riwayatSection.style.setProperty('position', 'absolute', 'important');
+                    riwayatSection.style.setProperty('left', '-9999px', 'important');
+                    riwayatSection.style.setProperty('height', '0', 'important');
+                    riwayatSection.style.setProperty('overflow', 'hidden', 'important');
+                    riwayatSection.removeAttribute('data-show');
+                    riwayatSection.classList.remove('show');
+                }
+            }
+            
+            // Pastikan section tersembunyi saat pertama kali load (kecuali ada session success)
+            hidePresensiSections();
+            
+            // Cek apakah ada session success message (presensi berhasil dikirim)
+            // Hanya tampilkan jika benar-benar ada session success DAN form baru saja di-submit
+            @if(session('success'))
+                // Tunggu sebentar untuk memastikan DOM sudah siap - OPTIMIZED (lebih cepat)
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        showPresensiSections();
+                    }, 50);
+                });
+            @else
+                // Jika tidak ada session success, PASTIKAN section tersembunyi - langsung
+                hidePresensiSections();
+            @endif
+
+            // Handle form submit - tampilkan section setelah submit
+            const presensiForm = document.getElementById('presensiForm');
+            const btnKirimPresensi = document.getElementById('btnKirimPresensi');
+            
+            if (presensiForm && btnKirimPresensi) {
+                btnKirimPresensi.addEventListener('click', function(e) {
+                    // Simpan status submit ke sessionStorage
+                    sessionStorage.setItem('presensiSubmitted', 'true');
+                });
+                
+                presensiForm.addEventListener('submit', function(e) {
+                    // Simpan status submit ke sessionStorage
+                    sessionStorage.setItem('presensiSubmitted', 'true');
+                });
+            }
+
+            // Cek sessionStorage untuk menampilkan section jika sudah submit sebelumnya
+            // Tapi hanya jika benar-benar ada session success atau flag submit
+            const hasPresensiSubmitted = sessionStorage.getItem('presensiSubmitted') === 'true';
+            const hasSessionSuccess = @json(session('success') ? true : false);
+            
+            // PASTIKAN: Hanya tampilkan jika benar-benar ada session success (form baru di-submit)
+            // JANGAN tampilkan hanya karena ada $todayPresensi (presensi lama)
+            if (hasSessionSuccess && hasPresensiSubmitted) {
+                // OPTIMIZED: langsung tampilkan tanpa delay yang lama
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        showPresensiSections();
+                    }, 50);
+                });
+                
+                // Hapus flag setelah ditampilkan
+                sessionStorage.removeItem('presensiSubmitted');
+            } else {
+                // Jika tidak ada session success atau flag submit, PASTIKAN section tersembunyi - langsung
+                hidePresensiSections();
+            }
+            
+            // PASTIKAN section tersembunyi sekali lagi setelah semua check
+            setTimeout(function() {
+                if (!hasSessionSuccess) {
+                    hidePresensiSections();
+                }
+            }, 300);
+        }
+        
+        // initializeRiwayatPresensi sudah dipanggil di DOMContentLoaded utama di atas
     </script>
 </body>
 </html>
