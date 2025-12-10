@@ -6,8 +6,9 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\RangkumanController;
-use App\Http\Controllers\RppController;
+use App\Http\Controllers\EvaluasiGuruController;
 use App\Http\Controllers\GuruMataPelajaranController;
+use App\Http\Controllers\MateriPembelajaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,15 +123,67 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{rangkuman}', [RangkumanController::class, 'destroy'])->name('destroy');
         });
         
-        // RPP Routes
-        Route::prefix('rpp')->name('rpp.')->group(function () {
-            Route::get('/', [RppController::class, 'index'])->name('index');
-            Route::get('/create', [RppController::class, 'create'])->name('create');
-            Route::post('/', [RppController::class, 'store'])->name('store');
-            Route::get('/{rpp}', [RppController::class, 'show'])->name('show');
-            Route::get('/{rpp}/edit', [RppController::class, 'edit'])->name('edit');
-            Route::put('/{rpp}', [RppController::class, 'update'])->name('update');
-            Route::delete('/{rpp}', [RppController::class, 'destroy'])->name('destroy');
+        // Materi Pembelajaran Routes
+        Route::prefix('materi-pembelajaran')->name('materi-pembelajaran.')->group(function () {
+            Route::get('/edit', [MateriPembelajaranController::class, 'edit'])->name('edit');
+            Route::put('/', [MateriPembelajaranController::class, 'update'])->name('update');
+        });
+        
+        // Redirect RPP (fitur sudah dihapus)
+        Route::prefix('rpp')->group(function () {
+            Route::any('/', function () {
+                return redirect()->route('guru.dashboard')->with('info', 'Fitur RPP telah dihapus');
+            });
+            Route::any('{any}', function () {
+                return redirect()->route('guru.dashboard')->with('info', 'Fitur RPP telah dihapus');
+            })->where('any', '.*');
+        });
+        
+        // Evaluasi Guru Routes
+        Route::prefix('evaluasi')->name('evaluasi.')->group(function () {
+            Route::get('/', [EvaluasiGuruController::class, 'index'])->name('index');
+            
+            // Rubrik Penilaian
+            Route::prefix('rubrik')->name('rubrik.')->group(function () {
+                Route::get('/', [EvaluasiGuruController::class, 'rubrikIndex'])->name('index');
+                Route::get('/create', [EvaluasiGuruController::class, 'rubrikCreate'])->name('create');
+                Route::post('/', [EvaluasiGuruController::class, 'rubrikStore'])->name('store');
+                Route::get('/{id}', [EvaluasiGuruController::class, 'rubrikShow'])->name('show');
+                Route::get('/{id}/edit', [EvaluasiGuruController::class, 'rubrikEdit'])->name('edit');
+                Route::put('/{id}', [EvaluasiGuruController::class, 'rubrikUpdate'])->name('update');
+                Route::delete('/{id}', [EvaluasiGuruController::class, 'rubrikDestroy'])->name('destroy');
+            });
+            
+            // Lembar Penilaian
+            Route::prefix('lembar')->name('lembar.')->group(function () {
+                Route::get('/', [EvaluasiGuruController::class, 'lembarIndex'])->name('index');
+                Route::get('/create', [EvaluasiGuruController::class, 'lembarCreate'])->name('create');
+                Route::post('/', [EvaluasiGuruController::class, 'lembarStore'])->name('store');
+                Route::get('/{id}', [EvaluasiGuruController::class, 'lembarShow'])->name('show');
+                Route::get('/{id}/edit', [EvaluasiGuruController::class, 'lembarEdit'])->name('edit');
+                Route::put('/{id}', [EvaluasiGuruController::class, 'lembarUpdate'])->name('update');
+                Route::delete('/{id}', [EvaluasiGuruController::class, 'lembarDestroy'])->name('destroy');
+            });
+            
+            // AJAX endpoint untuk mengambil siswa berdasarkan kelas
+            Route::get('/get-siswa-by-kelas', [EvaluasiGuruController::class, 'getSiswaByKelas'])->name('get-siswa-by-kelas');
+            
+            // Nilai Formatif & Sumatif
+            Route::prefix('nilai')->name('nilai.')->group(function () {
+                Route::get('/', [EvaluasiGuruController::class, 'nilaiIndex'])->name('index');
+                Route::get('/create', [EvaluasiGuruController::class, 'nilaiCreate'])->name('create');
+                Route::post('/', [EvaluasiGuruController::class, 'nilaiStore'])->name('store');
+                Route::get('/{id}/edit', [EvaluasiGuruController::class, 'nilaiEdit'])->name('edit');
+                Route::put('/{id}', [EvaluasiGuruController::class, 'nilaiUpdate'])->name('update');
+                Route::delete('/{id}', [EvaluasiGuruController::class, 'nilaiDestroy'])->name('destroy');
+            });
+            
+            // Rekap Hasil Belajar
+            Route::prefix('rekap')->name('rekap.')->group(function () {
+                Route::get('/', [EvaluasiGuruController::class, 'rekapIndex'])->name('index');
+                Route::post('/generate', [EvaluasiGuruController::class, 'rekapGenerate'])->name('generate');
+                Route::get('/{id}', [EvaluasiGuruController::class, 'rekapShow'])->name('show');
+            });
         });
         
         // Mata Pelajaran Routes

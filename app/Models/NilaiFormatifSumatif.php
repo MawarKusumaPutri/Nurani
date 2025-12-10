@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class NilaiFormatifSumatif extends Model
+{
+    protected $table = 'nilai_formatif_sumatif';
+    
+    protected $fillable = [
+        'guru_id',
+        'siswa_id',
+        'mata_pelajaran',
+        'kelas',
+        'semester',
+        'tahun_pelajaran',
+        'formatif_1',
+        'formatif_2',
+        'formatif_3',
+        'formatif_4',
+        'rata_formatif',
+        'sumatif_uts',
+        'sumatif_uas',
+        'rata_sumatif',
+        'nilai_akhir',
+        'predikat',
+        'keterangan',
+    ];
+
+    protected $casts = [
+        'formatif_1' => 'decimal:2',
+        'formatif_2' => 'decimal:2',
+        'formatif_3' => 'decimal:2',
+        'formatif_4' => 'decimal:2',
+        'rata_formatif' => 'decimal:2',
+        'sumatif_uts' => 'decimal:2',
+        'sumatif_uas' => 'decimal:2',
+        'rata_sumatif' => 'decimal:2',
+        'nilai_akhir' => 'decimal:2',
+    ];
+
+    public function guru(): BelongsTo
+    {
+        return $this->belongsTo(Guru::class);
+    }
+
+    public function siswa(): BelongsTo
+    {
+        return $this->belongsTo(Siswa::class);
+    }
+}

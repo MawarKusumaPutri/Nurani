@@ -618,6 +618,9 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <form method="GET" action="{{ route('guru.materi.index') }}" class="search-filter-form">
+                                @if(request('mata_pelajaran'))
+                                    <input type="hidden" name="mata_pelajaran" value="{{ request('mata_pelajaran') }}">
+                                @endif
                                 <div class="row g-3">
                                     <div class="col-md-4 col-sm-6">
                                         <label class="form-label fw-semibold">
@@ -629,7 +632,7 @@
                                         <label class="form-label fw-semibold">
                                             <i class="fas fa-users me-1"></i>Kelas
                                         </label>
-                                        <select class="form-select" name="kelas">
+                                        <select class="form-select" name="kelas" id="kelas-filter" onchange="this.form.submit()">
                                             <option value="">Semua Kelas</option>
                                             <option value="7" {{ request('kelas') == '7' ? 'selected' : '' }}>Kelas 7</option>
                                             <option value="8" {{ request('kelas') == '8' ? 'selected' : '' }}>Kelas 8</option>

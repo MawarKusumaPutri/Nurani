@@ -28,13 +28,39 @@ class MateriController extends Controller
         }
 
         $query = $guru->materi();
+        
+        // Filter by mata pelajaran if selected
         if ($selectedMataPelajaran) {
             $query->where('mata_pelajaran', $selectedMataPelajaran);
         }
 
+        // Filter by kelas if selected
+        if ($request->filled('kelas')) {
+            $query->where('kelas', $request->kelas);
+        }
+
+        // Filter by search
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%')
+                  ->orWhere('topik', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter by topik
+        if ($request->filled('topik')) {
+            $query->where('topik', 'like', '%' . $request->topik . '%');
+        }
+
         $materi = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('guru.materi.index', compact('guru', 'materi', 'mataPelajaranList', 'selectedMataPelajaran'));
+        // Pass filter values to view
+        $selectedKelas = $request->get('kelas');
+        $selectedTopik = $request->get('topik');
+        $selectedSearch = $request->get('search');
+
+        return view('guru.materi.index', compact('guru', 'materi', 'mataPelajaranList', 'selectedMataPelajaran', 'selectedKelas', 'selectedTopik', 'selectedSearch'));
     }
 
     public function create()

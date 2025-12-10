@@ -124,4 +124,12 @@ class Guru extends Model
     {
         return $this->hasMany(Jadwal::class);
     }
+
+    /**
+     * Get the materi pembelajaran for the guru.
+     */
+    public function materiPembelajaran(): HasMany
+    {
+        return $this->hasMany(MateriPembelajaran::class);
+    }
 }

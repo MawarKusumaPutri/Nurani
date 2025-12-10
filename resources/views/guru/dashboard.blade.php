@@ -107,6 +107,20 @@
             background: white;
             border-left: 4px solid #2E7D32;
         }
+        .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .card-body::-webkit-scrollbar-thumb {
+            background: #2E7D32;
+            border-radius: 10px;
+        }
+        .card-body::-webkit-scrollbar-thumb:hover {
+            background: #4CAF50;
+        }
         .btn-primary {
             background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
             border: none;
@@ -409,455 +423,164 @@
                     </div>
                 @endif
 
-                <!-- Statistics Cards -->
+                <!-- Materi Pembelajaran -->
                 <div class="row mb-4">
-                    <div class="col-md-3 mb-3">
-                        <div class="card stat-card">
-                            <div class="card-body text-center">
-                                <i class="fas fa-book fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $totalMateri }}</div>
-                                <div>Total Materi</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card stat-card">
-                            <div class="card-body text-center">
-                                <i class="fas fa-check-circle fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $materiPublished }}</div>
-                                <div>Materi Dipublikasi</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card stat-card">
-                            <div class="card-body text-center">
-                                <i class="fas fa-question-circle fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $totalKuis }}</div>
-                                <div>Total Kuis</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card stat-card">
-                            <div class="card-body text-center">
-                                <i class="fas fa-calendar-day fa-2x mb-3"></i>
-                                <div class="stat-number">{{ $totalJadwalHariIni ?? ($jadwalHariIni->count() ?? 0) }}</div>
-                                <div>Jadwal Hari Ini</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Jadwal Mengajar Hari Ini -->
-                @if(isset($jadwalHariIni) && $jadwalHariIni->count() > 0)
-                <div class="card mb-4 border-warning">
-                    <div class="card-header bg-warning bg-opacity-10 border-warning">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fas fa-clock me-2 text-warning"></i>
-                                Jadwal Mengajar Hari Ini ({{ \Carbon\Carbon::today()->format('d F Y') }})
-                            </h5>
-                            <span class="badge bg-warning text-dark">{{ $jadwalHariIni->count() }} Jadwal</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach($jadwalHariIni as $jadwal)
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border-primary h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <h6 class="mb-0 text-primary">
-                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
-                                                </h6>
-                                                <span class="badge bg-primary">{{ $jadwal->kelas }}</span>
-                                            </div>
-                                            <div class="mb-2">
-                                                <small class="text-muted">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
-                                                </small>
-                                            </div>
-                                            <div class="d-flex gap-2 flex-wrap">
-                                                @if($jadwal->is_lab)
-                                                    <span class="badge bg-info">
-                                                        <i class="fas fa-flask me-1"></i>Laboratorium
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->is_lapangan)
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-running me-1"></i>Lapangan
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->ruang)
-                                                    <span class="badge bg-secondary">
-                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            @if($jadwal->keterangan)
-                                                <p class="text-muted small mt-2 mb-0">
-                                                    <i class="fas fa-info-circle me-1"></i>{{ Str::limit($jadwal->keterangan, 50) }}
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @else
-                <div class="card mb-4 border-secondary">
-                    <div class="card-body text-center py-4">
-                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                        <p class="text-muted mb-0">Tidak ada jadwal mengajar hari ini</p>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Jadwal Mengajar Minggu Ini -->
-                <div class="card mb-4 border-info">
-                    <div class="card-header bg-info bg-opacity-10 border-info">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fas fa-calendar-week me-2 text-info"></i>
-                                Jadwal Mengajar Minggu Ini
-                            </h5>
-                            <a href="{{ route('guru.jadwal.index', ['filter' => 'minggu_ini']) }}" class="btn btn-sm btn-outline-info">
-                                Lihat Semua
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        @if($jadwalMingguIni && $jadwalMingguIni->count() > 0)
-                        <div class="row">
-                            @foreach($jadwalMingguIni->take(6) as $jadwal)
-                                <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="card border-info h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <h6 class="mb-0 text-info">
-                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
-                                                </h6>
-                                                <span class="badge bg-info">{{ $jadwal->kelas }}</span>
-                                            </div>
-                                            <div class="mb-2">
-                                                <small class="text-muted d-block">
-                                                    <i class="fas fa-calendar me-1"></i>
-                                                    <strong>{{ ucfirst($jadwal->hari) }}</strong>
-                                                    @if($jadwal->tanggal)
-                                                        ({{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }})
-                                                    @endif
-                                                </small>
-                                                <small class="text-muted d-block mt-1">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
-                                                </small>
-                                            </div>
-                                            <div class="d-flex gap-2 flex-wrap">
-                                                @if($jadwal->is_lab)
-                                                    <span class="badge bg-info">
-                                                        <i class="fas fa-flask me-1"></i>Laboratorium
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->is_lapangan)
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-running me-1"></i>Lapangan
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->ruang)
-                                                    <span class="badge bg-secondary">
-                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Belum ada jadwal mengajar untuk minggu ini. Jadwal akan muncul setelah ditentukan oleh Tenaga Usaha.</p>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Jadwal Mengajar Mendatang -->
-                <div class="card mb-4 border-primary">
-                    <div class="card-header bg-primary bg-opacity-10 border-primary">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fas fa-calendar-alt me-2 text-primary"></i>
-                                Jadwal Mengajar Mendatang (7 Hari Ke Depan)
-                            </h5>
-                            <a href="{{ route('guru.jadwal.index') }}" class="btn btn-sm btn-outline-primary">
-                                Lihat Semua
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        @if($jadwalMendatang && $jadwalMendatang->count() > 0)
-                        <div class="row">
-                            @foreach($jadwalMendatang as $jadwal)
-                                <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="card border-primary h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <h6 class="mb-0 text-primary">
-                                                    <i class="fas fa-book me-2"></i>{{ $jadwal->mata_pelajaran_nama }}
-                                                </h6>
-                                                <span class="badge bg-primary">{{ $jadwal->kelas }}</span>
-                                            </div>
-                                            <div class="mb-2">
-                                                <small class="text-muted d-block">
-                                                    <i class="fas fa-calendar me-1"></i>
-                                                    <strong>{{ ucfirst($jadwal->hari) }}</strong>
-                                                    @if($jadwal->tanggal)
-                                                        ({{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }})
-                                                    @endif
-                                                </small>
-                                                <small class="text-muted d-block mt-1">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - 
-                                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
-                                                </small>
-                                            </div>
-                                            <div class="d-flex gap-2 flex-wrap">
-                                                @if($jadwal->is_lab)
-                                                    <span class="badge bg-info">
-                                                        <i class="fas fa-flask me-1"></i>Laboratorium
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->is_lapangan)
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-running me-1"></i>Lapangan
-                                                    </span>
-                                                @endif
-                                                @if($jadwal->ruang)
-                                                    <span class="badge bg-secondary">
-                                                        <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Belum ada jadwal mengajar mendatang. Jadwal akan muncul setelah ditentukan oleh Tenaga Usaha.</p>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="row">
-                    <!-- Materi Terbaru -->
-                    <div class="col-md-8 mb-4">
-                        <div class="card content-card">
+                    <div class="col-12">
+                        <div class="card content-card mb-4">
                             <div class="card-header bg-white border-0">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">
-                                        <i class="fas fa-book me-2 text-primary"></i>
-                                        Materi Terbaru
+                                        <i class="fas fa-book-open me-2 text-primary"></i>
+                                        Materi Pembelajaran - {{ $selectedMataPelajaran ?? 'Mata Pelajaran' }}
                                     </h5>
-                                    <a href="{{ route('guru.materi.index') }}" class="btn btn-sm btn-outline-primary">
-                                        Lihat Semua
+                                    <a href="{{ route('guru.materi-pembelajaran.edit', ['mata_pelajaran' => $selectedMataPelajaran]) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit me-2"></i>Edit Materi
                                     </a>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                @if($materiTerbaru->count() > 0)
-                                    @foreach($materiTerbaru as $materi)
-                                        <div class="materi-item">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="mb-1">{{ $materi->judul }}</h6>
-                                                    <p class="text-muted mb-2 small">{{ Str::limit($materi->deskripsi, 100) }}</p>
-                                                    <div class="d-flex gap-2">
-                                                        <span class="badge bg-light text-dark">{{ $materi->kelas }}</span>
-                                                        <span class="badge bg-light text-dark">{{ $materi->topik }}</span>
-                                                        @if($materi->is_published)
-                                                            <span class="status-badge status-published">Dipublikasi</span>
-                                                        @else
-                                                            <span class="status-badge status-draft">Draft</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="text-end">
-                                                    <small class="text-muted">{{ $materi->created_at->format('d M Y') }}</small>
-                                                </div>
+                            <div class="card-body" style="max-height: 800px; overflow-y: auto; padding: 20px; background-color: #ffffff !important;">
+                                <!-- A. IDENTITAS SEKOLAH DAN PROGRAM -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-school"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-primary">A. IDENTITAS SEKOLAH DAN PROGRAM</h5>
+                                    </div>
+                                    @if($materiPembelajaran && $materiPembelajaran->identitas_sekolah_program)
+                                        <div class="card-text">
+                                            <div style="line-height: 2;">
+                                                {!! nl2br(e($materiPembelajaran->identitas_sekolah_program)) !!}
                                             </div>
                                         </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kuis Aktif -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card content-card">
-                            <div class="card-header bg-white border-0">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">
-                                        <i class="fas fa-question-circle me-2 text-primary"></i>
-                                        Kuis Aktif
-                                    </h5>
-                                    <a href="{{ route('guru.kuis.index') }}" class="btn btn-sm btn-outline-primary">
-                                        Lihat Semua
-                                    </a>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan identitas sekolah dan program.</p>
+                                    @endif
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                @if($kuisAktif->count() > 0)
-                                    @foreach($kuisAktif as $kuis)
-                                        <div class="mb-3 p-3 border rounded">
-                                            <h6 class="mb-1">{{ $kuis->judul }}</h6>
-                                            <p class="text-muted small mb-2">{{ $kuis->kelas }} - {{ $kuis->mata_pelajaran }}</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="kuis-badge">
-                                                    {{ $kuis->status }}
-                                                </span>
-                                                <small class="text-muted">
-                                                    {{ $kuis->tanggal_mulai->format('d M') }}
-                                                </small>
-                                            </div>
+
+                                <!-- B. KOMPETENSI INTI DAN CAPAIAN PEMBELAJARAN -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-certificate"></i>
                                         </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Jadwal Hari Ini -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card content-card">
-                            <div class="card-body text-center py-5">
-                                @if($jadwalHariIni && $jadwalHariIni->count() > 0)
-                                    <div class="row">
-                                        @foreach($jadwalHariIni as $jadwal)
-                                            <div class="col-md-6 mb-3">
-                                                <div class="p-3 border rounded">
-                                                    <h6 class="mb-2">{{ $jadwal->mata_pelajaran }}</h6>
-                                                    <p class="mb-1 text-muted small">{{ $jadwal->kelas }}</p>
-                                                    <p class="mb-0">
-                                                        <i class="fas fa-clock me-1"></i>
-                                                        {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}
-                                                        @if($jadwal->ruang)
-                                                            <span class="ms-2">
-                                                                <i class="fas fa-door-open me-1"></i>{{ $jadwal->ruang }}
-                                                            </span>
-                                                        @endif
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        @endforeach
+                                        <h5 class="mb-0 text-success">B. KOMPETENSI INTI DAN CAPAIAN PEMBELAJARAN</h5>
                                     </div>
-                                @else
-                                    <i class="fas fa-calendar-times fa-3x text-danger mb-3"></i>
-                                    <h5 class="text-muted">Tidak ada jadwal mengajar hari ini</h5>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Jadwal Minggu Ini -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card content-card">
-                            <div class="card-header bg-white border-0">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">
-                                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
-                                        Jadwal Mengajar Minggu Ini
-                                    </h5>
-                                    <a href="{{ route('guru.jadwal.index') }}" class="btn btn-sm btn-outline-primary">
-                                        Lihat Semua
-                                    </a>
+                                    @if($materiPembelajaran && $materiPembelajaran->kompetensi_inti_capaian)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->kompetensi_inti_capaian)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan kompetensi inti dan capaian pembelajaran.</p>
+                                    @endif
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                @if($jadwalMingguIni && $jadwalMingguIni->count() > 0)
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Hari</th>
-                                                    <th>Mata Pelajaran</th>
-                                                    <th>Kelas</th>
-                                                    <th>Jam</th>
-                                                    <th>Ruang</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($jadwalMingguIni as $jadwal)
-                                                    <tr>
-                                                        <td><strong>{{ ucfirst($jadwal->hari) }}</strong></td>
-                                                        <td>{{ $jadwal->mata_pelajaran }}</td>
-                                                        <td>{{ $jadwal->kelas }}</td>
-                                                        <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
-                                                        <td>{{ $jadwal->ruang ?? '-' }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @else
-                                    <p class="text-muted text-center py-3">Tidak ada jadwal mengajar minggu ini</p>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Quick Actions -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card content-card">
-                            <div class="card-header bg-white border-0">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-bolt me-2 text-primary"></i>
-                                    Quick Actions
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 mb-3">
-                                        <a href="{{ route('guru.materi.create') }}" class="btn btn-outline-primary w-100">
-                                            <i class="fas fa-plus me-2"></i>
-                                            Tambah Materi
-                                        </a>
+                                <!-- C. UNIT-UNIT PEMBELAJARAN -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-info">C. UNIT-UNIT PEMBELAJARAN</h5>
                                     </div>
-                                    <div class="col-md-3 mb-3">
-                                        <a href="{{ route('guru.kuis.create') }}" class="btn btn-outline-success w-100">
-                                            <i class="fas fa-question-circle me-2"></i>
-                                            Buat Kuis
-                                        </a>
+                                    @if($materiPembelajaran && $materiPembelajaran->unit_pembelajaran)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->unit_pembelajaran)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan unit-unit pembelajaran.</p>
+                                    @endif
+                                </div>
+
+                                <!-- D. PENDEKATAN PEMBELAJARAN HUMANIS -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-warning">D. PENDEKATAN PEMBELAJARAN HUMANIS</h5>
                                     </div>
-                                    <div class="col-md-3 mb-3">
-                                        <a href="{{ route('guru.profil') }}" class="btn btn-outline-warning w-100">
-                                            <i class="fas fa-user me-2"></i>
-                                            Edit Profil
-                                        </a>
+                                    @if($materiPembelajaran && $materiPembelajaran->pendekatan_pembelajaran)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->pendekatan_pembelajaran)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan pendekatan pembelajaran humanis.</p>
+                                    @endif
+                                </div>
+
+                                <!-- E. MODEL-MODEL PEMBELAJARAN YANG DIGUNAKAN -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-danger">E. MODEL-MODEL PEMBELAJARAN YANG DIGUNAKAN</h5>
                                     </div>
+                                    @if($materiPembelajaran && $materiPembelajaran->model_pembelajaran)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->model_pembelajaran)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan model-model pembelajaran.</p>
+                                    @endif
+                                </div>
+
+                                <!-- F. KEGIATAN PEMBELAJARAN: STRUKTUR UMUM SETIAP PERTEMUAN -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-secondary">F. KEGIATAN PEMBELAJARAN: STRUKTUR UMUM SETIAP PERTEMUAN</h5>
+                                    </div>
+                                    @if($materiPembelajaran && $materiPembelajaran->kegiatan_pembelajaran)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->kegiatan_pembelajaran)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan kegiatan pembelajaran.</p>
+                                    @endif
+                                </div>
+
+                                <!-- G. PENILAIAN (ASSESSMENT) -->
+                                <div class="mb-4 pb-4 border-bottom">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-clipboard-check"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-dark">G. PENILAIAN (ASSESSMENT)</h5>
+                                    </div>
+                                    @if($materiPembelajaran && $materiPembelajaran->penilaian)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->penilaian)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan penilaian.</p>
+                                    @endif
+                                </div>
+
+                                <!-- H. SARANA DAN PRASARANA -->
+                                <div class="mb-2">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-tools"></i>
+                                        </div>
+                                        <h5 class="mb-0 text-primary">H. SARANA DAN PRASARANA</h5>
+                                    </div>
+                                    @if($materiPembelajaran && $materiPembelajaran->sarana_prasarana)
+                                        <div class="card-text">
+                                            {!! nl2br(e($materiPembelajaran->sarana_prasarana)) !!}
+                                        </div>
+                                    @else
+                                        <p class="card-text text-muted">Belum ada data. Silakan edit untuk menambahkan sarana dan prasarana.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -8,8 +8,12 @@ use App\Models\Materi;
 use App\Models\Kuis;
 use App\Models\Notification;
 use App\Models\Jadwal;
+use App\Models\MateriPembelajaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
 use App\Helpers\PhotoHelper;
 use Carbon\Carbon;
 
@@ -141,6 +145,39 @@ class GuruController extends Controller
             ->limit(10)
             ->get();
 
+        // Get materi pembelajaran untuk mata pelajaran yang dipilih
+        $materiPembelajaran = null;
+        if ($selectedMataPelajaran) {
+            try {
+                // Query materi pembelajaran
+                $materiPembelajaran = MateriPembelajaran::where('guru_id', $guru->id)
+                    ->where('mata_pelajaran', $selectedMataPelajaran)
+                    ->first();
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Jika error karena tabel tidak ada, buat tabel dan coba lagi
+                if (strpos($e->getMessage(), "doesn't exist") !== false || 
+                    strpos($e->getMessage(), "Base table or view not found") !== false ||
+                    strpos($e->getMessage(), "1146") !== false) {
+                    try {
+                        $this->createMateriPembelajaranTable();
+                        // Coba query lagi setelah tabel dibuat
+                        $materiPembelajaran = MateriPembelajaran::where('guru_id', $guru->id)
+                            ->where('mata_pelajaran', $selectedMataPelajaran)
+                            ->first();
+                    } catch (\Exception $e2) {
+                        // Jika masih error, set null saja (tidak akan crash aplikasi)
+                        $materiPembelajaran = null;
+                    }
+                } else {
+                    // Error lain, set null
+                    $materiPembelajaran = null;
+                }
+            } catch (\Exception $e) {
+                // Error lain, set null
+                $materiPembelajaran = null;
+            }
+        }
+
         return view('guru.dashboard', compact(
             'guru',
             'mataPelajaranList',
@@ -155,7 +192,8 @@ class GuruController extends Controller
             'jadwalHariIni',
             'totalJadwalHariIni',
             'jadwalMingguIni',
-            'jadwalMendatang'
+            'jadwalMendatang',
+            'materiPembelajaran'
         ));
     }
 
@@ -465,5 +503,46 @@ class GuruController extends Controller
         \App\Models\Materi::create($materiData);
 
         return redirect()->route('guru.materi.index')->with('success', 'Materi berhasil ditambahkan!');
+    }
+
+    /**
+     * Create materi_pembelajaran table if it doesn't exist
+     */
+    private function createMateriPembelajaranTable()
+    {
+        try {
+            // Cek dulu apakah tabel sudah ada dengan PDO langsung (lebih reliable)
+            $pdo = DB::connection()->getPdo();
+            $result = $pdo->query("SHOW TABLES LIKE 'materi_pembelajaran'");
+            if ($result->rowCount() > 0) {
+                return; // Tabel sudah ada
+            }
+        } catch (\Exception $e) {
+            // Ignore error, lanjutkan membuat tabel
+        }
+        
+        try {
+            // Gunakan PDO langsung untuk membuat tabel (lebih reliable)
+            $pdo = DB::connection()->getPdo();
+            $sql = "CREATE TABLE IF NOT EXISTS `materi_pembelajaran` (
+              `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `guru_id` bigint(20) UNSIGNED NOT NULL,
+              `mata_pelajaran` varchar(255) NOT NULL,
+              `identitas_mata_pelajaran` text DEFAULT NULL,
+              `profil_sejarah` text DEFAULT NULL,
+              `relevansi` text DEFAULT NULL,
+              `created_at` timestamp NULL DEFAULT NULL,
+              `updated_at` timestamp NULL DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `materi_pembelajaran_guru_id_mata_pelajaran_unique` (`guru_id`, `mata_pelajaran`),
+              KEY `materi_pembelajaran_guru_id_foreign` (`guru_id`),
+              CONSTRAINT `materi_pembelajaran_guru_id_foreign` FOREIGN KEY (`guru_id`) REFERENCES `gurus` (`id`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            $pdo->exec($sql);
+        } catch (\Exception $e) {
+            // Jika masih gagal, log error
+            \Log::error('Failed to create materi_pembelajaran table: ' . $e->getMessage());
+            // Jangan throw, biarkan aplikasi tetap berjalan
+        }
     }
 }
