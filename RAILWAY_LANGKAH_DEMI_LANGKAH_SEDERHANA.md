@@ -88,30 +88,37 @@ Name: DB_CONNECTION
 Value: mysql
 ```
 
+**⚠️ PENTING:** Ganti `MySQL` dengan nama service database Anda yang sebenarnya!
+
 ```
 Name: DB_HOST
-Value: ${MYSQLHOST}
+Value: ${{MySQL.MYSQLHOST}}
 ```
 
 ```
 Name: DB_PORT
-Value: ${MYSQLPORT}
+Value: ${{MySQL.MYSQLPORT}}
 ```
 
 ```
 Name: DB_DATABASE
-Value: ${MYSQLDATABASE}
+Value: ${{MySQL.MYSQLDATABASE}}
 ```
 
 ```
 Name: DB_USERNAME
-Value: ${MYSQLUSER}
+Value: ${{MySQL.MYSQLUSER}}
 ```
 
 ```
 Name: DB_PASSWORD
-Value: ${MYSQLPASSWORD}
+Value: ${{MySQL.MYSQLPASSWORD}}
 ```
+
+**📝 Catatan:**
+- Format yang benar: `${{ServiceName.VARIABLE}}` (double curly braces)
+- Ganti `MySQL` dengan nama service database Anda (lihat di sidebar kiri)
+- Contoh jika nama service adalah "Postgres": `${{Postgres.MYSQLHOST}}`
 
 ---
 
