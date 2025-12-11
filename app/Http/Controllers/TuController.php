@@ -1975,7 +1975,15 @@ class TuController extends Controller
             return view('tu.surat.index', compact('surats'));
         } catch (\Exception $e) {
             \Log::error('Error fetching surats: ' . $e->getMessage());
-            return view('tu.surat.index', ['surats' => \Illuminate\Pagination\LengthAwarePaginator::make([], 0, 50)]);
+            // Create empty paginator using constructor instead of make()
+            $surats = new \Illuminate\Pagination\LengthAwarePaginator(
+                collect([]),
+                0,
+                50,
+                1,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+            return view('tu.surat.index', compact('surats'));
         }
     }
     

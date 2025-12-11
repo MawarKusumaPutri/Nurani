@@ -12,32 +12,33 @@ class TimezoneHelper
         // Default timezone
         $defaultTimezone = 'Asia/Jakarta'; // WIB
         
-        // Skip for localhost or private IPs
-        if ($ip === '127.0.0.1' || $ip === '::1' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0) {
+        // Skip for localhost or private IPs - LANGSUNG RETURN (TIDAK API CALL)
+        if ($ip === '127.0.0.1' || $ip === '::1' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0 || strpos($ip, 'localhost') !== false) {
             return $defaultTimezone;
         }
         
         try {
-            // Use IP geolocation service (free tier)
-            $response = file_get_contents("http://ip-api.com/json/{$ip}?fields=timezone", false, stream_context_create([
+            // Use IP geolocation service (free tier) - DENGAN TIMEOUT SANGAT PENDEK
+            $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=timezone", false, stream_context_create([
                 'http' => [
-                    'timeout' => 5
+                    'timeout' => 1, // Timeout 1 detik (sangat pendek untuk tidak blocking)
+                    'ignore_errors' => true
                 ]
             ]));
             
             if ($response !== false) {
-                $data = json_decode($response, true);
+                $data = @json_decode($response, true);
                 
                 if (isset($data['timezone']) && !empty($data['timezone'])) {
                     return $data['timezone'];
                 }
             }
         } catch (\Exception $e) {
-            // Fallback to default
+            // Fallback to default - tidak throw error
         }
         
         // Fallback: Try to determine based on IP range (simplified)
-        $ipLong = ip2long($ip);
+        $ipLong = @ip2long($ip);
         
         if ($ipLong !== false) {
             // Indonesia timezone ranges (simplified)
@@ -84,27 +85,29 @@ class TimezoneHelper
      */
     public static function getLocationFromIP($ip)
     {
-        // Skip for localhost or private IPs
-        if ($ip === '127.0.0.1' || $ip === '::1' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0) {
+        // Skip for localhost or private IPs - LANGSUNG RETURN (TIDAK API CALL)
+        if ($ip === '127.0.0.1' || $ip === '::1' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0 || strpos($ip, 'localhost') !== false) {
             return 'Local Development';
         }
         
         try {
-            $response = file_get_contents("http://ip-api.com/json/{$ip}?fields=country,regionName,city", false, stream_context_create([
+            // DENGAN TIMEOUT SANGAT PENDEK untuk tidak blocking
+            $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=country,regionName,city", false, stream_context_create([
                 'http' => [
-                    'timeout' => 5
+                    'timeout' => 1, // Timeout 1 detik (sangat pendek untuk tidak blocking)
+                    'ignore_errors' => true
                 ]
             ]));
             
             if ($response !== false) {
-                $data = json_decode($response, true);
+                $data = @json_decode($response, true);
                 
                 if (isset($data['country']) && isset($data['city'])) {
                     return $data['city'] . ', ' . $data['regionName'] . ', ' . $data['country'];
                 }
             }
         } catch (\Exception $e) {
-            // Fallback to default
+            // Fallback to default - tidak throw error
         }
         
         return 'Unknown Location';

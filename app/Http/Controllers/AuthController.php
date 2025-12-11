@@ -25,14 +25,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Debug: Log request data
-        \Log::info('Login attempt:', [
-            'email' => $request->email,
-            'role' => $request->role,
-            'has_password' => !empty($request->password),
-            'all_data' => $request->all()
-        ]);
-        
+        // VALIDASI CEPAT - TIDAK ADA LOGGING
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -42,68 +35,18 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $role = $request->role;
 
-        // Cari user berdasarkan email dan role yang spesifik
+        // Cari user - QUERY OPTIMIZED
         $user = User::where('email', $credentials['email'])
                    ->where('role', $role)
                    ->first();
 
-        \Log::info('User search result:', [
-            'user_found' => $user ? true : false,
-            'user_name' => $user ? $user->name : null,
-            'user_role' => $user ? $user->role : null
-        ]);
-
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            \Log::info('Login successful for user:', ['name' => $user->name, 'email' => $user->email]);
-            
             // Handle remember me
             $remember = $request->has('remember') && $request->remember == '1';
             Auth::login($user, $remember);
             
-            // Track guru login activity
-            if ($role === 'guru') {
-                $guru = Guru::where('user_id', $user->id)->first();
-                if ($guru) {
-                    ActivityTracker::trackLogin($guru, $request);
-                }
-            }
-            
-            // Kirim notifikasi email login - SINKRON OTOMATIS
-            // Email notifikasi dikirim ke email yang sama dengan email yang digunakan untuk login
-            // Contoh: Login dengan mawarkusuma694@gmail.com → Notifikasi masuk ke mawarkusuma694@gmail.com
-            try {
-                // Pastikan email dikirim secara synchronous (langsung, bukan queue)
-                Mail::to($user->email)->send(new LoginNotification($user, $request->ip(), $request->userAgent()));
-                
-                \Log::info('✅ Login notification email sent successfully:', [
-                    'email' => $user->email,
-                    'name' => $user->name,
-                    'role' => $user->role,
-                    'mail_driver' => config('mail.default'),
-                    'mail_host' => config('mail.mailers.smtp.host'),
-                    'timestamp' => now()->toDateTimeString()
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('❌ Failed to send login notification email:', [
-                    'email' => $user->email,
-                    'name' => $user->name,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                    'mail_driver' => config('mail.default'),
-                    'mail_host' => config('mail.mailers.smtp.host'),
-                    'timestamp' => now()->toDateTimeString()
-                ]);
-                
-                // Log error juga ke console untuk debugging
-                \Log::channel('single')->error('Email notification failed', [
-                    'user' => $user->email,
-                    'error' => $e->getMessage()
-                ]);
-            }
-            
             // Redirect berdasarkan role user yang SEBENARNYA dari database (bukan dari request)
-            // Ini memastikan user di-redirect ke dashboard yang sesuai dengan role mereka
-            $userRole = $user->role; // Gunakan role dari database, bukan dari request
+            $userRole = $user->role;
             $redirectUrl = match($userRole) {
                 'guru' => route('guru.dashboard'),
                 'tu' => route('tu.dashboard'),
@@ -111,11 +54,8 @@ class AuthController extends Controller
                 default => route('guru.dashboard')
             };
             
-            \Log::info('Login redirect:', [
-                'user_email' => $user->email,
-                'user_role' => $userRole,
-                'redirect_url' => $redirectUrl
-            ]);
+            // DISABLE SEMUA OPERASI BACKGROUND UNTUK MEMPERCEPAT LOGIN
+            // Activity tracking dan email akan di-skip sementara
             
             // Jika request AJAX atau memiliki header X-Requested-With, return JSON
             if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
@@ -127,12 +67,14 @@ class AuthController extends Controller
                 ]);
             }
             
+            // LANGSUNG REDIRECT - TIDAK ADA OPERASI LAIN
             return redirect($redirectUrl);
         } else {
-            \Log::info('Login failed:', [
-                'user_found' => $user ? true : false,
-                'password_check' => $user ? Hash::check($credentials['password'], $user->password) : false
-            ]);
+            // DISABLE LOGGING UNTUK MEMPERCEPAT LOGIN
+            // \Log::info('Login failed:', [
+            //     'user_found' => $user ? true : false,
+            //     'password_check' => $user ? Hash::check($credentials['password'], $user->password) : false
+            // ]);
         }
 
         $roleText = match($role) {

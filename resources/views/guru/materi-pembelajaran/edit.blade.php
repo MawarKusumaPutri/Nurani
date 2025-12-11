@@ -324,8 +324,10 @@
                                             <div class="col-md-6 mb-3">
                                                 <label for="nama_sekolah" class="form-label fw-bold">1. Nama Sekolah</label>
                                                 <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah" 
-                                                       value="{{ old('nama_sekolah', $identitasData['1'] ?? 'Mts Nurul Aiman') }}" 
-                                                       placeholder="Masukkan nama sekolah">
+                                                       value="Mts Nurul Aiman" 
+                                                       readonly
+                                                       style="background-color: #e9ecef; cursor: not-allowed;"
+                                                       title="Nama sekolah tidak dapat diubah">
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label for="mata_pelajaran_identitas" class="form-label fw-bold">2. Mata Pelajaran</label>
@@ -336,9 +338,12 @@
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label for="kelas_identitas" class="form-label fw-bold">3. Kelas</label>
-                                                <input type="text" class="form-control" id="kelas_identitas" name="kelas_identitas" 
-                                                       value="{{ old('kelas_identitas', $identitasData['3'] ?? 'IX') }}" 
-                                                       placeholder="Contoh: IX, VII, VIII">
+                                                <select class="form-select" id="kelas_identitas" name="kelas_identitas">
+                                                    <option value="">Pilih Kelas</option>
+                                                    <option value="VII" {{ old('kelas_identitas', $identitasData['3'] ?? 'IX') == 'VII' ? 'selected' : '' }}>Kelas 7</option>
+                                                    <option value="VIII" {{ old('kelas_identitas', $identitasData['3'] ?? 'IX') == 'VIII' ? 'selected' : '' }}>Kelas 8</option>
+                                                    <option value="IX" {{ old('kelas_identitas', $identitasData['3'] ?? 'IX') == 'IX' ? 'selected' : '' }}>Kelas 9</option>
+                                                </select>
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label for="alokasi_waktu" class="form-label fw-bold">4. Alokasi Waktu</label>
@@ -514,7 +519,8 @@
         
         // Function to combine identitas fields into structured format
         function combineIdentitasFields() {
-            const namaSekolah = document.getElementById('nama_sekolah').value.trim();
+            // Nama sekolah selalu "Mts Nurul Aiman" dan tidak bisa diubah
+            const namaSekolah = 'Mts Nurul Aiman';
             const mataPelajaran = document.getElementById('mata_pelajaran_identitas').value.trim();
             const kelas = document.getElementById('kelas_identitas').value.trim();
             const alokasiWaktu = document.getElementById('alokasi_waktu').value.trim();
@@ -523,7 +529,7 @@
             
             // Build formatted string
             let formatted = '';
-            if (namaSekolah) formatted += '1. Nama Sekolah : ' + namaSekolah + '\n';
+            formatted += '1. Nama Sekolah : ' + namaSekolah + '\n';
             if (mataPelajaran) formatted += '2. Mata Pelajaran : ' + mataPelajaran + '\n';
             if (kelas) formatted += '3. Kelas : ' + kelas + '\n';
             if (alokasiWaktu) formatted += '4. Alokasi Waktu : ' + alokasiWaktu + '\n';
