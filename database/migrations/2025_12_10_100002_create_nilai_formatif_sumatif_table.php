@@ -43,9 +43,9 @@ return new class extends Migration
             
             $table->timestamps();
             
-            // Index untuk pencarian cepat
-            $table->index(['guru_id', 'mata_pelajaran', 'kelas', 'semester']);
-            $table->index(['siswa_id', 'mata_pelajaran']);
+            // Index untuk pencarian cepat (nama index dipendekkan agar tidak melebihi 64 karakter)
+            $table->index(['guru_id', 'mata_pelajaran', 'kelas', 'semester'], 'idx_nilai_guru_mapel_kelas_sem');
+            $table->index(['siswa_id', 'mata_pelajaran'], 'idx_nilai_siswa_mapel');
         });
     }
 

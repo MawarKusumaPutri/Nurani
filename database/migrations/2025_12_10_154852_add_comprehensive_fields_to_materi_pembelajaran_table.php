@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Pastikan tabel sudah ada sebelum menambahkan kolom
+        if (!Schema::hasTable('materi_pembelajaran')) {
+            return;
+        }
+        
         Schema::table('materi_pembelajaran', function (Blueprint $table) {
             // A. IDENTITAS SEKOLAH DAN PROGRAM
             $table->longText('identitas_sekolah_program')->nullable()->after('relevansi');
