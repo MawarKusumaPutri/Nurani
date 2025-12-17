@@ -125,9 +125,24 @@
     </div>
     
     <nav class="nav flex-column px-3 pb-4">
-        <a class="nav-link {{ $currentRoute == 'guru.dashboard' ? 'active' : '' }}" href="{{ route('guru.dashboard') }}">
-            <i class="fas fa-home me-2"></i> RPP
-        </a>
+        <!-- RPP Dropdown -->
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.rangkuman') || $currentRoute == 'guru.dashboard' ? 'active' : '' }}" href="#" id="rppDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-home me-2"></i> RPP
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="rppDropdown">
+                <li><a class="dropdown-item {{ $currentRoute == 'guru.dashboard' ? 'active' : '' }}" href="{{ route('guru.dashboard') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard RPP
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.rangkuman.index') ? 'active' : '' }}" href="{{ route('guru.rangkuman.index') }}">
+                    <i class="fas fa-list me-2"></i> Rangkuman RPP
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.rangkuman.create') ? 'active' : '' }}" href="{{ route('guru.rangkuman.create') }}">
+                    <i class="fas fa-plus me-2"></i> Buat RPP
+                </a></li>
+            </ul>
+        </div>
+        
         <a class="nav-link {{ str_contains($currentRoute, 'guru.jadwal') ? 'active' : '' }}" href="{{ route('guru.jadwal.index') }}">
             <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
         </a>
@@ -143,9 +158,31 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.kuis') ? 'active' : '' }}" href="{{ route('guru.kuis.index') }}">
             <i class="fas fa-question-circle me-2"></i> Kuis
         </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}" id="evaluasi-nav-link" data-evaluasi-link="true" onclick="window.location.href='{{ route('guru.evaluasi.index') }}'; return true;">
-            <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
-        </a>
+        
+        <!-- Evaluasi Guru Dropdown -->
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="#" id="evaluasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="evaluasiDropdown">
+                <li><a class="dropdown-item {{ $currentRoute == 'guru.evaluasi.index' ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard Evaluasi
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rubrik') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rubrik.index') }}">
+                    <i class="fas fa-list-check me-2"></i> Rubrik Penilaian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.lembar') ? 'active' : '' }}" href="{{ route('guru.evaluasi.lembar.index') }}">
+                    <i class="fas fa-file-alt me-2"></i> Lembar Penilaian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.nilai') ? 'active' : '' }}" href="{{ route('guru.evaluasi.nilai.index') }}">
+                    <i class="fas fa-chart-line me-2"></i> Nilai Harian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rekap') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rekap.index') }}">
+                    <i class="fas fa-chart-bar me-2"></i> Rekap Hasil Belajar
+                </a></li>
+            </ul>
+        </div>
+        
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
@@ -333,6 +370,57 @@
         cursor: pointer !important;
     }
     
+    /* Dropdown Menu Styling */
+    .sidebar .dropdown-menu {
+        background: rgba(27, 94, 32, 0.95) !important;
+        border: none;
+        border-radius: 8px;
+        margin-top: 4px;
+        padding: 8px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        min-width: 200px;
+    }
+    
+    .sidebar .dropdown-item {
+        color: rgba(255, 255, 255, 0.8) !important;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .sidebar .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        transform: translateX(5px);
+    }
+    
+    .sidebar .dropdown-item.active {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        font-weight: 600;
+    }
+    
+    .sidebar .dropdown-toggle::after {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+        border-top-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .sidebar .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+    }
+    
+    .sidebar .nav-item.dropdown {
+        position: relative;
+    }
+    
+    .sidebar .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
     /* Pastikan SEMUA nav-link bisa diklik, termasuk RPP - ULTRA AGGRESSIVE */
     .sidebar .nav-link,
     #guru-sidebar .nav-link,
@@ -366,6 +454,57 @@
         color: white !important;
         background: rgba(255, 255, 255, 0.1) !important;
         font-weight: 600 !important;
+    }
+    
+    /* Dropdown Menu Styling */
+    .sidebar .dropdown-menu {
+        background: rgba(27, 94, 32, 0.95) !important;
+        border: none;
+        border-radius: 8px;
+        margin-top: 4px;
+        padding: 8px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        min-width: 200px;
+    }
+    
+    .sidebar .dropdown-item {
+        color: rgba(255, 255, 255, 0.8) !important;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .sidebar .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        transform: translateX(5px);
+    }
+    
+    .sidebar .dropdown-item.active {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        font-weight: 600;
+    }
+    
+    .sidebar .dropdown-toggle::after {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+        border-top-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .sidebar .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+    }
+    
+    .sidebar .nav-item.dropdown {
+        position: relative;
+    }
+    
+    .sidebar .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     
     /* Profile Section Styling - Ensure Consistency */
