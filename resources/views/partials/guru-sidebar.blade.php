@@ -391,20 +391,36 @@
         background: rgba(27, 94, 32, 0.98) !important;
         border: none;
         border-radius: 8px;
-        margin-left: 8px;
+        margin-left: 8px !important;
         padding: 8px 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         min-width: 220px;
         position: absolute !important;
         left: 100% !important;
+        right: auto !important;
         top: 0 !important;
+        bottom: auto !important;
+        margin-top: 0 !important;
         z-index: 1050 !important;
         display: none;
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateX(-10px) !important;
         transition: opacity 0.3s ease, transform 0.3s ease;
-        margin-top: 0 !important;
         will-change: transform, opacity;
+    }
+    
+    /* Force dropdown to appear on the right side */
+    .sidebar .dropdown-menu.show,
+    .sidebar .dropdown-menu[data-bs-popper],
+    .sidebar .nav-item.dropdown.show .dropdown-menu {
+        position: absolute !important;
+        left: 100% !important;
+        right: auto !important;
+        top: 0 !important;
+        bottom: auto !important;
+        margin-left: 8px !important;
+        margin-top: 0 !important;
+        transform: translateX(0) !important;
     }
     
     /* Pastikan dropdown tidak terpotong oleh container */
@@ -431,14 +447,34 @@
     
     /* Pastikan dropdown muncul di samping dengan benar */
     .sidebar .nav-item.dropdown {
-        position: relative !important;
+        position: static !important;
     }
     
-    .sidebar .dropdown-menu {
+    /* Override Bootstrap Popper positioning - FORCE SIDEBAR POSITION */
+    .sidebar .dropdown-menu[data-bs-popper],
+    .sidebar .dropdown-menu.show,
+    .sidebar .nav-item.dropdown.show .dropdown-menu,
+    .sidebar .nav-item.dropdown .dropdown-toggle[aria-expanded="true"] ~ .dropdown-menu {
         position: absolute !important;
         left: 100% !important;
+        right: auto !important;
         top: 0 !important;
+        bottom: auto !important;
         margin-left: 8px !important;
+        margin-top: 0 !important;
+        transform: translateX(0) !important;
+        inset: auto !important;
+    }
+    
+    /* Prevent Bootstrap from changing position */
+    .sidebar .dropdown-menu[style*="position"] {
+        position: absolute !important;
+    }
+    
+    .sidebar .dropdown-menu[style*="left"],
+    .sidebar .dropdown-menu[style*="top"] {
+        left: 100% !important;
+        top: 0 !important;
     }
     
     .sidebar .dropdown-menu.show {
@@ -710,8 +746,8 @@
         if (typeof bootstrap !== 'undefined') {
             const dropdownElementList = document.querySelectorAll('.sidebar .dropdown-toggle');
             dropdownElementList.forEach(function(dropdownToggleEl) {
-                new bootstrap.Dropdown(dropdownToggleEl, {
-                    boundary: 'viewport',
+                const dropdown = new bootstrap.Dropdown(dropdownToggleEl, {
+                    boundary: 'clippingParents',
                     placement: 'right-start',
                     popperConfig: {
                         modifiers: [
@@ -723,12 +759,49 @@
                             },
                             {
                                 name: 'preventOverflow',
-                                options: {
-                                    boundary: 'viewport'
-                                }
+                                enabled: false
+                            },
+                            {
+                                name: 'flip',
+                                enabled: false
                             }
                         ]
                     }
+                });
+                
+                // Force position after show - AGGRESSIVE
+                dropdownToggleEl.addEventListener('shown.bs.dropdown', function() {
+                    const menu = this.nextElementSibling || this.closest('.dropdown').querySelector('.dropdown-menu');
+                    if (menu && menu.classList.contains('dropdown-menu')) {
+                        // Force positioning dengan !important via setProperty
+                        menu.style.setProperty('position', 'absolute', 'important');
+                        menu.style.setProperty('left', '100%', 'important');
+                        menu.style.setProperty('right', 'auto', 'important');
+                        menu.style.setProperty('top', '0', 'important');
+                        menu.style.setProperty('bottom', 'auto', 'important');
+                        menu.style.setProperty('margin-left', '8px', 'important');
+                        menu.style.setProperty('margin-top', '0', 'important');
+                        menu.style.setProperty('transform', 'translateX(0)', 'important');
+                        menu.style.setProperty('inset', 'auto', 'important');
+                        
+                        // Remove any inline styles that Bootstrap might add
+                        const rect = this.getBoundingClientRect();
+                        const sidebarRect = document.getElementById('guru-sidebar').getBoundingClientRect();
+                        menu.style.left = (sidebarRect.width + 8) + 'px';
+                        menu.style.top = rect.top - sidebarRect.top + 'px';
+                    }
+                });
+                
+                // Also force on click
+                dropdownToggleEl.addEventListener('click', function(e) {
+                    setTimeout(function() {
+                        const menu = dropdownToggleEl.nextElementSibling || dropdownToggleEl.closest('.dropdown').querySelector('.dropdown-menu');
+                        if (menu && menu.classList.contains('dropdown-menu')) {
+                            menu.style.setProperty('position', 'absolute', 'important');
+                            menu.style.setProperty('left', '100%', 'important');
+                            menu.style.setProperty('top', '0', 'important');
+                        }
+                    }, 10);
                 });
             });
         } else {
