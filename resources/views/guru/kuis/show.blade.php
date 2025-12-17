@@ -198,25 +198,33 @@
                                     <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Soal Kuis</h5>
                                 </div>
                                 <div class="card-body">
-                                    @if($kuis->soal && is_array($kuis->soal) && count($kuis->soal) > 0)
-                                        @foreach($kuis->soal as $index => $soal)
+                                    @php
+                                        // Pastikan soal ter-decode dengan benar
+                                        $soalData = $kuis->soal;
+                                        if (is_string($soalData)) {
+                                            $soalData = json_decode($soalData, true);
+                                        }
+                                    @endphp
+                                    
+                                    @if($soalData && is_array($soalData) && count($soalData) > 0)
+                                        @foreach($soalData as $index => $soal)
                                             <div class="question-item">
                                                 <div class="d-flex align-items-start mb-3">
                                                     <div class="question-number">{{ $index + 1 }}</div>
                                                     <div class="flex-grow-1">
-                                                        <h6 class="mb-3">{{ $soal['pertanyaan'] }}</h6>
+                                                        <h6 class="mb-3">{{ $soal['pertanyaan'] ?? 'Pertanyaan tidak tersedia' }}</h6>
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-check mb-2">
                                                                     <input class="form-check-input" type="radio" disabled>
                                                                     <label class="form-check-label">
-                                                                        A. {{ $soal['pilihan_a'] }}
+                                                                        A. {{ isset($soal['pilihan']['A']) ? $soal['pilihan']['A'] : (isset($soal['pilihan_a']) ? $soal['pilihan_a'] : '') }}
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check mb-2">
                                                                     <input class="form-check-input" type="radio" disabled>
                                                                     <label class="form-check-label">
-                                                                        B. {{ $soal['pilihan_b'] }}
+                                                                        B. {{ isset($soal['pilihan']['B']) ? $soal['pilihan']['B'] : (isset($soal['pilihan_b']) ? $soal['pilihan_b'] : '') }}
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -224,20 +232,20 @@
                                                                 <div class="form-check mb-2">
                                                                     <input class="form-check-input" type="radio" disabled>
                                                                     <label class="form-check-label">
-                                                                        C. {{ $soal['pilihan_c'] }}
+                                                                        C. {{ isset($soal['pilihan']['C']) ? $soal['pilihan']['C'] : (isset($soal['pilihan_c']) ? $soal['pilihan_c'] : '') }}
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check mb-2">
                                                                     <input class="form-check-input" type="radio" disabled>
                                                                     <label class="form-check-label">
-                                                                        D. {{ $soal['pilihan_d'] }}
+                                                                        D. {{ isset($soal['pilihan']['D']) ? $soal['pilihan']['D'] : (isset($soal['pilihan_d']) ? $soal['pilihan_d'] : '') }}
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="mt-2">
                                                             <span class="badge bg-success">
-                                                                <i class="fas fa-check me-1"></i>Jawaban Benar: {{ $soal['jawaban_benar'] }}
+                                                                <i class="fas fa-check me-1"></i>Jawaban Benar: {{ $soal['jawaban_benar'] ?? 'Tidak tersedia' }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -247,7 +255,12 @@
                                     @else
                                         <div class="text-center py-4">
                                             <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
-                                            <p class="text-muted">Soal kuis belum dibuat</p>
+                                            <p class="text-muted">Soal kuis belum dibuat atau tidak tersedia</p>
+                                            @if(config('app.debug'))
+                                                <small class="text-muted d-block mt-2">
+                                                    Debug: soal data = {{ var_export($soalData, true) }}
+                                                </small>
+                                            @endif
                                         </div>
                                     @endif
                                 </div>
