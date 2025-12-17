@@ -64,42 +64,24 @@
         }
         
         /* CSS khusus untuk layout horizontal detail lembar penilaian - PASTIKAN BERSEBELAHAN */
-        .card-body {
+        .card-body > .row {
             display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: nowrap !important;
+            flex-wrap: wrap !important;
+            margin-right: -0.75rem !important;
+            margin-left: -0.75rem !important;
         }
         
-        /* Pastikan kolom tampil bersebelahan di SEMUA layar >= 576px - TIDAK BOLEH VERTIKAL */
-        @media (min-width: 576px) {
-            .card-body {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: nowrap !important;
-            }
-            
-            .card-body > div:first-of-type,
-            .card-body > div:nth-of-type(2) {
-                flex: 1 1 50% !important;
-                min-width: 0 !important;
+        .card-body > .row > .col-md-6 {
+            position: relative !important;
+            width: 100% !important;
+            padding-right: 0.75rem !important;
+            padding-left: 0.75rem !important;
+        }
+        
+        @media (min-width: 768px) {
+            .card-body > .row > .col-md-6 {
+                flex: 0 0 50% !important;
                 max-width: 50% !important;
-                width: 50% !important;
-            }
-        }
-        
-        /* Di layar sangat kecil, kolom jadi vertikal */
-        @media (max-width: 575px) {
-            .card-body {
-                flex-direction: column !important;
-                flex-wrap: wrap !important;
-            }
-            
-            .card-body > div:first-of-type,
-            .card-body > div:nth-of-type(2) {
-                flex: 1 1 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                margin-bottom: 1.5rem;
             }
         }
         
@@ -171,9 +153,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-body" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 2rem !important; width: 100% !important; align-items: flex-start !important; box-sizing: border-box !important;">
-                                <!-- Kolom Kiri -->
-                                <div style="flex: 1 1 50% !important; min-width: 0 !important; max-width: 50% !important; width: 50% !important;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Kolom Kiri -->
+                                    <div class="col-md-6 col-lg-6">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Siswa</strong></div>
                                             <div class="col-7">{{ $lembar->siswa->nama ?? 'N/A' }}</div>
@@ -202,8 +185,8 @@
                                         @endif
                                     </div>
 
-                                <!-- Kolom Kanan -->
-                                <div style="flex: 1 1 50% !important; min-width: 0 !important; max-width: 50% !important; width: 50% !important;">
+                                    <!-- Kolom Kanan -->
+                                    <div class="col-md-6 col-lg-6">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Nilai</strong></div>
                                             <div class="col-7">
@@ -227,6 +210,7 @@
                                         </div>
                                         @endif
                                     </div>
+                                </div>
                             </div>
 
                             <!-- Field yang membutuhkan full width -->
@@ -287,26 +271,17 @@
         // Force horizontal layout untuk detail lembar penilaian
         function forceHorizontalLayout() {
             const cardBody = document.querySelector('.card-body');
-            if (cardBody && window.innerWidth >= 576) {
-                cardBody.style.setProperty('display', 'flex', 'important');
-                cardBody.style.setProperty('flex-direction', 'row', 'important');
-                cardBody.style.setProperty('flex-wrap', 'nowrap', 'important');
-                cardBody.style.setProperty('gap', '2rem', 'important');
-                
-                const children = cardBody.children;
-                if (children.length >= 2) {
-                    // Kolom pertama
-                    if (children[0]) {
-                        children[0].style.setProperty('flex', '1 1 50%', 'important');
-                        children[0].style.setProperty('max-width', '50%', 'important');
-                        children[0].style.setProperty('width', '50%', 'important');
-                    }
-                    // Kolom kedua
-                    if (children[1]) {
-                        children[1].style.setProperty('flex', '1 1 50%', 'important');
-                        children[1].style.setProperty('max-width', '50%', 'important');
-                        children[1].style.setProperty('width', '50%', 'important');
-                    }
+            if (cardBody && window.innerWidth >= 768) {
+                const row = cardBody.querySelector('.row');
+                if (row) {
+                    row.style.setProperty('display', 'flex', 'important');
+                    row.style.setProperty('flex-wrap', 'wrap', 'important');
+                    
+                    const cols = row.querySelectorAll('.col-md-6');
+                    cols.forEach(function(col) {
+                        col.style.setProperty('flex', '0 0 50%', 'important');
+                        col.style.setProperty('max-width', '50%', 'important');
+                    });
                 }
             }
         }
