@@ -548,7 +548,12 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     siswaSelect.innerHTML = '<option value="">Pilih Siswa</option>';
                     
@@ -566,8 +571,8 @@
                     siswaSelect.disabled = false;
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    siswaSelect.innerHTML = '<option value="">Error memuat siswa</option>';
+                    console.error('Error fetching siswa:', error);
+                    siswaSelect.innerHTML = '<option value="">Error memuat siswa. Silakan coba lagi.</option>';
                     siswaSelect.disabled = false;
                 });
             });

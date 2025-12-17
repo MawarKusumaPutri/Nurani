@@ -915,16 +915,21 @@ class EvaluasiGuruController extends Controller
      */
     public function getSiswaByKelas(Request $request)
     {
-        $kelas = $request->get('kelas');
-        
-        if (!$kelas) {
-            return response()->json(['siswa' => []]);
+        try {
+            $kelas = $request->get('kelas');
+            
+            if (!$kelas) {
+                return response()->json(['siswa' => []], 200);
+            }
+            
+            $siswaList = Siswa::where('kelas', $kelas)
+                ->orderBy('nama')
+                ->get(['id', 'nama', 'kelas']);
+            
+            return response()->json(['siswa' => $siswaList], 200);
+        } catch (\Exception $e) {
+            Log::error('Error getting siswa by kelas: ' . $e->getMessage());
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data siswa', 'siswa' => []], 500);
         }
-        
-        $siswaList = Siswa::where('kelas', $kelas)
-            ->orderBy('nama')
-            ->get(['id', 'nama', 'kelas']);
-        
-        return response()->json(['siswa' => $siswaList]);
     }
 }
