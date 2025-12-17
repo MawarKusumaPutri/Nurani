@@ -487,24 +487,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     function previewPhoto(input) {
-        console.log('previewPhoto called', input.files);
-        
         if (input.files && input.files[0]) {
-            // Validasi ukuran file (maksimal 2MB)
             const file = input.files[0];
             const maxSize = 2 * 1024 * 1024; // 2MB dalam bytes
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             
+            // Validasi ukuran file
             if (file.size > maxSize) {
                 alert('Ukuran file terlalu besar! Maksimal 2MB.');
-                input.value = ''; // Reset input
+                input.value = '';
                 return;
             }
             
             // Validasi tipe file
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             if (!validTypes.includes(file.type)) {
                 alert('Format file tidak valid! Hanya JPG, PNG, dan GIF yang diizinkan.');
-                input.value = ''; // Reset input
+                input.value = '';
                 return;
             }
             
@@ -513,55 +511,48 @@
             const preview = document.getElementById('photoPreview');
             const placeholder = document.getElementById('photoPlaceholder');
             
-            // Validate file type
-            const file = input.files[0];
-            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-            if (!validTypes.includes(file.type)) {
-                alert('Format file tidak valid. Harap pilih file JPG, PNG, atau GIF.');
-                input.value = '';
-                return;
-            }
-            
-            // Validate file size (2MB = 2097152 bytes)
-            if (file.size > 2097152) {
-                alert('Ukuran file terlalu besar. Maksimal 2MB.');
-                input.value = '';
-                return;
-            }
-            
             reader.onload = function(e) {
-                console.log('FileReader loaded', e.target.result);
-                
                 if (preview && placeholder) {
-                    // Set preview image
+                    // Set preview image dengan animasi fade in
                     preview.src = e.target.result;
                     preview.style.display = 'block';
+                    preview.style.opacity = '0';
+                    preview.style.transition = 'opacity 0.3s ease-in';
                     preview.style.zIndex = '2';
                     
-                    // Hide placeholder
-                    placeholder.style.display = 'none';
+                    // Fade in animation
+                    setTimeout(function() {
+                        preview.style.opacity = '1';
+                    }, 10);
                     
-                    // Show checkmark with animation
+                    // Hide placeholder dengan animasi
+                    placeholder.style.transition = 'opacity 0.3s ease-out';
+                    placeholder.style.opacity = '0';
+                    setTimeout(function() {
+                        placeholder.style.display = 'none';
+                    }, 300);
+                    
+                    // Show checkmark dengan animasi
                     if (checkmark) {
                         checkmark.style.display = 'flex';
+                        checkmark.style.opacity = '0';
                         checkmark.style.animation = 'fadeIn 0.3s ease-in';
                         checkmark.style.background = 'rgba(40, 167, 69, 0.9)';
+                        setTimeout(function() {
+                            checkmark.style.opacity = '1';
+                        }, 10);
                     }
-                    
-                    console.log('Preview updated successfully');
-                } else {
-                    console.error('Preview or placeholder element not found');
                 }
             };
             
             reader.onerror = function(e) {
                 console.error('FileReader error', e);
                 alert('Gagal membaca file. Silakan coba lagi.');
+                input.value = '';
             };
             
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         } else {
-            console.log('No file selected');
             // Hide checkmark if no file selected
             const checkmark = document.getElementById('photoCheckmark');
             if (checkmark) {

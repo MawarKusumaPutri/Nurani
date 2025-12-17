@@ -163,15 +163,51 @@
 <script>
 function previewPhoto(input) {
     if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const maxSize = 2 * 1024 * 1024; // 2MB dalam bytes
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        
+        // Validasi ukuran file
+        if (file.size > maxSize) {
+            alert('Ukuran file terlalu besar! Maksimal 2MB.');
+            input.value = '';
+            return;
+        }
+        
+        // Validasi tipe file
+        if (!validTypes.includes(file.type)) {
+            alert('Format file tidak valid! Hanya JPG, PNG, dan GIF yang diizinkan.');
+            input.value = '';
+            return;
+        }
+        
         const reader = new FileReader();
         
         reader.onload = function(e) {
             const preview = document.getElementById('photoPreview');
             const placeholder = document.getElementById('photoPlaceholder');
             
-            preview.src = e.target.result;
-            preview.classList.remove('d-none');
-            placeholder.classList.add('d-none');
+            if (preview && placeholder) {
+                // Set preview image dengan animasi fade in
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                preview.style.opacity = '0';
+                preview.style.transition = 'opacity 0.3s ease-in';
+                preview.classList.remove('d-none');
+                
+                // Fade in animation
+                setTimeout(function() {
+                    preview.style.opacity = '1';
+                }, 10);
+                
+                // Hide placeholder dengan animasi
+                placeholder.style.transition = 'opacity 0.3s ease-out';
+                placeholder.style.opacity = '0';
+                setTimeout(function() {
+                    placeholder.style.display = 'none';
+                    placeholder.classList.add('d-none');
+                }, 300);
+            }
         };
         
         reader.readAsDataURL(input.files[0]);
