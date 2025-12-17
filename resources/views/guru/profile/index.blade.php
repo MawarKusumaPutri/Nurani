@@ -33,6 +33,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     <div class="container-fluid">
