@@ -63,31 +63,31 @@
             margin-bottom: 0.5rem;
         }
         
-        /* CSS khusus untuk layout horizontal detail lembar penilaian */
-        .card-body > .d-flex {
-            display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
+        /* CSS khusus untuk layout horizontal detail lembar penilaian - PASTIKAN BERSEBELAHAN */
+        .detail-lembar-container {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 2rem !important;
+            align-items: start !important;
         }
         
-        /* Pastikan kolom tampil bersebelahan di layar >= 768px */
+        /* Pastikan kolom tampil bersebelahan di layar >= 768px - TIDAK BOLEH VERTIKAL */
         @media (min-width: 768px) {
-            .card-body > .d-flex > div {
-                flex: 1 1 45% !important;
-                min-width: 300px;
+            .detail-lembar-container {
+                grid-template-columns: 1fr 1fr !important;
+                display: grid !important;
             }
         }
         
         /* Di layar kecil, kolom jadi vertikal */
         @media (max-width: 767px) {
-            .card-body > .d-flex {
-                flex-direction: column !important;
+            .detail-lembar-container {
+                grid-template-columns: 1fr !important;
+                display: block !important;
             }
             
-            .card-body > .d-flex > div {
-                flex: 1 1 100% !important;
-                min-width: 100%;
-                width: 100%;
+            .detail-lembar-container > div {
+                margin-bottom: 1.5rem;
             }
         }
         
@@ -159,10 +159,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex flex-row flex-wrap" style="display: flex !important; flex-direction: row !important; gap: 2rem;">
-                                    <!-- Kolom Kiri -->
-                                    <div style="flex: 1 1 45%; min-width: 300px;">
+                            <div class="card-body detail-lembar-container">
+                                <!-- Kolom Kiri -->
+                                <div>
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Siswa</strong></div>
                                             <div class="col-7">{{ $lembar->siswa->nama ?? 'N/A' }}</div>
@@ -191,8 +190,8 @@
                                         @endif
                                     </div>
 
-                                    <!-- Kolom Kanan -->
-                                    <div style="flex: 1 1 45%; min-width: 300px;">
+                                <!-- Kolom Kanan -->
+                                <div>
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Nilai</strong></div>
                                             <div class="col-7">
@@ -216,9 +215,9 @@
                                         </div>
                                         @endif
                                     </div>
-                                </div>
+                            </div>
 
-                                <!-- Field yang membutuhkan full width -->
+                            <!-- Field yang membutuhkan full width -->
                                 @if($lembar->detail_nilai)
                                 <div class="row mt-3">
                                     <div class="col-12">
