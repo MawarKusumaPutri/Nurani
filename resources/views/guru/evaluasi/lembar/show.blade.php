@@ -63,25 +63,29 @@
             margin-bottom: 0.5rem;
         }
         
-        .card-body .row > div {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .card-body > .row {
+        /* Pastikan row Bootstrap menggunakan flexbox dengan benar */
+        .card-body .row {
             display: flex !important;
-            flex-wrap: wrap;
+            flex-wrap: wrap !important;
+            margin-right: -0.75rem !important;
+            margin-left: -0.75rem !important;
         }
         
-        .card-body .col-md-6 {
-            flex: 0 0 50%;
-            max-width: 50%;
+        /* Pastikan kolom tampil bersebelahan di layar >= 768px */
+        @media (min-width: 768px) {
+            .card-body .col-md-6 {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-right: 0.75rem !important;
+                padding-left: 0.75rem !important;
+            }
         }
         
+        /* Di layar kecil, kolom jadi vertikal */
         @media (max-width: 767px) {
             .card-body .col-md-6 {
-                flex: 0 0 100%;
-                max-width: 100%;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
             }
         }
         
@@ -154,9 +158,9 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row g-3">
+                                <div class="row">
                                     <!-- Kolom Kiri -->
-                                    <div class="col-12 col-md-6 col-lg-6">
+                                    <div class="col-md-6">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Siswa</strong></div>
                                             <div class="col-7">{{ $lembar->siswa->nama ?? 'N/A' }}</div>
@@ -186,7 +190,7 @@
                                     </div>
 
                                     <!-- Kolom Kanan -->
-                                    <div class="col-12 col-md-6 col-lg-6">
+                                    <div class="col-md-6">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Nilai</strong></div>
                                             <div class="col-7">
