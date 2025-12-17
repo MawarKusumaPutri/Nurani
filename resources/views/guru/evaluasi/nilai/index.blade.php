@@ -283,8 +283,8 @@
                 <!-- Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="mb-1">Nilai Formatif & Sumatif</h2>
-                        <p class="text-muted mb-0">Input dan kelola nilai formatif dan sumatif siswa</p>
+                        <h2 class="mb-1">Nilai Harian</h2>
+                        <p class="text-muted mb-0">Input dan kelola nilai harian, UTS, dan UAS untuk siswa</p>
                     </div>
                 </div>
 
