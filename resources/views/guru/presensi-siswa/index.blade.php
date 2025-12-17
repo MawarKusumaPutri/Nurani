@@ -774,7 +774,7 @@
                                                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                                                         <select name="aktivitas[]" class="form-select form-select-sm" style="width: 100% !important; box-sizing: border-box !important;">
                                                             <option value="">Pilih Aktivitas</option>
-                                                            <option value="aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                            <option value="aktif di kelas" {{ $existingPresensi && ($existingPresensi->aktivitas == 'aktif di kelas' || $existingPresensi->aktivitas == 'aktif') ? 'selected' : '' }}>Aktif di Kelas</option>
                                                             <option value="tidak aktif di kelas" {{ $existingPresensi && $existingPresensi->aktivitas == 'tidak aktif di kelas' ? 'selected' : '' }}>Tidak Aktif di Kelas</option>
                                                         </select>
                                                         <input type="text" name="keterangan[]" class="form-control form-control-sm" 
@@ -840,8 +840,8 @@
                                             </td>
                                             <td>
                                                 @if($presensi->aktivitas)
-                                                    <span class="badge bg-{{ $presensi->aktivitas == 'aktif' ? 'success' : 'warning' }}">
-                                                        {{ $presensi->aktivitas == 'aktif' ? 'Aktif' : 'Tidak Aktif di Kelas' }}
+                                                    <span class="badge bg-{{ ($presensi->aktivitas == 'aktif di kelas' || $presensi->aktivitas == 'aktif') ? 'success' : 'warning' }}">
+                                                        {{ ($presensi->aktivitas == 'aktif di kelas' || $presensi->aktivitas == 'aktif') ? 'Aktif di Kelas' : 'Tidak Aktif di Kelas' }}
                                                     </span>
                                                 @else
                                                     <span class="text-muted">-</span>
@@ -897,7 +897,7 @@
                             <label class="form-label">Aktivitas Siswa</label>
                             <select name="aktivitas" class="form-select" id="editAktivitas">
                                 <option value="">Pilih Aktivitas</option>
-                                <option value="aktif">Aktif</option>
+                                <option value="aktif di kelas">Aktif di Kelas</option>
                                 <option value="tidak aktif di kelas">Tidak Aktif di Kelas</option>
                             </select>
                         </div>
@@ -920,7 +920,12 @@
         function editPresensi(id, status, aktivitas, keterangan) {
             document.getElementById('editForm').action = '/guru/presensi-siswa/' + id;
             document.getElementById('editStatus').value = status;
-            document.getElementById('editAktivitas').value = aktivitas || '';
+            // Handle backward compatibility: jika aktivitas adalah 'aktif', ubah ke 'aktif di kelas'
+            let aktivitasValue = aktivitas || '';
+            if (aktivitasValue === 'aktif') {
+                aktivitasValue = 'aktif di kelas';
+            }
+            document.getElementById('editAktivitas').value = aktivitasValue;
             document.getElementById('editKeterangan').value = keterangan || '';
             new bootstrap.Modal(document.getElementById('editModal')).show();
         }

@@ -87,7 +87,7 @@ class PresensiSiswaController extends Controller
             'tanggal' => 'required|date',
             'kelas' => 'required|in:7,8,9',
             'aktivitas' => 'nullable|array',
-            'aktivitas.*' => 'nullable|in:aktif,tidak aktif di kelas',
+            'aktivitas.*' => 'nullable|in:aktif di kelas,tidak aktif di kelas',
             'keterangan' => 'nullable|array',
             'keterangan.*' => 'nullable|string|max:500',
         ], [
@@ -173,7 +173,7 @@ class PresensiSiswaController extends Controller
 
         $request->validate([
             'status' => 'required|in:hadir,sakit,izin,alfa',
-            'aktivitas' => 'nullable|in:aktif,tidak aktif di kelas',
+            'aktivitas' => 'nullable|in:aktif di kelas,tidak aktif di kelas',
             'keterangan' => 'nullable|string|max:500',
         ]);
 
