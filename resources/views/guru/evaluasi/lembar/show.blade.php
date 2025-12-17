@@ -64,29 +64,49 @@
         }
         
         /* CSS khusus untuk layout horizontal detail lembar penilaian - PASTIKAN BERSEBELAHAN */
-        .detail-lembar-container {
+        .card-body.detail-lembar-container {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
             gap: 2rem !important;
             align-items: start !important;
+            width: 100% !important;
+            padding: 1.5rem !important;
+        }
+        
+        .card-body.detail-lembar-container > div {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+        
+        /* Override semua kemungkinan konflik */
+        .card-body.detail-lembar-container .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
         }
         
         /* Pastikan kolom tampil bersebelahan di layar >= 768px - TIDAK BOLEH VERTIKAL */
         @media (min-width: 768px) {
-            .detail-lembar-container {
+            .card-body.detail-lembar-container {
                 grid-template-columns: 1fr 1fr !important;
                 display: grid !important;
+                grid-auto-flow: row !important;
+            }
+            
+            .card-body.detail-lembar-container > div {
+                display: block !important;
+                float: none !important;
             }
         }
         
         /* Di layar kecil, kolom jadi vertikal */
         @media (max-width: 767px) {
-            .detail-lembar-container {
+            .card-body.detail-lembar-container {
                 grid-template-columns: 1fr !important;
-                display: block !important;
+                display: grid !important;
             }
             
-            .detail-lembar-container > div {
+            .card-body.detail-lembar-container > div {
                 margin-bottom: 1.5rem;
             }
         }
@@ -159,7 +179,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-body detail-lembar-container">
+                            <div class="card-body detail-lembar-container" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 2rem !important; width: 100% !important; align-items: start !important;">
                                 <!-- Kolom Kiri -->
                                 <div>
                                         <div class="row mb-2">
