@@ -344,9 +344,23 @@
                                                 $currentYear = date('Y');
                                                 $nextYear = $currentYear + 1;
                                                 $defaultTahun = $currentYear . '/' . $nextYear;
+                                                // Generate pilihan tahun pelajaran (5 tahun ke belakang dan 5 tahun ke depan)
+                                                $tahunOptions = [];
+                                                for ($i = -5; $i <= 5; $i++) {
+                                                    $startYear = $currentYear + $i;
+                                                    $endYear = $startYear + 1;
+                                                    $tahunOptions[] = $startYear . '/' . $endYear;
+                                                }
                                             @endphp
-                                            <input type="text" class="form-control" id="tahun_pelajaran" name="tahun_pelajaran" value="{{ $defaultTahun }}" placeholder="2024/2025" pattern="\d{4}/\d{4}">
-                                            <small class="text-muted">Format: YYYY/YYYY (contoh: 2024/2025 atau 2025/2026)</small>
+                                            <select class="form-select" id="tahun_pelajaran" name="tahun_pelajaran">
+                                                <option value="">Pilih Tahun Pelajaran</option>
+                                                @foreach($tahunOptions as $tahun)
+                                                    <option value="{{ $tahun }}" {{ $tahun == $defaultTahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                                                @endforeach
+                                                <option value="custom">Lainnya (Input Manual)</option>
+                                            </select>
+                                            <input type="text" class="form-control mt-2" id="tahun_pelajaran_custom" name="tahun_pelajaran_custom" placeholder="2024/2025" pattern="\d{4}/\d{4}" style="display: none;" value="">
+                                            <small class="text-muted">Pilih tahun pelajaran atau pilih "Lainnya" untuk input manual</small>
                                         </div>
                                     </div>
 
@@ -471,6 +485,43 @@
         window.addEventListener('load', forceWhiteBackground);
         setInterval(forceWhiteBackground, 100);
 
+        // Handle tahun pelajaran dropdown
+        const tahunPelajaranSelect = document.getElementById('tahun_pelajaran');
+        const tahunPelajaranCustom = document.getElementById('tahun_pelajaran_custom');
+        const form = document.querySelector('form[action*="nilai.store"]');
+        
+        if (tahunPelajaranSelect && tahunPelajaranCustom) {
+            tahunPelajaranSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    tahunPelajaranCustom.style.display = 'block';
+                    tahunPelajaranCustom.required = true;
+                    tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                } else {
+                    tahunPelajaranCustom.style.display = 'none';
+                    tahunPelajaranCustom.required = false;
+                    tahunPelajaranCustom.value = '';
+                    tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                }
+            });
+            
+            // Handle form submit - pastikan tahun pelajaran dikirim dengan benar
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (tahunPelajaranSelect.value === 'custom') {
+                        // Jika custom, pastikan input custom terisi
+                        if (!tahunPelajaranCustom.value || !tahunPelajaranCustom.value.match(/^\d{4}\/\d{4}$/)) {
+                            e.preventDefault();
+                            alert('Mohon isi tahun pelajaran dengan format YYYY/YYYY (contoh: 2024/2025)');
+                            tahunPelajaranCustom.focus();
+                            return false;
+                        }
+                        // Set name untuk dikirim ke server
+                        tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                    }
+                });
+            }
+        }
+        
         // Filter siswa berdasarkan kelas
         const kelasSelect = document.getElementById('kelas');
         const siswaSelect = document.getElementById('siswa_id');

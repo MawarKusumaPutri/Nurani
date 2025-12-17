@@ -341,8 +341,30 @@
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="tahun_pelajaran" class="form-label">Tahun Pelajaran</label>
-                                            <input type="text" class="form-control" id="tahun_pelajaran" name="tahun_pelajaran" value="{{ $nilai->tahun_pelajaran ?? date('Y') . '/' . (date('Y') + 1) }}" placeholder="2024/2025" pattern="\d{4}/\d{4}">
-                                            <small class="text-muted">Format: YYYY/YYYY (contoh: 2024/2025 atau 2025/2026)</small>
+                                            @php
+                                                $currentYear = date('Y');
+                                                $nextYear = $currentYear + 1;
+                                                $defaultTahun = $currentYear . '/' . $nextYear;
+                                                $currentTahunPelajaran = $nilai->tahun_pelajaran ?? $defaultTahun;
+                                                // Generate pilihan tahun pelajaran (5 tahun ke belakang dan 5 tahun ke depan)
+                                                $tahunOptions = [];
+                                                for ($i = -5; $i <= 5; $i++) {
+                                                    $startYear = $currentYear + $i;
+                                                    $endYear = $startYear + 1;
+                                                    $tahunOptions[] = $startYear . '/' . $endYear;
+                                                }
+                                                // Cek apakah tahun pelajaran saat ini ada di daftar
+                                                $isCustom = !in_array($currentTahunPelajaran, $tahunOptions);
+                                            @endphp
+                                            <select class="form-select" id="tahun_pelajaran" name="tahun_pelajaran">
+                                                <option value="">Pilih Tahun Pelajaran</option>
+                                                @foreach($tahunOptions as $tahun)
+                                                    <option value="{{ $tahun }}" {{ $tahun == $currentTahunPelajaran ? 'selected' : '' }}>{{ $tahun }}</option>
+                                                @endforeach
+                                                <option value="custom" {{ $isCustom ? 'selected' : '' }}>Lainnya (Input Manual)</option>
+                                            </select>
+                                            <input type="text" class="form-control mt-2" id="tahun_pelajaran_custom" name="tahun_pelajaran_custom" placeholder="2024/2025" pattern="\d{4}/\d{4}" value="{{ $isCustom ? $currentTahunPelajaran : '' }}" style="display: {{ $isCustom ? 'block' : 'none' }};">
+                                            <small class="text-muted">Pilih tahun pelajaran atau pilih "Lainnya" untuk input manual</small>
                                         </div>
                                     </div>
 
@@ -466,6 +488,45 @@
         }
         window.addEventListener('load', forceWhiteBackground);
         setInterval(forceWhiteBackground, 100);
+
+        // Handle tahun pelajaran dropdown
+        const tahunPelajaranSelect = document.getElementById('tahun_pelajaran');
+        const tahunPelajaranCustom = document.getElementById('tahun_pelajaran_custom');
+        const form = document.querySelector('form[action*="nilai.update"]');
+        
+        if (tahunPelajaranSelect && tahunPelajaranCustom) {
+            tahunPelajaranSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    tahunPelajaranCustom.style.display = 'block';
+                    tahunPelajaranCustom.required = true;
+                    tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                } else {
+                    tahunPelajaranCustom.style.display = 'none';
+                    tahunPelajaranCustom.required = false;
+                    if (this.value !== 'custom') {
+                        tahunPelajaranCustom.value = '';
+                    }
+                    tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                }
+            });
+            
+            // Handle form submit - pastikan tahun pelajaran dikirim dengan benar
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (tahunPelajaranSelect.value === 'custom') {
+                        // Jika custom, pastikan input custom terisi
+                        if (!tahunPelajaranCustom.value || !tahunPelajaranCustom.value.match(/^\d{4}\/\d{4}$/)) {
+                            e.preventDefault();
+                            alert('Mohon isi tahun pelajaran dengan format YYYY/YYYY (contoh: 2024/2025)');
+                            tahunPelajaranCustom.focus();
+                            return false;
+                        }
+                        // Set name untuk dikirim ke server
+                        tahunPelajaranCustom.name = 'tahun_pelajaran_custom';
+                    }
+                });
+            }
+        }
 
         // Filter siswa berdasarkan kelas
         const kelasSelect = document.getElementById('kelas');

@@ -486,7 +486,8 @@ class EvaluasiGuruController extends Controller
             'mata_pelajaran' => 'required|string',
             'kelas' => 'required|string',
             'semester' => 'required|string',
-            'tahun_pelajaran' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
+            'tahun_pelajaran' => 'nullable|string',
+            'tahun_pelajaran_custom' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
             'formatif_1' => 'nullable|numeric|min:0|max:100',
             'tanggal_nilai_harian' => 'nullable|date',
             'formatif_2' => 'nullable|numeric|min:0|max:100',
@@ -502,6 +503,12 @@ class EvaluasiGuruController extends Controller
             'predikat' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
+        
+        // Handle tahun pelajaran: jika custom, gunakan tahun_pelajaran_custom
+        if ($validated['tahun_pelajaran'] === 'custom') {
+            $validated['tahun_pelajaran'] = $validated['tahun_pelajaran_custom'] ?? null;
+        }
+        unset($validated['tahun_pelajaran_custom']); // Hapus dari validated karena tidak ada di fillable
 
         // Hitung rata-rata formatif
         $formatifValues = array_filter([
@@ -568,7 +575,8 @@ class EvaluasiGuruController extends Controller
             'mata_pelajaran' => 'required|string',
             'kelas' => 'required|string',
             'semester' => 'required|string',
-            'tahun_pelajaran' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
+            'tahun_pelajaran' => 'nullable|string',
+            'tahun_pelajaran_custom' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
             'formatif_1' => 'nullable|numeric|min:0|max:100',
             'tanggal_nilai_harian' => 'nullable|date',
             'formatif_2' => 'nullable|numeric|min:0|max:100',
@@ -584,6 +592,12 @@ class EvaluasiGuruController extends Controller
             'predikat' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
+        
+        // Handle tahun pelajaran: jika custom, gunakan tahun_pelajaran_custom
+        if ($validated['tahun_pelajaran'] === 'custom') {
+            $validated['tahun_pelajaran'] = $validated['tahun_pelajaran_custom'] ?? null;
+        }
+        unset($validated['tahun_pelajaran_custom']); // Hapus dari validated karena tidak ada di fillable
 
         // Hitung rata-rata formatif
         $formatifValues = array_filter([
