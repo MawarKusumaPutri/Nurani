@@ -741,8 +741,7 @@
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 12% !important; min-width: 100px !important; padding: 0.75rem !important;">NIS</th>
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 25% !important; min-width: 200px !important; padding: 0.75rem !important;">Nama Siswa</th>
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 18% !important; min-width: 150px !important; padding: 0.75rem !important;">Status</th>
-                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 15% !important; min-width: 130px !important; padding: 0.75rem !important;">Aktivitas Siswa</th>
-                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 25% !important; min-width: 250px !important; padding: 0.75rem !important;">Keterangan</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">Aktivitas Siswa & Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody style="display: table-row-group !important; visibility: visible !important; opacity: 1 !important;">
@@ -771,18 +770,18 @@
                                                         <option value="alfa" {{ $existingPresensi && $existingPresensi->status == 'alfa' ? 'selected' : '' }}>Alfa</option>
                                                     </select>
                                                 </td>
-                                                <td style="width: 15% !important; min-width: 130px !important; padding: 0.75rem !important;">
-                                                    <select name="aktivitas[]" class="form-select form-select-sm" style="width: 100% !important; min-width: 120px !important; box-sizing: border-box !important;">
-                                                        <option value="">Pilih Aktivitas</option>
-                                                        <option value="aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                                        <option value="tidak aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                                                    </select>
-                                                </td>
-                                                <td style="width: 25% !important; min-width: 250px !important; padding: 0.75rem !important;">
-                                                    <input type="text" name="keterangan[]" class="form-control form-control-sm" 
-                                                           placeholder="Keterangan (opsional)" 
-                                                           value="{{ $existingPresensi ? $existingPresensi->keterangan : '' }}"
-                                                           style="width: 100% !important; min-width: 200px !important; box-sizing: border-box !important;">
+                                                <td style="width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">
+                                                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                                        <select name="aktivitas[]" class="form-select form-select-sm" style="width: 100% !important; box-sizing: border-box !important;">
+                                                            <option value="">Pilih Aktivitas</option>
+                                                            <option value="aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                            <option value="tidak aktif di kelas" {{ $existingPresensi && $existingPresensi->aktivitas == 'tidak aktif di kelas' ? 'selected' : '' }}>Tidak Aktif di Kelas</option>
+                                                        </select>
+                                                        <input type="text" name="keterangan[]" class="form-control form-control-sm" 
+                                                               placeholder="Keterangan (opsional)" 
+                                                               value="{{ $existingPresensi ? $existingPresensi->keterangan : '' }}"
+                                                               style="width: 100% !important; box-sizing: border-box !important;">
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -823,6 +822,7 @@
                                         <th>NIS</th>
                                         <th>Nama Siswa</th>
                                         <th>Status</th>
+                                        <th>Aktivitas</th>
                                         <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -838,9 +838,18 @@
                                                     {{ $presensi->status_label }}
                                                 </span>
                                             </td>
+                                            <td>
+                                                @if($presensi->aktivitas)
+                                                    <span class="badge bg-{{ $presensi->aktivitas == 'aktif' ? 'success' : 'warning' }}">
+                                                        {{ $presensi->aktivitas == 'aktif' ? 'Aktif' : 'Tidak Aktif di Kelas' }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $presensi->keterangan ?? '-' }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-warning" onclick="editPresensi({{ $presensi->id }}, '{{ $presensi->status }}', '{{ $presensi->keterangan ?? '' }}')">
+                                                <button class="btn btn-sm btn-warning" onclick="editPresensi({{ $presensi->id }}, '{{ $presensi->status }}', '{{ $presensi->aktivitas ?? '' }}', '{{ $presensi->keterangan ?? '' }}')">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <form action="{{ route('guru.presensi-siswa.destroy', $presensi->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus presensi ini?')">
@@ -885,6 +894,14 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Aktivitas Siswa</label>
+                            <select name="aktivitas" class="form-select" id="editAktivitas">
+                                <option value="">Pilih Aktivitas</option>
+                                <option value="aktif">Aktif</option>
+                                <option value="tidak aktif di kelas">Tidak Aktif di Kelas</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Keterangan</label>
                             <textarea name="keterangan" class="form-control" id="editKeterangan" rows="3"></textarea>
                         </div>
@@ -900,10 +917,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function editPresensi(id, status, keterangan) {
+        function editPresensi(id, status, aktivitas, keterangan) {
             document.getElementById('editForm').action = '/guru/presensi-siswa/' + id;
             document.getElementById('editStatus').value = status;
-            document.getElementById('editKeterangan').value = keterangan;
+            document.getElementById('editAktivitas').value = aktivitas || '';
+            document.getElementById('editKeterangan').value = keterangan || '';
             new bootstrap.Modal(document.getElementById('editModal')).show();
         }
         
