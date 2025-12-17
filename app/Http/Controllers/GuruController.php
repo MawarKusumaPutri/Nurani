@@ -347,65 +347,107 @@ class GuruController extends Controller
         // Handle foto upload - FLEKSIBEL: bisa simpan di mana saja
         if ($request->hasFile('foto')) {
             try {
-                // Delete old photo if exists
-                if ($guru->foto) {
-                    // Hapus foto lama dari berbagai kemungkinan lokasi
-                    PhotoHelper::deletePhoto($guru->foto);
-                    // Coba hapus dengan berbagai format path lama
-                    $oldFilename = basename($guru->foto);
-                    if ($oldFilename && $oldFilename !== $guru->foto) {
-                        PhotoHelper::deletePhoto('profiles/guru/' . $oldFilename);
-                        PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
-                        PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                $file = $request->file('foto');
+                
+                // Validasi file sebelum upload
+                if (!$file || !$file->isValid()) {
+                    $errorMsg = $file ? 'File foto tidak valid. Error code: ' . $file->getError() : 'File foto tidak ditemukan.';
+                    \Log::error('File invalid for guru: ' . $errorMsg);
+                    return back()->withErrors(['foto' => $errorMsg])->withInput();
+                }
+                
+                // Cek ukuran file (max 2MB)
+                if ($file->getSize() > 2048 * 1024) {
+                    return back()->withErrors(['foto' => 'Ukuran file terlalu besar. Maksimal 2MB.'])->withInput();
+                }
+                
+                // Cek tipe file
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                $fileMime = $file->getMimeType();
+                if (!in_array($fileMime, $allowedMimes)) {
+                    return back()->withErrors(['foto' => 'Format file tidak didukung. Gunakan JPG, PNG, atau GIF. Format yang diupload: ' . $fileMime])->withInput();
+                }
+                
+                // Pastikan storage link ada
+                $storageLink = public_path('storage');
+                if (!file_exists($storageLink) || !is_link($storageLink)) {
+                    try {
+                        \Artisan::call('storage:link');
+                        \Log::info('Storage link created successfully for guru');
+                    } catch (\Exception $e) {
+                        \Log::warning('Gagal membuat storage link: ' . $e->getMessage());
                     }
                 }
                 
-                $file = $request->file('foto');
+                // Pastikan folder storage ada
+                $storagePath = storage_path('app/public/profiles/guru');
+                if (!file_exists($storagePath)) {
+                    if (!mkdir($storagePath, 0755, true)) {
+                        \Log::error('Gagal membuat folder: ' . $storagePath);
+                        // Coba dengan permission yang lebih tinggi
+                        @mkdir($storagePath, 0777, true);
+                    }
+                }
+                
+                // Verifikasi folder ada dan writable
+                if (!file_exists($storagePath) || !is_writable($storagePath)) {
+                    \Log::error('Folder tidak ada atau tidak writable: ' . $storagePath);
+                    return back()->withErrors(['foto' => 'Folder storage tidak dapat diakses. Silakan hubungi administrator.'])->withInput();
+                }
+                
+                // Delete old photo if exists
+                if ($guru->foto) {
+                    try {
+                        // Hapus foto lama dari berbagai kemungkinan lokasi
+                        PhotoHelper::deletePhoto($guru->foto);
+                        // Coba hapus dengan berbagai format path lama
+                        $oldFilename = basename($guru->foto);
+                        if ($oldFilename && $oldFilename !== $guru->foto) {
+                            PhotoHelper::deletePhoto('profiles/guru/' . $oldFilename);
+                            PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
+                            PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                        }
+                    } catch (\Exception $e) {
+                        // Log error tapi lanjutkan proses upload
+                        \Log::warning('Gagal menghapus foto lama: ' . $e->getMessage());
+                    }
+                }
                 
                 // OTOMATIS SIMPAN dengan path yang benar
                 // Prioritas 1: simpan di storage/app/public/profiles/guru/
                 $fotoPath = PhotoHelper::savePhoto($file, 'profiles/guru', true);
                 
-                if ($fotoPath) {
-                    // Verifikasi file benar-benar tersimpan SEBELUM menyimpan ke database
-                    $fileExists = \Illuminate\Support\Facades\Storage::disk('public')->exists($fotoPath);
-                    $fullPath = storage_path('app/public/' . $fotoPath);
-                    $fileExistsOnDisk = file_exists($fullPath);
-                    
-                    \Log::info('Photo upload attempt for guru', [
-                        'guru_id' => $guru->id,
-                        'foto_path' => $fotoPath,
-                        'file_exists_storage' => $fileExists,
-                        'file_exists_disk' => $fileExistsOnDisk,
-                        'full_path' => $fullPath
-                    ]);
-                    
-                    // Hanya simpan ke database jika file benar-benar ada
-                    if ($fileExists || $fileExistsOnDisk) {
-                        $guru->foto = $fotoPath;
-                        \Log::info('Photo path saved to database for guru', [
-                            'guru_id' => $guru->id,
-                            'foto_path' => $fotoPath
-                        ]);
-                    } else {
-                        \Log::error('Photo file not found after upload for guru', [
-                            'guru_id' => $guru->id,
-                            'foto_path' => $fotoPath,
-                            'full_path' => $fullPath
-                        ]);
-                        return back()->withErrors(['foto' => 'Foto berhasil diupload tapi file tidak ditemukan. Silakan coba lagi.'])->withInput();
-                    }
+                if ($fotoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($fotoPath)) {
+                    // Path sudah benar: profiles/guru/[nama-file]
+                    $guru->foto = $fotoPath;
+                    \Log::info('Foto guru berhasil disimpan: ' . $fotoPath);
                 } else {
                     // Fallback: simpan di public/image/profiles
                     $fotoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
-                    if ($fotoPath) {
+                    if ($fotoPath && file_exists(public_path($fotoPath))) {
                         // Path: image/profiles/[nama-file]
                         $guru->foto = $fotoPath;
+                        \Log::info('Foto guru berhasil disimpan (fallback): ' . $fotoPath);
                     } else {
-                        return back()->withErrors(['foto' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                        // Log error untuk debugging
+                        \Log::error('Gagal menyimpan foto guru: File valid tapi savePhoto mengembalikan null atau file tidak ada');
+                        \Log::error('File info: ' . json_encode([
+                            'name' => $file->getClientOriginalName(),
+                            'size' => $file->getSize(),
+                            'mime' => $file->getMimeType(),
+                            'error' => $file->getError(),
+                            'storage_path' => $storagePath,
+                            'storage_exists' => file_exists($storagePath),
+                            'storage_writable' => is_writable($storagePath)
+                        ]));
+                        return back()->withErrors(['foto' => 'Gagal menyimpan foto. Pastikan folder storage memiliki permission yang benar dan storage link sudah dibuat.'])->withInput();
                     }
                 }
             } catch (\Exception $e) {
+                // Log error lengkap untuk debugging
+                \Log::error('Error upload foto guru: ' . $e->getMessage());
+                \Log::error('Stack trace: ' . $e->getTraceAsString());
+                \Log::error('File: ' . (isset($file) && $file ? $file->getClientOriginalName() : 'null'));
                 return back()->withErrors(['foto' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
             }
         }

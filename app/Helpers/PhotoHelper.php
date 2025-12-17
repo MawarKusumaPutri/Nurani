@@ -299,12 +299,44 @@ class PhotoHelper
                     return null;
                 }
                 
+                // Verifikasi folder writable sebelum upload
+                if (!is_writable($storagePath)) {
+                    \Log::error('Folder tidak writable: ' . $storagePath);
+                    // Coba ubah permission
+                    @chmod($storagePath, 0755);
+                    if (!is_writable($storagePath)) {
+                        throw new \Exception('Folder storage tidak dapat ditulis. Silakan hubungi administrator.');
+                    }
+                }
+                
                 // Save to storage
-                $path = $file->storeAs($basePath, $filename, 'public');
-                if ($path && Storage::disk('public')->exists($path)) {
-                    return $path; // Return relative path: basePath/filename
-                } else {
-                    \Log::error('File tidak tersimpan atau tidak ditemukan: ' . $path);
+                try {
+                    $path = $file->storeAs($basePath, $filename, 'public');
+                    if ($path) {
+                        // Verifikasi file benar-benar ada
+                        if (Storage::disk('public')->exists($path)) {
+                            \Log::info('Foto berhasil disimpan di storage: ' . $path);
+                            return $path; // Return relative path: basePath/filename
+                        } else {
+                            \Log::error('File tidak ditemukan setelah disimpan: ' . $path);
+                            // Coba cek dengan path lengkap
+                            $fullPath = storage_path('app/public/' . $path);
+                            if (file_exists($fullPath)) {
+                                \Log::info('File ditemukan di path lengkap: ' . $fullPath);
+                                return $path;
+                            } else {
+                                throw new \Exception('File berhasil diupload tapi tidak ditemukan di storage. Path: ' . $path);
+                            }
+                        }
+                    } else {
+                        $errorMsg = 'Gagal menyimpan file. storeAs mengembalikan false/null untuk: ' . $basePath . '/' . $filename;
+                        \Log::error($errorMsg);
+                        throw new \Exception($errorMsg);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Error saat storeAs: ' . $e->getMessage());
+                    \Log::error('Path: ' . $basePath . ', Filename: ' . $filename);
+                    throw $e; // Re-throw untuk ditangani di controller
                 }
             } else {
                 // OTOMATIS BUAT FOLDER - Pastikan semua folder parent ada
@@ -331,14 +363,39 @@ class PhotoHelper
                 // Verifikasi folder sudah ada
                 if (!file_exists($publicPath)) {
                     \Log::error('Folder tidak ada setelah dibuat: ' . $publicPath);
-                    return null;
+                    throw new \Exception('Folder tidak dapat dibuat: ' . $publicPath);
+                }
+                
+                // Verifikasi folder writable
+                if (!is_writable($publicPath)) {
+                    \Log::error('Folder tidak writable: ' . $publicPath);
+                    // Coba ubah permission
+                    @chmod($publicPath, 0755);
+                    if (!is_writable($publicPath)) {
+                        throw new \Exception('Folder tidak dapat ditulis. Silakan hubungi administrator.');
+                    }
                 }
                 
                 $fullPath = $publicPath . '/' . $filename;
-                if ($file->move($publicPath, $filename)) {
-                    return $basePath . '/' . $filename; // Return relative path from public
-                } else {
-                    \Log::error('File tidak bisa dipindahkan ke: ' . $publicPath);
+                try {
+                    if ($file->move($publicPath, $filename)) {
+                        // Verifikasi file benar-benar ada
+                        if (file_exists($fullPath)) {
+                            \Log::info('Foto berhasil disimpan di public: ' . $fullPath);
+                            return $basePath . '/' . $filename; // Return relative path from public
+                        } else {
+                            $errorMsg = 'File tidak ditemukan setelah move: ' . $fullPath;
+                            \Log::error($errorMsg);
+                            throw new \Exception($errorMsg);
+                        }
+                    } else {
+                        $errorMsg = 'File tidak bisa dipindahkan ke: ' . $publicPath . '. Error code: ' . $file->getError();
+                        \Log::error($errorMsg);
+                        throw new \Exception($errorMsg);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Error saat move file: ' . $e->getMessage());
+                    throw $e; // Re-throw untuk ditangani di controller
                 }
             }
             
