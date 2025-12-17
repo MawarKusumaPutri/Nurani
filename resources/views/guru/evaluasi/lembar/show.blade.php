@@ -54,6 +54,37 @@
             background: #ffffff !important;
         }
         
+        dt {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        dd {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body .row > div {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-body > .row {
+            display: flex !important;
+            flex-wrap: wrap;
+        }
+        
+        .card-body .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        
+        @media (max-width: 767px) {
+            .card-body .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+        
         @media (max-width: 991px) {
             .sidebar-toggle {
                 display: block;
@@ -120,57 +151,82 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-10 col-lg-8">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <dl class="row">
-                                    <dt class="col-sm-4">Siswa</dt>
-                                    <dd class="col-sm-8">{{ $lembar->siswa->nama ?? 'N/A' }}</dd>
-
-                                    <dt class="col-sm-4">Mata Pelajaran</dt>
-                                    <dd class="col-sm-8">{{ $lembar->mata_pelajaran }}</dd>
-
-                                    <dt class="col-sm-4">Kelas</dt>
-                                    <dd class="col-sm-8">Kelas {{ $lembar->kelas }}</dd>
-
-                                    <dt class="col-sm-4">Semester</dt>
-                                    <dd class="col-sm-8">{{ $lembar->semester }}</dd>
-
-                                    <dt class="col-sm-4">Tanggal Penilaian</dt>
-                                    <dd class="col-sm-8">{{ \Carbon\Carbon::parse($lembar->tanggal_penilaian)->format('d/m/Y') }}</dd>
-
-
-                                    @if($lembar->rubrikPenilaian)
-                                    <dt class="col-sm-4">Rubrik Penilaian</dt>
-                                    <dd class="col-sm-8">{{ $lembar->rubrikPenilaian->judul }}</dd>
-                                    @endif
-
-                                    <dt class="col-sm-4">Nilai</dt>
-                                    <dd class="col-sm-8">
-                                        @if($lembar->nilai)
-                                            <span class="badge bg-primary fs-6">{{ number_format($lembar->nilai, 2) }}</span>
-                                        @else
-                                            <span class="text-muted">-</span>
+                                <div class="row g-3">
+                                    <!-- Kolom Kiri -->
+                                    <div class="col-12 col-md-6 col-lg-6">
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Siswa</strong></div>
+                                            <div class="col-7">{{ $lembar->siswa->nama ?? 'N/A' }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Mata Pelajaran</strong></div>
+                                            <div class="col-7">{{ $lembar->mata_pelajaran }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Kelas</strong></div>
+                                            <div class="col-7">Kelas {{ $lembar->kelas }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Semester</strong></div>
+                                            <div class="col-7">{{ $lembar->semester }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Tanggal Penilaian</strong></div>
+                                            <div class="col-7">{{ \Carbon\Carbon::parse($lembar->tanggal_penilaian)->format('d/m/Y') }}</div>
+                                        </div>
+                                        @if($lembar->rubrikPenilaian)
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Rubrik Penilaian</strong></div>
+                                            <div class="col-7">{{ $lembar->rubrikPenilaian->judul }}</div>
+                                        </div>
                                         @endif
-                                    </dd>
+                                    </div>
 
-                                    @if($lembar->aspek_penilaian)
-                                    <dt class="col-sm-4">Aspek Penilaian</dt>
-                                    <dd class="col-sm-8">{{ $lembar->aspek_penilaian }}</dd>
-                                    @endif
+                                    <!-- Kolom Kanan -->
+                                    <div class="col-12 col-md-6 col-lg-6">
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Nilai</strong></div>
+                                            <div class="col-7">
+                                                @if($lembar->nilai)
+                                                    <span class="badge bg-primary fs-6">{{ number_format($lembar->nilai, 2) }}</span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @if($lembar->aspek_penilaian)
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Aspek Penilaian</strong></div>
+                                            <div class="col-7">{{ $lembar->aspek_penilaian }}</div>
+                                        </div>
+                                        @endif
+                                        @if($lembar->catatan)
+                                        <div class="row mb-2">
+                                            <div class="col-5"><strong>Catatan</strong></div>
+                                            <div class="col-7">{{ $lembar->catatan }}</div>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
 
-                                    @if($lembar->catatan)
-                                    <dt class="col-sm-4">Catatan</dt>
-                                    <dd class="col-sm-8">{{ $lembar->catatan }}</dd>
-                                    @endif
-
-                                    @if($lembar->detail_nilai)
-                                    <dt class="col-sm-4">Detail Nilai</dt>
-                                    <dd class="col-sm-8">
-                                        <pre class="bg-light p-3 rounded">{{ $lembar->detail_nilai }}</pre>
-                                    </dd>
-                                    @endif
-                                </dl>
+                                <!-- Field yang membutuhkan full width -->
+                                @if($lembar->detail_nilai)
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="row mb-2">
+                                            <div class="col-12"><strong>Detail Nilai</strong></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <pre class="bg-light p-3 rounded mb-0">{{ $lembar->detail_nilai }}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
