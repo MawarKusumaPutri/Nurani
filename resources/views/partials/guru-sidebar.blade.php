@@ -186,9 +186,27 @@
         visibility: visible !important;
         opacity: 1 !important;
         position: relative !important;
-        width: auto !important;
         left: 0 !important;
         transform: translateX(0) !important;
+    }
+    
+    /* Pastikan sidebar memiliki lebar tetap di desktop - tidak full width */
+    @media (min-width: 768px) {
+        .sidebar.col-md-3,
+        #guru-sidebar.col-md-3 {
+            flex: 0 0 25% !important;
+            max-width: 25% !important;
+            width: 25% !important;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .sidebar.col-lg-2,
+        #guru-sidebar.col-lg-2 {
+            flex: 0 0 16.66666667% !important;
+            max-width: 16.66666667% !important;
+            width: 16.66666667% !important;
+        }
     }
     
     /* Styling scrollbar untuk sidebar umum */
@@ -260,26 +278,33 @@
         scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
     }
     
-    /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
-    @media (min-width: 768px) {
-        .col-md-3.col-lg-2.sidebar {
-            position: relative !important;
-            float: none !important;
-        }
-    }
-    
-    /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+    /* Pastikan sidebar memiliki lebar tetap - tidak full width */
     @media (min-width: 768px) {
         .col-md-3.col-lg-2.sidebar,
         #guru-sidebar {
+            position: relative !important;
+            float: none !important;
+            flex: 0 0 25% !important;
+            width: 25% !important;
+            max-width: 25% !important;
+            min-width: 250px !important;
             display: flex !important;
             visibility: visible !important;
             opacity: 1 !important;
-            position: relative !important;
             left: 0 !important;
             transform: translateX(0) !important;
             margin-left: 0 !important;
             margin-right: 0 !important;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .col-md-3.col-lg-2.sidebar,
+        #guru-sidebar {
+            flex: 0 0 16.66666667% !important;
+            width: 16.66666667% !important;
+            max-width: 16.66666667% !important;
+            min-width: 200px !important;
         }
     }
     
@@ -784,11 +809,24 @@
                         menu.style.setProperty('transform', 'translateX(0)', 'important');
                         menu.style.setProperty('inset', 'auto', 'important');
                         
-                        // Remove any inline styles that Bootstrap might add
+                        // Calculate position relative to sidebar
                         const rect = this.getBoundingClientRect();
                         const sidebarRect = document.getElementById('guru-sidebar').getBoundingClientRect();
-                        menu.style.left = (sidebarRect.width + 8) + 'px';
-                        menu.style.top = rect.top - sidebarRect.top + 'px';
+                        const relativeTop = rect.top - sidebarRect.top;
+                        
+                        // Force position: di samping kanan sidebar, bukan di bawah
+                        menu.style.setProperty('left', '100%', 'important');
+                        menu.style.setProperty('right', 'auto', 'important');
+                        menu.style.setProperty('top', relativeTop + 'px', 'important');
+                        menu.style.setProperty('bottom', 'auto', 'important');
+                        menu.style.setProperty('margin-left', '8px', 'important');
+                        menu.style.setProperty('margin-top', '0', 'important');
+                        menu.style.setProperty('transform', 'translateX(0)', 'important');
+                        
+                        // Remove any Popper.js inline styles that might override
+                        menu.removeAttribute('data-popper-placement');
+                        menu.removeAttribute('data-popper-reference-hidden');
+                        menu.removeAttribute('data-popper-escaped');
                     }
                 });
                 

@@ -208,14 +208,21 @@
             margin-right: 0;
         }
         
-        /* Pastikan sidebar dan main content berada di samping - sama seperti halaman lain */
+        /* Pastikan sidebar dan main content berada di samping - sama seperti Tenaga Usaha */
         @media (min-width: 768px) {
+            .container-fluid {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
             .container-fluid > .row {
                 display: flex !important;
                 flex-wrap: nowrap !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
             }
             
-            /* Sidebar di samping kiri */
+            /* Sidebar di samping kiri - lebar tetap, tidak full width */
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 flex: 0 0 25% !important;
@@ -237,9 +244,11 @@
             
             /* Main content di samping kanan sidebar */
             .col-md-9.col-lg-10,
-            main.col-md-9 {
+            main.col-md-9,
+            main.col-md-9.col-lg-10 {
                 flex: 0 0 75% !important;
                 width: 75% !important;
+                max-width: 75% !important;
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
@@ -248,6 +257,9 @@
                 min-height: 100vh !important;
                 background-color: #ffffff !important;
                 box-sizing: border-box !important;
+                margin-left: 0 !important;
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
             }
         }
         
@@ -262,9 +274,11 @@
             }
             
             .col-md-9.col-lg-10,
-            main.col-md-9 {
+            main.col-md-9,
+            main.col-md-9.col-lg-10 {
                 flex: 0 0 83.33333333% !important;
                 width: 83.33333333% !important;
+                max-width: 83.33333333% !important;
             }
         }
         }
