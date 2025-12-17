@@ -329,6 +329,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
+                
+                @if($errors->has('foto'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <i class="fas fa-image me-2"></i>
+                        <strong>Peringatan Upload Foto:</strong> {{ $errors->first('foto') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
                 <div class="row">
                     <div class="col-md-8">

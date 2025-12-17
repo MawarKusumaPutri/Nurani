@@ -2463,8 +2463,10 @@ class TuController extends Controller
                 $file = $request->file('photo');
                 
                 // Validasi file sebelum upload
-                if (!$file->isValid()) {
-                    return back()->withErrors(['photo' => 'File foto tidak valid. Silakan pilih file lain.'])->withInput();
+                if (!$file || !$file->isValid()) {
+                    $errorMsg = $file ? 'File foto tidak valid. Error code: ' . $file->getError() : 'File foto tidak ditemukan.';
+                    \Log::error('File invalid: ' . $errorMsg);
+                    return back()->withErrors(['photo' => $errorMsg])->withInput();
                 }
                 
                 // Cek ukuran file (max 2MB)
@@ -2474,8 +2476,36 @@ class TuController extends Controller
                 
                 // Cek tipe file
                 $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-                if (!in_array($file->getMimeType(), $allowedMimes)) {
-                    return back()->withErrors(['photo' => 'Format file tidak didukung. Gunakan JPG, PNG, atau GIF.'])->withInput();
+                $fileMime = $file->getMimeType();
+                if (!in_array($fileMime, $allowedMimes)) {
+                    return back()->withErrors(['photo' => 'Format file tidak didukung. Gunakan JPG, PNG, atau GIF. Format yang diupload: ' . $fileMime])->withInput();
+                }
+                
+                // Pastikan storage link ada
+                $storageLink = public_path('storage');
+                if (!file_exists($storageLink) || !is_link($storageLink)) {
+                    try {
+                        \Artisan::call('storage:link');
+                        \Log::info('Storage link created successfully');
+                    } catch (\Exception $e) {
+                        \Log::warning('Gagal membuat storage link: ' . $e->getMessage());
+                    }
+                }
+                
+                // Pastikan folder storage ada
+                $storagePath = storage_path('app/public/profiles/tu');
+                if (!file_exists($storagePath)) {
+                    if (!mkdir($storagePath, 0755, true)) {
+                        \Log::error('Gagal membuat folder: ' . $storagePath);
+                        // Coba dengan permission yang lebih tinggi
+                        @mkdir($storagePath, 0777, true);
+                    }
+                }
+                
+                // Verifikasi folder ada dan writable
+                if (!file_exists($storagePath) || !is_writable($storagePath)) {
+                    \Log::error('Folder tidak ada atau tidak writable: ' . $storagePath);
+                    return back()->withErrors(['photo' => 'Folder storage tidak dapat diakses. Silakan hubungi administrator.'])->withInput();
                 }
                 
                 // Delete old photo if exists
@@ -2500,33 +2530,53 @@ class TuController extends Controller
                 // Prioritas 1: simpan di storage/app/public/profiles/tu/
                 $photoPath = PhotoHelper::savePhoto($file, 'profiles/tu', true);
                 
-                if ($photoPath) {
+                if ($photoPath && Storage::disk('public')->exists($photoPath)) {
                     // Path sudah benar: profiles/tu/[nama-file]
                     // Langsung simpan ke database tanpa perlu edit manual
                     $user->photo = $photoPath;
+                    \Log::info('Foto TU berhasil disimpan: ' . $photoPath);
                 } else {
                     // Fallback: simpan di public/image/profiles
                     $photoPath = PhotoHelper::savePhoto($file, 'image/profiles', false);
-                    if ($photoPath) {
+                    if ($photoPath && file_exists(public_path($photoPath))) {
                         // Path: image/profiles/[nama-file]
                         $user->photo = $photoPath;
+                        \Log::info('Foto TU berhasil disimpan (fallback): ' . $photoPath);
                     } else {
                         // Log error untuk debugging
-                        \Log::error('Gagal menyimpan foto TU: File valid tapi savePhoto mengembalikan null');
+                        \Log::error('Gagal menyimpan foto TU: File valid tapi savePhoto mengembalikan null atau file tidak ada');
                         \Log::error('File info: ' . json_encode([
                             'name' => $file->getClientOriginalName(),
                             'size' => $file->getSize(),
                             'mime' => $file->getMimeType(),
-                            'error' => $file->getError()
+                            'error' => $file->getError(),
+                            'storage_path' => $storagePath,
+                            'storage_exists' => file_exists($storagePath),
+                            'storage_writable' => is_writable($storagePath)
                         ]));
-                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Pastikan folder storage memiliki permission yang benar.'])->withInput();
+                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Pastikan folder storage memiliki permission yang benar dan storage link sudah dibuat.'])->withInput();
                     }
                 }
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                // Re-throw validation exception agar ditangani oleh Laravel
+                throw $e;
             } catch (\Exception $e) {
                 // Log error lengkap untuk debugging
                 \Log::error('Error upload foto TU: ' . $e->getMessage());
                 \Log::error('Stack trace: ' . $e->getTraceAsString());
-                return back()->withErrors(['photo' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
+                \Log::error('File: ' . (isset($file) && $file ? $file->getClientOriginalName() : 'null'));
+                
+                // Error message yang lebih user-friendly
+                $errorMessage = 'Gagal mengupload foto. ';
+                if (strpos($e->getMessage(), 'writable') !== false || strpos($e->getMessage(), 'permission') !== false) {
+                    $errorMessage .= 'Folder storage tidak memiliki permission yang cukup. Silakan hubungi administrator.';
+                } elseif (strpos($e->getMessage(), 'not found') !== false || strpos($e->getMessage(), 'tidak ditemukan') !== false) {
+                    $errorMessage .= 'File tidak ditemukan setelah upload. Silakan coba lagi.';
+                } else {
+                    $errorMessage .= $e->getMessage();
+                }
+                
+                return back()->withErrors(['photo' => $errorMessage])->withInput();
             }
         }
         

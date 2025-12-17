@@ -443,12 +443,26 @@ class GuruController extends Controller
                         return back()->withErrors(['foto' => 'Gagal menyimpan foto. Pastikan folder storage memiliki permission yang benar dan storage link sudah dibuat.'])->withInput();
                     }
                 }
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                // Re-throw validation exception agar ditangani oleh Laravel
+                throw $e;
             } catch (\Exception $e) {
                 // Log error lengkap untuk debugging
                 \Log::error('Error upload foto guru: ' . $e->getMessage());
                 \Log::error('Stack trace: ' . $e->getTraceAsString());
                 \Log::error('File: ' . (isset($file) && $file ? $file->getClientOriginalName() : 'null'));
-                return back()->withErrors(['foto' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
+                
+                // Error message yang lebih user-friendly
+                $errorMessage = 'Gagal mengupload foto. ';
+                if (strpos($e->getMessage(), 'writable') !== false || strpos($e->getMessage(), 'permission') !== false) {
+                    $errorMessage .= 'Folder storage tidak memiliki permission yang cukup. Silakan hubungi administrator.';
+                } elseif (strpos($e->getMessage(), 'not found') !== false || strpos($e->getMessage(), 'tidak ditemukan') !== false) {
+                    $errorMessage .= 'File tidak ditemukan setelah upload. Silakan coba lagi.';
+                } else {
+                    $errorMessage .= $e->getMessage();
+                }
+                
+                return back()->withErrors(['foto' => $errorMessage])->withInput();
             }
         }
 
