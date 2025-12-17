@@ -63,29 +63,31 @@
             margin-bottom: 0.5rem;
         }
         
-        /* Pastikan row Bootstrap menggunakan flexbox dengan benar */
-        .card-body .row {
+        /* CSS khusus untuk layout horizontal detail lembar penilaian */
+        .card-body > .d-flex {
             display: flex !important;
+            flex-direction: row !important;
             flex-wrap: wrap !important;
-            margin-right: -0.75rem !important;
-            margin-left: -0.75rem !important;
         }
         
         /* Pastikan kolom tampil bersebelahan di layar >= 768px */
         @media (min-width: 768px) {
-            .card-body .col-md-6 {
-                flex: 0 0 50% !important;
-                max-width: 50% !important;
-                padding-right: 0.75rem !important;
-                padding-left: 0.75rem !important;
+            .card-body > .d-flex > div {
+                flex: 1 1 45% !important;
+                min-width: 300px;
             }
         }
         
         /* Di layar kecil, kolom jadi vertikal */
         @media (max-width: 767px) {
-            .card-body .col-md-6 {
-                flex: 0 0 100% !important;
-                max-width: 100% !important;
+            .card-body > .d-flex {
+                flex-direction: column !important;
+            }
+            
+            .card-body > .d-flex > div {
+                flex: 1 1 100% !important;
+                min-width: 100%;
+                width: 100%;
             }
         }
         
@@ -158,9 +160,9 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
+                                <div class="d-flex flex-row flex-wrap" style="display: flex !important; flex-direction: row !important; gap: 2rem;">
                                     <!-- Kolom Kiri -->
-                                    <div class="col-md-6">
+                                    <div style="flex: 1 1 45%; min-width: 300px;">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Siswa</strong></div>
                                             <div class="col-7">{{ $lembar->siswa->nama ?? 'N/A' }}</div>
@@ -190,7 +192,7 @@
                                     </div>
 
                                     <!-- Kolom Kanan -->
-                                    <div class="col-md-6">
+                                    <div style="flex: 1 1 45%; min-width: 300px;">
                                         <div class="row mb-2">
                                             <div class="col-5"><strong>Nilai</strong></div>
                                             <div class="col-7">
