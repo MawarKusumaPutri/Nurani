@@ -13,6 +13,7 @@ use App\Models\Kuis;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class EvaluasiGuruController extends Controller
 {
@@ -238,20 +239,83 @@ class EvaluasiGuruController extends Controller
 
         // Handle kuis atau rubrik
         $rubrikPenilaianId = null;
-        if ($validated['rubrik_penilaian_id']) {
+        $jenisPenilaian = 'Harian'; // Default value
+        
+        if (!empty($validated['rubrik_penilaian_id'])) {
             if (strpos($validated['rubrik_penilaian_id'], 'kuis_') === 0) {
                 // Ini adalah kuis, simpan sebagai null (atau bisa ditambahkan field kuis_id nanti)
                 $rubrikPenilaianId = null;
+                $jenisPenilaian = 'Kuis';
             } else {
-                // Ini adalah rubrik
-                $rubrikPenilaianId = $validated['rubrik_penilaian_id'];
+                // Ini adalah rubrik, pastikan integer
+                $rubrikPenilaianId = (int) $validated['rubrik_penilaian_id'];
+                $jenisPenilaian = 'Rubrik';
             }
         }
         
-        $validated['rubrik_penilaian_id'] = $rubrikPenilaianId;
-        $validated['guru_id'] = $guru->id;
+        // Buat array data secara eksplisit untuk memastikan semua field terisi
+        // Pastikan jenis_penilaian selalu ada dan tidak kosong
+        if (empty($jenisPenilaian)) {
+            $jenisPenilaian = 'Harian';
+        }
         
-        LembarPenilaian::create($validated);
+        $data = [
+            'guru_id' => (int) $guru->id,
+            'siswa_id' => (int) $validated['siswa_id'],
+            'rubrik_penilaian_id' => $rubrikPenilaianId,
+            'mata_pelajaran' => trim($validated['mata_pelajaran']),
+            'kelas' => trim($validated['kelas']),
+            'semester' => trim($validated['semester']),
+            'tahun_pelajaran' => !empty($validated['tahun_pelajaran']) ? trim($validated['tahun_pelajaran']) : null,
+            'tanggal_penilaian' => $validated['tanggal_penilaian'],
+            'jenis_penilaian' => trim($jenisPenilaian), // Pastikan selalu ada
+            'aspek_penilaian' => !empty($validated['aspek_penilaian']) ? trim($validated['aspek_penilaian']) : null,
+            'nilai' => !empty($validated['nilai']) ? (float) $validated['nilai'] : null,
+            'catatan' => !empty($validated['catatan']) ? trim($validated['catatan']) : null,
+            'detail_nilai' => !empty($validated['detail_nilai']) ? trim($validated['detail_nilai']) : null,
+        ];
+        
+        // PASTIKAN jenis_penilaian SELALU ADA - Validasi ketat
+        if (empty($jenisPenilaian) || trim($jenisPenilaian) === '' || is_null($jenisPenilaian)) {
+            $jenisPenilaian = 'Harian';
+        }
+        $jenisPenilaian = trim($jenisPenilaian);
+        
+        // Pastikan jenis_penilaian di data array juga benar
+        $data['jenis_penilaian'] = $jenisPenilaian;
+        
+        // Validasi final sebelum insert
+        if (empty($data['jenis_penilaian']) || trim($data['jenis_penilaian']) === '') {
+            $data['jenis_penilaian'] = 'Harian';
+        }
+        
+        // Gunakan DB::table() langsung dengan semua field termasuk jenis_penilaian
+        // Ini memastikan field jenis_penilaian SELALU disertakan dalam query INSERT
+        $insertData = [
+            'guru_id' => (int) $data['guru_id'],
+            'siswa_id' => (int) $data['siswa_id'],
+            'rubrik_penilaian_id' => $data['rubrik_penilaian_id'],
+            'mata_pelajaran' => (string) $data['mata_pelajaran'],
+            'kelas' => (string) $data['kelas'],
+            'semester' => (string) $data['semester'],
+            'tahun_pelajaran' => $data['tahun_pelajaran'],
+            'tanggal_penilaian' => $data['tanggal_penilaian'],
+            'jenis_penilaian' => (string) $data['jenis_penilaian'], // WAJIB ADA - TIDAK BOLEH KOSONG
+            'aspek_penilaian' => $data['aspek_penilaian'],
+            'nilai' => $data['nilai'],
+            'catatan' => $data['catatan'],
+            'detail_nilai' => $data['detail_nilai'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        
+        // Final check - pastikan jenis_penilaian ada
+        if (empty($insertData['jenis_penilaian'])) {
+            $insertData['jenis_penilaian'] = 'Harian';
+        }
+        
+        // Insert ke database
+        DB::table('lembar_penilaian')->insert($insertData);
 
         return redirect()->route('guru.evaluasi.lembar.index')->with('success', 'Lembar penilaian berhasil dibuat');
     }
@@ -300,18 +364,47 @@ class EvaluasiGuruController extends Controller
 
         // Handle kuis atau rubrik
         $rubrikPenilaianId = null;
-        if ($validated['rubrik_penilaian_id']) {
+        $jenisPenilaian = 'Harian'; // Default value
+        
+        if (!empty($validated['rubrik_penilaian_id'])) {
             if (strpos($validated['rubrik_penilaian_id'], 'kuis_') === 0) {
                 // Ini adalah kuis, simpan sebagai null (atau bisa ditambahkan field kuis_id nanti)
                 $rubrikPenilaianId = null;
+                $jenisPenilaian = 'Kuis';
             } else {
-                // Ini adalah rubrik
-                $rubrikPenilaianId = $validated['rubrik_penilaian_id'];
+                // Ini adalah rubrik, pastikan integer
+                $rubrikPenilaianId = (int) $validated['rubrik_penilaian_id'];
+                $jenisPenilaian = 'Rubrik';
             }
         }
         
-        $validated['rubrik_penilaian_id'] = $rubrikPenilaianId;
-        $lembar->update($validated);
+        // Pastikan jenis_penilaian selalu ada dan tidak kosong
+        if (empty($jenisPenilaian)) {
+            $jenisPenilaian = 'Harian';
+        }
+        
+        // Buat array data secara eksplisit untuk memastikan semua field terisi
+        $data = [
+            'siswa_id' => (int) $validated['siswa_id'],
+            'rubrik_penilaian_id' => $rubrikPenilaianId,
+            'mata_pelajaran' => trim($validated['mata_pelajaran']),
+            'kelas' => trim($validated['kelas']),
+            'semester' => trim($validated['semester']),
+            'tahun_pelajaran' => !empty($validated['tahun_pelajaran']) ? trim($validated['tahun_pelajaran']) : null,
+            'tanggal_penilaian' => $validated['tanggal_penilaian'],
+            'jenis_penilaian' => trim($jenisPenilaian), // Pastikan selalu ada
+            'aspek_penilaian' => !empty($validated['aspek_penilaian']) ? trim($validated['aspek_penilaian']) : null,
+            'nilai' => !empty($validated['nilai']) ? (float) $validated['nilai'] : null,
+            'catatan' => !empty($validated['catatan']) ? trim($validated['catatan']) : null,
+            'detail_nilai' => !empty($validated['detail_nilai']) ? trim($validated['detail_nilai']) : null,
+        ];
+        
+        // Pastikan jenis_penilaian tidak kosong sebelum update
+        if (empty($data['jenis_penilaian'])) {
+            $data['jenis_penilaian'] = 'Harian';
+        }
+        
+        $lembar->update($data);
 
         return redirect()->route('guru.evaluasi.lembar.index')->with('success', 'Lembar penilaian berhasil diperbarui');
     }
