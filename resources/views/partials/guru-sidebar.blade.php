@@ -143,31 +143,9 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.kuis') ? 'active' : '' }}" href="{{ route('guru.kuis.index') }}">
             <i class="fas fa-question-circle me-2"></i> Kuis
         </a>
-        
-        <!-- Evaluasi Guru Dropdown - Muncul di Samping -->
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="#" id="evaluasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="evaluasiDropdown">
-                <li><a class="dropdown-item {{ $currentRoute == 'guru.evaluasi.index' ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
-                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard Evaluasi
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rubrik') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rubrik.index') }}">
-                    <i class="fas fa-list-check me-2"></i> Rubrik Penilaian
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.lembar') ? 'active' : '' }}" href="{{ route('guru.evaluasi.lembar.index') }}">
-                    <i class="fas fa-file-alt me-2"></i> Lembar Penilaian
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.nilai') ? 'active' : '' }}" href="{{ route('guru.evaluasi.nilai.index') }}">
-                    <i class="fas fa-chart-line me-2"></i> Nilai Harian
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rekap') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rekap.index') }}">
-                    <i class="fas fa-chart-bar me-2"></i> Rekap Hasil Belajar
-                </a></li>
-            </ul>
-        </div>
-        
+        <a class="nav-link {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
+            <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
+        </a>
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
