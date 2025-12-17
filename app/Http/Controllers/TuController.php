@@ -2460,20 +2460,41 @@ class TuController extends Controller
         // Handle photo upload - OTOMATIS: path akan disimpan dengan benar
         if ($request->hasFile('photo')) {
             try {
-                // Delete old photo if exists
-                if ($user->photo) {
-                    // Hapus foto lama dari berbagai kemungkinan lokasi
-                    PhotoHelper::deletePhoto($user->photo);
-                    // Coba hapus dengan berbagai format path lama
-                    $oldFilename = basename($user->photo);
-                    if ($oldFilename && $oldFilename !== $user->photo) {
-                        PhotoHelper::deletePhoto('profiles/tu/' . $oldFilename);
-                        PhotoHelper::deletePhoto('photos/' . $oldFilename);
-                        PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
-                    }
+                $file = $request->file('photo');
+                
+                // Validasi file sebelum upload
+                if (!$file->isValid()) {
+                    return back()->withErrors(['photo' => 'File foto tidak valid. Silakan pilih file lain.'])->withInput();
                 }
                 
-                $file = $request->file('photo');
+                // Cek ukuran file (max 2MB)
+                if ($file->getSize() > 2048 * 1024) {
+                    return back()->withErrors(['photo' => 'Ukuran file terlalu besar. Maksimal 2MB.'])->withInput();
+                }
+                
+                // Cek tipe file
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                if (!in_array($file->getMimeType(), $allowedMimes)) {
+                    return back()->withErrors(['photo' => 'Format file tidak didukung. Gunakan JPG, PNG, atau GIF.'])->withInput();
+                }
+                
+                // Delete old photo if exists
+                if ($user->photo) {
+                    try {
+                        // Hapus foto lama dari berbagai kemungkinan lokasi
+                        PhotoHelper::deletePhoto($user->photo);
+                        // Coba hapus dengan berbagai format path lama
+                        $oldFilename = basename($user->photo);
+                        if ($oldFilename && $oldFilename !== $user->photo) {
+                            PhotoHelper::deletePhoto('profiles/tu/' . $oldFilename);
+                            PhotoHelper::deletePhoto('photos/' . $oldFilename);
+                            PhotoHelper::deletePhoto('guru/foto/' . $oldFilename);
+                        }
+                    } catch (\Exception $e) {
+                        // Log error tapi lanjutkan proses upload
+                        \Log::warning('Gagal menghapus foto lama: ' . $e->getMessage());
+                    }
+                }
                 
                 // OTOMATIS SIMPAN dengan path yang benar
                 // Prioritas 1: simpan di storage/app/public/profiles/tu/
@@ -2490,10 +2511,21 @@ class TuController extends Controller
                         // Path: image/profiles/[nama-file]
                         $user->photo = $photoPath;
                     } else {
-                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Silakan coba lagi.'])->withInput();
+                        // Log error untuk debugging
+                        \Log::error('Gagal menyimpan foto TU: File valid tapi savePhoto mengembalikan null');
+                        \Log::error('File info: ' . json_encode([
+                            'name' => $file->getClientOriginalName(),
+                            'size' => $file->getSize(),
+                            'mime' => $file->getMimeType(),
+                            'error' => $file->getError()
+                        ]));
+                        return back()->withErrors(['photo' => 'Gagal menyimpan foto. Pastikan folder storage memiliki permission yang benar.'])->withInput();
                     }
                 }
             } catch (\Exception $e) {
+                // Log error lengkap untuk debugging
+                \Log::error('Error upload foto TU: ' . $e->getMessage());
+                \Log::error('Stack trace: ' . $e->getTraceAsString());
                 return back()->withErrors(['photo' => 'Terjadi kesalahan saat mengupload foto: ' . $e->getMessage()])->withInput();
             }
         }
