@@ -49,6 +49,7 @@
             color: #856404;
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     <div class="container-fluid">

@@ -56,6 +56,7 @@
             object-fit: cover;
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body class="bg-light">
     <div class="container-fluid">

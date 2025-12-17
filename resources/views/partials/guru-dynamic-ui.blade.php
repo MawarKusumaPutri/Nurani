@@ -1,5 +1,12 @@
 {{-- Dynamic UI Enhancements untuk semua halaman Guru --}}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+    /* Global Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
     /* Loading Overlay */
     .loading-overlay {
         position: fixed;
@@ -7,12 +14,12 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         display: none;
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        backdrop-filter: blur(2px);
+        backdrop-filter: blur(3px);
     }
 
     .loading-spinner {
@@ -29,73 +36,179 @@
         100% { transform: rotate(360deg); }
     }
 
-    /* Fade In Animation */
-    .fade-in {
-        animation: fadeIn 0.4s ease-in;
-    }
-
-    @keyframes fadeIn {
-        from { 
-            opacity: 0; 
-            transform: translateY(-10px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-
-    /* Card Animations */
+    /* Card Enhancements */
     .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
-        animation: fadeIn 0.4s ease-in;
+        opacity: 0;
+        animation: fadeInCard 0.4s ease forwards;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+    .card:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInCard {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-5px);
     }
 
-    /* Form Controls */
-    .form-select, .form-control {
-        transition: all 0.2s ease;
+    .card-header {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
     }
 
-    .form-select:focus, .form-control:focus {
-        transform: scale(1.02);
-        box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
-        border-color: #2E7D32;
+    .card-body {
+        padding: 1.5rem;
     }
 
-    /* Button Animations */
+    /* Button Enhancements */
     .btn {
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 10px 20px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        border: none;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
     }
 
     .btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .btn:active {
         transform: translateY(0);
     }
 
-    /* Table Animations */
+    /* Form Controls */
+    .form-select, .form-control {
+        transition: all 0.2s ease;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-select:focus, .form-control:focus {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+        border-color: #2E7D32;
+    }
+
+    /* Table Enhancements */
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+        padding: 1rem;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
     .table tbody tr {
         transition: all 0.2s ease;
+        opacity: 0;
+        animation: fadeInRow 0.3s ease forwards;
+    }
+
+    .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+    .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+    .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+    .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+    .table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+    .table tbody tr:nth-child(6) { animation-delay: 0.3s; }
+    .table tbody tr:nth-child(7) { animation-delay: 0.35s; }
+    .table tbody tr:nth-child(8) { animation-delay: 0.4s; }
+    .table tbody tr:nth-child(9) { animation-delay: 0.45s; }
+    .table tbody tr:nth-child(10) { animation-delay: 0.5s; }
+
+    @keyframes fadeInRow {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .table tbody tr:hover {
         background-color: #f8f9fa;
-        transform: scale(1.01);
+        transform: scale(1.005);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    /* Badge Enhancements */
+    .badge {
+        transition: all 0.2s ease;
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+
+    .badge:hover {
+        transform: scale(1.1);
     }
 
     /* Alert Animations */
     .alert {
         animation: slideDown 0.3s ease-out;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
     @keyframes slideDown {
@@ -114,15 +227,16 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background: #28a745;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
         padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
         z-index: 10000;
         display: none;
         animation: slideInRight 0.3s ease-out;
         min-width: 250px;
+        font-weight: 500;
     }
 
     @keyframes slideInRight {
@@ -141,25 +255,16 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background: #dc3545;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
         color: white;
         padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(220, 53, 69, 0.4);
         z-index: 10000;
         display: none;
         animation: slideInRight 0.3s ease-out;
         min-width: 250px;
-    }
-
-    /* Pulse Animation */
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
+        font-weight: 500;
     }
 
     /* Ripple Effect */
@@ -196,72 +301,16 @@
         background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
     }
 
-    /* Stagger Animation untuk Table Rows */
-    .table tbody tr {
-        opacity: 0;
-        animation: fadeInRow 0.3s ease forwards;
-    }
-
-    .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
-    .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
-    .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
-    .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
-    .table tbody tr:nth-child(5) { animation-delay: 0.25s; }
-    .table tbody tr:nth-child(6) { animation-delay: 0.3s; }
-    .table tbody tr:nth-child(7) { animation-delay: 0.35s; }
-    .table tbody tr:nth-child(8) { animation-delay: 0.4s; }
-    .table tbody tr:nth-child(9) { animation-delay: 0.45s; }
-    .table tbody tr:nth-child(10) { animation-delay: 0.5s; }
-
-    @keyframes fadeInRow {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Card Stagger Animation */
-    .card {
-        opacity: 0;
-        animation: fadeInCard 0.4s ease forwards;
-    }
-
-    .card:nth-child(1) { animation-delay: 0.1s; }
-    .card:nth-child(2) { animation-delay: 0.2s; }
-    .card:nth-child(3) { animation-delay: 0.3s; }
-    .card:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes fadeInCard {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     /* Smooth Scroll */
     html {
         scroll-behavior: smooth;
     }
 
-    /* Badge Animations */
-    .badge {
-        transition: all 0.2s ease;
-    }
-
-    .badge:hover {
-        transform: scale(1.1);
-    }
-
     /* Modal Animations */
     .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         animation: modalFadeIn 0.3s ease;
     }
 
@@ -276,6 +325,17 @@
         }
     }
 
+    .modal-header {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        border-bottom: none;
+    }
+
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+
     /* Page Transition */
     .page-content {
         animation: pageFadeIn 0.4s ease;
@@ -287,6 +347,117 @@
         }
         to {
             opacity: 1;
+        }
+    }
+
+    /* Input Group Enhancements */
+    .input-group .form-control:focus,
+    .input-group .form-select:focus {
+        z-index: 3;
+    }
+
+    /* Dropdown Enhancements */
+    .dropdown-menu {
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        border: none;
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        color: white;
+        transform: translateX(5px);
+    }
+
+    /* Pagination Enhancements */
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        border: none;
+        color: #2E7D32;
+        transition: all 0.2s ease;
+    }
+
+    .pagination .page-link:hover {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        border: none;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        color: white;
+        border-radius: 15px;
+    }
+
+    .stat-card .card-body {
+        padding: 2rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Content Card */
+    .content-card {
+        background: white;
+        border-left: 4px solid #2E7D32;
+        border-radius: 10px;
+    }
+
+    /* Fade In Animation */
+    .fade-in {
+        animation: fadeIn 0.4s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(-10px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
+
+    /* Pulse Animation */
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Responsive Enhancements */
+    @media (max-width: 768px) {
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .table {
+            font-size: 0.875rem;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            font-size: 0.875rem;
         }
     }
 </style>
@@ -331,6 +502,7 @@
             setTimeout(function() {
                 notification.style.opacity = '0';
                 notification.style.transform = 'translateX(100px)';
+                notification.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                 setTimeout(function() {
                     notification.style.display = 'none';
                     notification.style.opacity = '1';
@@ -354,6 +526,7 @@
             setTimeout(function() {
                 notification.style.opacity = '0';
                 notification.style.transform = 'translateX(100px)';
+                notification.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                 setTimeout(function() {
                     notification.style.display = 'none';
                     notification.style.opacity = '1';
@@ -380,14 +553,14 @@
             // Show success notification dari session
             @if(session('success'))
                 setTimeout(function() {
-                    showSuccessNotification('{{ session('success') }}');
+                    showSuccessNotification('{{ addslashes(session('success')) }}');
                 }, 500);
             @endif
 
             // Show error notification dari session
             @if(session('error'))
                 setTimeout(function() {
-                    showErrorNotification('{{ session('error') }}');
+                    showErrorNotification('{{ addslashes(session('error')) }}');
                 }, 500);
             @endif
 
@@ -476,6 +649,19 @@
             if (pageContent) {
                 pageContent.classList.add('page-content');
             }
+
+            // Smooth scroll untuk filter form
+            const filterForms = document.querySelectorAll('form[method="GET"]');
+            filterForms.forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    setTimeout(function() {
+                        const formCard = document.querySelector('.card');
+                        if (formCard) {
+                            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 100);
+                });
+            });
         });
 
         // Handle modal animations
