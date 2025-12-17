@@ -125,24 +125,9 @@
     </div>
     
     <nav class="nav flex-column px-3 pb-4">
-        <!-- RPP Dropdown -->
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.rangkuman') || $currentRoute == 'guru.dashboard' ? 'active' : '' }}" href="#" id="rppDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-home me-2"></i> RPP
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="rppDropdown">
-                <li><a class="dropdown-item {{ $currentRoute == 'guru.dashboard' ? 'active' : '' }}" href="{{ route('guru.dashboard') }}">
-                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard RPP
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.rangkuman.index') ? 'active' : '' }}" href="{{ route('guru.rangkuman.index') }}">
-                    <i class="fas fa-list me-2"></i> Rangkuman RPP
-                </a></li>
-                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.rangkuman.create') ? 'active' : '' }}" href="{{ route('guru.rangkuman.create') }}">
-                    <i class="fas fa-plus me-2"></i> Buat RPP
-                </a></li>
-            </ul>
-        </div>
-        
+        <a class="nav-link {{ $currentRoute == 'guru.dashboard' || str_contains($currentRoute, 'guru.rangkuman') ? 'active' : '' }}" href="{{ route('guru.dashboard') }}">
+            <i class="fas fa-home me-2"></i> RPP
+        </a>
         <a class="nav-link {{ str_contains($currentRoute, 'guru.jadwal') ? 'active' : '' }}" href="{{ route('guru.jadwal.index') }}">
             <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
         </a>
