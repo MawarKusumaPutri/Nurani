@@ -529,7 +529,7 @@ class EvaluasiGuruController extends Controller
         }
 
         // Tentukan predikat jika belum ada
-        if (!$validated['predikat'] && $validated['nilai_akhir'] !== null) {
+        if (empty($validated['predikat'] ?? null) && $validated['nilai_akhir'] !== null) {
             if ($validated['nilai_akhir'] >= 85) {
                 $validated['predikat'] = 'A';
             } elseif ($validated['nilai_akhir'] >= 70) {
@@ -611,7 +611,7 @@ class EvaluasiGuruController extends Controller
         }
 
         // Tentukan predikat jika belum ada
-        if (!$validated['predikat'] && $validated['nilai_akhir'] !== null) {
+        if (empty($validated['predikat'] ?? null) && $validated['nilai_akhir'] !== null) {
             if ($validated['nilai_akhir'] >= 85) {
                 $validated['predikat'] = 'A';
             } elseif ($validated['nilai_akhir'] >= 70) {
