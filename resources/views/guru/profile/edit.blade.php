@@ -202,11 +202,71 @@
                 z-index: 1;
             }
             
-            /* Pastikan konten tidak bergeser saat sidebar terbuka */
-            .container-fluid .row {
-                margin-left: 0;
-                margin-right: 0;
+        /* Pastikan konten tidak bergeser saat sidebar terbuka */
+        .container-fluid .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        /* Pastikan sidebar dan main content berada di samping - sama seperti halaman lain */
+        @media (min-width: 768px) {
+            .container-fluid > .row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
             }
+            
+            /* Sidebar di samping kiri */
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 25% !important;
+                width: 25% !important;
+                max-width: 25% !important;
+                min-width: 250px !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: translateX(0) !important;
+                z-index: 1000 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            /* Main content di samping kanan sidebar */
+            .col-md-9.col-lg-10,
+            main.col-md-9 {
+                flex: 0 0 75% !important;
+                width: 75% !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 1 !important;
+                min-height: 100vh !important;
+                background-color: #ffffff !important;
+                box-sizing: border-box !important;
+            }
+        }
+        
+        /* Large screen - sidebar lebih kecil */
+        @media (min-width: 992px) {
+            .col-md-3.col-lg-2.sidebar,
+            #guru-sidebar {
+                flex: 0 0 16.66666667% !important;
+                width: 16.66666667% !important;
+                max-width: 16.66666667% !important;
+                min-width: 200px !important;
+            }
+            
+            .col-md-9.col-lg-10,
+            main.col-md-9 {
+                flex: 0 0 83.33333333% !important;
+                width: 83.33333333% !important;
+            }
+        }
         }
     </style>
     @include('partials.guru-dynamic-ui')
@@ -218,7 +278,7 @@
             @include('partials.guru-sidebar')
 
             <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Edit Profil</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
