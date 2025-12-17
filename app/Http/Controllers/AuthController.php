@@ -47,6 +47,8 @@ class AuthController extends Controller
             
             // Redirect berdasarkan role user yang SEBENARNYA dari database (bukan dari request)
             $userRole = $user->role;
+            
+            // Pastikan redirect URL sesuai dengan role
             $redirectUrl = match($userRole) {
                 'guru' => route('guru.dashboard'),
                 'tu' => route('tu.dashboard'),
@@ -68,7 +70,8 @@ class AuthController extends Controller
             }
             
             // LANGSUNG REDIRECT - TIDAK ADA OPERASI LAIN
-            return redirect($redirectUrl);
+            // Gunakan redirect()->intended() sebagai fallback jika ada intended URL
+            return redirect()->intended($redirectUrl);
         } else {
             // DISABLE LOGGING UNTUK MEMPERCEPAT LOGIN
             // \Log::info('Login failed:', [

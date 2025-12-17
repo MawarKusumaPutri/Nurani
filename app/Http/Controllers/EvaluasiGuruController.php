@@ -486,13 +486,19 @@ class EvaluasiGuruController extends Controller
             'mata_pelajaran' => 'required|string',
             'kelas' => 'required|string',
             'semester' => 'required|string',
-            'tahun_pelajaran' => 'nullable|string',
+            'tahun_pelajaran' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
             'formatif_1' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian' => 'nullable|date',
             'formatif_2' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_2' => 'nullable|date',
             'formatif_3' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_3' => 'nullable|date',
             'formatif_4' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_4' => 'nullable|date',
             'sumatif_uts' => 'nullable|numeric|min:0|max:100',
+            'tanggal_uts' => 'nullable|date',
             'sumatif_uas' => 'nullable|numeric|min:0|max:100',
+            'tanggal_uas' => 'nullable|date',
             'predikat' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
@@ -539,7 +545,7 @@ class EvaluasiGuruController extends Controller
         
         NilaiFormatifSumatif::create($validated);
 
-        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai formatif & sumatif berhasil disimpan');
+        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai harian berhasil disimpan');
     }
 
     public function nilaiEdit($id)
@@ -562,13 +568,19 @@ class EvaluasiGuruController extends Controller
             'mata_pelajaran' => 'required|string',
             'kelas' => 'required|string',
             'semester' => 'required|string',
-            'tahun_pelajaran' => 'nullable|string',
+            'tahun_pelajaran' => 'nullable|string|regex:/^\d{4}\/\d{4}$/',
             'formatif_1' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian' => 'nullable|date',
             'formatif_2' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_2' => 'nullable|date',
             'formatif_3' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_3' => 'nullable|date',
             'formatif_4' => 'nullable|numeric|min:0|max:100',
+            'tanggal_nilai_harian_4' => 'nullable|date',
             'sumatif_uts' => 'nullable|numeric|min:0|max:100',
+            'tanggal_uts' => 'nullable|date',
             'sumatif_uas' => 'nullable|numeric|min:0|max:100',
+            'tanggal_uas' => 'nullable|date',
             'predikat' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
@@ -613,7 +625,7 @@ class EvaluasiGuruController extends Controller
 
         $nilai->update($validated);
 
-        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai formatif & sumatif berhasil diperbarui');
+        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai harian berhasil diperbarui');
     }
 
     public function nilaiDestroy($id)
@@ -622,7 +634,7 @@ class EvaluasiGuruController extends Controller
         $nilai = NilaiFormatifSumatif::where('guru_id', $guru->id)->findOrFail($id);
         $nilai->delete();
 
-        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai formatif & sumatif berhasil dihapus');
+        return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai harian berhasil dihapus');
     }
 
     /**
@@ -826,12 +838,18 @@ class EvaluasiGuruController extends Controller
                   `semester` varchar(255) NOT NULL,
                   `tahun_pelajaran` varchar(255) DEFAULT NULL,
                   `formatif_1` decimal(5,2) DEFAULT NULL,
+                  `tanggal_nilai_harian` date DEFAULT NULL,
                   `formatif_2` decimal(5,2) DEFAULT NULL,
+                  `tanggal_nilai_harian_2` date DEFAULT NULL,
                   `formatif_3` decimal(5,2) DEFAULT NULL,
+                  `tanggal_nilai_harian_3` date DEFAULT NULL,
                   `formatif_4` decimal(5,2) DEFAULT NULL,
+                  `tanggal_nilai_harian_4` date DEFAULT NULL,
                   `rata_formatif` decimal(5,2) DEFAULT NULL,
                   `sumatif_uts` decimal(5,2) DEFAULT NULL,
+                  `tanggal_uts` date DEFAULT NULL,
                   `sumatif_uas` decimal(5,2) DEFAULT NULL,
+                  `tanggal_uas` date DEFAULT NULL,
                   `rata_sumatif` decimal(5,2) DEFAULT NULL,
                   `nilai_akhir` decimal(5,2) DEFAULT NULL,
                   `predikat` varchar(255) DEFAULT NULL,

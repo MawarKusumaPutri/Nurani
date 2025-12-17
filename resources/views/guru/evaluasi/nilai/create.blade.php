@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Nilai Formatif & Sumatif - {{ $guru->user->name }}</title>
+    <title>Tambah Nilai Harian - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -285,9 +285,9 @@
                 <div class="mb-4">
                     <h2 class="mb-2">
                         <i class="fas fa-plus me-2 text-primary"></i>
-                        Tambah Nilai Formatif & Sumatif
+                        Tambah Nilai Harian
                     </h2>
-                    <p class="text-muted mb-3">Input nilai formatif dan sumatif untuk siswa</p>
+                    <p class="text-muted mb-3">Input nilai harian, UTS, dan UAS untuk siswa</p>
                     <a href="{{ route('guru.evaluasi.nilai.index') }}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-arrow-left me-2"></i>Kembali
                     </a>
@@ -340,28 +340,56 @@
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="tahun_pelajaran" class="form-label">Tahun Pelajaran</label>
-                                            <input type="text" class="form-control" id="tahun_pelajaran" name="tahun_pelajaran" placeholder="2024/2025">
+                                            @php
+                                                $currentYear = date('Y');
+                                                $nextYear = $currentYear + 1;
+                                                $defaultTahun = $currentYear . '/' . $nextYear;
+                                            @endphp
+                                            <input type="text" class="form-control" id="tahun_pelajaran" name="tahun_pelajaran" value="{{ $defaultTahun }}" placeholder="2024/2025" pattern="\d{4}/\d{4}">
+                                            <small class="text-muted">Format: YYYY/YYYY (contoh: 2024/2025 atau 2025/2026)</small>
                                         </div>
                                     </div>
 
                                     <hr>
-                                    <h5 class="mb-3">Nilai Formatif</h5>
+                                    <h5 class="mb-3">Nilai Harian</h5>
                                     <div class="row">
-                                        <div class="col-md-3 mb-3">
-                                            <label for="formatif_1" class="form-label">Formatif 1</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="formatif_1" class="form-label">Nilai Harian</label>
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="formatif_1" name="formatif_1" placeholder="0.00">
                                         </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="formatif_2" class="form-label">Formatif 2</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tanggal_nilai_harian" class="form-label">Tanggal Nilai Harian</label>
+                                            <input type="date" class="form-control" id="tanggal_nilai_harian" name="tanggal_nilai_harian" value="{{ date('Y-m-d') }}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="formatif_2" class="form-label">Nilai Harian 2 (Opsional)</label>
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="formatif_2" name="formatif_2" placeholder="0.00">
                                         </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="formatif_3" class="form-label">Formatif 3</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tanggal_nilai_harian_2" class="form-label">Tanggal Nilai Harian 2</label>
+                                            <input type="date" class="form-control" id="tanggal_nilai_harian_2" name="tanggal_nilai_harian_2">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="formatif_3" class="form-label">Nilai Harian 3 (Opsional)</label>
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="formatif_3" name="formatif_3" placeholder="0.00">
                                         </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="formatif_4" class="form-label">Formatif 4</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tanggal_nilai_harian_3" class="form-label">Tanggal Nilai Harian 3</label>
+                                            <input type="date" class="form-control" id="tanggal_nilai_harian_3" name="tanggal_nilai_harian_3">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="formatif_4" class="form-label">Nilai Harian 4 (Opsional)</label>
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="formatif_4" name="formatif_4" placeholder="0.00">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tanggal_nilai_harian_4" class="form-label">Tanggal Nilai Harian 4</label>
+                                            <input type="date" class="form-control" id="tanggal_nilai_harian_4" name="tanggal_nilai_harian_4">
                                         </div>
                                     </div>
 
@@ -373,8 +401,18 @@
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="sumatif_uts" name="sumatif_uts" placeholder="0.00">
                                         </div>
                                         <div class="col-md-6 mb-3">
+                                            <label for="tanggal_uts" class="form-label">Tanggal UTS</label>
+                                            <input type="date" class="form-control" id="tanggal_uts" name="tanggal_uts">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
                                             <label for="sumatif_uas" class="form-label">UAS</label>
                                             <input type="number" step="0.01" min="0" max="100" class="form-control" id="sumatif_uas" name="sumatif_uas" placeholder="0.00">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tanggal_uas" class="form-label">Tanggal UAS</label>
+                                            <input type="date" class="form-control" id="tanggal_uas" name="tanggal_uas">
                                         </div>
                                     </div>
 

@@ -1,0 +1,17 @@
+-- ========================================
+-- FIX TABLESPACE & GENERATE TABEL
+-- ========================================
+-- Jalankan di phpMyAdmin → Tab "SQL" (tidak perlu pilih database dulu)
+-- Copy semua SQL di bawah ini, paste di phpMyAdmin SQL tab, lalu klik "Go"
+-- Setelah ini, jalankan: GENERATE_TABEL_OTOMATIS.bat
+
+-- Langkah 1: Hapus database (untuk menghapus file tablespace yang corrupt)
+DROP DATABASE IF EXISTS nurani;
+
+-- Langkah 2: Buat database baru
+CREATE DATABASE nurani CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Selesai! Setelah ini, jalankan di terminal:
+-- php artisan migrate --force
+-- php artisan db:seed --class=UserSeeder
+-- ATAU double-click: GENERATE_TABEL_OTOMATIS.bat
