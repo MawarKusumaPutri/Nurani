@@ -210,7 +210,7 @@ function previewPhoto(input) {
             }
         };
         
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 }
 </script>
