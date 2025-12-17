@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilai Formatif & Sumatif - {{ $guru->user->name }}</title>
+    <title>Nilai Harian - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -290,7 +290,7 @@
 
                 @if(!$tableExists)
                     <div class="alert alert-warning">
-                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Tabel Nilai Formatif & Sumatif Belum Ada</h5>
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Tabel Nilai Harian Belum Ada</h5>
                         <p class="mb-3">Klik tombol di bawah untuk membuat tabel secara otomatis:</p>
                         <div class="d-flex gap-2 flex-wrap mb-3">
                             <a href="http://localhost/nurani/public/BUAT_EVALUASI_NOW.php" class="btn btn-success btn-lg" onclick="this.innerHTML='<i class=\'fas fa-spinner fa-spin me-2\'></i>Membuat tabel...'; setTimeout(function(){ window.location.reload(); }, 2000);">
@@ -344,8 +344,8 @@
                                         <th>Mata Pelajaran</th>
                                         <th>Kelas</th>
                                         <th>Semester</th>
-                                        <th>Rata Formatif</th>
-                                        <th>Rata Sumatif</th>
+                                        <th>Rata Nilai Harian</th>
+                                        <th>Rata UTS/UAS</th>
                                         <th>Nilai Akhir</th>
                                         <th>Predikat</th>
                                         <th>Aksi</th>
@@ -411,7 +411,7 @@
                         </div>
                     @else
                         <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>Belum ada nilai formatif & sumatif. <a href="{{ route('guru.evaluasi.nilai.create') }}">Input nilai pertama</a>
+                            <i class="fas fa-info-circle me-2"></i>Belum ada nilai harian. <a href="{{ route('guru.evaluasi.nilai.create') }}">Input nilai pertama</a>
                         </div>
                     @endif
                 @endif
