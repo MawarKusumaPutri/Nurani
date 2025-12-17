@@ -329,13 +329,20 @@
                                         <small class="text-muted">Pilih kelas terlebih dahulu untuk menampilkan daftar siswa</small>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="semester" name="semester" required>
-                                            <option value="">Pilih Semester</option>
-                                            <option value="Ganjil">Ganjil</option>
-                                            <option value="Genap">Genap</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="semester" name="semester" required>
+                                                <option value="">Pilih Semester</option>
+                                                <option value="Ganjil">Ganjil</option>
+                                                <option value="Genap">Genap</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tahun_pelajaran" class="form-label">Tahun Pelajaran</label>
+                                            <input type="text" class="form-control" id="tahun_pelajaran" name="tahun_pelajaran" placeholder="2024/2025" pattern="\d{4}/\d{4}">
+                                            <small class="text-muted">Format: YYYY/YYYY (contoh: 2024/2025)</small>
+                                        </div>
                                     </div>
 
                                     <hr>
