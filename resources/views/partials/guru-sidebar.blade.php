@@ -180,7 +180,7 @@
         background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
         background-color: #2E7D32 !important;
         overflow-y: auto;
-        overflow-x: hidden;
+        overflow-x: visible !important;
         -webkit-overflow-scrolling: touch;
         display: flex !important;
         visibility: visible !important;
@@ -290,9 +290,10 @@
     #guru-sidebar nav {
         flex: 1;
         overflow-y: auto;
-        overflow-x: hidden;
+        overflow-x: visible !important;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 20px;
+        position: relative;
     }
     
     /* Styling scrollbar untuk nav di dalam sidebar */
@@ -357,7 +358,14 @@
     
     /* Dropdown Menu Styling */
     .sidebar .nav-item.dropdown {
-        position: relative;
+        position: static !important;
+    }
+    
+    .sidebar .nav-item.dropdown:hover .dropdown-menu,
+    .sidebar .nav-item.dropdown .dropdown-toggle[aria-expanded="true"] ~ .dropdown-menu {
+        display: block !important;
+        opacity: 1;
+        transform: translateX(0);
     }
     
     .sidebar .dropdown-toggle {
@@ -365,6 +373,7 @@
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+        position: relative;
     }
     
     .sidebar .dropdown-toggle::after {
@@ -394,6 +403,42 @@
         opacity: 0;
         transform: translateX(-10px);
         transition: opacity 0.3s ease, transform 0.3s ease;
+        margin-top: 0 !important;
+        will-change: transform, opacity;
+    }
+    
+    /* Pastikan dropdown tidak terpotong oleh container */
+    .sidebar .nav-item.dropdown {
+        overflow: visible !important;
+    }
+    
+    .sidebar .nav {
+        overflow: visible !important;
+    }
+    
+    /* Pastikan container tidak memotong dropdown */
+    .container-fluid {
+        overflow: visible !important;
+    }
+    
+    .container-fluid .row {
+        overflow: visible !important;
+    }
+    
+    .col-md-3.col-lg-2.sidebar {
+        overflow: visible !important;
+    }
+    
+    /* Pastikan dropdown muncul di samping dengan benar */
+    .sidebar .nav-item.dropdown {
+        position: relative !important;
+    }
+    
+    .sidebar .dropdown-menu {
+        position: absolute !important;
+        left: 100% !important;
+        top: 0 !important;
+        margin-left: 8px !important;
     }
     
     .sidebar .dropdown-menu.show {
@@ -667,12 +712,19 @@
             dropdownElementList.forEach(function(dropdownToggleEl) {
                 new bootstrap.Dropdown(dropdownToggleEl, {
                     boundary: 'viewport',
+                    placement: 'right-start',
                     popperConfig: {
                         modifiers: [
                             {
                                 name: 'offset',
                                 options: {
-                                    offset: [0, 8]
+                                    offset: [8, 0]
+                                }
+                            },
+                            {
+                                name: 'preventOverflow',
+                                options: {
+                                    boundary: 'viewport'
                                 }
                             }
                         ]
