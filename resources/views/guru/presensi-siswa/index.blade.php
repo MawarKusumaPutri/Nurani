@@ -293,6 +293,167 @@
             width: 100% !important;
             min-width: 250px !important;
         }
+
+        /* Dynamic UI Enhancements */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2E7D32;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .form-select, .form-control {
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus, .form-control:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .alert {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            display: none;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .is-valid {
+            border-color: #28a745 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none'%3e%3ccircle cx='6' cy='6' r='4.5' stroke='%23dc3545' stroke-width='1'/%3e%3cpath stroke='%23dc3545' stroke-linecap='round' d='m5.8 3.6.4.4.4-.4m0 4.8-.4-.4-.4.4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
         
         /* Pastikan select status konsisten ukurannya */
         #presensiForm .table td select.form-select {
@@ -674,14 +835,20 @@
                 </div>
 
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
+                    <script>
+                        // Show success notification
+                        setTimeout(function() {
+                            showSuccessNotification('{{ session('success') }}');
+                        }, 500);
+                    </script>
                 @endif
 
                 @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -917,6 +1084,49 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Loading overlay functions
+        function showLoadingOverlay() {
+            let overlay = document.getElementById('loadingOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'loadingOverlay';
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = '<div class="loading-spinner"></div>';
+                document.body.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        // Show success notification
+        function showSuccessNotification(message) {
+            let notification = document.getElementById('successNotification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'successNotification';
+                notification.className = 'success-feedback';
+                document.body.appendChild(notification);
+            }
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(function() {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100px)';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateX(0)';
+                }, 300);
+            }, 3000);
+        }
+
         function editPresensi(id, status, aktivitas, keterangan) {
             document.getElementById('editForm').action = '/guru/presensi-siswa/' + id;
             document.getElementById('editStatus').value = status;
@@ -927,7 +1137,23 @@
             }
             document.getElementById('editAktivitas').value = aktivitasValue;
             document.getElementById('editKeterangan').value = keterangan || '';
-            new bootstrap.Modal(document.getElementById('editModal')).show();
+            
+            // Animate modal saat muncul
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
+            
+            // Add fade-in animation
+            const modalElement = document.getElementById('editModal');
+            modalElement.addEventListener('shown.bs.modal', function() {
+                const modalContent = modalElement.querySelector('.modal-content');
+                modalContent.style.opacity = '0';
+                modalContent.style.transform = 'scale(0.9)';
+                setTimeout(function() {
+                    modalContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    modalContent.style.opacity = '1';
+                    modalContent.style.transform = 'scale(1)';
+                }, 10);
+            }, { once: true });
         }
         
         function toggleSidebar() {
@@ -1047,9 +1273,186 @@
         }
         
         // Setup nav links saat DOM ready
+        // Dynamic UI Enhancements
         document.addEventListener('DOMContentLoaded', function() {
             setupNavLinks();
-            
+
+            // Auto-hide alerts dengan animasi
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 5000); // Auto-hide setelah 5 detik
+            });
+
+            // Loading overlay untuk form submit
+            const presensiForm = document.getElementById('presensiForm');
+            if (presensiForm) {
+                presensiForm.addEventListener('submit', function(e) {
+                    // Show loading overlay
+                    showLoadingOverlay();
+                    
+                    // Disable submit button
+                    const submitBtn = presensiForm.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+                        
+                        // Re-enable setelah 10 detik (fallback)
+                        setTimeout(function() {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                            hideLoadingOverlay();
+                        }, 10000);
+                    }
+                });
+            }
+
+            // Loading overlay untuk edit form
+            const editForm = document.getElementById('editForm');
+            if (editForm) {
+                editForm.addEventListener('submit', function(e) {
+                    showLoadingOverlay();
+                    const submitBtn = editForm.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+                    }
+                });
+            }
+
+            // Smooth scroll untuk filter form
+            const filterForm = document.querySelector('form[method="GET"]');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function(e) {
+                    setTimeout(function() {
+                        const formCard = document.querySelector('.card');
+                        if (formCard) {
+                            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 100);
+                });
+            }
+
+            // Real-time validation feedback
+            const formInputs = document.querySelectorAll('#presensiForm input, #presensiForm select');
+            formInputs.forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    if (this.hasAttribute('required') && !this.value) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid') && this.value) {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                });
+            });
+
+            // Animate table rows saat muncul
+            const tableRows = document.querySelectorAll('#presensiForm tbody tr');
+            tableRows.forEach(function(row, index) {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+                setTimeout(function() {
+                    row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, index * 50); // Stagger animation
+            });
+
+            // Animate cards saat muncul
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(function(card, index) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(function() {
+                    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Hover effect untuk buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(function(btn) {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Smooth focus untuk form inputs
+            const formControls = document.querySelectorAll('.form-control, .form-select');
+            formControls.forEach(function(control) {
+                control.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                    this.parentElement.style.transition = 'transform 0.2s ease';
+                });
+                control.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add pulse animation untuk button save
+            const saveBtn = document.querySelector('button[type="submit"]:not([form])');
+            if (saveBtn && saveBtn.textContent.includes('Simpan Presensi')) {
+                setInterval(function() {
+                    if (!saveBtn.disabled) {
+                        saveBtn.style.animation = 'pulse 2s infinite';
+                    }
+                }, 100);
+            }
+
+            // Add ripple effect untuk buttons
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(function() {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Smooth scroll saat filter
+            const filterBtn = document.querySelector('button[type="submit"]:not([form])');
+            if (filterBtn && filterBtn.textContent.includes('Filter')) {
+                filterBtn.addEventListener('click', function() {
+                    setTimeout(function() {
+                        const formCard = document.querySelector('.card');
+                        if (formCard) {
+                            formCard.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                        }
+                    }, 300);
+                });
+            }
+
             // Pastikan semua konten muncul
             const mainContent = document.querySelector('.col-md-9.col-lg-10');
             if (mainContent) {
