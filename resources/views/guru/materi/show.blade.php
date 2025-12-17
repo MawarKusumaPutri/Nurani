@@ -52,6 +52,7 @@
             line-height: 1.8;
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     <div class="container-fluid">

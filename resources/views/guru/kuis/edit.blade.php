@@ -70,6 +70,7 @@
             margin-right: 15px;
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     <div class="container-fluid">

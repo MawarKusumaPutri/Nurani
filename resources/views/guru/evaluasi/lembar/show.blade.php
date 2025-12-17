@@ -120,6 +120,7 @@
             }
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()" type="button" aria-label="Toggle sidebar">

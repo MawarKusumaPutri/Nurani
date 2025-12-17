@@ -1420,6 +1420,7 @@
             }
         }
     </style>
+    @include('partials.guru-dynamic-ui')
 </head>
 <body>
     
