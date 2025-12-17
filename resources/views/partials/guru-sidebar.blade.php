@@ -143,9 +143,31 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.kuis') ? 'active' : '' }}" href="{{ route('guru.kuis.index') }}">
             <i class="fas fa-question-circle me-2"></i> Kuis
         </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
-            <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
-        </a>
+        
+        <!-- Evaluasi Guru Dropdown - Muncul di Samping -->
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="#" id="evaluasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="evaluasiDropdown">
+                <li><a class="dropdown-item {{ $currentRoute == 'guru.evaluasi.index' ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard Evaluasi
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rubrik') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rubrik.index') }}">
+                    <i class="fas fa-list-check me-2"></i> Rubrik Penilaian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.lembar') ? 'active' : '' }}" href="{{ route('guru.evaluasi.lembar.index') }}">
+                    <i class="fas fa-file-alt me-2"></i> Lembar Penilaian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.nilai') ? 'active' : '' }}" href="{{ route('guru.evaluasi.nilai.index') }}">
+                    <i class="fas fa-chart-line me-2"></i> Nilai Harian
+                </a></li>
+                <li><a class="dropdown-item {{ str_contains($currentRoute, 'guru.evaluasi.rekap') ? 'active' : '' }}" href="{{ route('guru.evaluasi.rekap.index') }}">
+                    <i class="fas fa-chart-bar me-2"></i> Rekap Hasil Belajar
+                </a></li>
+            </ul>
+        </div>
+        
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
@@ -360,24 +382,24 @@
         background: rgba(27, 94, 32, 0.98) !important;
         border: none;
         border-radius: 8px;
-        margin-top: 4px;
+        margin-left: 8px;
         padding: 8px 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        min-width: 100%;
+        min-width: 220px;
         position: absolute !important;
-        left: 0 !important;
-        top: 100% !important;
+        left: 100% !important;
+        top: 0 !important;
         z-index: 1050 !important;
         display: none;
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateX(-10px);
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
     
     .sidebar .dropdown-menu.show {
         display: block !important;
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
     
     .sidebar .dropdown-item {
