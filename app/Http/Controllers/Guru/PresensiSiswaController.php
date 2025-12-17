@@ -86,12 +86,15 @@ class PresensiSiswaController extends Controller
             'status.*' => 'required|in:hadir,sakit,izin,alfa',
             'tanggal' => 'required|date',
             'kelas' => 'required|in:7,8,9',
+            'aktivitas' => 'nullable|array',
+            'aktivitas.*' => 'nullable|in:aktif,tidak aktif',
             'keterangan' => 'nullable|array',
             'keterangan.*' => 'nullable|string|max:500',
         ], [
             'siswa_id.required' => 'Pilih setidaknya satu siswa',
             'status.*.required' => 'Status presensi harus diisi untuk semua siswa',
             'status.*.in' => 'Status presensi tidak valid',
+            'aktivitas.*.in' => 'Aktivitas siswa tidak valid',
             'tanggal.required' => 'Tanggal harus diisi',
             'tanggal.date' => 'Format tanggal tidak valid',
             'kelas.required' => 'Kelas harus dipilih',
@@ -101,6 +104,7 @@ class PresensiSiswaController extends Controller
         $kelas = $request->kelas;
         $siswaIds = $request->siswa_id;
         $statuses = $request->status;
+        $aktivitases = $request->aktivitas ?? [];
         $keterangans = $request->keterangan ?? [];
 
         $successCount = 0;
@@ -167,11 +171,13 @@ class PresensiSiswaController extends Controller
 
         $request->validate([
             'status' => 'required|in:hadir,sakit,izin,alfa',
+            'aktivitas' => 'nullable|in:aktif,tidak aktif',
             'keterangan' => 'nullable|string|max:500',
         ]);
 
         $presensi->update([
             'status' => $request->status,
+            'aktivitas' => $request->aktivitas,
             'keterangan' => $request->keterangan,
         ]);
 

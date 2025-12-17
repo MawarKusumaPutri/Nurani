@@ -741,7 +741,8 @@
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 12% !important; min-width: 100px !important; padding: 0.75rem !important;">NIS</th>
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 25% !important; min-width: 200px !important; padding: 0.75rem !important;">Nama Siswa</th>
                                             <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 18% !important; min-width: 150px !important; padding: 0.75rem !important;">Status</th>
-                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">Keterangan</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 15% !important; min-width: 130px !important; padding: 0.75rem !important;">Aktivitas Siswa</th>
+                                            <th style="display: table-cell !important; visibility: visible !important; opacity: 1 !important; width: 25% !important; min-width: 250px !important; padding: 0.75rem !important;">Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody style="display: table-row-group !important; visibility: visible !important; opacity: 1 !important;">
@@ -770,11 +771,18 @@
                                                         <option value="alfa" {{ $existingPresensi && $existingPresensi->status == 'alfa' ? 'selected' : '' }}>Alfa</option>
                                                     </select>
                                                 </td>
-                                                <td style="width: 40% !important; min-width: 350px !important; padding: 0.75rem !important;">
+                                                <td style="width: 15% !important; min-width: 130px !important; padding: 0.75rem !important;">
+                                                    <select name="aktivitas[]" class="form-select form-select-sm" style="width: 100% !important; min-width: 120px !important; box-sizing: border-box !important;">
+                                                        <option value="">Pilih Aktivitas</option>
+                                                        <option value="aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                                        <option value="tidak aktif" {{ $existingPresensi && $existingPresensi->aktivitas == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                                    </select>
+                                                </td>
+                                                <td style="width: 25% !important; min-width: 250px !important; padding: 0.75rem !important;">
                                                     <input type="text" name="keterangan[]" class="form-control form-control-sm" 
                                                            placeholder="Keterangan (opsional)" 
                                                            value="{{ $existingPresensi ? $existingPresensi->keterangan : '' }}"
-                                                           style="width: 100% !important; min-width: 300px !important; box-sizing: border-box !important;">
+                                                           style="width: 100% !important; min-width: 200px !important; box-sizing: border-box !important;">
                                                 </td>
                                             </tr>
                                         @endforeach

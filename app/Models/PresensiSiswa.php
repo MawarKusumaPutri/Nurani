@@ -17,6 +17,7 @@ class PresensiSiswa extends Model
         'guru_id',
         'tanggal',
         'status',
+        'aktivitas',
         'keterangan'
     ];
 
