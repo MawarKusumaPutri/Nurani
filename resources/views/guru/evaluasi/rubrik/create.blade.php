@@ -535,12 +535,13 @@
             });
         }
         
+        // Jalankan sekali saja saat load, tidak perlu interval yang terlalu sering
         forceWhiteBackground();
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', forceWhiteBackground);
         }
         window.addEventListener('load', forceWhiteBackground);
-        setInterval(forceWhiteBackground, 100);
+        // Hapus interval yang terlalu sering - hanya jalankan sekali saat load
         
         // Fungsi untuk membuat ulang elemen jika tidak ada - ULTRA AGGRESSIVE
         function createKriteriaElementsIfMissing() {
@@ -673,9 +674,6 @@
                 }
             });
         }
-        
-        // Langsung jalankan tanpa menunggu - LANGSUNG MUNCUL
-        ensureKriteriaVisible();
         
         // Langsung jalankan TANPA MENUNGGU - LANGSUNG MUNCUL
         // Jalankan segera saat script dimuat

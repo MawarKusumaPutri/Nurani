@@ -383,11 +383,7 @@
         ensureKriteriaVisible();
     });
     
-    // Monitor setiap 3 detik untuk backup saja (jika ada yang menghapus)
-    setInterval(function() {
-        createKriteriaElementsIfMissing();
-        ensureKriteriaVisible();
-    }, 3000);
+    // Hapus interval yang terlalu sering - MutationObserver sudah cukup untuk memantau perubahan
     
     // Observer untuk memastikan tidak ada yang mengubah display atau menghapus elemen - ULTRA AGGRESSIVE
     const observer = new MutationObserver(function(mutations) {
