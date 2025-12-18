@@ -140,7 +140,7 @@ class EvaluasiGuruController extends Controller
             'semester' => 'required|string',
             'tahun_pelajaran' => 'nullable|string',
             'deskripsi' => 'nullable|string',
-            'kriteria_penilaian' => 'required|string',
+            'kriteria_penilaian' => 'nullable|string',
             'skala_nilai' => 'nullable|string',
             'indikator' => 'nullable|string',
         ]);
