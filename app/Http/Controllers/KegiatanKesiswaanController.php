@@ -15,13 +15,11 @@ class KegiatanKesiswaanController extends Controller
         $role = $user->role;
         
         // Get user data based on role
-        if ($role === 'guru') {
+        if ($role === 'tu') {
+            return view('kegiatan-kesiswaan.index', compact('role'));
+        } elseif ($role === 'guru') {
             $guru = \App\Models\Guru::where('user_id', $user->id)->first();
             return view('kegiatan-kesiswaan.index', compact('guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            return view('kegiatan-kesiswaan.index', compact('role'));
-        } elseif ($role === 'tu') {
-            return view('kegiatan-kesiswaan.index', compact('role'));
         }
         
         return redirect()->route('login');
@@ -45,11 +43,6 @@ class KegiatanKesiswaanController extends Controller
                 ->orderBy('tanggal_mulai', 'desc')
                 ->paginate(10);
             return view('kegiatan-kesiswaan.rencana.index', compact('rencanas', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            $rencanas = KegiatanKesiswaan::where('status', 'rencana')
-                ->orderBy('tanggal_mulai', 'desc')
-                ->paginate(10);
-            return view('kegiatan-kesiswaan.rencana.index', compact('rencanas', 'role'));
         }
         
         return redirect()->route('login');
@@ -65,8 +58,6 @@ class KegiatanKesiswaanController extends Controller
         } elseif ($role === 'guru') {
             $guru = \App\Models\Guru::where('user_id', $user->id)->first();
             return view('kegiatan-kesiswaan.rencana.create', compact('guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            return view('kegiatan-kesiswaan.rencana.create', compact('role'));
         }
         
         return redirect()->route('login');
@@ -102,7 +93,6 @@ class KegiatanKesiswaanController extends Controller
         $route = match(Auth::user()->role) {
             'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
             'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -120,8 +110,6 @@ class KegiatanKesiswaanController extends Controller
         } elseif ($role === 'guru') {
             $guru = \App\Models\Guru::where('user_id', $user->id)->first();
             return view('kegiatan-kesiswaan.rencana.show', compact('rencana', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            return view('kegiatan-kesiswaan.rencana.show', compact('rencana', 'role'));
         }
         
         return redirect()->route('login');
@@ -144,8 +132,6 @@ class KegiatanKesiswaanController extends Controller
         } elseif ($role === 'guru') {
             $guru = \App\Models\Guru::where('user_id', $user->id)->first();
             return view('kegiatan-kesiswaan.rencana.edit', compact('rencana', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            return view('kegiatan-kesiswaan.rencana.edit', compact('rencana', 'role'));
         }
         
         return redirect()->route('login');
@@ -191,7 +177,6 @@ class KegiatanKesiswaanController extends Controller
         $route = match(Auth::user()->role) {
             'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
             'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -218,7 +203,6 @@ class KegiatanKesiswaanController extends Controller
         $route = match(Auth::user()->role) {
             'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
             'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -242,12 +226,6 @@ class KegiatanKesiswaanController extends Controller
                 ->orderBy('tanggal_mulai', 'asc')
                 ->paginate(10);
             return view('kegiatan-kesiswaan.monitoring.index', compact('kegiatans', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            $kegiatans = KegiatanKesiswaan::whereIn('status', ['sedang_berlangsung', 'rencana'])
-                ->orderBy('tanggal_mulai', 'asc')
-                ->paginate(10);
-            return view('kegiatan-kesiswaan.monitoring.index', compact('kegiatans', 'role'));
-        }
         
         return redirect()->route('login');
     }
@@ -265,7 +243,6 @@ class KegiatanKesiswaanController extends Controller
         $route = match(Auth::user()->role) {
             'tu' => 'tu.kegiatan-kesiswaan.monitoring.index',
             'guru' => 'guru.kegiatan-kesiswaan.monitoring.index',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.monitoring.index',
             default => 'login'
         };
         
@@ -289,11 +266,6 @@ class KegiatanKesiswaanController extends Controller
                 ->orderBy('tanggal_selesai', 'desc')
                 ->paginate(10);
             return view('kegiatan-kesiswaan.laporan.index', compact('laporans', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            $laporans = KegiatanKesiswaan::where('status', 'selesai')
-                ->orderBy('tanggal_selesai', 'desc')
-                ->paginate(10);
-            return view('kegiatan-kesiswaan.laporan.index', compact('laporans', 'role'));
         }
         
         return redirect()->route('login');
@@ -310,8 +282,6 @@ class KegiatanKesiswaanController extends Controller
         } elseif ($role === 'guru') {
             $guru = \App\Models\Guru::where('user_id', $user->id)->first();
             return view('kegiatan-kesiswaan.laporan.show', compact('laporan', 'guru', 'role'));
-        } elseif ($role === 'kepala_sekolah') {
-            return view('kegiatan-kesiswaan.laporan.show', compact('laporan', 'role'));
         }
         
         return redirect()->route('login');
@@ -334,7 +304,6 @@ class KegiatanKesiswaanController extends Controller
         $route = match(Auth::user()->role) {
             'tu' => 'tu.kegiatan-kesiswaan.laporan.index',
             'guru' => 'guru.kegiatan-kesiswaan.laporan.index',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.laporan.index',
             default => 'login'
         };
         
