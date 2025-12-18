@@ -146,15 +146,6 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.evaluasi') ? 'active' : '' }}" href="{{ route('guru.evaluasi.index') }}">
             <i class="fas fa-clipboard-check me-2"></i> Evaluasi Guru
         </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.kegiatan-kesiswaan') ? 'active' : '' }}" href="{{ route('guru.kegiatan-kesiswaan.index') }}">
-            <i class="fas fa-users me-2"></i> Kegiatan Kesiswaan
-        </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.wali-kelas') ? 'active' : '' }}" href="{{ route('guru.wali-kelas.index') }}">
-            <i class="fas fa-chalkboard-teacher me-2"></i> Wali Kelas
-        </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.kurikulum') ? 'active' : '' }}" href="{{ route('guru.kurikulum.index') }}">
-            <i class="fas fa-book-open me-2"></i> Kurikulum
-        </a>
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
