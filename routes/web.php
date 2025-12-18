@@ -190,50 +190,6 @@ Route::middleware('auth')->group(function () {
             });
         });
         
-        // Kegiatan Kesiswaan Routes
-        Route::prefix('kegiatan-kesiswaan')->name('kegiatan-kesiswaan.')->group(function () {
-            Route::get('/', [KegiatanKesiswaanController::class, 'index'])->name('index');
-            
-            // Rencana Routes
-            Route::prefix('rencana')->name('rencana.')->group(function () {
-                Route::get('/', [KegiatanKesiswaanController::class, 'rencana'])->name('index');
-                Route::get('/create', [KegiatanKesiswaanController::class, 'rencanaCreate'])->name('create');
-                Route::post('/', [KegiatanKesiswaanController::class, 'rencanaStore'])->name('store');
-                Route::get('/{id}/edit', [KegiatanKesiswaanController::class, 'rencanaEdit'])->name('edit');
-                Route::put('/{id}', [KegiatanKesiswaanController::class, 'rencanaUpdate'])->name('update');
-                Route::delete('/{id}', [KegiatanKesiswaanController::class, 'rencanaDestroy'])->name('destroy');
-            });
-            
-            // Monitoring Routes
-            Route::prefix('monitoring')->name('monitoring.')->group(function () {
-                Route::get('/', [KegiatanKesiswaanController::class, 'monitoring'])->name('index');
-                Route::put('/{id}/status', [KegiatanKesiswaanController::class, 'monitoringUpdateStatus'])->name('update-status');
-            });
-            
-            // Laporan Routes
-            Route::prefix('laporan')->name('laporan.')->group(function () {
-                Route::get('/', [KegiatanKesiswaanController::class, 'laporan'])->name('index');
-                Route::get('/{id}', [KegiatanKesiswaanController::class, 'laporanShow'])->name('show');
-                Route::put('/{id}', [KegiatanKesiswaanController::class, 'laporanUpdate'])->name('update');
-            });
-        });
-        
-        // Wali Kelas Routes
-        Route::prefix('wali-kelas')->name('wali-kelas.')->group(function () {
-            Route::get('/', [WaliKelasController::class, 'index'])->name('index');
-            Route::get('/rencana', [WaliKelasController::class, 'rencana'])->name('rencana');
-            Route::get('/monitoring', [WaliKelasController::class, 'monitoring'])->name('monitoring');
-            Route::get('/laporan', [WaliKelasController::class, 'laporan'])->name('laporan');
-        });
-        
-        // Kurikulum Routes
-        Route::prefix('kurikulum')->name('kurikulum.')->group(function () {
-            Route::get('/', [KurikulumController::class, 'index'])->name('index');
-            Route::get('/rencana', [KurikulumController::class, 'rencana'])->name('rencana');
-            Route::get('/monitoring', [KurikulumController::class, 'monitoring'])->name('monitoring');
-            Route::get('/laporan', [KurikulumController::class, 'laporan'])->name('laporan');
-        });
-        
         // Mata Pelajaran Routes
         Route::prefix('mata-pelajaran')->name('mata_pelajaran.')->group(function () {
             Route::get('/available', [GuruMataPelajaranController::class, 'getAvailableSubjects'])->name('available');
