@@ -162,7 +162,20 @@ class KegiatanKesiswaanController extends Controller
             'dokumen_lampiran' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
         ]);
         
-        $data = $request->all();
+        // Only get allowed fields for update (exclude status and created_by)
+        $data = $request->only([
+            'judul_kegiatan',
+            'deskripsi',
+            'tanggal_mulai',
+            'tanggal_selesai',
+            'waktu_mulai',
+            'waktu_selesai',
+            'lokasi',
+            'penanggung_jawab',
+            'anggaran',
+            'peserta',
+            'catatan',
+        ]);
         
         if ($request->hasFile('dokumen_lampiran')) {
             // Delete old file
