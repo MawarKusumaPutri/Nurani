@@ -362,23 +362,38 @@
                                     <div class="mb-3">
                                         <label for="kriteria_penilaian" class="form-label">
                                             Kriteria Penilaian <span class="text-danger">*</span>
-                                            <i class="fas fa-info-circle text-info ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Kriteria penilaian adalah aspek-aspek yang akan dinilai. Contoh: Pemahaman Konsep, Keterampilan Praktik, Kreativitas, dll."></i>
                                         </label>
-                                        <textarea class="form-control" id="kriteria_penilaian" name="kriteria_penilaian" rows="6" required placeholder="Masukkan kriteria penilaian"></textarea>
+                                        <div class="alert alert-warning mb-3" style="font-size: 0.9rem;">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Apa itu Kriteria Penilaian?</strong><br>
+                                            Kriteria penilaian adalah <strong>aspek-aspek atau komponen</strong> yang akan dinilai dari siswa. 
+                                            Ini membantu guru untuk menilai siswa secara lebih terstruktur dan objektif.
+                                            <br><br>
+                                            <strong>Contoh Kriteria Penilaian:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                <li><strong>Pemahaman Konsep:</strong> Seberapa baik siswa memahami materi pelajaran</li>
+                                                <li><strong>Keterampilan Praktik:</strong> Kemampuan siswa menerapkan teori dalam praktik</li>
+                                                <li><strong>Kreativitas:</strong> Kemampuan siswa berpikir kreatif dan inovatif</li>
+                                                <li><strong>Kerjasama:</strong> Kemampuan siswa bekerja dalam tim</li>
+                                                <li><strong>Presentasi:</strong> Kemampuan siswa menyampaikan hasil kerja</li>
+                                            </ul>
+                                        </div>
+                                        <textarea class="form-control" id="kriteria_penilaian" name="kriteria_penilaian" rows="8" required placeholder="Masukkan kriteria penilaian (lihat contoh di bawah)"></textarea>
                                         <div class="mt-2">
-                                            <small class="text-muted d-block mb-2">
-                                                <i class="fas fa-lightbulb text-warning me-1"></i>
-                                                <strong>Penjelasan:</strong> Kriteria penilaian adalah aspek-aspek yang akan dinilai dari siswa. Anda dapat menuliskan dalam format teks biasa atau JSON.
-                                            </small>
                                             <div class="alert alert-info mb-0" style="font-size: 0.875rem;">
-                                                <strong><i class="fas fa-book me-1"></i>Contoh Format Teks:</strong><br>
-                                                <code style="display: block; padding: 0.5rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px;">
-                                                    1. Pemahaman Konsep: Siswa mampu memahami konsep dasar materi dengan baik<br>
-                                                    2. Keterampilan Praktik: Siswa dapat menerapkan konsep dalam praktik<br>
-                                                    3. Kreativitas: Siswa menunjukkan kreativitas dalam menyelesaikan masalah<br>
-                                                    4. Kerjasama: Siswa aktif berpartisipasi dalam kerja kelompok
+                                                <strong><i class="fas fa-book me-1"></i>Cara Mengisi (Format Teks - Paling Mudah):</strong><br>
+                                                <code style="display: block; padding: 0.75rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px; white-space: pre-wrap;">
+1. Pemahaman Konsep: Siswa mampu memahami konsep dasar materi dengan baik dan dapat menjelaskannya kembali
+
+2. Keterampilan Praktik: Siswa dapat menerapkan konsep yang dipelajari dalam situasi praktik atau kehidupan sehari-hari
+
+3. Kreativitas: Siswa menunjukkan kreativitas dan inovasi dalam menyelesaikan masalah atau tugas
+
+4. Kerjasama: Siswa aktif berpartisipasi dalam kerja kelompok dan dapat bekerja sama dengan baik
+
+5. Presentasi: Siswa dapat menyampaikan hasil kerja dengan jelas dan menarik
                                                 </code>
-                                                <strong class="mt-2 d-block"><i class="fas fa-code me-1"></i>Contoh Format JSON:</strong><br>
+                                                <strong class="mt-3 d-block"><i class="fas fa-code me-1"></i>Atau Format JSON (Opsional):</strong><br>
                                                 <code style="display: block; padding: 0.5rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px;">
                                                     {"Pemahaman Konsep": "Siswa mampu memahami konsep dasar", "Keterampilan Praktik": "Siswa dapat menerapkan konsep", "Kreativitas": "Siswa menunjukkan kreativitas"}
                                                 </code>
