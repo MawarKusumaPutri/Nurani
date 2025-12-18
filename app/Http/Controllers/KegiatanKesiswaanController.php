@@ -80,7 +80,7 @@ class KegiatanKesiswaanController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'waktu_mulai' => 'nullable',
-            'waktu_selesai' => 'nullable|after:waktu_mulai',
+            'waktu_selesai' => 'nullable',
             'lokasi' => 'nullable|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
             'anggaran' => 'nullable|numeric|min:0',
@@ -100,9 +100,9 @@ class KegiatanKesiswaanController extends Controller
         KegiatanKesiswaan::create($data);
         
         $route = match(Auth::user()->role) {
-            'tu' => 'tu.kegiatan-kesiswaan.rencana',
-            'guru' => 'guru.kegiatan-kesiswaan.rencana',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana',
+            'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
+            'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
+            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -117,7 +117,7 @@ class KegiatanKesiswaanController extends Controller
         
         // Check if user can edit
         if ($role === 'tu' && $rencana->created_by !== $user->id) {
-            return redirect()->route('tu.kegiatan-kesiswaan.rencana')
+            return redirect()->route('tu.kegiatan-kesiswaan.rencana.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit rencana ini.');
         }
         
@@ -139,7 +139,7 @@ class KegiatanKesiswaanController extends Controller
         
         // Check if user can update
         if (Auth::user()->role === 'tu' && $rencana->created_by !== Auth::id()) {
-            return redirect()->route('tu.kegiatan-kesiswaan.rencana')
+            return redirect()->route('tu.kegiatan-kesiswaan.rencana.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengupdate rencana ini.');
         }
         
@@ -149,7 +149,7 @@ class KegiatanKesiswaanController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'waktu_mulai' => 'nullable',
-            'waktu_selesai' => 'nullable|after:waktu_mulai',
+            'waktu_selesai' => 'nullable',
             'lokasi' => 'nullable|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
             'anggaran' => 'nullable|numeric|min:0',
@@ -171,9 +171,9 @@ class KegiatanKesiswaanController extends Controller
         $rencana->update($data);
         
         $route = match(Auth::user()->role) {
-            'tu' => 'tu.kegiatan-kesiswaan.rencana',
-            'guru' => 'guru.kegiatan-kesiswaan.rencana',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana',
+            'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
+            'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
+            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -186,7 +186,7 @@ class KegiatanKesiswaanController extends Controller
         
         // Check if user can delete
         if (Auth::user()->role === 'tu' && $rencana->created_by !== Auth::id()) {
-            return redirect()->route('tu.kegiatan-kesiswaan.rencana')
+            return redirect()->route('tu.kegiatan-kesiswaan.rencana.index')
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus rencana ini.');
         }
         
@@ -198,9 +198,9 @@ class KegiatanKesiswaanController extends Controller
         $rencana->delete();
         
         $route = match(Auth::user()->role) {
-            'tu' => 'tu.kegiatan-kesiswaan.rencana',
-            'guru' => 'guru.kegiatan-kesiswaan.rencana',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana',
+            'tu' => 'tu.kegiatan-kesiswaan.rencana.index',
+            'guru' => 'guru.kegiatan-kesiswaan.rencana.index',
+            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.rencana.index',
             default => 'login'
         };
         
@@ -245,9 +245,9 @@ class KegiatanKesiswaanController extends Controller
         $kegiatan->update(['status' => $request->status]);
         
         $route = match(Auth::user()->role) {
-            'tu' => 'tu.kegiatan-kesiswaan.monitoring',
-            'guru' => 'guru.kegiatan-kesiswaan.monitoring',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.monitoring',
+            'tu' => 'tu.kegiatan-kesiswaan.monitoring.index',
+            'guru' => 'guru.kegiatan-kesiswaan.monitoring.index',
+            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.monitoring.index',
             default => 'login'
         };
         
@@ -314,9 +314,9 @@ class KegiatanKesiswaanController extends Controller
         ]);
         
         $route = match(Auth::user()->role) {
-            'tu' => 'tu.kegiatan-kesiswaan.laporan',
-            'guru' => 'guru.kegiatan-kesiswaan.laporan',
-            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.laporan',
+            'tu' => 'tu.kegiatan-kesiswaan.laporan.index',
+            'guru' => 'guru.kegiatan-kesiswaan.laporan.index',
+            'kepala_sekolah' => 'kepala_sekolah.kegiatan-kesiswaan.laporan.index',
             default => 'login'
         };
         
