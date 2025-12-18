@@ -68,8 +68,30 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="kriteria_penilaian" class="form-label">Kriteria Penilaian <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="kriteria_penilaian" name="kriteria_penilaian" rows="5" required>{{ old('kriteria_penilaian', $rubrik->kriteria_penilaian) }}</textarea>
+                                <label for="kriteria_penilaian" class="form-label">
+                                    Kriteria Penilaian <span class="text-danger">*</span>
+                                    <i class="fas fa-info-circle text-info ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Kriteria penilaian adalah aspek-aspek yang akan dinilai. Contoh: Pemahaman Konsep, Keterampilan Praktik, Kreativitas, dll."></i>
+                                </label>
+                                <textarea class="form-control" id="kriteria_penilaian" name="kriteria_penilaian" rows="6" required>{{ old('kriteria_penilaian', $rubrik->kriteria_penilaian) }}</textarea>
+                                <div class="mt-2">
+                                    <small class="text-muted d-block mb-2">
+                                        <i class="fas fa-lightbulb text-warning me-1"></i>
+                                        <strong>Penjelasan:</strong> Kriteria penilaian adalah aspek-aspek yang akan dinilai dari siswa. Anda dapat menuliskan dalam format teks biasa atau JSON.
+                                    </small>
+                                    <div class="alert alert-info mb-0" style="font-size: 0.875rem;">
+                                        <strong><i class="fas fa-book me-1"></i>Contoh Format Teks:</strong><br>
+                                        <code style="display: block; padding: 0.5rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                                            1. Pemahaman Konsep: Siswa mampu memahami konsep dasar materi dengan baik<br>
+                                            2. Keterampilan Praktik: Siswa dapat menerapkan konsep dalam praktik<br>
+                                            3. Kreativitas: Siswa menunjukkan kreativitas dalam menyelesaikan masalah<br>
+                                            4. Kerjasama: Siswa aktif berpartisipasi dalam kerja kelompok
+                                        </code>
+                                        <strong class="mt-2 d-block"><i class="fas fa-code me-1"></i>Contoh Format JSON:</strong><br>
+                                        <code style="display: block; padding: 0.5rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                                            {"Pemahaman Konsep": "Siswa mampu memahami konsep dasar", "Keterampilan Praktik": "Siswa dapat menerapkan konsep", "Kreativitas": "Siswa menunjukkan kreativitas"}
+                                        </code>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="mb-3">
@@ -108,3 +130,14 @@
         background-color: #f8f9fa;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Initialize Bootstrap tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
