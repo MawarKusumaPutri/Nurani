@@ -239,6 +239,7 @@ class KegiatanKesiswaanController extends Controller
                 ->orderBy('tanggal_mulai', 'asc')
                 ->paginate(10);
             return view('kegiatan-kesiswaan.monitoring.index', compact('kegiatans', 'guru', 'role'));
+        }
         
         return redirect()->route('login');
     }
