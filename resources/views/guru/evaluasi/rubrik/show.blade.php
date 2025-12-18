@@ -164,7 +164,7 @@
                                 <div class="mb-4">
                                     <h6 class="text-muted mb-2">Kriteria Penilaian</h6>
                                     <div class="border p-3 rounded bg-light">
-                                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ $rubrik->kriteria_penilaian }}</pre>
+                                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ $rubrik->kriteria_penilaian ?? '-' }}</pre>
                                     </div>
                                 </div>
 
