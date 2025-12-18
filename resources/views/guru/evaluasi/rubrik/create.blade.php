@@ -674,18 +674,40 @@
             });
         }
         
+        // Langsung jalankan tanpa menunggu - LANGSUNG MUNCUL
+        ensureKriteriaVisible();
+        
+        // Langsung jalankan TANPA MENUNGGU - LANGSUNG MUNCUL
+        // Jalankan segera saat script dimuat
+        (function() {
+            // Langsung buat elemen jika belum ada
+            createKriteriaElementsIfMissing();
+            // Langsung force visibility
+            ensureKriteriaVisible();
+        })();
+        
         // Jalankan saat DOM ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', ensureKriteriaVisible);
+            document.addEventListener('DOMContentLoaded', function() {
+                createKriteriaElementsIfMissing();
+                ensureKriteriaVisible();
+            });
         } else {
+            createKriteriaElementsIfMissing();
             ensureKriteriaVisible();
         }
         
-        // Jalankan setelah load
-        window.addEventListener('load', ensureKriteriaVisible);
+        // Jalankan setelah load (backup)
+        window.addEventListener('load', function() {
+            createKriteriaElementsIfMissing();
+            ensureKriteriaVisible();
+        });
         
-        // Monitor setiap 100ms untuk memastikan tetap terlihat - SANGAT AGGRESIF
-        setInterval(ensureKriteriaVisible, 100);
+        // Monitor setiap 3 detik untuk backup saja (jika ada yang menghapus)
+        setInterval(function() {
+            createKriteriaElementsIfMissing();
+            ensureKriteriaVisible();
+        }, 3000);
         
         // Observer untuk memastikan tidak ada yang mengubah display atau menghapus elemen - ULTRA AGGRESSIVE
         const observer = new MutationObserver(function(mutations) {
