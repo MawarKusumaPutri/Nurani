@@ -93,6 +93,11 @@ class KegiatanKesiswaanController extends Controller
         $data['status'] = 'rencana';
         $data['created_by'] = Auth::id();
         
+        // Handle peserta as array (multiple select)
+        if ($request->has('peserta') && is_array($request->peserta)) {
+            $data['peserta'] = implode(', ', $request->peserta);
+        }
+        
         if ($request->hasFile('dokumen_lampiran')) {
             $data['dokumen_lampiran'] = $request->file('dokumen_lampiran')->store('kegiatan-kesiswaan', 'public');
         }
@@ -159,6 +164,11 @@ class KegiatanKesiswaanController extends Controller
         ]);
         
         $data = $request->all();
+        
+        // Handle peserta as array (multiple select)
+        if ($request->has('peserta') && is_array($request->peserta)) {
+            $data['peserta'] = implode(', ', $request->peserta);
+        }
         
         if ($request->hasFile('dokumen_lampiran')) {
             // Delete old file
