@@ -1143,6 +1143,12 @@
                     </div>
                 @endif
                 
+                @if (session('error'))
+                    <div class="alert alert-danger" style="background: rgba(255,0,0,0.1); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,0,0,0.3);">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                    </div>
+                @endif
+                
                 <form id="loginForm" method="POST" action="{{ route('login.modal') }}">
                     @csrf
                     <input type="hidden" name="role" id="userRole" value="guru">
@@ -1274,8 +1280,8 @@
             return token;
         }
 
-        // Handle form submission - Update CSRF token sebelum submit dan biarkan form submit normal
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Handle form submission - Update CSRF token dan handle AJAX untuk modal
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             // Get fresh CSRF token dari meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             
@@ -1293,8 +1299,68 @@
                 submitBtn.disabled = true;
             }
             
-            // Biarkan form submit normal - Route sudah di-exclude dari CSRF verification
-            // Form akan submit dengan CSRF token yang sudah di-update
+            // Cek jika ini request dari modal (bukan halaman login terpisah)
+            const isModal = document.getElementById('loginSidebar')?.classList.contains('show');
+            
+            if (isModal) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                try {
+                    const response = await fetch('{{ route("login.modal") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Login berhasil, redirect
+                        window.location.href = data.redirect;
+                    } else {
+                        // Login gagal, tampilkan error
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'alert alert-danger';
+                        errorDiv.style.cssText = 'background: rgba(255,0,0,0.1); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,0,0,0.3);';
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + data.error;
+                        
+                        // Hapus error sebelumnya jika ada
+                        const existingError = document.querySelector('.sidebar-body .alert-danger');
+                        if (existingError && !existingError.closest('.login-form-header')) {
+                            existingError.remove();
+                        }
+                        
+                        // Tambahkan error baru setelah form header
+                        const formHeader = document.querySelector('.login-form-header');
+                        if (formHeader) {
+                            formHeader.after(errorDiv);
+                        }
+                        
+                        // Jika sudah 2 kali gagal, redirect ke lupa password
+                        if (data.attempts >= 2) {
+                            setTimeout(() => {
+                                window.location.href = '{{ route("password.request") }}?email=' + encodeURIComponent(formData.get('email')) + '&role=' + encodeURIComponent(formData.get('role'));
+                            }, 2000);
+                        }
+                        
+                        // Enable button kembali
+                        if (submitBtn) {
+                            submitBtn.textContent = originalText || 'Login';
+                            submitBtn.disabled = false;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    // Fallback: submit form secara normal
+                    this.submit();
+                }
+            }
+            // Jika bukan modal, biarkan form submit normal
         });
 
         // Handle logout with JavaScript as fallback

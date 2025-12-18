@@ -99,6 +99,15 @@
         <a href="{{ route('kepala_sekolah.notifications') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.notifications') ? 'active' : '' }}">
             <i class="fas fa-bell me-2"></i>Notifikasi
         </a>
+        <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.index') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.kegiatan-kesiswaan*') ? 'active' : '' }}">
+            <i class="fas fa-users me-2"></i>Kegiatan Kesiswaan
+        </a>
+        <a href="{{ route('kepala_sekolah.wali-kelas.index') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.wali-kelas*') ? 'active' : '' }}">
+            <i class="fas fa-chalkboard-teacher me-2"></i>Wali Kelas
+        </a>
+        <a href="{{ route('kepala_sekolah.kurikulum.index') }}" class="nav-link {{ request()->routeIs('kepala_sekolah.kurikulum*') ? 'active' : '' }}">
+            <i class="fas fa-book-open me-2"></i>Kurikulum
+        </a>
         <a href="{{ route('logout.get') }}" class="nav-link mt-3">
             <i class="fas fa-sign-out-alt me-2"></i>Logout
         </a>

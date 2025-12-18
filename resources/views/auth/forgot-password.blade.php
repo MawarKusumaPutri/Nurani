@@ -316,13 +316,19 @@
             <form method="POST" action="{{ route('password.email') }}">
                 @csrf
                 
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                    </div>
+                @endif
+                
                 <div class="form-group mb-3">
                     <label class="form-label">Role</label>
-                    <select class="form-control" name="role" required>
+                    <select class="form-control" name="role" id="role" required>
                         <option value="">Pilih Role</option>
-                        <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
-                        <option value="kepala_sekolah" {{ old('role') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
-                        <option value="tu" {{ old('role') == 'tu' ? 'selected' : '' }}>Tenaga Usaha</option>
+                        <option value="guru" {{ (old('role') ?? ($role ?? '')) == 'guru' ? 'selected' : '' }}>Guru</option>
+                        <option value="kepala_sekolah" {{ (old('role') ?? ($role ?? '')) == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                        <option value="tu" {{ (old('role') ?? ($role ?? '')) == 'tu' ? 'selected' : '' }}>Tenaga Usaha</option>
                     </select>
                 </div>
                 
@@ -333,7 +339,7 @@
                            name="email" 
                            id="email"
                            placeholder="Masukkan email Anda"
-                           value="{{ old('email') }}"
+                           value="{{ old('email') ?? ($email ?? '') }}"
                            required>
                     <small class="text-muted" id="email-hint" style="display: none; font-size: 12px; margin-top: 5px;">
                         <i class="fas fa-info-circle"></i> Email otomatis terisi berdasarkan role yang dipilih
@@ -356,15 +362,25 @@
     <script>
         // Auto-fill email berdasarkan role
         document.addEventListener('DOMContentLoaded', function() {
-            const roleSelect = document.querySelector('select[name="role"]');
+            const roleSelect = document.getElementById('role');
             const emailInput = document.getElementById('email');
             const emailHint = document.getElementById('email-hint');
+            
+            // Jika email dan role sudah ada dari query string, jangan auto-fill
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailFromUrl = urlParams.get('email');
+            const roleFromUrl = urlParams.get('role');
+            
+            if (emailFromUrl && roleFromUrl) {
+                // Email dan role sudah diisi dari redirect, jangan ubah
+                return;
+            }
             
             // Auto-fill email saat role dipilih
             if (roleSelect && emailInput) {
                 roleSelect.addEventListener('change', function() {
                     const role = this.value;
-                    if (role) {
+                    if (role && !emailInput.value) {
                         // Ambil email pertama dari role yang dipilih
                         fetch(`/api/users-by-role?role=${role}`)
                             .then(response => response.json())
@@ -379,7 +395,7 @@
                                 console.log('Auto-fill error:', error);
                                 // Jika error, biarkan user input manual
                             });
-                    } else {
+                    } else if (!role) {
                         emailInput.value = '';
                         emailHint.style.display = 'none';
                     }

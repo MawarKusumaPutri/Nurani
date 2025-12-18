@@ -9,6 +9,9 @@ use App\Http\Controllers\RangkumanController;
 use App\Http\Controllers\EvaluasiGuruController;
 use App\Http\Controllers\GuruMataPelajaranController;
 use App\Http\Controllers\MateriPembelajaranController;
+use App\Http\Controllers\KegiatanKesiswaanController;
+use App\Http\Controllers\WaliKelasController;
+use App\Http\Controllers\KurikulumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -187,6 +190,30 @@ Route::middleware('auth')->group(function () {
             });
         });
         
+        // Kegiatan Kesiswaan Routes
+        Route::prefix('kegiatan-kesiswaan')->name('kegiatan-kesiswaan.')->group(function () {
+            Route::get('/', [KegiatanKesiswaanController::class, 'index'])->name('index');
+            Route::get('/rencana', [KegiatanKesiswaanController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KegiatanKesiswaanController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KegiatanKesiswaanController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Wali Kelas Routes
+        Route::prefix('wali-kelas')->name('wali-kelas.')->group(function () {
+            Route::get('/', [WaliKelasController::class, 'index'])->name('index');
+            Route::get('/rencana', [WaliKelasController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [WaliKelasController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [WaliKelasController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Kurikulum Routes
+        Route::prefix('kurikulum')->name('kurikulum.')->group(function () {
+            Route::get('/', [KurikulumController::class, 'index'])->name('index');
+            Route::get('/rencana', [KurikulumController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KurikulumController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KurikulumController::class, 'laporan'])->name('laporan');
+        });
+        
         // Mata Pelajaran Routes
         Route::prefix('mata-pelajaran')->name('mata_pelajaran.')->group(function () {
             Route::get('/available', [GuruMataPelajaranController::class, 'getAvailableSubjects'])->name('available');
@@ -234,6 +261,30 @@ Route::middleware('auth')->group(function () {
             Route::get('/api/weekly-table', [App\Http\Controllers\KepalaSekolahController::class, 'getWeeklyTable'])->name('api.weekly_table');
             Route::get('/api/activity-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getActivityDistribution'])->name('api.activity_distribution');
             Route::get('/api/status-distribution', [App\Http\Controllers\KepalaSekolahController::class, 'getStatusDistribution'])->name('api.status_distribution');
+        
+        // Kegiatan Kesiswaan Routes
+        Route::prefix('kegiatan-kesiswaan')->name('kegiatan-kesiswaan.')->group(function () {
+            Route::get('/', [KegiatanKesiswaanController::class, 'index'])->name('index');
+            Route::get('/rencana', [KegiatanKesiswaanController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KegiatanKesiswaanController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KegiatanKesiswaanController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Wali Kelas Routes
+        Route::prefix('wali-kelas')->name('wali-kelas.')->group(function () {
+            Route::get('/', [WaliKelasController::class, 'index'])->name('index');
+            Route::get('/rencana', [WaliKelasController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [WaliKelasController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [WaliKelasController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Kurikulum Routes
+        Route::prefix('kurikulum')->name('kurikulum.')->group(function () {
+            Route::get('/', [KurikulumController::class, 'index'])->name('index');
+            Route::get('/rencana', [KurikulumController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KurikulumController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KurikulumController::class, 'laporan'])->name('laporan');
+        });
     });
 
     // TU Routes
@@ -346,6 +397,30 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'profileIndex'])->name('index');
             Route::get('/edit', [App\Http\Controllers\TuController::class, 'profileEdit'])->name('edit');
             Route::put('/update', [App\Http\Controllers\TuController::class, 'profileUpdate'])->name('update');
+        });
+        
+        // Kegiatan Kesiswaan Routes
+        Route::prefix('kegiatan-kesiswaan')->name('kegiatan-kesiswaan.')->group(function () {
+            Route::get('/', [KegiatanKesiswaanController::class, 'index'])->name('index');
+            Route::get('/rencana', [KegiatanKesiswaanController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KegiatanKesiswaanController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KegiatanKesiswaanController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Wali Kelas Routes
+        Route::prefix('wali-kelas')->name('wali-kelas.')->group(function () {
+            Route::get('/', [WaliKelasController::class, 'index'])->name('index');
+            Route::get('/rencana', [WaliKelasController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [WaliKelasController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [WaliKelasController::class, 'laporan'])->name('laporan');
+        });
+        
+        // Kurikulum Routes
+        Route::prefix('kurikulum')->name('kurikulum.')->group(function () {
+            Route::get('/', [KurikulumController::class, 'index'])->name('index');
+            Route::get('/rencana', [KurikulumController::class, 'rencana'])->name('rencana');
+            Route::get('/monitoring', [KurikulumController::class, 'monitoring'])->name('monitoring');
+            Route::get('/laporan', [KurikulumController::class, 'laporan'])->name('laporan');
         });
     });
 });

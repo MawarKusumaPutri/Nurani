@@ -41,6 +41,10 @@ class AuthController extends Controller
                    ->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
+            // Reset failed attempts jika login berhasil
+            $sessionKey = 'login_attempts_' . md5($credentials['email'] . '_' . $role);
+            $request->session()->forget($sessionKey);
+            
             // Handle remember me
             $remember = $request->has('remember') && $request->remember == '1';
             Auth::login($user, $remember);
@@ -78,6 +82,12 @@ class AuthController extends Controller
             //     'user_found' => $user ? true : false,
             //     'password_check' => $user ? Hash::check($credentials['password'], $user->password) : false
             // ]);
+            
+            // Track failed login attempts
+            $sessionKey = 'login_attempts_' . md5($credentials['email'] . '_' . $role);
+            $attempts = $request->session()->get($sessionKey, 0);
+            $attempts++;
+            $request->session()->put($sessionKey, $attempts);
         }
 
         $roleText = match($role) {
@@ -87,13 +97,29 @@ class AuthController extends Controller
             default => 'pengguna'
         };
 
+        // Cek jumlah percobaan yang gagal
+        $sessionKey = 'login_attempts_' . md5($credentials['email'] . '_' . $role);
+        $attempts = $request->session()->get($sessionKey, 0);
+        
+        // Jika sudah 2 kali gagal, redirect ke lupa password
+        if ($attempts >= 2) {
+            $request->session()->forget($sessionKey); // Reset attempts
+            return redirect()->route('password.request')
+                ->with('error', 'Anda telah memasukkan password yang salah sebanyak 2 kali. Silakan reset password Anda.')
+                ->withInput(['email' => $credentials['email'], 'role' => $role]);
+        }
+
         $errorMessage = 'Email atau password tidak valid. Pastikan Anda adalah ' . $roleText . ' yang terdaftar.';
+        $remainingAttempts = 2 - $attempts;
+        $errorMessage .= ' (Percobaan ' . $attempts . '/2. Sisa percobaan: ' . $remainingAttempts . ')';
         
         // Jika request AJAX atau memiliki header X-Requested-With, return JSON
         if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'success' => false,
-                'error' => $errorMessage
+                'error' => $errorMessage,
+                'attempts' => $attempts,
+                'remaining_attempts' => $remainingAttempts
             ], 422);
         }
 
@@ -156,9 +182,12 @@ class AuthController extends Controller
         }
     }
 
-    public function showForgotPasswordForm()
+    public function showForgotPasswordForm(Request $request)
     {
-        return view('auth.forgot-password');
+        return view('auth.forgot-password', [
+            'email' => $request->query('email', old('email')),
+            'role' => $request->query('role', old('role'))
+        ]);
     }
 
     public function sendResetLink(Request $request)

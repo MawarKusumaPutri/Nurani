@@ -587,6 +587,12 @@
                 </div>
             @endif
             
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                </div>
+            @endif
+            
             <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
                 
@@ -770,11 +776,14 @@
         
         // Handle login - biarkan form submit normal untuk menghindari security warning
         // Hanya tambahkan loading state dan save credentials
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
             const loginButton = document.getElementById('loginButton');
             const loginButtonText = document.getElementById('loginButtonText');
             const loginButtonLoading = document.getElementById('loginButtonLoading');
             const loginError = document.getElementById('loginError');
+            const loginErrorText = document.getElementById('loginErrorText');
             
             // Hide error
             if (loginError) {
@@ -807,9 +816,55 @@
                 localStorage.removeItem('remember_me');
             }
             
-            // Biarkan form submit secara normal (tidak preventDefault)
-            // Browser akan handle submission dan redirect otomatis
-            // Jika muncul warning, user bisa klik "Tetap kirim" atau "Send anyway"
+            // Submit via AJAX untuk handle attempts
+            const formData = new FormData(this);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            try {
+                const response = await fetch('{{ route("login") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Login berhasil, redirect
+                    window.location.href = data.redirect;
+                } else {
+                    // Login gagal, tampilkan error
+                    if (loginError && loginErrorText) {
+                        loginErrorText.textContent = data.error || 'Email atau password tidak valid.';
+                        loginError.style.display = 'block';
+                    }
+                    
+                    // Jika sudah 2 kali gagal, redirect ke lupa password
+                    if (data.attempts >= 2) {
+                        setTimeout(() => {
+                            window.location.href = '{{ route("password.request") }}?email=' + encodeURIComponent(formData.get('email')) + '&role=' + encodeURIComponent(formData.get('role'));
+                        }, 2000);
+                    }
+                    
+                    // Enable button kembali
+                    if (loginButton) {
+                        loginButton.disabled = false;
+                    }
+                    if (loginButtonText) {
+                        loginButtonText.style.display = 'inline';
+                    }
+                    if (loginButtonLoading) {
+                        loginButtonLoading.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                // Fallback: submit form secara normal
+                this.submit();
+            }
         });
     </script>
 </body>
