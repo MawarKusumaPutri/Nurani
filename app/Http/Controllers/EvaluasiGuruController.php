@@ -548,6 +548,14 @@ class EvaluasiGuruController extends Controller
         return redirect()->route('guru.evaluasi.nilai.index')->with('success', 'Nilai harian berhasil disimpan');
     }
 
+    public function nilaiShow($id)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        $nilai = NilaiFormatifSumatif::where('guru_id', $guru->id)->with('siswa')->findOrFail($id);
+        
+        return view('guru.evaluasi.nilai.show', compact('guru', 'nilai'));
+    }
+
     public function nilaiEdit($id)
     {
         $guru = Guru::where('user_id', Auth::id())->first();

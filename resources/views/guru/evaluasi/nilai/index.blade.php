@@ -389,13 +389,16 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <a href="{{ route('guru.evaluasi.nilai.edit', $item->id) }}" class="btn btn-sm btn-warning">
+                                                    <a href="{{ route('guru.evaluasi.nilai.show', $item->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ route('guru.evaluasi.nilai.edit', $item->id) }}" class="btn btn-sm btn-warning" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form action="{{ route('guru.evaluasi.nilai.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>

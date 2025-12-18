@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [EvaluasiGuruController::class, 'nilaiIndex'])->name('index');
                 Route::get('/create', [EvaluasiGuruController::class, 'nilaiCreate'])->name('create');
                 Route::post('/', [EvaluasiGuruController::class, 'nilaiStore'])->name('store');
+                Route::get('/{id}', [EvaluasiGuruController::class, 'nilaiShow'])->name('show');
                 Route::get('/{id}/edit', [EvaluasiGuruController::class, 'nilaiEdit'])->name('edit');
                 Route::put('/{id}', [EvaluasiGuruController::class, 'nilaiUpdate'])->name('update');
                 Route::delete('/{id}', [EvaluasiGuruController::class, 'nilaiDestroy'])->name('destroy');
