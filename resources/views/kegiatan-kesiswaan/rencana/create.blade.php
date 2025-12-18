@@ -132,9 +132,9 @@
                                         <label for="peserta" class="form-label">Peserta (Kelas)</label>
                                         <select class="form-select" id="peserta" name="peserta">
                                             <option value="">Pilih Kelas</option>
-                                            <option value="7" {{ old('peserta') == '7' ? 'selected' : '' }}>Kelas 7</option>
-                                            <option value="8" {{ old('peserta') == '8' ? 'selected' : '' }}>Kelas 8</option>
-                                            <option value="9" {{ old('peserta') == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                            <option value="Kelas 7" {{ old('peserta') == 'Kelas 7' ? 'selected' : '' }}>Kelas 7</option>
+                                            <option value="Kelas 8" {{ old('peserta') == 'Kelas 8' ? 'selected' : '' }}>Kelas 8</option>
+                                            <option value="Kelas 9" {{ old('peserta') == 'Kelas 9' ? 'selected' : '' }}>Kelas 9</option>
                                             <option value="Semua Kelas" {{ old('peserta') == 'Semua Kelas' ? 'selected' : '' }}>Semua Kelas</option>
                                         </select>
                                         <div class="form-text">Pilih kelas yang akan mengikuti kegiatan ini</div>
