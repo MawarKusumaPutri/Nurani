@@ -360,6 +360,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [KegiatanKesiswaanController::class, 'rencana'])->name('index');
                 Route::get('/create', [KegiatanKesiswaanController::class, 'rencanaCreate'])->name('create');
                 Route::post('/', [KegiatanKesiswaanController::class, 'rencanaStore'])->name('store');
+                Route::get('/{id}', [KegiatanKesiswaanController::class, 'rencanaShow'])->name('show');
                 Route::get('/{id}/edit', [KegiatanKesiswaanController::class, 'rencanaEdit'])->name('edit');
                 Route::put('/{id}', [KegiatanKesiswaanController::class, 'rencanaUpdate'])->name('update');
                 Route::delete('/{id}', [KegiatanKesiswaanController::class, 'rencanaDestroy'])->name('destroy');

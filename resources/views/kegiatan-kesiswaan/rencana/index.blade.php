@@ -88,6 +88,9 @@
                                                         </td>
                                                         <td>
                                                             <div class="btn-group btn-group-sm">
+                                                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.rencana.show', $rencana->id) : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.rencana.show', $rencana->id) : route('kepala_sekolah.kegiatan-kesiswaan.rencana.show', $rencana->id)) }}" class="btn btn-outline-info" title="Lihat Detail">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
                                                                 <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.rencana.edit', $rencana->id) : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.rencana.edit', $rencana->id) : route('kepala_sekolah.kegiatan-kesiswaan.rencana.edit', $rencana->id)) }}" class="btn btn-outline-primary" title="Edit">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
@@ -214,6 +217,9 @@
                                                             </td>
                                                             <td>
                                                                 <div class="btn-group btn-group-sm">
+                                                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.rencana.show', $rencana->id) }}" class="btn btn-outline-info" title="Lihat Detail">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </a>
                                                                     <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.rencana.edit', $rencana->id) }}" class="btn btn-outline-primary" title="Edit">
                                                                         <i class="fas fa-edit"></i>
                                                                     </a>

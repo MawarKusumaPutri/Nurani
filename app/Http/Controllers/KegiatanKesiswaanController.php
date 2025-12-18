@@ -109,6 +109,24 @@ class KegiatanKesiswaanController extends Controller
         return redirect()->route($route)->with('success', 'Rencana kegiatan berhasil dibuat');
     }
     
+    public function rencanaShow($id)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+        $rencana = KegiatanKesiswaan::findOrFail($id);
+        
+        if ($role === 'tu') {
+            return view('kegiatan-kesiswaan.rencana.show', compact('rencana', 'role'));
+        } elseif ($role === 'guru') {
+            $guru = \App\Models\Guru::where('user_id', $user->id)->first();
+            return view('kegiatan-kesiswaan.rencana.show', compact('rencana', 'guru', 'role'));
+        } elseif ($role === 'kepala_sekolah') {
+            return view('kegiatan-kesiswaan.rencana.show', compact('rencana', 'role'));
+        }
+        
+        return redirect()->route('login');
+    }
+    
     public function rencanaEdit($id)
     {
         $user = Auth::user();
