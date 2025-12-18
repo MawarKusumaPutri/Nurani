@@ -132,16 +132,20 @@
                                         <label for="peserta" class="form-label">Peserta (Kelas)</label>
                                         @php
                                             $pesertaValue = old('peserta', $rencana->peserta ?? '');
-                                            $pesertaArray = $pesertaValue ? (strpos($pesertaValue, ',') !== false ? explode(',', $pesertaValue) : [$pesertaValue]) : [];
-                                            $pesertaArray = array_map('trim', $pesertaArray);
+                                            // Handle old data yang mungkin dalam format "7, 8" atau hanya "7"
+                                            if ($pesertaValue && strpos($pesertaValue, ',') !== false) {
+                                                $pesertaArray = array_map('trim', explode(',', $pesertaValue));
+                                                $pesertaValue = $pesertaArray[0]; // Ambil nilai pertama jika ada multiple
+                                            }
                                         @endphp
-                                        <select class="form-select" id="peserta" name="peserta" multiple>
-                                            <option value="7" {{ in_array('7', $pesertaArray) ? 'selected' : '' }}>Kelas 7</option>
-                                            <option value="8" {{ in_array('8', $pesertaArray) ? 'selected' : '' }}>Kelas 8</option>
-                                            <option value="9" {{ in_array('9', $pesertaArray) ? 'selected' : '' }}>Kelas 9</option>
-                                            <option value="Semua Kelas" {{ in_array('Semua Kelas', $pesertaArray) ? 'selected' : '' }}>Semua Kelas</option>
+                                        <select class="form-select" id="peserta" name="peserta">
+                                            <option value="">Pilih Kelas</option>
+                                            <option value="7" {{ $pesertaValue == '7' ? 'selected' : '' }}>Kelas 7</option>
+                                            <option value="8" {{ $pesertaValue == '8' ? 'selected' : '' }}>Kelas 8</option>
+                                            <option value="9" {{ $pesertaValue == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                            <option value="Semua Kelas" {{ $pesertaValue == 'Semua Kelas' ? 'selected' : '' }}>Semua Kelas</option>
                                         </select>
-                                        <div class="form-text">Pilih kelas yang akan mengikuti kegiatan ini (bisa pilih lebih dari satu dengan menahan Ctrl/Cmd)</div>
+                                        <div class="form-text">Pilih kelas yang akan mengikuti kegiatan ini</div>
                                     </div>
 
                                     <div class="mb-3">
@@ -314,16 +318,20 @@
                                             <label for="peserta" class="form-label">Peserta (Kelas)</label>
                                             @php
                                                 $pesertaValue = old('peserta', $rencana->peserta ?? '');
-                                                $pesertaArray = $pesertaValue ? (strpos($pesertaValue, ',') !== false ? explode(',', $pesertaValue) : [$pesertaValue]) : [];
-                                                $pesertaArray = array_map('trim', $pesertaArray);
+                                                // Handle old data yang mungkin dalam format "7, 8" atau hanya "7"
+                                                if ($pesertaValue && strpos($pesertaValue, ',') !== false) {
+                                                    $pesertaArray = array_map('trim', explode(',', $pesertaValue));
+                                                    $pesertaValue = $pesertaArray[0]; // Ambil nilai pertama jika ada multiple
+                                                }
                                             @endphp
-                                            <select class="form-select" id="peserta" name="peserta" multiple>
-                                                <option value="7" {{ in_array('7', $pesertaArray) ? 'selected' : '' }}>Kelas 7</option>
-                                                <option value="8" {{ in_array('8', $pesertaArray) ? 'selected' : '' }}>Kelas 8</option>
-                                                <option value="9" {{ in_array('9', $pesertaArray) ? 'selected' : '' }}>Kelas 9</option>
-                                                <option value="Semua Kelas" {{ in_array('Semua Kelas', $pesertaArray) ? 'selected' : '' }}>Semua Kelas</option>
+                                            <select class="form-select" id="peserta" name="peserta">
+                                                <option value="">Pilih Kelas</option>
+                                                <option value="7" {{ $pesertaValue == '7' ? 'selected' : '' }}>Kelas 7</option>
+                                                <option value="8" {{ $pesertaValue == '8' ? 'selected' : '' }}>Kelas 8</option>
+                                                <option value="9" {{ $pesertaValue == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                                <option value="Semua Kelas" {{ $pesertaValue == 'Semua Kelas' ? 'selected' : '' }}>Semua Kelas</option>
                                             </select>
-                                            <div class="form-text">Pilih kelas yang akan mengikuti kegiatan ini (bisa pilih lebih dari satu dengan menahan Ctrl/Cmd)</div>
+                                            <div class="form-text">Pilih kelas yang akan mengikuti kegiatan ini</div>
                                         </div>
 
                                         <div class="mb-3">
