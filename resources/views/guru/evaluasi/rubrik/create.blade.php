@@ -542,8 +542,72 @@
         window.addEventListener('load', forceWhiteBackground);
         setInterval(forceWhiteBackground, 100);
         
+        // Fungsi untuk membuat ulang elemen jika tidak ada - ULTRA AGGRESSIVE
+        function createKriteriaElementsIfMissing() {
+            const textarea = document.getElementById('kriteria_penilaian');
+            if (!textarea) return;
+            
+            // Cek apakah bagian kuning ada
+            let penjelasan = document.getElementById('kriteria-penjelasan-kuning');
+            if (!penjelasan) {
+                // Buat ulang bagian kuning
+                penjelasan = document.createElement('div');
+                penjelasan.id = 'kriteria-penjelasan-kuning';
+                penjelasan.className = 'alert alert-warning mb-3 kriteria-penjelasan';
+                penjelasan.style.cssText = 'font-size: 0.9rem; display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #fff3cd !important; border-color: #ffc107 !important; color: #856404 !important;';
+                penjelasan.innerHTML = `
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Apa itu Kriteria Penilaian?</strong><br>
+                    Kriteria penilaian adalah <strong>aspek-aspek atau komponen</strong> yang akan dinilai dari siswa. 
+                    Ini membantu guru untuk menilai siswa secara lebih terstruktur dan objektif.
+                    <br><br>
+                    <strong>Contoh Kriteria Penilaian:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li><strong>Pemahaman Konsep:</strong> Seberapa baik siswa memahami materi pelajaran</li>
+                        <li><strong>Keterampilan Praktik:</strong> Kemampuan siswa menerapkan teori dalam praktik</li>
+                        <li><strong>Kreativitas:</strong> Kemampuan siswa berpikir kreatif dan inovatif</li>
+                        <li><strong>Kerjasama:</strong> Kemampuan siswa bekerja dalam tim</li>
+                        <li><strong>Presentasi:</strong> Kemampuan siswa menyampaikan hasil kerja</li>
+                    </ul>
+                `;
+                // Insert sebelum textarea
+                textarea.parentNode.insertBefore(penjelasan, textarea);
+            }
+            
+            // Cek apakah bagian biru ada
+            let contoh = document.getElementById('kriteria-contoh-biru');
+            if (!contoh) {
+                // Buat ulang bagian biru
+                contoh = document.createElement('div');
+                contoh.id = 'kriteria-contoh-biru';
+                contoh.className = 'mt-2 kriteria-contoh';
+                contoh.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;';
+                contoh.innerHTML = `
+                    <div class="alert alert-info mb-0" style="font-size: 0.875rem; background-color: #d1ecf1 !important; border-color: #bee5eb !important; color: #0c5460 !important;">
+                        <strong><i class="fas fa-book me-1"></i>Cara Mengisi (Format Teks - Paling Mudah):</strong><br>
+                        <code style="display: block; padding: 0.75rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px; white-space: pre-wrap;">
+1. Pemahaman Konsep: Siswa mampu memahami konsep dasar materi dengan baik dan dapat menjelaskannya kembali
+
+2. Keterampilan Praktik: Siswa dapat menerapkan konsep yang dipelajari dalam situasi praktik atau kehidupan sehari-hari
+
+3. Kreativitas: Siswa menunjukkan kreativitas dan inovasi dalam menyelesaikan masalah atau tugas
+
+4. Kerjasama: Siswa aktif berpartisipasi dalam kerja kelompok dan dapat bekerja sama dengan baik
+
+5. Presentasi: Siswa dapat menyampaikan hasil kerja dengan jelas dan menarik
+                        </code>
+                    </div>
+                `;
+                // Insert setelah textarea
+                textarea.parentNode.insertBefore(contoh, textarea.nextSibling);
+            }
+        }
+        
         // Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT - ULTRA AGGRESSIVE
         function ensureKriteriaVisible() {
+            // Buat elemen jika tidak ada
+            createKriteriaElementsIfMissing();
+            
             // Cari semua elemen yang mungkin menyembunyikan - menggunakan ID dan class
             const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
             const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
@@ -560,8 +624,13 @@
                 penjelasan.style.setProperty('overflow', 'visible', 'important');
                 penjelasan.style.setProperty('max-height', 'none', 'important');
                 penjelasan.style.setProperty('min-height', 'auto', 'important');
+                penjelasan.style.setProperty('background-color', '#fff3cd', 'important');
+                penjelasan.style.setProperty('border-color', '#ffc107', 'important');
+                penjelasan.style.setProperty('color', '#856404', 'important');
                 penjelasan.classList.remove('d-none', 'hidden', 'collapse');
                 penjelasan.classList.add('d-block');
+                // Pastikan tidak dihapus
+                penjelasan.setAttribute('data-permanent', 'true');
             }
             
             if (alertWarning) {
@@ -582,12 +651,17 @@
                 contoh.style.setProperty('min-height', 'auto', 'important');
                 contoh.classList.remove('d-none', 'hidden', 'collapse');
                 contoh.classList.add('d-block');
+                // Pastikan tidak dihapus
+                contoh.setAttribute('data-permanent', 'true');
             }
             
             if (alertInfo) {
                 alertInfo.style.setProperty('display', 'block', 'important');
                 alertInfo.style.setProperty('visibility', 'visible', 'important');
                 alertInfo.style.setProperty('opacity', '1', 'important');
+                alertInfo.style.setProperty('background-color', '#d1ecf1', 'important');
+                alertInfo.style.setProperty('border-color', '#bee5eb', 'important');
+                alertInfo.style.setProperty('color', '#0c5460', 'important');
             }
             
             // Pastikan semua child elements juga terlihat
@@ -613,25 +687,87 @@
         // Monitor setiap 100ms untuk memastikan tetap terlihat - SANGAT AGGRESIF
         setInterval(ensureKriteriaVisible, 100);
         
-        // Observer untuk memastikan tidak ada yang mengubah display
+        // Observer untuk memastikan tidak ada yang mengubah display atau menghapus elemen - ULTRA AGGRESSIVE
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                // Jika ada elemen yang dihapus, buat ulang
+                if (mutation.type === 'childList') {
+                    mutation.removedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && (node.id === 'kriteria-penjelasan-kuning' || node.id === 'kriteria-contoh-biru')) {
+                            console.log('Elemen kriteria dihapus, membuat ulang...');
+                            createKriteriaElementsIfMissing();
+                            ensureKriteriaVisible();
+                        }
+                    });
+                }
+                // Jika ada perubahan atribut, force visibility
+                if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
                     ensureKriteriaVisible();
                 }
             });
         });
         
-        // Observe perubahan pada elemen penjelasan
+        // Observe perubahan pada elemen penjelasan dan parent-nya
         document.addEventListener('DOMContentLoaded', function() {
-            const penjelasan = document.querySelector('.kriteria-penjelasan');
-            const contoh = document.querySelector('.kriteria-contoh');
+            const textarea = document.getElementById('kriteria_penilaian');
+            const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
+            const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
+            
+            // Observe parent container untuk mendeteksi penghapusan
+            if (textarea && textarea.parentNode) {
+                observer.observe(textarea.parentNode, { 
+                    childList: true, 
+                    subtree: true, 
+                    attributes: true, 
+                    attributeFilter: ['style', 'class'] 
+                });
+            }
             
             if (penjelasan) {
-                observer.observe(penjelasan, { attributes: true, attributeFilter: ['style', 'class'] });
+                observer.observe(penjelasan, { 
+                    attributes: true, 
+                    attributeFilter: ['style', 'class'],
+                    childList: true,
+                    subtree: true
+                });
             }
             if (contoh) {
-                observer.observe(contoh, { attributes: true, attributeFilter: ['style', 'class'] });
+                observer.observe(contoh, { 
+                    attributes: true, 
+                    attributeFilter: ['style', 'class'],
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            // Prevent removal
+            if (penjelasan) {
+                penjelasan.addEventListener('DOMNodeRemoved', function(e) {
+                    e.preventDefault();
+                    createKriteriaElementsIfMissing();
+                });
+            }
+            if (contoh) {
+                contoh.addEventListener('DOMNodeRemoved', function(e) {
+                    e.preventDefault();
+                    createKriteriaElementsIfMissing();
+                });
+            }
+        });
+        
+        // Juga observe setelah window load
+        window.addEventListener('load', function() {
+            createKriteriaElementsIfMissing();
+            ensureKriteriaVisible();
+            
+            const textarea = document.getElementById('kriteria_penilaian');
+            if (textarea && textarea.parentNode) {
+                observer.observe(textarea.parentNode, { 
+                    childList: true, 
+                    subtree: true, 
+                    attributes: true, 
+                    attributeFilter: ['style', 'class'] 
+                });
             }
         });
     </script>
