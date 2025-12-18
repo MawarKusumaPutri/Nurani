@@ -34,7 +34,7 @@
                                 </div>
                                 <h4 class="card-title">Rencana Kegiatan</h4>
                                 <p class="card-text text-muted">Buat dan kelola rencana kegiatan kesiswaan</p>
-                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.rencana') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.rencana') : route('kepala_sekolah.kegiatan-kesiswaan.rencana')) }}" class="btn btn-primary">
+                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.rencana.index') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.rencana.index') : route('kepala_sekolah.kegiatan-kesiswaan.rencana.index')) }}" class="btn btn-primary">
                                     <i class="fas fa-arrow-right me-2"></i>Masuk
                                 </a>
                             </div>
@@ -48,7 +48,7 @@
                                 </div>
                                 <h4 class="card-title">Monitoring Pelaksanaan</h4>
                                 <p class="card-text text-muted">Pantau pelaksanaan kegiatan kesiswaan</p>
-                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.monitoring') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.monitoring') : route('kepala_sekolah.kegiatan-kesiswaan.monitoring')) }}" class="btn btn-success">
+                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.monitoring.index') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.monitoring.index') : route('kepala_sekolah.kegiatan-kesiswaan.monitoring.index')) }}" class="btn btn-success">
                                     <i class="fas fa-arrow-right me-2"></i>Masuk
                                 </a>
                             </div>
@@ -62,7 +62,7 @@
                                 </div>
                                 <h4 class="card-title">Laporan Kegiatan</h4>
                                 <p class="card-text text-muted">Lihat dan kelola laporan hasil kegiatan</p>
-                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.laporan') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.laporan') : route('kepala_sekolah.kegiatan-kesiswaan.laporan')) }}" class="btn btn-info">
+                                <a href="{{ $role === 'tu' ? route('tu.kegiatan-kesiswaan.laporan.index') : ($role === 'guru' ? route('guru.kegiatan-kesiswaan.laporan.index') : route('kepala_sekolah.kegiatan-kesiswaan.laporan.index')) }}" class="btn btn-info">
                                     <i class="fas fa-arrow-right me-2"></i>Masuk
                                 </a>
                             </div>
@@ -112,7 +112,7 @@
                                     </div>
                                     <h4 class="card-title">Rencana Kegiatan</h4>
                                     <p class="card-text text-muted">Buat dan kelola rencana kegiatan kesiswaan</p>
-                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.rencana') }}" class="btn btn-primary">
+                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.rencana.index') }}" class="btn btn-primary">
                                         <i class="fas fa-arrow-right me-2"></i>Masuk
                                     </a>
                                 </div>
@@ -126,7 +126,7 @@
                                     </div>
                                     <h4 class="card-title">Monitoring Pelaksanaan</h4>
                                     <p class="card-text text-muted">Pantau pelaksanaan kegiatan kesiswaan</p>
-                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.monitoring') }}" class="btn btn-success">
+                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.monitoring.index') }}" class="btn btn-success">
                                         <i class="fas fa-arrow-right me-2"></i>Masuk
                                     </a>
                                 </div>
@@ -140,7 +140,7 @@
                                     </div>
                                     <h4 class="card-title">Laporan Kegiatan</h4>
                                     <p class="card-text text-muted">Lihat dan kelola laporan hasil kegiatan</p>
-                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.laporan') }}" class="btn btn-info">
+                                    <a href="{{ route('kepala_sekolah.kegiatan-kesiswaan.laporan.index') }}" class="btn btn-info">
                                         <i class="fas fa-arrow-right me-2"></i>Masuk
                                     </a>
                                 </div>
