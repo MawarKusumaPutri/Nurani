@@ -72,7 +72,8 @@
                                     Kriteria Penilaian <span class="text-danger">*</span>
                                 </label>
                                 <!-- Penjelasan Kriteria Penilaian - TETAP TERLIHAT -->
-                                <div class="alert alert-warning mb-3 kriteria-penjelasan" style="font-size: 0.9rem; display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;">
+                                <!-- Penjelasan Kriteria Penilaian - TETAP TERLIHAT - BAGIAN KUNING -->
+                                <div id="kriteria-penjelasan-kuning" class="alert alert-warning mb-3 kriteria-penjelasan" style="font-size: 0.9rem; display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; background-color: #fff3cd !important; border-color: #ffc107 !important; color: #856404 !important;">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <strong>Apa itu Kriteria Penilaian?</strong><br>
                                     Kriteria penilaian adalah <strong>aspek-aspek atau komponen</strong> yang akan dinilai dari siswa. 
@@ -89,8 +90,9 @@
                                 </div>
                                 <textarea class="form-control" id="kriteria_penilaian" name="kriteria_penilaian" rows="8" required>{{ old('kriteria_penilaian', is_array($rubrik->kriteria_penilaian) ? json_encode($rubrik->kriteria_penilaian, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : $rubrik->kriteria_penilaian) }}</textarea>
                                 <!-- Contoh Cara Mengisi - TETAP TERLIHAT -->
-                                <div class="mt-2 kriteria-contoh" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;">
-                                    <div class="alert alert-info mb-0" style="font-size: 0.875rem;">
+                                <!-- Contoh Cara Mengisi - TETAP TERLIHAT - BAGIAN BIRU -->
+                                <div id="kriteria-contoh-biru" class="mt-2 kriteria-contoh" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important;">
+                                    <div class="alert alert-info mb-0" style="font-size: 0.875rem; background-color: #d1ecf1 !important; border-color: #bee5eb !important; color: #0c5460 !important;">
                                         <strong><i class="fas fa-book me-1"></i>Cara Mengisi (Format Teks - Paling Mudah):</strong><br>
                                         <code style="display: block; padding: 0.75rem; margin-top: 0.5rem; background: #f8f9fa; border-radius: 4px; white-space: pre-wrap;">
 1. Pemahaman Konsep: Siswa mampu memahami konsep dasar materi dengan baik dan dapat menjelaskannya kembali
@@ -147,9 +149,10 @@
         background-color: #f8f9fa;
     }
     
-    /* Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT */
+    /* Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT - ULTRA AGGRESSIVE */
     .kriteria-penjelasan,
-    .kriteria-contoh {
+    .kriteria-penjelasan.alert,
+    .kriteria-penjelasan.alert-warning {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -157,24 +160,56 @@
         z-index: 1 !important;
         height: auto !important;
         overflow: visible !important;
+        max-height: none !important;
+        min-height: auto !important;
     }
     
-    .kriteria-penjelasan .alert,
-    .kriteria-contoh .alert {
+    .kriteria-contoh,
+    .kriteria-contoh .alert,
+    .kriteria-contoh .alert-info {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
+        max-height: none !important;
+        min-height: auto !important;
+    }
+    
+    /* Pastikan tidak ada yang menyembunyikan - FORCE VISIBLE */
+    .kriteria-penjelasan *,
+    .kriteria-contoh *,
+    .kriteria-penjelasan ul,
+    .kriteria-penjelasan li,
+    .kriteria-contoh code,
+    .kriteria-contoh strong {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
     }
     
-    /* Pastikan tidak ada yang menyembunyikan */
-    .kriteria-penjelasan *,
-    .kriteria-contoh * {
+    .kriteria-penjelasan ul {
         display: block !important;
-        visibility: visible !important;
+        list-style-type: disc !important;
+        padding-left: 1.5rem !important;
     }
     
-    .kriteria-penjelasan ul,
+    .kriteria-penjelasan li {
+        display: list-item !important;
+    }
+    
     .kriteria-contoh code {
+        display: block !important;
+        white-space: pre-wrap !important;
+    }
+    
+    /* Override semua kemungkinan hidden */
+    .kriteria-penjelasan[style*="display: none"],
+    .kriteria-contoh[style*="display: none"],
+    .kriteria-penjelasan[style*="visibility: hidden"],
+    .kriteria-contoh[style*="visibility: hidden"] {
         display: block !important;
         visibility: visible !important;
     }
@@ -190,11 +225,15 @@
         });
     });
     
-    // Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT
+    // Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT - ULTRA AGGRESSIVE
     function ensureKriteriaVisible() {
-        const penjelasan = document.querySelector('.kriteria-penjelasan');
-        const contoh = document.querySelector('.kriteria-contoh');
+        // Cari semua elemen yang mungkin menyembunyikan - menggunakan ID dan class
+        const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
+        const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
+        const alertWarning = document.querySelector('#kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan.alert-warning');
+        const alertInfo = document.querySelector('#kriteria-contoh-biru .alert-info') || document.querySelector('.kriteria-contoh .alert-info');
         
+        // Force visibility untuk bagian kuning (penjelasan)
         if (penjelasan) {
             penjelasan.style.setProperty('display', 'block', 'important');
             penjelasan.style.setProperty('visibility', 'visible', 'important');
@@ -202,8 +241,19 @@
             penjelasan.style.setProperty('position', 'relative', 'important');
             penjelasan.style.setProperty('height', 'auto', 'important');
             penjelasan.style.setProperty('overflow', 'visible', 'important');
+            penjelasan.style.setProperty('max-height', 'none', 'important');
+            penjelasan.style.setProperty('min-height', 'auto', 'important');
+            penjelasan.classList.remove('d-none', 'hidden', 'collapse');
+            penjelasan.classList.add('d-block');
         }
         
+        if (alertWarning) {
+            alertWarning.style.setProperty('display', 'block', 'important');
+            alertWarning.style.setProperty('visibility', 'visible', 'important');
+            alertWarning.style.setProperty('opacity', '1', 'important');
+        }
+        
+        // Force visibility untuk bagian biru (contoh)
         if (contoh) {
             contoh.style.setProperty('display', 'block', 'important');
             contoh.style.setProperty('visibility', 'visible', 'important');
@@ -211,7 +261,26 @@
             contoh.style.setProperty('position', 'relative', 'important');
             contoh.style.setProperty('height', 'auto', 'important');
             contoh.style.setProperty('overflow', 'visible', 'important');
+            contoh.style.setProperty('max-height', 'none', 'important');
+            contoh.style.setProperty('min-height', 'auto', 'important');
+            contoh.classList.remove('d-none', 'hidden', 'collapse');
+            contoh.classList.add('d-block');
         }
+        
+        if (alertInfo) {
+            alertInfo.style.setProperty('display', 'block', 'important');
+            alertInfo.style.setProperty('visibility', 'visible', 'important');
+            alertInfo.style.setProperty('opacity', '1', 'important');
+        }
+        
+        // Pastikan semua child elements juga terlihat
+        const allElements = document.querySelectorAll('.kriteria-penjelasan *, .kriteria-contoh *');
+        allElements.forEach(function(el) {
+            if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+                el.style.setProperty('display', '', 'important');
+                el.style.setProperty('visibility', 'visible', 'important');
+            }
+        });
     }
     
     // Jalankan saat DOM ready
@@ -224,8 +293,8 @@
     // Jalankan setelah load
     window.addEventListener('load', ensureKriteriaVisible);
     
-    // Monitor setiap detik untuk memastikan tetap terlihat
-    setInterval(ensureKriteriaVisible, 1000);
+    // Monitor setiap 100ms untuk memastikan tetap terlihat - SANGAT AGGRESIF
+    setInterval(ensureKriteriaVisible, 100);
     
     // Observer untuk memastikan tidak ada yang mengubah display
     const observer = new MutationObserver(function(mutations) {
@@ -238,8 +307,8 @@
     
     // Observe perubahan pada elemen penjelasan
     document.addEventListener('DOMContentLoaded', function() {
-        const penjelasan = document.querySelector('.kriteria-penjelasan');
-        const contoh = document.querySelector('.kriteria-contoh');
+        const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
+        const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
         
         if (penjelasan) {
             observer.observe(penjelasan, { attributes: true, attributeFilter: ['style', 'class'] });
