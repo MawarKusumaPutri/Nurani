@@ -604,75 +604,51 @@
             }
         }
         
-        // Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT - ULTRA AGGRESSIVE
+        // Cache elemen untuk performa lebih baik
+        let cachedPenjelasan = null;
+        let cachedContoh = null;
+        
+        // Pastikan bagian penjelasan Kriteria Penilaian TETAP TERLIHAT - OPTIMIZED
         function ensureKriteriaVisible() {
             // Buat elemen jika tidak ada
             createKriteriaElementsIfMissing();
             
-            // Cari semua elemen yang mungkin menyembunyikan - menggunakan ID dan class
-            const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
-            const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
-            const alertWarning = document.querySelector('#kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan.alert-warning');
-            const alertInfo = document.querySelector('#kriteria-contoh-biru .alert-info') || document.querySelector('.kriteria-contoh .alert-info');
-            
-            // Force visibility untuk bagian kuning (penjelasan)
-            if (penjelasan) {
-                penjelasan.style.setProperty('display', 'block', 'important');
-                penjelasan.style.setProperty('visibility', 'visible', 'important');
-                penjelasan.style.setProperty('opacity', '1', 'important');
-                penjelasan.style.setProperty('position', 'relative', 'important');
-                penjelasan.style.setProperty('height', 'auto', 'important');
-                penjelasan.style.setProperty('overflow', 'visible', 'important');
-                penjelasan.style.setProperty('max-height', 'none', 'important');
-                penjelasan.style.setProperty('min-height', 'auto', 'important');
-                penjelasan.style.setProperty('background-color', '#fff3cd', 'important');
-                penjelasan.style.setProperty('border-color', '#ffc107', 'important');
-                penjelasan.style.setProperty('color', '#856404', 'important');
-                penjelasan.classList.remove('d-none', 'hidden', 'collapse');
-                penjelasan.classList.add('d-block');
-                // Pastikan tidak dihapus
-                penjelasan.setAttribute('data-permanent', 'true');
+            // Gunakan cache atau query sekali saja
+            if (!cachedPenjelasan) {
+                cachedPenjelasan = document.getElementById('kriteria-penjelasan-kuning');
+            }
+            if (!cachedContoh) {
+                cachedContoh = document.getElementById('kriteria-contoh-biru');
             }
             
-            if (alertWarning) {
-                alertWarning.style.setProperty('display', 'block', 'important');
-                alertWarning.style.setProperty('visibility', 'visible', 'important');
-                alertWarning.style.setProperty('opacity', '1', 'important');
-            }
-            
-            // Force visibility untuk bagian biru (contoh)
-            if (contoh) {
-                contoh.style.setProperty('display', 'block', 'important');
-                contoh.style.setProperty('visibility', 'visible', 'important');
-                contoh.style.setProperty('opacity', '1', 'important');
-                contoh.style.setProperty('position', 'relative', 'important');
-                contoh.style.setProperty('height', 'auto', 'important');
-                contoh.style.setProperty('overflow', 'visible', 'important');
-                contoh.style.setProperty('max-height', 'none', 'important');
-                contoh.style.setProperty('min-height', 'auto', 'important');
-                contoh.classList.remove('d-none', 'hidden', 'collapse');
-                contoh.classList.add('d-block');
-                // Pastikan tidak dihapus
-                contoh.setAttribute('data-permanent', 'true');
-            }
-            
-            if (alertInfo) {
-                alertInfo.style.setProperty('display', 'block', 'important');
-                alertInfo.style.setProperty('visibility', 'visible', 'important');
-                alertInfo.style.setProperty('opacity', '1', 'important');
-                alertInfo.style.setProperty('background-color', '#d1ecf1', 'important');
-                alertInfo.style.setProperty('border-color', '#bee5eb', 'important');
-                alertInfo.style.setProperty('color', '#0c5460', 'important');
-            }
-            
-            // Pastikan semua child elements juga terlihat
-            const allElements = document.querySelectorAll('.kriteria-penjelasan *, .kriteria-contoh *');
-            allElements.forEach(function(el) {
-                if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
-                    el.style.setProperty('display', '', 'important');
-                    el.style.setProperty('visibility', 'visible', 'important');
+            // Force visibility untuk bagian kuning (penjelasan) - hanya jika perlu
+            if (cachedPenjelasan) {
+                // Cek apakah sudah visible, jika sudah tidak perlu update lagi
+                const computedStyle = window.getComputedStyle(cachedPenjelasan);
+                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
+                    cachedPenjelasan.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; height: auto !important; overflow: visible !important; max-height: none !important; min-height: auto !important; background-color: #fff3cd !important; border-color: #ffc107 !important; color: #856404 !important;';
+                    cachedPenjelasan.classList.remove('d-none', 'hidden', 'collapse');
+                    cachedPenjelasan.classList.add('d-block');
+                    cachedPenjelasan.setAttribute('data-permanent', 'true');
                 }
-            });
+            }
+            
+            // Force visibility untuk bagian biru (contoh) - hanya jika perlu
+            if (cachedContoh) {
+                const computedStyle = window.getComputedStyle(cachedContoh);
+                if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
+                    cachedContoh.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; height: auto !important; overflow: visible !important; max-height: none !important; min-height: auto !important;';
+                    cachedContoh.classList.remove('d-none', 'hidden', 'collapse');
+                    cachedContoh.classList.add('d-block');
+                    cachedContoh.setAttribute('data-permanent', 'true');
+                    
+                    // Update alert-info di dalam contoh
+                    const alertInfo = cachedContoh.querySelector('.alert-info');
+                    if (alertInfo) {
+                        alertInfo.style.cssText = 'font-size: 0.875rem; display: block !important; visibility: visible !important; opacity: 1 !important; background-color: #d1ecf1 !important; border-color: #bee5eb !important; color: #0c5460 !important;';
+                    }
+                }
+            }
         }
         
         // Langsung jalankan TANPA MENUNGGU - LANGSUNG MUNCUL
@@ -707,86 +683,46 @@
             ensureKriteriaVisible();
         }, 3000);
         
-        // Observer untuk memastikan tidak ada yang mengubah display atau menghapus elemen - ULTRA AGGRESSIVE
+        // Observer yang lebih efisien - hanya pantau penghapusan elemen, tidak pantau perubahan atribut yang terlalu sering
+        let observerTimeout = null;
         const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                // Jika ada elemen yang dihapus, buat ulang
-                if (mutation.type === 'childList') {
-                    mutation.removedNodes.forEach(function(node) {
-                        if (node.nodeType === 1 && (node.id === 'kriteria-penjelasan-kuning' || node.id === 'kriteria-contoh-biru')) {
-                            console.log('Elemen kriteria dihapus, membuat ulang...');
-                            createKriteriaElementsIfMissing();
-                            ensureKriteriaVisible();
-                        }
-                    });
-                }
-                // Jika ada perubahan atribut, force visibility
-                if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+            // Debounce untuk menghindari terlalu banyak callback
+            if (observerTimeout) {
+                clearTimeout(observerTimeout);
+            }
+            
+            observerTimeout = setTimeout(function() {
+                let needsUpdate = false;
+                
+                mutations.forEach(function(mutation) {
+                    // Hanya cek jika ada elemen yang dihapus
+                    if (mutation.type === 'childList') {
+                        mutation.removedNodes.forEach(function(node) {
+                            if (node.nodeType === 1 && (node.id === 'kriteria-penjelasan-kuning' || node.id === 'kriteria-contoh-biru')) {
+                                needsUpdate = true;
+                            }
+                        });
+                    }
+                });
+                
+                // Hanya update jika benar-benar diperlukan
+                if (needsUpdate) {
+                    createKriteriaElementsIfMissing();
                     ensureKriteriaVisible();
                 }
-            });
+            }, 500); // Debounce 500ms
         });
         
-        // Observe perubahan pada elemen penjelasan dan parent-nya
+        // Setup observer hanya sekali saat DOM ready
         document.addEventListener('DOMContentLoaded', function() {
             const textarea = document.getElementById('kriteria_penilaian');
-            const penjelasan = document.getElementById('kriteria-penjelasan-kuning') || document.querySelector('.kriteria-penjelasan');
-            const contoh = document.getElementById('kriteria-contoh-biru') || document.querySelector('.kriteria-contoh');
             
-            // Observe parent container untuk mendeteksi penghapusan
+            // Hanya observe parent container untuk mendeteksi penghapusan elemen
+            // Tidak perlu observe attributes karena terlalu sering dan tidak perlu
             if (textarea && textarea.parentNode) {
                 observer.observe(textarea.parentNode, { 
-                    childList: true, 
-                    subtree: true, 
-                    attributes: true, 
-                    attributeFilter: ['style', 'class'] 
-                });
-            }
-            
-            if (penjelasan) {
-                observer.observe(penjelasan, { 
-                    attributes: true, 
-                    attributeFilter: ['style', 'class'],
-                    childList: true,
-                    subtree: true
-                });
-            }
-            if (contoh) {
-                observer.observe(contoh, { 
-                    attributes: true, 
-                    attributeFilter: ['style', 'class'],
-                    childList: true,
-                    subtree: true
-                });
-            }
-            
-            // Prevent removal
-            if (penjelasan) {
-                penjelasan.addEventListener('DOMNodeRemoved', function(e) {
-                    e.preventDefault();
-                    createKriteriaElementsIfMissing();
-                });
-            }
-            if (contoh) {
-                contoh.addEventListener('DOMNodeRemoved', function(e) {
-                    e.preventDefault();
-                    createKriteriaElementsIfMissing();
-                });
-            }
-        });
-        
-        // Juga observe setelah window load
-        window.addEventListener('load', function() {
-            createKriteriaElementsIfMissing();
-            ensureKriteriaVisible();
-            
-            const textarea = document.getElementById('kriteria_penilaian');
-            if (textarea && textarea.parentNode) {
-                observer.observe(textarea.parentNode, { 
-                    childList: true, 
-                    subtree: true, 
-                    attributes: true, 
-                    attributeFilter: ['style', 'class'] 
+                    childList: true,  // Hanya pantau penambahan/penghapusan child
+                    subtree: false    // Tidak perlu subtree untuk performa lebih baik
                 });
             }
         });
