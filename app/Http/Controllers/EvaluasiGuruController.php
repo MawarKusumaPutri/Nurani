@@ -106,6 +106,11 @@ class EvaluasiGuruController extends Controller
 
         $validated['guru_id'] = $guru->id;
         
+        // Pastikan kriteria_penilaian selalu ada (default: empty array yang akan di-encode sebagai JSON)
+        if (!isset($validated['kriteria_penilaian']) || empty($validated['kriteria_penilaian'])) {
+            $validated['kriteria_penilaian'] = [];
+        }
+        
         RubrikPenilaian::create($validated);
 
         return redirect()->route('guru.evaluasi.rubrik.index')->with('success', 'Rubrik penilaian berhasil dibuat');
@@ -144,6 +149,11 @@ class EvaluasiGuruController extends Controller
             'skala_nilai' => 'nullable|string',
             'indikator' => 'nullable|string',
         ]);
+
+        // Pastikan kriteria_penilaian selalu ada (default: empty array yang akan di-encode sebagai JSON)
+        if (!isset($validated['kriteria_penilaian']) || empty($validated['kriteria_penilaian'])) {
+            $validated['kriteria_penilaian'] = [];
+        }
 
         $rubrik->update($validated);
 

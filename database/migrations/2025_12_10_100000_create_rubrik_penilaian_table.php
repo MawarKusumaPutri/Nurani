@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('semester');
             $table->string('tahun_pelajaran')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->text('kriteria_penilaian'); // JSON atau text untuk menyimpan kriteria
+            $table->text('kriteria_penilaian')->nullable(); // JSON atau text untuk menyimpan kriteria
             $table->text('skala_nilai')->nullable(); // Skala penilaian (1-4, 1-5, dll)
             $table->text('indikator')->nullable(); // Indikator penilaian
             $table->timestamps();
