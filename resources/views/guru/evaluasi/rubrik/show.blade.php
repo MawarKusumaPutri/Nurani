@@ -164,7 +164,18 @@
                                 <div class="mb-4">
                                     <h6 class="text-muted mb-2">Kriteria Penilaian</h6>
                                     <div class="border p-3 rounded bg-light">
-                                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ $rubrik->kriteria_penilaian ?? '-' }}</pre>
+                                        @php
+                                            $kriteria = $rubrik->kriteria_penilaian;
+                                        @endphp
+                                        @if($kriteria && (is_array($kriteria) ? count($kriteria) > 0 : !empty($kriteria)))
+                                            @if(is_array($kriteria))
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{!! json_encode($kriteria, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</pre>
+                                            @else
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ $kriteria }}</pre>
+                                            @endif
+                                        @else
+                                            <p class="text-muted mb-0">-</p>
+                                        @endif
                                     </div>
                                 </div>
 
