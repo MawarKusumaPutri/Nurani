@@ -566,15 +566,11 @@
                                     @php
                                         $mataPelajaranForEdit = $selectedMataPelajaran ?? ($mataPelajaranList->count() > 0 ? $mataPelajaranList->first()->mata_pelajaran : null);
                                     @endphp
-                                    @if($mataPelajaranForEdit)
-                                        <a href="{{ route('guru.materi-pembelajaran.edit') }}?mata_pelajaran={{ urlencode($mataPelajaranForEdit) }}" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-edit me-2"></i>Edit Materi
-                                        </a>
-                                    @else
-                                        <a href="{{ route('guru.materi-pembelajaran.edit') }}" class="btn btn-primary btn-sm" title="Edit Materi (akan menggunakan mata pelajaran pertama)">
-                                            <i class="fas fa-edit me-2"></i>Edit Materi
-                                        </a>
-                                    @endif
+                                    <a href="{{ route('guru.materi-pembelajaran.edit') }}{{ $mataPelajaranForEdit ? '?mata_pelajaran=' . urlencode($mataPelajaranForEdit) : '' }}" 
+                                       class="btn btn-primary btn-sm" 
+                                       title="Edit Materi Pembelajaran (RPP)">
+                                        <i class="fas fa-edit me-2"></i>Edit Materi
+                                    </a>
                                 </div>
                             </div>
                             <div class="card-body" style="max-height: 800px; overflow-y: auto; padding: 20px; background-color: #ffffff !important;">
