@@ -252,9 +252,9 @@
                             <i class="fas fa-edit me-2 text-primary"></i>
                             Edit Materi Pembelajaran
                         </h2>
-                        <p class="text-muted mb-0">Edit konten materi pembelajaran untuk {{ $mataPelajaran }}</p>
+                        <p class="text-muted mb-0">Edit konten materi pembelajaran{{ $mataPelajaran ? ' untuk ' . $mataPelajaran : '' }}</p>
                     </div>
-                    <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $mataPelajaran]) }}" class="btn btn-secondary">
+                    <a href="{{ route('guru.dashboard') }}{{ $mataPelajaran ? '?mata_pelajaran=' . urlencode($mataPelajaran) : '' }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Kembali
                     </a>
                 </div>
@@ -267,7 +267,7 @@
                                     @csrf
                                     @method('PUT')
                                     
-                                    <input type="hidden" name="mata_pelajaran" value="{{ $mataPelajaran }}">
+                                    <input type="hidden" name="mata_pelajaran" value="{{ $mataPelajaran ?? '' }}">
                                     
                                     <!-- A. IDENTITAS SEKOLAH DAN PROGRAM -->
                                     <div class="mb-4 pb-4 border-bottom">
@@ -282,7 +282,7 @@
                                             // Parse existing data if available
                                             $identitasData = ['1' => '', '2' => '', '3' => '', '4' => '', '5' => '', '6' => ''];
                                             // Selalu gunakan mata pelajaran dari guru yang login untuk field 2
-                                            $identitasData['2'] = $mataPelajaran;
+                                            $identitasData['2'] = $mataPelajaran ?? '';
                                             
                                             if ($materiPembelajaran && $materiPembelajaran->identitas_sekolah_program) {
                                                 $lines = explode("\n", $materiPembelajaran->identitas_sekolah_program);
@@ -478,7 +478,7 @@
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save me-2"></i>Simpan Perubahan
                                         </button>
-                                        <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $mataPelajaran]) }}" class="btn btn-secondary">
+                                        <a href="{{ route('guru.dashboard') }}{{ $mataPelajaran ? '?mata_pelajaran=' . urlencode($mataPelajaran) : '' }}" class="btn btn-secondary">
                                             <i class="fas fa-times me-2"></i>Batal
                                         </a>
                                     </div>

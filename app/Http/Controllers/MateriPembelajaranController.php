@@ -17,28 +17,38 @@ class MateriPembelajaranController extends Controller
             return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
         }
 
+        $mataPelajaranList = $guru->mataPelajaranAktif;
+        
         $mataPelajaran = $request->get('mata_pelajaran');
         if (!$mataPelajaran) {
-            $mataPelajaranList = $guru->mataPelajaranAktif;
             if ($mataPelajaranList->count() > 0) {
                 $mataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
             } else {
-                return redirect()->route('guru.dashboard')->with('error', 'Mata pelajaran tidak ditemukan');
+                // Jika tidak ada mata pelajaran, tetap buka halaman edit dengan mata pelajaran null
+                // User bisa memilih dari dropdown jika ada
+                $mataPelajaran = null;
             }
         }
 
-        $materiPembelajaran = MateriPembelajaran::where('guru_id', $guru->id)
-            ->where('mata_pelajaran', $mataPelajaran)
-            ->first();
+        $materiPembelajaran = null;
+        if ($mataPelajaran) {
+            $materiPembelajaran = MateriPembelajaran::where('guru_id', $guru->id)
+                ->where('mata_pelajaran', $mataPelajaran)
+                ->first();
+        }
 
         // Jika belum ada, buat default dengan konten baru
         if (!$materiPembelajaran) {
             $materiPembelajaran = new MateriPembelajaran();
             $materiPembelajaran->guru_id = $guru->id;
-            $materiPembelajaran->mata_pelajaran = $mataPelajaran;
+            $materiPembelajaran->mata_pelajaran = $mataPelajaran ?? '';
             
             // Set default values untuk field baru
-            $materiPembelajaran->identitas_sekolah_program = "Nama Sekolah : Mts Nurul Aiman\n\nMata Pelajaran : {$mataPelajaran}\n\nKelas : IX\n\nAlokasi Waktu : 12 x 40 menit per unit\n\nJumlah Pertemuan : 6 pertemuan per unit\n\nTahun Ajaran : 2025-2026";
+            if ($mataPelajaran) {
+                $materiPembelajaran->identitas_sekolah_program = "Nama Sekolah : Mts Nurul Aiman\n\nMata Pelajaran : {$mataPelajaran}\n\nKelas : IX\n\nAlokasi Waktu : 12 x 40 menit per unit\n\nJumlah Pertemuan : 6 pertemuan per unit\n\nTahun Ajaran : 2025-2026";
+            } else {
+                $materiPembelajaran->identitas_sekolah_program = "Nama Sekolah : Mts Nurul Aiman\n\nMata Pelajaran : \n\nKelas : IX\n\nAlokasi Waktu : 12 x 40 menit per unit\n\nJumlah Pertemuan : 6 pertemuan per unit\n\nTahun Ajaran : 2025-2026";
+            }
             $materiPembelajaran->kompetensi_inti_capaian = "";
             $materiPembelajaran->unit_pembelajaran = "";
             $materiPembelajaran->pendekatan_pembelajaran = "";
@@ -47,8 +57,6 @@ class MateriPembelajaranController extends Controller
             $materiPembelajaran->penilaian = "";
             $materiPembelajaran->sarana_prasarana = "";
         }
-
-        $mataPelajaranList = $guru->mataPelajaranAktif;
 
         return view('guru.materi-pembelajaran.edit', compact('guru', 'materiPembelajaran', 'mataPelajaran', 'mataPelajaranList'));
     }
