@@ -309,6 +309,11 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         
         if ($user) {
+            // Cek apakah password baru sama dengan password lama
+            if (Hash::check($request->password, $user->password)) {
+                return back()->withErrors(['password' => 'Password baru tidak boleh sama dengan password lama. Silakan gunakan password yang berbeda.'])->withInput();
+            }
+            
             $user->password = Hash::make($request->password);
             $user->save();
 

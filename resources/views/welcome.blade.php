@@ -1171,7 +1171,9 @@
                     <button type="submit" class="btn-login">Login</button>
                 </form>
                 
-                <a href="{{ route('password.request') }}" class="forgot-password">Lupa password?</a>
+                @if($errors->any() || session('error'))
+                    <a href="{{ route('password.request') }}" class="forgot-password">Lupa password?</a>
+                @endif
                 <div style="text-align: center; margin-top: 15px;">
                     <small style="color: rgba(255,255,255,0.7);">Akun sudah tersedia, silakan login dengan kredensial yang diberikan</small>
                 </div>
