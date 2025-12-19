@@ -563,9 +563,15 @@
                                         <i class="fas fa-book-open me-2 text-primary"></i>
                                         Materi Pembelajaran - {{ $selectedMataPelajaran ?? 'Mata Pelajaran' }}
                                     </h5>
-                                    <a href="{{ route('guru.materi-pembelajaran.edit', ['mata_pelajaran' => $selectedMataPelajaran]) }}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-edit me-2"></i>Edit Materi
-                                    </a>
+                                    @if($selectedMataPelajaran)
+                                        <a href="{{ route('guru.materi-pembelajaran.edit', ['mata_pelajaran' => $selectedMataPelajaran]) }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit me-2"></i>Edit Materi
+                                        </a>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" disabled title="Pilih mata pelajaran terlebih dahulu">
+                                            <i class="fas fa-edit me-2"></i>Edit Materi
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card-body" style="max-height: 800px; overflow-y: auto; padding: 20px; background-color: #ffffff !important;">
