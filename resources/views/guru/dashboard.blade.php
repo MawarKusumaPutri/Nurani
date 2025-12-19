@@ -563,14 +563,17 @@
                                         <i class="fas fa-book-open me-2 text-primary"></i>
                                         Materi Pembelajaran - {{ $selectedMataPelajaran ?? 'Mata Pelajaran' }}
                                     </h5>
-                                    @if($selectedMataPelajaran)
-                                        <a href="{{ route('guru.materi-pembelajaran.edit', ['mata_pelajaran' => $selectedMataPelajaran]) }}" class="btn btn-primary btn-sm">
+                                    @php
+                                        $mataPelajaranForEdit = $selectedMataPelajaran ?? ($mataPelajaranList->count() > 0 ? $mataPelajaranList->first()->mata_pelajaran : null);
+                                    @endphp
+                                    @if($mataPelajaranForEdit)
+                                        <a href="{{ route('guru.materi-pembelajaran.edit') }}?mata_pelajaran={{ urlencode($mataPelajaranForEdit) }}" class="btn btn-primary btn-sm">
                                             <i class="fas fa-edit me-2"></i>Edit Materi
                                         </a>
                                     @else
-                                        <button class="btn btn-secondary btn-sm" disabled title="Pilih mata pelajaran terlebih dahulu">
+                                        <a href="{{ route('guru.materi-pembelajaran.edit') }}" class="btn btn-primary btn-sm" title="Edit Materi (akan menggunakan mata pelajaran pertama)">
                                             <i class="fas fa-edit me-2"></i>Edit Materi
-                                        </button>
+                                        </a>
                                     @endif
                                 </div>
                             </div>
