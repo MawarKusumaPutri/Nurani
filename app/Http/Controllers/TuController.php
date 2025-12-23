@@ -407,6 +407,95 @@ class TuController extends Controller
             }
             
             return redirect()->route('tu.siswa.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->route('tu.siswa.index')
+                ->with('error', 'Gagal mengimport data: ' . $e->getMessage());
+        }
+    }
+    
+    public function importPaste(Request $request)
+    {
+        $request->validate([
+            'paste_data' => 'required|string',
+        ]);
+
+        try {
+            $pasteData = $request->paste_data;
+            
+            // Split by newline
+            $lines = explode("\n", $pasteData);
+            
+            $imported = 0;
+            $errors = [];
+            $firstLine = true;
+            
+            foreach ($lines as $lineNum => $line) {
+                // Skip empty lines
+                $line = trim($line);
+                if (empty($line)) {
+                    continue;
+                }
+                
+                // Skip header (first line)
+                if ($firstLine) {
+                    $firstLine = false;
+                    continue;
+                }
+                
+                // Split by tab (Excel default) or multiple spaces
+                $row = preg_split('/\t+/', $line);
+                
+                // If no tabs found, try splitting by multiple spaces
+                if (count($row) == 1) {
+                    $row = preg_split('/\s{2,}/', $line);
+                }
+                
+                try {
+                    // Validate required fields
+                    if (count($row) < 3 || empty($row[0]) || empty($row[1]) || empty($row[2])) {
+                        $errors[] = "Baris " . ($lineNum + 1) . " - Data tidak lengkap";
+                        continue;
+                    }
+                    
+                    // Clean data
+                    $nis = trim($row[0]);
+                    $nama = trim($row[1]);
+                    $kelas = trim($row[2]);
+                    
+                    // Check if NIS already exists
+                    if (Siswa::where('nis', $nis)->exists()) {
+                        $errors[] = "NIS '{$nis}' sudah ada di database";
+                        continue;
+                    }
+                    
+                    // Create siswa
+                    Siswa::create([
+                        'nis' => $nis,
+                        'nama' => $nama,
+                        'kelas' => $kelas,
+                        'jenis_kelamin' => isset($row[3]) ? trim($row[3]) : 'Laki-laki',
+                        'tempat_lahir' => isset($row[4]) ? trim($row[4]) : null,
+                        'tanggal_lahir' => isset($row[5]) && !empty(trim($row[5])) ? trim($row[5]) : null,
+                        'alamat' => isset($row[6]) ? trim($row[6]) : null,
+                        'status' => isset($row[7]) ? trim($row[7]) : 'aktif',
+                    ]);
+                    
+                    $imported++;
+                } catch (\Exception $e) {
+                    $errors[] = "Baris " . ($lineNum + 1) . " - " . $e->getMessage();
+                }
+            }
+            
+            // Prepare success message
+            $message = "Berhasil mengimport {$imported} data siswa dari copy-paste.";
+            if (count($errors) > 0) {
+                $message .= " Terdapat " . count($errors) . " error: " . implode(', ', array_slice($errors, 0, 3));
+                if (count($errors) > 3) {
+                    $message .= " dan " . (count($errors) - 3) . " error lainnya.";
+                }
+            }
+            
+            return redirect()->route('tu.siswa.index')->with('success', $message);
             
         } catch (\Exception $e) {
             return redirect()->route('tu.siswa.index')

@@ -262,6 +262,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'siswaEdit'])->name('edit');
             Route::get('/template/download', [App\Http\Controllers\TuController::class, 'downloadTemplate'])->name('template');
             Route::post('/import', [App\Http\Controllers\TuController::class, 'importExcel'])->name('import');
+            Route::post('/import-paste', [App\Http\Controllers\TuController::class, 'importPaste'])->name('import-paste');
         });
         
         // Presensi Management

@@ -282,26 +282,43 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('tu.siswa.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    {{-- Download Template --}}
-                    <div class="alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Langkah-langkah Import:
-                        </h6>
-                        <ol class="mb-2">
-                            <li>Download template Excel di bawah ini</li>
-                            <li>Isi data siswa sesuai format template</li>
-                            <li>Upload file Excel yang sudah diisi</li>
-                            <li>Klik "Import Data"</li>
-                        </ol>
-                        <a href="{{ route('tu.siswa.template') }}" class="btn btn-sm btn-primary">
-                            <i class="fas fa-download me-2"></i>
-                            Download Template Excel
-                        </a>
-                    </div>
+            <div class="modal-body">
+                {{-- Tabs untuk pilihan import --}}
+                <ul class="nav nav-tabs mb-3" id="importTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-panel" type="button" role="tab">
+                            <i class="fas fa-upload me-2"></i>Upload File
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="paste-tab" data-bs-toggle="tab" data-bs-target="#paste-panel" type="button" role="tab">
+                            <i class="fas fa-paste me-2"></i>Copy-Paste dari Excel
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="importTabContent">
+                    {{-- Tab 1: Upload File --}}
+                    <div class="tab-pane fade show active" id="upload-panel" role="tabpanel">
+                        <form action="{{ route('tu.siswa.import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            {{-- Download Template --}}
+                            <div class="alert alert-info">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Langkah-langkah Import:
+                                </h6>
+                                <ol class="mb-2">
+                                    <li>Download template Excel di bawah ini</li>
+                                    <li>Isi data siswa sesuai format template</li>
+                                    <li>Upload file Excel yang sudah diisi</li>
+                                    <li>Klik "Import Data"</li>
+                                </ol>
+                                <a href="{{ route('tu.siswa.template') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download me-2"></i>
+                                    Download Template Excel
+                                </a>
+                            </div>
 
                     {{-- Format Template Info --}}
                     <div class="card mb-3">
