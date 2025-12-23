@@ -314,6 +314,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/list', [App\Http\Controllers\TuController::class, 'kalenderList'])->name('list');
             Route::get('/create', [App\Http\Controllers\TuController::class, 'kalenderCreate'])->name('create');
             Route::post('/store', [App\Http\Controllers\TuController::class, 'kalenderStore'])->name('store');
+            Route::get('/{id}', [App\Http\Controllers\TuController::class, 'kalenderShow'])->name('show');
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'kalenderEdit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'kalenderUpdate'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'kalenderDestroy'])->name('destroy');

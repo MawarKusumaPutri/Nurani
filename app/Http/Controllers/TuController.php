@@ -1814,6 +1814,17 @@ class TuController extends Controller
         return response()->download($filePath, $fileName);
     }
     
+    public function kalenderShow($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            return view('tu.kalender.show', compact('event'));
+        } catch (\Exception $e) {
+            return redirect()->route('tu.kalender.list')
+                ->with('error', 'Event tidak ditemukan.');
+        }
+    }
+    
     public function kalenderEdit($id)
     {
         try {
