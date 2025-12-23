@@ -301,6 +301,11 @@ Route::middleware('auth')->group(function () {
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'jadwalUpdate'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'jadwalDestroy'])->name('destroy');
             Route::get('/api/mata-pelajaran/{guruId}', [App\Http\Controllers\TuController::class, 'getMataPelajaranByGuru'])->name('api.mata-pelajaran');
+            
+            // Import/Export routes
+            Route::get('/template/download', [App\Http\Controllers\TuController::class, 'jadwalDownloadTemplate'])->name('template');
+            Route::post('/import', [App\Http\Controllers\TuController::class, 'jadwalImportExcel'])->name('import');
+            Route::get('/export', [App\Http\Controllers\TuController::class, 'jadwalExport'])->name('export');
         });
         
         // Kalender Management

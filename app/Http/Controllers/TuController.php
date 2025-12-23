@@ -17,6 +17,9 @@ use App\Models\Surat;
 use App\Models\PresensiSiswa;
 use App\Helpers\PhotoHelper;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\JadwalImport;
+use App\Exports\JadwalTemplateExport;
 
 class TuController extends Controller
 {
@@ -1203,6 +1206,101 @@ class TuController extends Controller
                 'Terjadi kesalahan saat menghapus jadwal: ' . $e->getMessage()
             );
         }
+    }
+    
+    /**
+     * Download template Excel untuk import jadwal
+     */
+    public function jadwalDownloadTemplate()
+    {
+        return Excel::download(new JadwalTemplateExport, 'template_jadwal_pelajaran.xlsx');
+    }
+    
+    /**
+     * Import jadwal dari file Excel
+     */
+    public function jadwalImportExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls|max:2048',
+            'semester' => 'nullable|string',
+            'tahun_ajaran' => 'nullable|string',
+        ]);
+
+        try {
+            $semester = $request->semester ?? '1';
+            $tahunAjaran = $request->tahun_ajaran ?? '2025/2026';
+            
+            $import = new JadwalImport(Auth::id(), $semester, $tahunAjaran);
+            Excel::import($import, $request->file('excel_file'));
+            
+            // Count imported jadwal
+            $imported = Jadwal::where('created_by', Auth::id())
+                ->where('created_at', '>=', now()->subMinutes(1))
+                ->count();
+            
+            return redirect()->route('tu.jadwal.index')
+                ->with('success', "Berhasil mengimport {$imported} jadwal pelajaran!");
+        } catch (\Exception $e) {
+            \Log::error('Error importing jadwal: ' . $e->getMessage());
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Gagal mengimport jadwal: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Export jadwal ke Excel
+     */
+    public function jadwalExport(Request $request)
+    {
+        $kelas = $request->get('kelas', '');
+        $hari = $request->get('hari', '');
+        
+        $query = Jadwal::with(['guru.user'])
+            ->orderBy('hari')
+            ->orderBy('jam_mulai');
+        
+        if ($kelas) {
+            $query->where('kelas', $kelas);
+        }
+        
+        if ($hari) {
+            $query->where('hari', $hari);
+        }
+        
+        $jadwals = $query->get();
+        
+        // Generate CSV content
+        $filename = 'jadwal_pelajaran_' . date('Y-m-d') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($jadwals) {
+            $file = fopen('php://output', 'w');
+            
+            // Header
+            fputcsv($file, ['Mata Pelajaran', 'Nama Guru', 'Kelas', 'Hari', 'Waktu', 'Ruang', 'Status', 'Keterangan']);
+            
+            // Data
+            foreach ($jadwals as $jadwal) {
+                fputcsv($file, [
+                    $jadwal->mata_pelajaran_nama,
+                    $jadwal->guru->user->name ?? 'N/A',
+                    $jadwal->kelas,
+                    $jadwal->hari_nama,
+                    date('H:i', strtotime($jadwal->jam_mulai)) . ' - ' . date('H:i', strtotime($jadwal->jam_selesai)),
+                    $jadwal->ruang ?? 'Ruang ' . $jadwal->kelas,
+                    ucfirst($jadwal->status),
+                    $jadwal->keterangan ?? '',
+                ]);
+            }
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
     
     // Kalender Management

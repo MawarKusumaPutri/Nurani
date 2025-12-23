@@ -16,12 +16,16 @@
                         <a href="{{ route('tu.jadwal.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Jadwal
                         </a>
-                        <button type="button" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-download"></i> Export
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                            <i class="fas fa-file-import"></i> Import Excel
                         </button>
+                        <a href="{{ route('tu.jadwal.export') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </a>
                     </div>
                 </div>
             </div>
+
 
             <!-- Success Message -->
             @if(session('success'))
@@ -222,6 +226,73 @@
                 </div>
             </div>
         </main>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">
+                    <i class="fas fa-file-import me-2"></i>Import Jadwal dari Excel
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('tu.jadwal.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Panduan Import:</strong>
+                        <ol class="mb-0 mt-2">
+                            <li>Download template Excel terlebih dahulu</li>
+                            <li>Isi data jadwal sesuai format template</li>
+                            <li>Upload file Excel yang sudah diisi</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Download Template</label>
+                        <div>
+                            <a href="{{ route('tu.jadwal.template') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-download me-1"></i> Download Template Excel
+                            </a>
+                        </div>
+                        <small class="text-muted">Template berisi contoh format data yang benar</small>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        <label for="semester" class="form-label">Semester</label>
+                        <select class="form-select" id="semester" name="semester">
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="tahun_ajaran" class="form-label">Tahun Ajaran</label>
+                        <input type="text" class="form-control" id="tahun_ajaran" name="tahun_ajaran" 
+                               value="2025/2026" placeholder="2025/2026">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="excel_file" class="form-label">Upload File Excel</label>
+                        <input type="file" class="form-control" id="excel_file" name="excel_file" 
+                               accept=".xlsx,.xls" required>
+                        <small class="text-muted">Format: .xlsx atau .xls (Max: 2MB)</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload me-1"></i> Import Jadwal
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
