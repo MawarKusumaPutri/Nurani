@@ -1347,11 +1347,15 @@ class TuController extends Controller
         $currentYear = now()->year;
         $nextYear = $currentYear + 1;
         
-        // Generate hari libur nasional dan internasional
-        $events = $this->generateHolidayEvents($currentYear);
+        // DISABLED: Generate hari libur nasional dan internasional
+        // Fokus hanya pada event yang dibuat oleh sekolah
+        // $events = $this->generateHolidayEvents($currentYear);
         
-        // Add events for next year (for December navigation)
-        $events = array_merge($events, $this->generateHolidayEvents($nextYear));
+        // DISABLED: Add events for next year (for December navigation)
+        // $events = array_merge($events, $this->generateHolidayEvents($nextYear));
+        
+        // Initialize empty events array
+        $events = [];
         
         // Get custom events from database
         // Ambil SEMUA event yang relevan (public atau milik user yang login)
