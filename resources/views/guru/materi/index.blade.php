@@ -631,6 +631,44 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4) !important;
         }
+
+        /* RPP Dropdown Styling */
+        .rpp-btn.dropdown-toggle {
+            border: none;
+        }
+
+        .rpp-btn.dropdown-toggle::after {
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            padding-left: 25px;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            margin: 8px 0;
+        }
         
         /* Responsive Design */
         @media (max-width: 991px) {
@@ -951,13 +989,45 @@
                                             <i class="fas fa-search me-1"></i> Q Cari
                                         </button>
                                     </div>
-                                    <div class="d-flex gap-2" style="min-width: 300px;">
+                                    <div class="d-flex gap-2" style="min-width: 350px;">
                                         <label class="form-label fw-semibold mb-1 d-block w-100">&nbsp;</label>
                                         <div class="d-flex gap-2 w-100">
-                                            <a href="https://s.id/mtsnurulaiman" target="_blank" class="rpp-btn flex-grow-1 text-center">
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <span>RPP</span>
-                                            </a>
+                                            {{-- RPP Dropdown --}}
+                                            <div class="dropdown flex-grow-1">
+                                                <button class="rpp-btn dropdown-toggle w-100 text-center" type="button" 
+                                                        id="rppDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-file-alt me-2"></i>
+                                                    <span>RPP</span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="rppDropdown">
+                                                    <li>
+                                                        <a class="dropdown-item" href="https://s.id/mtsnurulaiman" target="_blank">
+                                                            <i class="fas fa-school me-2 text-primary"></i>
+                                                            MTs Nurul Aiman
+                                                        </a>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="https://drive.google.com" target="_blank">
+                                                            <i class="fab fa-google-drive me-2 text-success"></i>
+                                                            Google Drive
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="https://www.kemdikbud.go.id" target="_blank">
+                                                            <i class="fas fa-landmark me-2 text-danger"></i>
+                                                            Kemdikbud
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="https://guruberbagi.kemdikbud.go.id" target="_blank">
+                                                            <i class="fas fa-users me-2 text-warning"></i>
+                                                            Guru Berbagi
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
                                             <a href="https://www.youtube.com" target="_blank" class="youtube-btn flex-grow-1 text-center">
                                                 <i class="fab fa-youtube me-2"></i>
                                                 <span>YouTube</span>
