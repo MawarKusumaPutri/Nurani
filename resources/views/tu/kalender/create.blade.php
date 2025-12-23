@@ -129,11 +129,18 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="penanggung_jawab" class="form-label">Penanggung Jawab</label>
-                                            <select class="form-select" id="penanggung_jawab" name="penanggung_jawab">
-                                                <option value="">Pilih Penanggung Jawab</option>
+                                            <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                id="penanggung_jawab" 
+                                                name="penanggung_jawab" 
+                                                list="penanggung_jawab_list"
+                                                value="{{ Auth::user()->name }}"
+                                                placeholder="Pilih atau ketik nama penanggung jawab"
+                                            >
+                                            <datalist id="penanggung_jawab_list">
                                                 @foreach($users as $user)
-                                                    <option value="{{ $user->name }}" {{ $user->id == Auth::id() ? 'selected' : '' }}>
-                                                        {{ $user->name }} 
+                                                    <option value="{{ $user->name }}">
                                                         @if($user->role == 'guru')
                                                             (Guru)
                                                         @elseif($user->role == 'kepala_sekolah')
@@ -143,9 +150,9 @@
                                                         @endif
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </datalist>
                                             <small class="form-text text-muted">
-                                                <i class="fas fa-info-circle"></i> Pilih siapa yang bertanggung jawab atas event ini
+                                                <i class="fas fa-info-circle"></i> Pilih siapa yang bertanggung jawab atau ketik nama sendiri
                                             </small>
                                         </div>
                                     </div>
