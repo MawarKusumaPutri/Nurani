@@ -1664,9 +1664,9 @@ class TuController extends Controller
         // Jika ada parameter kategori, kirim ke view
         $kategori = $request->get('kategori', '');
         
-        // Get all active users untuk dropdown penanggung jawab
+        // Get all users untuk dropdown penanggung jawab
+        // Note: users table tidak punya kolom 'status', jadi tidak perlu filter status
         $users = User::whereIn('role', ['tu', 'guru', 'kepala_sekolah'])
-            ->where('status', 'aktif')
             ->orderBy('role')
             ->orderBy('name')
             ->get();
