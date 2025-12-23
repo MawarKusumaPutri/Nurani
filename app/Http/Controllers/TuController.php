@@ -1212,15 +1212,29 @@ class TuController extends Controller
      */
     public function jadwalDownloadTemplate()
     {
+        // Check if Excel package is available
         if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
             return redirect()->route('tu.jadwal.index')
-                ->with('error', 'Fitur import Excel belum tersedia. Package sedang diinstall.');
+                ->with('error', 'Fitur import Excel sedang dalam maintenance. Silakan gunakan input manual.');
         }
         
-        $excelClass = \Maatwebsite\Excel\Facades\Excel::class;
-        $templateClass = \App\Exports\JadwalTemplateExport::class;
+        // Check if export class exists
+        $exportFile = app_path('Exports/JadwalTemplateExport.php');
+        if (!file_exists($exportFile)) {
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Template Excel sedang dalam proses instalasi. Silakan coba lagi nanti.');
+        }
         
-        return $excelClass::download(new $templateClass, 'template_jadwal_pelajaran.xlsx');
+        try {
+            $excelClass = \Maatwebsite\Excel\Facades\Excel::class;
+            $templateClass = \App\Exports\JadwalTemplateExport::class;
+            
+            return $excelClass::download(new $templateClass, 'template_jadwal_pelajaran.xlsx');
+        } catch (\Exception $e) {
+            \Log::error('Error downloading template: ' . $e->getMessage());
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Gagal mendownload template. Silakan hubungi administrator.');
+        }
     }
     
     /**
@@ -1228,9 +1242,17 @@ class TuController extends Controller
      */
     public function jadwalImportExcel(Request $request)
     {
+        // Check if Excel package is available
         if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
             return redirect()->route('tu.jadwal.index')
-                ->with('error', 'Fitur import Excel belum tersedia. Package sedang diinstall.');
+                ->with('error', 'Fitur import Excel sedang dalam maintenance. Silakan gunakan input manual.');
+        }
+        
+        // Check if import class exists
+        $importFile = app_path('Imports/JadwalImport.php');
+        if (!file_exists($importFile)) {
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Fitur import sedang dalam proses instalasi. Silakan coba lagi nanti.');
         }
         
         $request->validate([
