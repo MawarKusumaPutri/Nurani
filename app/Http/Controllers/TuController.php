@@ -1686,7 +1686,7 @@ class TuController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'waktu_mulai' => 'nullable|date_format:H:i',
-            'waktu_selesai' => 'nullable|date_format:H:i|after:waktu_mulai',
+            'waktu_selesai' => 'nullable|date_format:H:i',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
