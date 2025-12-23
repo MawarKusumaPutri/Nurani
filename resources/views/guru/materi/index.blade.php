@@ -1120,16 +1120,11 @@
                                             {{-- Progress Pertemuan --}}
                                             @if($item->jumlah_pertemuan > 0)
                                                 <div class="mb-3">
-                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <div class="mb-2">
                                                         <small class="text-muted fw-semibold">
                                                             <i class="fas fa-chalkboard-teacher me-1"></i>
                                                             Progress Pertemuan
                                                         </small>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary" 
-                                                                onclick="openPertemuanModal({{ $item->id }}, '{{ $item->judul }}', {{ $item->jumlah_pertemuan }}, {{ json_encode($item->pertemuan_selesai ?? []) }})"
-                                                                style="padding: 2px 8px; font-size: 11px;">
-                                                            <i class="fas fa-edit me-1"></i>Update
-                                                        </button>
                                                     </div>
                                                     
                                                     {{-- Progress Bar --}}
@@ -1174,6 +1169,12 @@
                                                    class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-eye me-1"></i>Lihat
                                                 </a>
+                                                @if($item->jumlah_pertemuan > 0)
+                                                    <button type="button" class="btn btn-sm btn-outline-info" 
+                                                            onclick="openPertemuanModal({{ $item->id }}, '{{ $item->judul }}', {{ $item->jumlah_pertemuan }}, {{ json_encode($item->pertemuan_selesai ?? []) }})">
+                                                        <i class="fas fa-tasks me-1"></i>Update
+                                                    </button>
+                                                @endif
                                                 <a href="{{ route('guru.materi.edit', $item) }}" 
                                                    class="btn btn-sm btn-outline-success">
                                                     <i class="fas fa-edit"></i>
