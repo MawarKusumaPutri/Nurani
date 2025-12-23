@@ -192,6 +192,11 @@
                                                         @endif
                                                     </td>
                                                     <td>
+                                                        @if($event->foto)
+                                                            <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-sm btn-success me-1">
+                                                                <i class="fas fa-download"></i> Unduh
+                                                            </a>
+                                                        @endif
                                                         <a href="{{ route('tu.kalender.edit', $event->id) }}" class="btn btn-sm btn-primary me-1">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
