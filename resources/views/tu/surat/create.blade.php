@@ -102,8 +102,8 @@
                                             <label for="sumber_surat" class="form-label">Sumber Surat <span class="text-danger">*</span></label>
                                             <select class="form-select" id="sumber_surat" name="sumber_surat" required>
                                                 <option value="">Pilih Sumber Surat</option>
-                                                <option value="sekolah" {{ old('sumber_surat', 'sekolah') == 'sekolah' ? 'selected' : '' }}>Surat dari Sekolah (Internal)</option>
-                                                <option value="yayasan" {{ old('sumber_surat') == 'yayasan' ? 'selected' : '' }}>Surat dari Yayasan (Eksternal)</option>
+                                                <option value="sekolah" {{ old('sumber_surat', $jenis ?? 'sekolah') == 'sekolah' ? 'selected' : '' }}>Surat dari Sekolah (Internal)</option>
+                                                <option value="yayasan" {{ old('sumber_surat', $jenis ?? 'sekolah') == 'yayasan' ? 'selected' : '' }}>Surat dari Yayasan (Eksternal)</option>
                                             </select>
                                             <div class="form-text">
                                                 <strong>Sekolah:</strong> Surat yang dibuat/dikirim oleh sekolah internal.<br>

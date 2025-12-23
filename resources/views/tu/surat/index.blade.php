@@ -13,7 +13,7 @@
                 <h1 class="h2">Surat Menyurat</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <a href="{{ route('tu.surat.create') }}" class="btn btn-sm btn-primary">
+                        <a href="{{ route('tu.surat.create', ['jenis' => $jenis ?? 'sekolah']) }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Buat Surat
                         </a>
                         <button type="button" class="btn btn-sm btn-outline-secondary">

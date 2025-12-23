@@ -2339,9 +2339,10 @@ class TuController extends Controller
         }
     }
     
-    public function suratCreate()
+    public function suratCreate(Request $request)
     {
-        return view('tu.surat.create');
+        $jenis = $request->get('jenis', 'sekolah');
+        return view('tu.surat.create', compact('jenis'));
     }
     
     public function suratShow($id)
