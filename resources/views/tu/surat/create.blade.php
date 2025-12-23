@@ -99,6 +99,23 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
+                                            <label for="sumber_surat" class="form-label">Sumber Surat <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="sumber_surat" name="sumber_surat" required>
+                                                <option value="">Pilih Sumber Surat</option>
+                                                <option value="sekolah" {{ old('sumber_surat', 'sekolah') == 'sekolah' ? 'selected' : '' }}>Surat dari Sekolah (Internal)</option>
+                                                <option value="yayasan" {{ old('sumber_surat') == 'yayasan' ? 'selected' : '' }}>Surat dari Yayasan (Eksternal)</option>
+                                            </select>
+                                            <div class="form-text">
+                                                <strong>Sekolah:</strong> Surat yang dibuat/dikirim oleh sekolah internal.<br>
+                                                <strong>Yayasan:</strong> Surat yang diterima dari pihak luar/eksternal (yayasan, instansi lain, dll).
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
                                             <label for="nomor_surat" class="form-label">Nomor Surat <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" placeholder="Contoh: 001/SK/MTs-NA/2024" required>
                                         </div>

@@ -2282,6 +2282,14 @@ class TuController extends Controller
                 })
                 ->with('creator');
             
+            // Filter berdasarkan jenis (yayasan/sekolah) dari submenu
+            if ($request->filled('jenis')) {
+                $jenis = $request->jenis;
+                if (in_array($jenis, ['yayasan', 'sekolah'])) {
+                    $query->where('sumber_surat', $jenis);
+                }
+            }
+            
             // Filter berdasarkan tipe surat (masuk/keluar)
             if ($request->filled('tipe_surat')) {
                 $query->where('tipe_surat', $request->tipe_surat);
@@ -2312,7 +2320,10 @@ class TuController extends Controller
             
             \Log::info('Surats fetched:', ['count' => $surats->total()]);
             
-            return view('tu.surat.index', compact('surats'));
+            // Pass jenis parameter to view
+            $jenis = $request->get('jenis', 'sekolah');
+            
+            return view('tu.surat.index', compact('surats', 'jenis'));
         } catch (\Exception $e) {
             \Log::error('Error fetching surats: ' . $e->getMessage());
             // Create empty paginator using constructor instead of make()
@@ -2323,7 +2334,8 @@ class TuController extends Controller
                 1,
                 ['path' => request()->url(), 'query' => request()->query()]
             );
-            return view('tu.surat.index', compact('surats'));
+            $jenis = $request->get('jenis', 'sekolah');
+            return view('tu.surat.index', compact('surats', 'jenis'));
         }
     }
     
@@ -2571,6 +2583,7 @@ class TuController extends Controller
     {
         $request->validate([
             'tipe_surat' => 'required|in:masuk,keluar',
+            'sumber_surat' => 'required|in:yayasan,sekolah',
             'jenis_surat' => 'required|string',
             'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
@@ -2591,6 +2604,7 @@ class TuController extends Controller
             // Simpan data surat
         $suratData = [
             'tipe_surat' => $request->tipe_surat,
+            'sumber_surat' => $request->sumber_surat,
             'jenis_surat' => $request->jenis_surat,
             'nomor_surat' => $request->nomor_surat,
             'tanggal_surat' => $request->tanggal_surat,
