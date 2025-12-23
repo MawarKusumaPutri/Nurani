@@ -95,6 +95,56 @@
             transform: translateX(5px);
         }
         
+        /* Dropdown submenu styling */
+        .sidebar .nav-item.dropdown {
+            width: 100%;
+        }
+        
+        .sidebar .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .sidebar .dropdown-toggle::after {
+            display: none; /* Hide default Bootstrap arrow */
+        }
+        
+        .sidebar .dropdown-toggle .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar .dropdown-toggle[aria-expanded="true"] .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .sidebar .submenu-link {
+            font-size: 0.9rem;
+            padding: 10px 15px;
+            padding-left: 45px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar .submenu-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(3px);
+        }
+        
+        .sidebar .submenu-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+        
+        .sidebar #suratSubmenu {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+        
         .profile-circle {
             width: 100px;
             height: 100px;
