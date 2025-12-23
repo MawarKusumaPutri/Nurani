@@ -583,6 +583,42 @@
             font-size: 18px !important;
         }
         
+        /* RPP Button Styling */
+        .rpp-btn {
+            background-color: #1976D2 !important;
+            border-color: #1976D2 !important;
+            color: white !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 10px 18px !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            white-space: nowrap !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3) !important;
+            position: relative !important;
+            z-index: 10 !important;
+            transition: all 0.3s ease !important;
+            font-size: 14px !important;
+        }
+        
+        .rpp-btn:hover {
+            background-color: #1565C0 !important;
+            border-color: #1565C0 !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4) !important;
+        }
+        
+        .rpp-btn:active {
+            transform: translateY(0);
+        }
+        
+        .rpp-btn i {
+            font-size: 18px !important;
+        }
+        
         .btn-success {
             padding: 10px 18px !important;
             font-weight: 500 !important;
@@ -623,6 +659,19 @@
                 display: none;
             }
             
+            .rpp-btn {
+                padding: 8px 14px !important;
+                font-size: 13px !important;
+            }
+            
+            .rpp-btn i {
+                font-size: 16px !important;
+            }
+            
+            .rpp-btn span {
+                display: none;
+            }
+            
             .btn-success {
                 padding: 8px 14px !important;
                 font-size: 13px !important;
@@ -646,6 +695,7 @@
             }
             
             .youtube-btn,
+            .rpp-btn,
             .btn-success {
                 flex: 1;
                 min-width: 120px;
@@ -674,6 +724,16 @@
             }
             
             .youtube-btn i {
+                font-size: 14px !important;
+                margin-right: 0 !important;
+            }
+            
+            .rpp-btn {
+                padding: 8px 12px !important;
+                font-size: 12px !important;
+            }
+            
+            .rpp-btn i {
                 font-size: 14px !important;
                 margin-right: 0 !important;
             }
@@ -811,9 +871,13 @@
                                             <i class="fas fa-search me-1"></i> Q Cari
                                         </button>
                                     </div>
-                                    <div class="d-flex gap-2" style="min-width: 200px;">
+                                    <div class="d-flex gap-2" style="min-width: 300px;">
                                         <label class="form-label fw-semibold mb-1 d-block w-100">&nbsp;</label>
                                         <div class="d-flex gap-2 w-100">
+                                            <a href="https://s.id/mtsnurulaiman" target="_blank" class="rpp-btn flex-grow-1 text-center">
+                                                <i class="fas fa-file-alt me-2"></i>
+                                                <span>RPP</span>
+                                            </a>
                                             <a href="https://www.youtube.com" target="_blank" class="youtube-btn flex-grow-1 text-center">
                                                 <i class="fab fa-youtube me-2"></i>
                                                 <span>YouTube</span>
