@@ -1795,6 +1795,25 @@ class TuController extends Controller
         );
     }
     
+    public function kalenderFotoDownload($id)
+    {
+        $event = Event::findOrFail($id);
+        
+        if (!$event->foto) {
+            abort(404, 'Foto tidak ditemukan');
+        }
+        
+        $filePath = storage_path('app/public/' . $event->foto);
+        
+        if (!file_exists($filePath)) {
+            abort(404, 'File foto tidak ditemukan');
+        }
+        
+        $fileName = 'foto_event_' . $event->id . '_' . basename($event->foto);
+        
+        return response()->download($filePath, $fileName);
+    }
+    
     public function kalenderEdit($id)
     {
         try {

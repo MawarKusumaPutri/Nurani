@@ -317,6 +317,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [App\Http\Controllers\TuController::class, 'kalenderEdit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\TuController::class, 'kalenderUpdate'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\TuController::class, 'kalenderDestroy'])->name('destroy');
+            Route::get('/{id}/foto/download', [App\Http\Controllers\TuController::class, 'kalenderFotoDownload'])->name('foto.download');
         });
         
         // Arsip Management
