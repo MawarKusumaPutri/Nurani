@@ -151,6 +151,11 @@
                                                 <div class="d-flex justify-content-between align-items-start">
                                                     <div>
                                                         <h6 class="mb-1">{{ $event->judul_event }}</h6>
+                                                        @if($event->penanggung_jawab)
+                                                            <p class="text-muted mb-1" style="font-size: 0.85rem;">
+                                                                <i class="fas fa-user-tie"></i> {{ $event->penanggung_jawab }}
+                                                            </p>
+                                                        @endif
                                                         <p class="text-muted mb-1">{{ $tanggalDisplay }}</p>
                                                         <small class="text-muted">Kategori: {{ ucfirst($kategori) }}</small>
                                                     </div>
@@ -599,7 +604,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 eventText.className = 'event-text';
                 // Show first event title, or multiple if short
                 if (dayEvents.length === 1) {
-                    eventText.textContent = dayEvents[0].judul || 'Event';
+                    const eventTitle = dayEvents[0].judul || 'Event';
+                    const penanggungJawab = dayEvents[0].penanggung_jawab || '';
+                    
+                    if (penanggungJawab) {
+                        eventText.innerHTML = `<strong>${eventTitle}</strong><br><small style="font-size: 8px; opacity: 0.9;">📋 ${penanggungJawab}</small>`;
+                    } else {
+                        eventText.textContent = eventTitle;
+                    }
                 } else {
                     eventText.textContent = (dayEvents[0].judul || 'Event') + ' (+' + (dayEvents.length - 1) + ')';
                 }
