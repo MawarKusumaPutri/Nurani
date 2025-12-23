@@ -1868,7 +1868,8 @@ class TuController extends Controller
             'is_all_day' => 'nullable|boolean',
             'is_public' => 'nullable|boolean',
             'is_important' => 'nullable|boolean',
-            'is_recurring' => 'nullable|boolean'
+            'is_recurring' => 'nullable|boolean',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:5120', // max 5MB
         ]);
 
         try {
@@ -1897,6 +1898,21 @@ class TuController extends Controller
                 $warnaEvent = $colorMap[strtolower($request->kategori_event)] ?? '#6c757d';
             }
             
+            // Handle foto upload
+            $fotoPath = $event->foto; // Keep existing foto
+            if ($request->hasFile('foto')) {
+                // Delete old foto if exists
+                if ($event->foto && \Storage::disk('public')->exists($event->foto)) {
+                    \Storage::disk('public')->delete($event->foto);
+                }
+                
+                // Upload new foto
+                $file = $request->file('foto');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/events', $filename);
+                $fotoPath = 'events/' . $filename;
+            }
+            
             $event->update([
                 'judul_event' => $request->judul_event,
                 'kategori_event' => $request->kategori_event,
@@ -1912,6 +1928,7 @@ class TuController extends Controller
                 'is_public' => $request->input('is_public', 0) == 1,
                 'is_important' => $request->input('is_important', 0) == 1,
                 'is_recurring' => $request->input('is_recurring', 0) == 1,
+                'foto' => $fotoPath,
             ]);
 
             $kategoriText = match($request->kategori_event) {
