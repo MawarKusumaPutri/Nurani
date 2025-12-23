@@ -129,7 +129,24 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="penanggung_jawab" class="form-label">Penanggung Jawab</label>
-                                            <input type="text" class="form-control" id="penanggung_jawab" name="penanggung_jawab" value="{{ Auth::user()->name }}" readonly>
+                                            <select class="form-select" id="penanggung_jawab" name="penanggung_jawab">
+                                                <option value="">Pilih Penanggung Jawab</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{ $user->name }}" {{ $user->id == Auth::id() ? 'selected' : '' }}>
+                                                        {{ $user->name }} 
+                                                        @if($user->role == 'guru')
+                                                            (Guru)
+                                                        @elseif($user->role == 'kepala_sekolah')
+                                                            (Kepala Sekolah)
+                                                        @elseif($user->role == 'tu')
+                                                            (Tenaga Usaha)
+                                                        @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <small class="form-text text-muted">
+                                                <i class="fas fa-info-circle"></i> Pilih siapa yang bertanggung jawab atas event ini
+                                            </small>
                                         </div>
                                     </div>
                                 </div>

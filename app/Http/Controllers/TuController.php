@@ -1663,7 +1663,15 @@ class TuController extends Controller
     {
         // Jika ada parameter kategori, kirim ke view
         $kategori = $request->get('kategori', '');
-        return view('tu.kalender.create', compact('kategori'));
+        
+        // Get all active users untuk dropdown penanggung jawab
+        $users = User::whereIn('role', ['tu', 'guru', 'kepala_sekolah'])
+            ->where('status', 'aktif')
+            ->orderBy('role')
+            ->orderBy('name')
+            ->get();
+        
+        return view('tu.kalender.create', compact('kategori', 'users'));
     }
     
     public function kalenderStore(Request $request)
