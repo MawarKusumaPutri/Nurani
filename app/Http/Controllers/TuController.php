@@ -1691,6 +1691,7 @@ class TuController extends Controller
             'lokasi' => 'nullable|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
             'warna' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:5120', // max 5MB
             'is_all_day' => 'nullable|boolean',
             'is_public' => 'nullable|boolean',
             'is_important' => 'nullable|boolean',
@@ -1724,6 +1725,15 @@ class TuController extends Controller
                 $warnaEvent = $colorMap[strtolower($request->kategori_event)] ?? '#6c757d';
             }
             
+            // Handle foto upload
+            $fotoPath = null;
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/events', $filename);
+                $fotoPath = 'events/' . $filename;
+            }
+            
             // Simpan data event ke database
             $event = Event::create([
             'judul_event' => $request->judul_event,
@@ -1736,6 +1746,7 @@ class TuController extends Controller
             'lokasi' => $request->lokasi,
             'penanggung_jawab' => $request->penanggung_jawab,
                 'warna' => $warnaEvent, // Gunakan warna yang sudah ditentukan
+                'foto' => $fotoPath,
                 'is_all_day' => $request->input('is_all_day', 0) == 1,
                 'is_public' => $request->input('is_public', 0) == 1,
                 'is_important' => $request->input('is_important', 0) == 1,

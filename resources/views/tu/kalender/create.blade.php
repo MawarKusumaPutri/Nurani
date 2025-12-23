@@ -56,7 +56,7 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="{{ route('tu.kalender.store') }}">
+                            <form method="POST" action="{{ route('tu.kalender.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 
                                 <div class="row">
@@ -172,6 +172,27 @@
                                             <small class="form-text text-muted">
                                                 <i class="fas fa-info-circle"></i> Warna event akan otomatis disesuaikan berdasarkan kategori yang Anda pilih untuk memudahkan identifikasi di kalender.
                                             </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="foto" class="form-label">
+                                                Foto Event 
+                                                <span class="text-muted small">(Opsional)</span>
+                                            </label>
+                                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="previewFoto(event)">
+                                            <small class="form-text text-muted">
+                                                <i class="fas fa-info-circle"></i> Upload foto event (JPG, PNG, max 5MB). Foto akan ditampilkan di detail event.
+                                            </small>
+                                            <div id="foto-preview" class="mt-3" style="display: none;">
+                                                <img id="foto-preview-img" src="" alt="Preview Foto" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
+                                                <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeFoto()">
+                                                    <i class="fas fa-times"></i> Hapus Foto
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -403,5 +424,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     @endif
 });
+
+// Foto preview functions
+function previewFoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Check file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Ukuran file terlalu besar! Maksimal 5MB.');
+            event.target.value = '';
+            return;
+        }
+        
+        // Check file type
+        if (!file.type.match('image.*')) {
+            alert('File harus berupa gambar (JPG, PNG, dll)');
+            event.target.value = '';
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('foto-preview-img').src = e.target.result;
+            document.getElementById('foto-preview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeFoto() {
+    document.getElementById('foto').value = '';
+    document.getElementById('foto-preview').style.display = 'none';
+    document.getElementById('foto-preview-img').src = '';
+}
 </script>
 @endsection
