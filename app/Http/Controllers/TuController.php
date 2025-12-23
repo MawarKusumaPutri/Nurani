@@ -1213,6 +1213,11 @@ class TuController extends Controller
      */
     public function jadwalDownloadTemplate()
     {
+        if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Fitur import Excel belum tersedia. Package sedang diinstall.');
+        }
+        
         return Excel::download(new JadwalTemplateExport, 'template_jadwal_pelajaran.xlsx');
     }
     
@@ -1221,6 +1226,11 @@ class TuController extends Controller
      */
     public function jadwalImportExcel(Request $request)
     {
+        if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
+            return redirect()->route('tu.jadwal.index')
+                ->with('error', 'Fitur import Excel belum tersedia. Package sedang diinstall.');
+        }
+        
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls|max:2048',
             'semester' => 'nullable|string',
