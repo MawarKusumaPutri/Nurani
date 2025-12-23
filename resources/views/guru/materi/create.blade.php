@@ -330,6 +330,17 @@
                                     </div>
                                     
                                     <div class="mb-3">
+                                        <label for="jumlah_pertemuan" class="form-label">
+                                            Jumlah Pertemuan 
+                                            <i class="fas fa-info-circle text-muted" data-bs-toggle="tooltip" 
+                                               title="Jumlah pertemuan untuk materi ini (dari RPP)"></i>
+                                        </label>
+                                        <input type="number" class="form-control" id="jumlah_pertemuan" name="jumlah_pertemuan" 
+                                               value="{{ old('jumlah_pertemuan', 1) }}" min="1" max="50" required>
+                                        <small class="text-muted">Anda bisa melacak progress pertemuan yang sudah diajarkan</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="is_published" name="is_published" 
                                                    {{ old('is_published') ? 'checked' : '' }}>

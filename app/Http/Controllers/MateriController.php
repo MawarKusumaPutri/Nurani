@@ -90,6 +90,7 @@ class MateriController extends Controller
             'kelas' => 'required|string|max:255',
             'mata_pelajaran' => 'required|string|max:255',
             'topik' => 'required|string|max:255',
+            'jumlah_pertemuan' => 'required|integer|min:1|max:50',
             'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,gif,mp4,avi,mov|max:10240',
             'konten' => 'nullable|string',
             'link_video' => 'nullable|url'
@@ -102,6 +103,8 @@ class MateriController extends Controller
             'kelas' => $request->kelas,
             'mata_pelajaran' => $request->mata_pelajaran,
             'topik' => $request->topik,
+            'jumlah_pertemuan' => $request->jumlah_pertemuan,
+            'pertemuan_selesai' => [],
             'konten' => $request->konten,
             'link_video' => $request->link_video,
             'is_published' => $request->has('is_published')
