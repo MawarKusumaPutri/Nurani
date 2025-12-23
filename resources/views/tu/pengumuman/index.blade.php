@@ -177,7 +177,12 @@
                                                             <i class="fas fa-user"></i>
                                                             {{ $event->penanggung_jawab }}
                                                         </small>
-                                                        <div>
+                                                        <div class="d-flex gap-1">
+                                                            @if($event->foto)
+                                                                <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-sm btn-success">
+                                                                    <i class="fas fa-download"></i> Download Foto
+                                                                </a>
+                                                            @endif
                                                             <a href="{{ route('tu.kalender.edit', $event->id) }}" class="btn btn-sm btn-outline-primary">
                                                                 <i class="fas fa-edit"></i> Edit
                                                             </a>
