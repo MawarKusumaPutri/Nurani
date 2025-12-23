@@ -310,6 +310,110 @@ class TuController extends Controller
         return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil diperbarui');
     }
     
+    public function downloadTemplate()
+    {
+        $filename = 'template_data_siswa.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() {
+            $file = fopen('php://output', 'w');
+            
+            // Header
+            fputcsv($file, ['NIS', 'Nama', 'Kelas', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Alamat', 'Status']);
+            
+            // Sample data
+            fputcsv($file, ['10120', 'Ahmad Fauzi', '7', 'Laki-laki', 'Jakarta', '2010-05-15', 'Jl. Merdeka No. 10', 'aktif']);
+            fputcsv($file, ['10121', 'Siti Nurhaliza', '7', 'Perempuan', 'Bandung', '2010-06-20', 'Jl. Sudirman No. 15', 'aktif']);
+            fputcsv($file, ['', '', '', '', '', '', '', '']);
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+    
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            $file = $request->file('excel_file');
+            $extension = $file->getClientOriginalExtension();
+            
+            $imported = 0;
+            $errors = [];
+            
+            if ($extension === 'csv') {
+                // Handle CSV file
+                $handle = fopen($file->getRealPath(), 'r');
+                $header = fgetcsv($handle); // Skip header row
+                
+                while (($row = fgetcsv($handle)) !== false) {
+                    // Skip empty rows
+                    if (empty(array_filter($row))) {
+                        continue;
+                    }
+                    
+                    try {
+                        // Validate required fields
+                        if (empty($row[0]) || empty($row[1]) || empty($row[2])) {
+                            $errors[] = "Baris dengan NIS '{$row[0]}' - Data tidak lengkap";
+                            continue;
+                        }
+                        
+                        // Check if NIS already exists
+                        if (Siswa::where('nis', $row[0])->exists()) {
+                            $errors[] = "NIS '{$row[0]}' sudah ada di database";
+                            continue;
+                        }
+                        
+                        // Create siswa
+                        Siswa::create([
+                            'nis' => $row[0],
+                            'nama' => $row[1],
+                            'kelas' => $row[2],
+                            'jenis_kelamin' => $row[3] ?? 'Laki-laki',
+                            'tempat_lahir' => $row[4] ?? null,
+                            'tanggal_lahir' => !empty($row[5]) ? $row[5] : null,
+                            'alamat' => $row[6] ?? null,
+                            'status' => $row[7] ?? 'aktif',
+                        ]);
+                        
+                        $imported++;
+                    } catch (\Exception $e) {
+                        $errors[] = "Baris dengan NIS '{$row[0]}' - " . $e->getMessage();
+                    }
+                }
+                
+                fclose($handle);
+            } else {
+                // For XLSX/XLS, we need PhpSpreadsheet
+                return redirect()->route('tu.siswa.index')
+                    ->with('error', 'Format Excel (.xlsx/.xls) belum didukung. Silakan gunakan format CSV atau convert ke CSV terlebih dahulu.');
+            }
+            
+            // Prepare success message
+            $message = "Berhasil mengimport {$imported} data siswa.";
+            if (count($errors) > 0) {
+                $message .= " Terdapat " . count($errors) . " error: " . implode(', ', array_slice($errors, 0, 3));
+                if (count($errors) > 3) {
+                    $message .= " dan " . (count($errors) - 3) . " error lainnya.";
+                }
+            }
+            
+            return redirect()->route('tu.siswa.index')->with('success', $message);
+            
+        } catch (\Exception $e) {
+            return redirect()->route('tu.siswa.index')
+                ->with('error', 'Gagal mengimport data: ' . $e->getMessage());
+        }
+    }
+    
     // Presensi Management
     public function presensiIndex(Request $request)
     {

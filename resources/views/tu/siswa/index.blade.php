@@ -282,7 +282,7 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="#" method="POST" enctype="multipart/form-data" id="importForm">
+            <form action="{{ route('tu.siswa.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     {{-- Download Template --}}
@@ -297,10 +297,10 @@
                             <li>Upload file Excel yang sudah diisi</li>
                             <li>Klik "Import Data"</li>
                         </ol>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="downloadTemplate()">
+                        <a href="{{ route('tu.siswa.template') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-download me-2"></i>
                             Download Template Excel
-                        </button>
+                        </a>
                     </div>
 
                     {{-- Format Template Info --}}
@@ -392,75 +392,6 @@ document.getElementById('excel_file')?.addEventListener('change', function(e) {
         fileSize.textContent = '(' + (file.size / 1024).toFixed(2) + ' KB)';
         fileInfo.classList.remove('d-none');
     }
-});
-
-// Download template Excel
-function downloadTemplate() {
-    // Create sample Excel data
-    const data = [
-        ['NIS', 'Nama', 'Kelas', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Alamat', 'Status'],
-        ['10120', 'Ahmad Fauzi', '7', 'Laki-laki', 'Jakarta', '2010-05-15', 'Jl. Merdeka No. 10', 'aktif'],
-        ['10121', 'Siti Nurhaliza', '7', 'Perempuan', 'Bandung', '2010-06-20', 'Jl. Sudirman No. 15', 'aktif'],
-        ['', '', '', '', '', '', '', '']
-    ];
-    
-    // Convert to CSV
-    let csvContent = data.map(row => row.join(',')).join('\n');
-    
-    // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'template_data_siswa.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    alert('Template berhasil didownload! File: template_data_siswa.csv\n\nAnda bisa membuka file CSV ini dengan Excel.');
-}
-
-// Handle form submit
-document.getElementById('importForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const fileInput = document.getElementById('excel_file');
-    if (!fileInput.files.length) {
-        alert('Silakan pilih file Excel terlebih dahulu!');
-        return;
-    }
-    
-    const file = fileInput.files[0];
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-    
-    if (!['xlsx', 'xls', 'csv'].includes(fileExtension)) {
-        alert('Format file tidak valid! Gunakan file .xlsx, .xls, atau .csv');
-        return;
-    }
-    
-    // Show loading
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengimport...';
-    
-    // Simulate import (untuk sementara)
-    setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-        
-        alert('Fitur import sedang dalam pengembangan!\n\nUntuk saat ini, silakan tambah data siswa secara manual melalui button "Tambah Siswa".\n\nFitur import Excel akan segera tersedia.');
-        
-        // Close modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('importModal'));
-        modal.hide();
-        
-        // Reset form
-        this.reset();
-        document.getElementById('fileInfo').classList.add('d-none');
-    }, 1500);
 });
 </script>
 
