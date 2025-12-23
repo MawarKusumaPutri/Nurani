@@ -17,9 +17,8 @@ use App\Models\Surat;
 use App\Models\PresensiSiswa;
 use App\Helpers\PhotoHelper;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\JadwalImport;
-use App\Exports\JadwalTemplateExport;
+// Excel classes will be loaded dynamically when needed
+
 
 class TuController extends Controller
 {
@@ -1218,7 +1217,10 @@ class TuController extends Controller
                 ->with('error', 'Fitur import Excel belum tersedia. Package sedang diinstall.');
         }
         
-        return Excel::download(new JadwalTemplateExport, 'template_jadwal_pelajaran.xlsx');
+        $excelClass = \Maatwebsite\Excel\Facades\Excel::class;
+        $templateClass = \App\Exports\JadwalTemplateExport::class;
+        
+        return $excelClass::download(new $templateClass, 'template_jadwal_pelajaran.xlsx');
     }
     
     /**
@@ -1241,8 +1243,11 @@ class TuController extends Controller
             $semester = $request->semester ?? '1';
             $tahunAjaran = $request->tahun_ajaran ?? '2025/2026';
             
-            $import = new JadwalImport(Auth::id(), $semester, $tahunAjaran);
-            Excel::import($import, $request->file('excel_file'));
+            $importClass = \App\Imports\JadwalImport::class;
+            $excelClass = \Maatwebsite\Excel\Facades\Excel::class;
+            
+            $import = new $importClass(Auth::id(), $semester, $tahunAjaran);
+            $excelClass::import($import, $request->file('excel_file'));
             
             // Count imported jadwal
             $imported = Jadwal::where('created_by', Auth::id())
