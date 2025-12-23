@@ -1019,12 +1019,6 @@
                                                             Kemdikbud
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="https://referensi.data.kemdikbud.go.id" target="_blank">
-                                                            <i class="fas fa-book me-2 text-info"></i>
-                                                            Referensi Kemdikbud
-                                                        </a>
-                                                    </li>
                                                 </ul>
                                             </div>
                                             
