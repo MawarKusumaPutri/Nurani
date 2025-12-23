@@ -808,6 +808,86 @@
                 min-width: 100% !important;
             }
         }
+
+        /* ===== PERTEMUAN TRACKING STYLES ===== */
+        .pertemuan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .pertemuan-btn {
+            background: #fff;
+            border: 2px solid #dc3545;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .pertemuan-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .pertemuan-btn.selesai {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .pertemuan-number {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .pertemuan-status {
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .pertemuan-btn:not(.selesai) .pertemuan-status {
+            color: #dc3545;
+        }
+
+        .pertemuan-btn.selesai .pertemuan-status {
+            color: #28a745;
+        }
+
+        .pertemuan-btn:not(.selesai) .pertemuan-status i {
+            color: #dc3545;
+        }
+
+        .pertemuan-btn.selesai .pertemuan-status i {
+            color: #28a745;
+        }
+
+        @media (max-width: 576px) {
+            .pertemuan-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+
+            .pertemuan-btn {
+                padding: 12px;
+            }
+
+            .pertemuan-number {
+                font-size: 12px;
+            }
+
+            .pertemuan-status {
+                font-size: 11px;
+            }
+        }
     </style>
     @include('partials.guru-dynamic-ui')
 </head>
@@ -973,6 +1053,52 @@
                                                 @endif
                                             </div>
 
+                                            {{-- Progress Pertemuan --}}
+                                            @if($item->jumlah_pertemuan > 0)
+                                                <div class="mb-3">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <small class="text-muted fw-semibold">
+                                                            <i class="fas fa-chalkboard-teacher me-1"></i>
+                                                            Progress Pertemuan
+                                                        </small>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                                onclick="openPertemuanModal({{ $item->id }}, '{{ $item->judul }}', {{ $item->jumlah_pertemuan }}, {{ json_encode($item->pertemuan_selesai ?? []) }})"
+                                                                style="padding: 2px 8px; font-size: 11px;">
+                                                            <i class="fas fa-edit me-1"></i>Update
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    {{-- Progress Bar --}}
+                                                    @php
+                                                        $persentase = $item->persentase_selesai ?? 0;
+                                                        $selesai = $item->jumlah_selesai ?? 0;
+                                                        $belum = $item->jumlah_belum_selesai ?? $item->jumlah_pertemuan;
+                                                    @endphp
+                                                    
+                                                    <div class="progress mb-2" style="height: 20px; border-radius: 10px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" 
+                                                             style="width: {{ $persentase }}%;" 
+                                                             aria-valuenow="{{ $persentase }}" aria-valuemin="0" aria-valuemax="100">
+                                                            <small class="fw-semibold">{{ $persentase }}%</small>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex gap-2">
+                                                            <span class="badge" style="background-color: #28a745; color: white;">
+                                                                <i class="fas fa-check-circle me-1"></i>
+                                                                {{ $selesai }} Selesai
+                                                            </span>
+                                                            <span class="badge" style="background-color: #dc3545; color: white;">
+                                                                <i class="fas fa-times-circle me-1"></i>
+                                                                {{ $belum }} Belum
+                                                            </span>
+                                                        </div>
+                                                        <small class="text-muted">{{ $item->jumlah_pertemuan }} Total</small>
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                         </div>
                                         <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
                                             <small class="text-muted">
@@ -1011,6 +1137,87 @@
                             </div>
                         </div>
                     @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Tracking Pertemuan --}}
+    <div class="modal fade" id="pertemuanModal" tabindex="-1" aria-labelledby="pertemuanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="pertemuanModalLabel">
+                        <i class="fas fa-chalkboard-teacher me-2"></i>
+                        Tracking Pertemuan
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3" id="modalMateriJudul"></h6>
+                        
+                        {{-- Progress Summary --}}
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center py-3">
+                                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                                        <h3 class="mb-0" id="modalSelesai">0</h3>
+                                        <small>Selesai</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-danger text-white">
+                                    <div class="card-body text-center py-3">
+                                        <i class="fas fa-times-circle fa-2x mb-2"></i>
+                                        <h3 class="mb-0" id="modalBelum">0</h3>
+                                        <small>Belum</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center py-3">
+                                        <i class="fas fa-chart-pie fa-2x mb-2"></i>
+                                        <h3 class="mb-0" id="modalPersentase">0%</h3>
+                                        <small>Progress</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Progress Bar --}}
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Progress Keseluruhan</label>
+                            <div class="progress" style="height: 30px;">
+                                <div class="progress-bar bg-success" role="progressbar" id="modalProgressBar" 
+                                     style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    0%
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Grid Pertemuan --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Klik untuk mengubah status pertemuan:</label>
+                            <div id="pertemuanGrid" class="pertemuan-grid"></div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>
+                                <strong>Petunjuk:</strong> Klik pada kotak pertemuan untuk menandai sebagai selesai (hijau) atau belum (merah).
+                                Perubahan akan tersimpan otomatis.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Tutup
+                    </button>
                 </div>
             </div>
         </div>
@@ -1177,6 +1384,123 @@
                 clearInterval(backgroundInterval);
             }
         }, 1000);
+
+        // ===== TRACKING PERTEMUAN FUNCTIONS =====
+        let currentMateriId = null;
+        let currentPertemuanSelesai = [];
+
+        function openPertemuanModal(materiId, judul, jumlahPertemuan, pertemuanSelesai) {
+            currentMateriId = materiId;
+            currentPertemuanSelesai = pertemuanSelesai || [];
+            
+            document.getElementById('modalMateriJudul').textContent = judul;
+            
+            // Generate grid pertemuan
+            const grid = document.getElementById('pertemuanGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= jumlahPertemuan; i++) {
+                const isSelesai = currentPertemuanSelesai.includes(i);
+                const btn = document.createElement('button');
+                btn.className = 'pertemuan-btn';
+                btn.dataset.pertemuan = i;
+                btn.innerHTML = `
+                    <div class="pertemuan-number">Pertemuan ${i}</div>
+                    <div class="pertemuan-status">
+                        <i class="fas ${isSelesai ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                        ${isSelesai ? 'Selesai' : 'Belum'}
+                    </div>
+                `;
+                
+                if (isSelesai) {
+                    btn.classList.add('selesai');
+                }
+                
+                btn.onclick = function() {
+                    togglePertemuan(i);
+                };
+                
+                grid.appendChild(btn);
+            }
+            
+            updateModalStats();
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('pertemuanModal'));
+            modal.show();
+        }
+
+        function togglePertemuan(nomorPertemuan) {
+            // Toggle di array lokal
+            const index = currentPertemuanSelesai.indexOf(nomorPertemuan);
+            if (index > -1) {
+                currentPertemuanSelesai.splice(index, 1);
+            } else {
+                currentPertemuanSelesai.push(nomorPertemuan);
+            }
+            
+            // Update UI button
+            const btn = document.querySelector(`[data-pertemuan="${nomorPertemuan}"]`);
+            const isSelesai = currentPertemuanSelesai.includes(nomorPertemuan);
+            
+            if (isSelesai) {
+                btn.classList.add('selesai');
+                btn.querySelector('.pertemuan-status').innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    Selesai
+                `;
+            } else {
+                btn.classList.remove('selesai');
+                btn.querySelector('.pertemuan-status').innerHTML = `
+                    <i class="fas fa-times-circle"></i>
+                    Belum
+                `;
+            }
+            
+            updateModalStats();
+            
+            // Send AJAX request to backend
+            fetch(`/guru/materi/${currentMateriId}/toggle-pertemuan`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    nomor_pertemuan: nomorPertemuan
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Pertemuan updated successfully');
+                    // Reload page setelah 500ms untuk update card
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menyimpan data');
+            });
+        }
+
+        function updateModalStats() {
+            const selesai = currentPertemuanSelesai.length;
+            const total = document.querySelectorAll('.pertemuan-btn').length;
+            const belum = total - selesai;
+            const persentase = total > 0 ? Math.round((selesai / total) * 100) : 0;
+            
+            document.getElementById('modalSelesai').textContent = selesai;
+            document.getElementById('modalBelum').textContent = belum;
+            document.getElementById('modalPersentase').textContent = persentase + '%';
+            
+            // Update progress bar
+            const progressBar = document.getElementById('modalProgressBar');
+            progressBar.style.width = persentase + '%';
+            progressBar.textContent = persentase + '%';
+        }
     </script>
 </body>
 </html>
