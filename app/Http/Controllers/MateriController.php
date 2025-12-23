@@ -273,4 +273,37 @@ class MateriController extends Controller
 
         return view('guru.materi.index', compact('guru', 'materi', 'mataPelajaranList', 'selectedMataPelajaran'));
     }
+
+    /**
+     * Toggle status pertemuan
+     */
+    public function togglePertemuan(Request $request, Materi $materi)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru || $materi->guru_id !== $guru->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'nomor_pertemuan' => 'required|integer|min:1'
+        ]);
+
+        $nomorPertemuan = $request->nomor_pertemuan;
+        
+        // Validate nomor pertemuan tidak melebihi jumlah pertemuan
+        if ($nomorPertemuan > $materi->jumlah_pertemuan) {
+            return response()->json(['error' => 'Nomor pertemuan tidak valid'], 400);
+        }
+
+        $materi->togglePertemuan($nomorPertemuan);
+
+        return response()->json([
+            'success' => true,
+            'pertemuan_selesai' => $materi->pertemuan_selesai,
+            'jumlah_selesai' => $materi->jumlah_selesai,
+            'jumlah_belum_selesai' => $materi->jumlah_belum_selesai,
+            'persentase_selesai' => $materi->persentase_selesai
+        ]);
+    }
 }
