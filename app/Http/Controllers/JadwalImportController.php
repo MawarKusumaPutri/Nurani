@@ -15,7 +15,7 @@ class JadwalImportController extends Controller
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls|max:5120', // max 5MB
-            'semester' => 'required|in:1,2',
+            'semester' => 'required|in:1,2,all',
             'tahun_ajaran' => 'required|string',
         ], [
             'file.required' => 'File Excel harus diupload.',

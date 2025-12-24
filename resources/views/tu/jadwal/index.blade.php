@@ -267,6 +267,7 @@
                     <div class="mb-3">
                         <label for="semester" class="form-label">Semester</label>
                         <select class="form-select" id="semester" name="semester">
+                            <option value="all">Seluruhnya</option>
                             <option value="1">Semester 1</option>
                             <option value="2">Semester 2</option>
                         </select>
