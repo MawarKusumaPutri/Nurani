@@ -58,7 +58,7 @@
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle"></i> 
                                         <strong>Belum ada foto untuk event ini.</strong><br>
-                                        <small>Klik tombol "Edit Event" di atas untuk menambahkan foto.</small>
+                                        <small>Klik tombol <strong>"Upload Foto"</strong> di bagian Aksi (sidebar kanan) untuk menambahkan foto.</small>
                                     </div>
                                 </div>
                             @endif
