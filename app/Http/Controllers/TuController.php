@@ -1901,8 +1901,11 @@ class TuController extends Controller
             // Handle foto upload
             $fotoPath = $event->foto; // Keep existing foto
             if ($request->hasFile('foto')) {
+                \Log::info('Uploading new foto for event ID: ' . $event->id);
+                
                 // Delete old foto if exists
                 if ($event->foto && \Storage::disk('public')->exists($event->foto)) {
+                    \Log::info('Deleting old foto: ' . $event->foto);
                     \Storage::disk('public')->delete($event->foto);
                 }
                 
@@ -1911,6 +1914,11 @@ class TuController extends Controller
                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/events', $filename);
                 $fotoPath = 'events/' . $filename;
+                
+                \Log::info('New foto uploaded successfully: ' . $fotoPath);
+                \Log::info('File size: ' . $file->getSize() . ' bytes');
+            } else {
+                \Log::info('No new foto uploaded for event ID: ' . $event->id);
             }
             
             $event->update([
@@ -1929,6 +1937,13 @@ class TuController extends Controller
                 'is_important' => $request->input('is_important', 0) == 1,
                 'is_recurring' => $request->input('is_recurring', 0) == 1,
                 'foto' => $fotoPath,
+            ]);
+            
+            \Log::info('Event updated successfully:', [
+                'id' => $event->id,
+                'judul_event' => $event->judul_event,
+                'foto' => $event->foto,
+                'foto_path_full' => $event->foto ? storage_path('app/public/' . $event->foto) : 'NULL'
             ]);
 
             $kategoriText = match($request->kategori_event) {
