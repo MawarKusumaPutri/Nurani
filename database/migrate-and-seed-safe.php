@@ -85,6 +85,30 @@ try {
     }
 }
 
+// Step 2.5: Verify and fix foto column in events table
+echo "\n[2.5/3] Verifikasi kolom foto di tabel events...\n";
+try {
+    // Check if events table exists
+    if (Schema::hasTable('events')) {
+        // Check if foto column exists
+        if (!Schema::hasColumn('events', 'foto')) {
+            echo "[INFO] Kolom 'foto' belum ada, menambahkan kolom...\n";
+            
+            Schema::table('events', function ($table) {
+                $table->string('foto')->nullable()->after('warna');
+            });
+            
+            echo "[SUKSES] Kolom 'foto' berhasil ditambahkan!\n";
+        } else {
+            echo "[INFO] Kolom 'foto' sudah ada di tabel events\n";
+        }
+    } else {
+        echo "[WARNING] Tabel 'events' belum ada\n";
+    }
+} catch (\Exception $e) {
+    echo "[WARNING] Gagal verifikasi kolom foto: " . $e->getMessage() . "\n";
+}
+
 // Step 3: Verify
 echo "[INFO] Verifikasi data...\n";
 try {
