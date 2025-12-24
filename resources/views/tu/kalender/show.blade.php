@@ -58,12 +58,25 @@
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle"></i> 
                                         <strong>Belum ada foto untuk event ini.</strong><br>
-                                        <small>Klik tombol <strong>"Upload Foto"</strong> di bagian Aksi (sidebar kanan) untuk menambahkan foto.</small>
+                                        <small>Klik tombol <strong>"Edit Event"</strong> di atas atau di bagian Aksi (sidebar kanan) untuk menambahkan foto.</small>
                                     </div>
                                 </div>
                             @endif
 
                             <!-- Kategori & Status Badges -->
+                            @php
+                                $kategoriColors = [
+                                    'akademik' => 'primary',
+                                    'ujian' => 'danger',
+                                    'libur' => 'warning',
+                                    'rapat' => 'info',
+                                    'pelatihan' => 'secondary',
+                                    'kegiatan' => 'success',
+                                    'pengumuman' => 'dark',
+                                    'lainnya' => 'secondary'
+                                ];
+                                $color = $kategoriColors[strtolower($event->kategori_event)] ?? 'secondary';
+                            @endphp
                             <div class="mb-4">
                                 @php
                                     $kategoriColors = [
@@ -237,10 +250,6 @@
                                 <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-success btn-sm w-100 mb-2">
                                     <i class="fas fa-download"></i> Download Foto
                                 </a>
-                            @else
-                                <button type="button" class="btn btn-warning btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
-                                    <i class="fas fa-upload"></i> Upload Foto
-                                </button>
                             @endif
                             <form action="{{ route('tu.kalender.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus event ini?');">
                                 @csrf
@@ -257,95 +266,4 @@
     </div>
 </div>
 
-<!-- Modal Upload Foto -->
-<div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="uploadFotoModalLabel">
-                    <i class="fas fa-upload"></i> Upload Foto Event
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{{ route('tu.kalender.update', $event->id) }}" method="POST" enctype="multipart/form-data" id="uploadFotoForm">
-                @csrf
-                @method('PUT')
-                
-                <!-- Hidden fields untuk data event yang tidak berubah -->
-                <input type="hidden" name="judul_event" value="{{ $event->judul_event }}">
-                <input type="hidden" name="kategori_event" value="{{ $event->kategori_event }}">
-                <input type="hidden" name="tanggal_mulai" value="{{ $event->tanggal_mulai->format('Y-m-d') }}">
-                <input type="hidden" name="tanggal_selesai" value="{{ $event->tanggal_selesai ? $event->tanggal_selesai->format('Y-m-d') : '' }}">
-                <input type="hidden" name="waktu_mulai" value="{{ $event->waktu_mulai }}">
-                <input type="hidden" name="waktu_selesai" value="{{ $event->waktu_selesai }}">
-                <input type="hidden" name="deskripsi" value="{{ $event->deskripsi }}">
-                <input type="hidden" name="lokasi" value="{{ $event->lokasi }}">
-                <input type="hidden" name="penanggung_jawab" value="{{ $event->penanggung_jawab }}">
-                <input type="hidden" name="warna" value="{{ $event->warna }}">
-                <input type="hidden" name="is_all_day" value="{{ $event->is_all_day ? '1' : '0' }}">
-                <input type="hidden" name="is_public" value="{{ $event->is_public ? '1' : '0' }}">
-                <input type="hidden" name="is_important" value="{{ $event->is_important ? '1' : '0' }}">
-                <input type="hidden" name="is_recurring" value="{{ $event->is_recurring ? '1' : '0' }}">
-                
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="foto" class="form-label">
-                            <i class="fas fa-image"></i> Pilih Foto Event
-                        </label>
-                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required onchange="previewFotoModal(event)">
-                        <small class="form-text text-muted">
-                            <i class="fas fa-info-circle"></i> Format: JPG, PNG, GIF. Maksimal 5MB.
-                        </small>
-                    </div>
-                    
-                    <!-- Preview Foto -->
-                    <div id="foto-preview-modal" class="text-center" style="display: none;">
-                        <label class="form-label">Preview:</label>
-                        <div class="border rounded p-2 bg-light">
-                            <img id="foto-preview-img-modal" src="" alt="Preview Foto" class="img-fluid rounded" style="max-height: 300px;">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-warning">
-                        <i class="fas fa-upload"></i> Upload Foto
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-function previewFotoModal(event) {
-    const file = event.target.files[0];
-    if (file) {
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Ukuran file terlalu besar! Maksimal 5MB.');
-            event.target.value = '';
-            document.getElementById('foto-preview-modal').style.display = 'none';
-            return;
-        }
-        
-        // Check file type
-        if (!file.type.match('image.*')) {
-            alert('File harus berupa gambar (JPG, PNG, GIF)');
-            event.target.value = '';
-            document.getElementById('foto-preview-modal').style.display = 'none';
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('foto-preview-img-modal').src = e.target.result;
-            document.getElementById('foto-preview-modal').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-</script>
 @endsection
