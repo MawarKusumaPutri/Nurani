@@ -34,6 +34,26 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            <!-- Foto Event - Ditampilkan di bagian atas -->
+                            @if($event->foto)
+                                <div class="mb-4">
+                                    <div class="border rounded p-3" style="background-color: #f8f9fa;">
+                                        <h6 class="mb-3"><i class="fas fa-image text-warning"></i> Foto Event</h6>
+                                        <div class="text-center mb-3">
+                                            <img src="{{ asset('storage/' . $event->foto) }}" 
+                                                 alt="Foto Event" 
+                                                 class="img-fluid rounded shadow" 
+                                                 style="max-width: 100%; max-height: 500px; border: 3px solid #dee2e6;">
+                                        </div>
+                                        <div class="text-center">
+                                            <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-success">
+                                                <i class="fas fa-download"></i> Download Foto
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             <!-- Kategori & Status Badges -->
                             <div class="mb-4">
                                 @php
@@ -137,19 +157,6 @@
                                 <div class="mb-3">
                                     <h6><i class="fas fa-align-left text-info"></i> Deskripsi</h6>
                                     <p class="text-muted">{{ $event->deskripsi }}</p>
-                                </div>
-                            @endif
-
-                            <!-- Foto Event -->
-                            @if($event->foto)
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-image text-warning"></i> Foto Event</h6>
-                                    <img src="{{ asset('storage/' . $event->foto) }}" alt="Foto Event" class="img-fluid rounded shadow-sm mb-2" style="max-width: 100%; max-height: 400px;">
-                                    <div>
-                                        <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-sm btn-success">
-                                            <i class="fas fa-download"></i> Download Foto
-                                        </a>
-                                    </div>
                                 </div>
                             @endif
                         </div>
