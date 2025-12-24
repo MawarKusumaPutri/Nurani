@@ -43,13 +43,22 @@
                                             <img src="{{ asset('storage/' . $event->foto) }}" 
                                                  alt="Foto Event" 
                                                  class="img-fluid rounded shadow" 
-                                                 style="max-width: 100%; max-height: 500px; border: 3px solid #dee2e6;">
+                                                 style="max-width: 100%; max-height: 500px; border: 3px solid #dee2e6;"
+                                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'alert alert-danger\'><i class=\'fas fa-exclamation-triangle\'></i> Foto tidak dapat dimuat. Path: {{ $event->foto }}</div>';">
                                         </div>
                                         <div class="text-center">
                                             <a href="{{ route('tu.kalender.foto.download', $event->id) }}" class="btn btn-success">
                                                 <i class="fas fa-download"></i> Download Foto
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="mb-4">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> 
+                                        <strong>Belum ada foto untuk event ini.</strong><br>
+                                        <small>Klik tombol "Edit Event" di atas untuk menambahkan foto.</small>
                                     </div>
                                 </div>
                             @endif
