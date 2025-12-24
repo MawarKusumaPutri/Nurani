@@ -1963,10 +1963,10 @@ class TuController extends Controller
 
             $successMessage = "Event '{$request->judul_event}' berhasil diperbarui!";
             if ($request->hasFile('foto')) {
-                $successMessage .= " Foto event berhasil di-upload.";
+                $successMessage = "✅ Foto event berhasil ditambahkan! Event '{$request->judul_event}' telah diperbarui.";
             }
 
-            return redirect()->route('tu.kalender.list')->with('success', $successMessage);
+            return redirect()->route('tu.kalender.show', $event->id)->with('success', $successMessage);
         } catch (\Exception $e) {
             \Log::error('Error updating event: ' . $e->getMessage());
             return redirect()->back()
