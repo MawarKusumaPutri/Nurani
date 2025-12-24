@@ -24,7 +24,8 @@ class Event extends Model
         'is_public',
         'is_important',
         'is_recurring',
-        'created_by'
+        'created_by',
+        'foto'  // CRITICAL: Kolom foto HARUS ada di fillable!
     ];
 
     protected $casts = [
