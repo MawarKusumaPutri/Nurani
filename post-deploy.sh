@@ -2,6 +2,10 @@
 
 echo "🚀 Running post-deploy setup..."
 
+# Install/update dependencies
+echo "📦 Installing dependencies..."
+composer install --no-dev --optimize-autoloader
+
 # Run migrations
 echo "📦 Running migrations..."
 php artisan migrate --force
