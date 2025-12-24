@@ -1872,7 +1872,11 @@ class TuController extends Controller
             'is_public' => 'nullable|boolean',
             'is_important' => 'nullable|boolean',
             'is_recurring' => 'nullable|boolean',
-            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:5120', // max 5MB
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240', // max 10MB
+        ], [
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Format foto harus: JPEG, JPG, PNG, atau GIF.',
+            'foto.max' => 'Ukuran foto maksimal 10MB.',
         ]);
 
         try {
@@ -2004,9 +2008,23 @@ class TuController extends Controller
             return redirect()->route('tu.kalender.show', $event->id)->with('success', $successMessage);
         } catch (\Exception $e) {
             \Log::error('Error updating event: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            // Pesan error yang lebih user-friendly
+            $errorMessage = 'Terjadi kesalahan saat memperbarui event.';
+            
+            // Cek apakah error terkait upload foto
+            if ($request->hasFile('foto')) {
+                $errorMessage = 'Gagal mengupload foto. Pastikan:
+                    • File adalah gambar (JPEG, PNG, GIF)
+                    • Ukuran maksimal 10MB
+                    • Directory storage dapat ditulis
+                    Detail error: ' . $e->getMessage();
+            }
+            
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan saat memperbarui event: ' . $e->getMessage());
+                ->with('error', $errorMessage);
         }
     }
     
