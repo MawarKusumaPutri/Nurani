@@ -1788,11 +1788,14 @@ class TuController extends Controller
             default => 'Event'
         };
 
+        $successMessage = "Event '{$request->judul_event}' berhasil ditambahkan ke kategori {$kategoriText}!";
+        if ($request->hasFile('foto')) {
+            $successMessage .= " Foto event berhasil di-upload.";
+        }
+
         // Semua event yang dibuat akan muncul di halaman pengumuman
         // Redirect ke halaman pengumuman untuk semua kategori
-        return redirect()->route('tu.pengumuman.index')->with('success', 
-            "Event '{$request->judul_event}' berhasil ditambahkan ke kategori {$kategoriText}!"
-        );
+        return redirect()->route('tu.pengumuman.index')->with('success', $successMessage);
     }
     
     public function kalenderFotoDownload($id)
@@ -1958,9 +1961,12 @@ class TuController extends Controller
                 default => 'Event'
             };
 
-            return redirect()->route('tu.kalender.list')->with('success', 
-                "Event '{$request->judul_event}' berhasil diperbarui!"
-            );
+            $successMessage = "Event '{$request->judul_event}' berhasil diperbarui!";
+            if ($request->hasFile('foto')) {
+                $successMessage .= " Foto event berhasil di-upload.";
+            }
+
+            return redirect()->route('tu.kalender.list')->with('success', $successMessage);
         } catch (\Exception $e) {
             \Log::error('Error updating event: ' . $e->getMessage());
             return redirect()->back()
