@@ -1903,23 +1903,51 @@ class TuController extends Controller
             
             // Handle foto upload
             $fotoPath = $event->foto; // Keep existing foto
+            $fotoUploaded = false;
+            
             if ($request->hasFile('foto')) {
-                \Log::info('Uploading new foto for event ID: ' . $event->id);
+                \Log::info('=== START FOTO UPLOAD ===');
+                \Log::info('Event ID: ' . $event->id);
+                \Log::info('Event Judul: ' . $event->judul_event);
                 
-                // Delete old foto if exists
-                if ($event->foto && \Storage::disk('public')->exists($event->foto)) {
-                    \Log::info('Deleting old foto: ' . $event->foto);
-                    \Storage::disk('public')->delete($event->foto);
-                }
-                
-                // Upload new foto
                 $file = $request->file('foto');
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/events', $filename);
-                $fotoPath = 'events/' . $filename;
-                
-                \Log::info('New foto uploaded successfully: ' . $fotoPath);
+                \Log::info('File original name: ' . $file->getClientOriginalName());
                 \Log::info('File size: ' . $file->getSize() . ' bytes');
+                \Log::info('File mime type: ' . $file->getMimeType());
+                
+                try {
+                    // Delete old foto if exists
+                    if ($event->foto && \Storage::disk('public')->exists($event->foto)) {
+                        \Log::info('Deleting old foto: ' . $event->foto);
+                        \Storage::disk('public')->delete($event->foto);
+                    }
+                    
+                    // Upload new foto
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    \Log::info('New filename: ' . $filename);
+                    
+                    // Store file
+                    $stored = $file->storeAs('events', $filename, 'public');
+                    \Log::info('File stored at: ' . $stored);
+                    
+                    $fotoPath = 'events/' . $filename;
+                    $fotoUploaded = true;
+                    
+                    \Log::info('✅ Foto uploaded successfully!');
+                    \Log::info('Foto path to save in DB: ' . $fotoPath);
+                    
+                    // Verify file exists
+                    $fullPath = storage_path('app/public/' . $fotoPath);
+                    if (file_exists($fullPath)) {
+                        \Log::info('✅ File verified exists at: ' . $fullPath);
+                    } else {
+                        \Log::error('❌ File NOT found at: ' . $fullPath);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('❌ Error uploading foto: ' . $e->getMessage());
+                    \Log::error('Stack trace: ' . $e->getTraceAsString());
+                    throw $e;
+                }
             } else {
                 \Log::info('No new foto uploaded for event ID: ' . $event->id);
             }
@@ -1942,12 +1970,19 @@ class TuController extends Controller
                 'foto' => $fotoPath,
             ]);
             
-            \Log::info('Event updated successfully:', [
-                'id' => $event->id,
-                'judul_event' => $event->judul_event,
-                'foto' => $event->foto,
-                'foto_path_full' => $event->foto ? storage_path('app/public/' . $event->foto) : 'NULL'
-            ]);
+            // Refresh model to get latest data from database
+            $event->refresh();
+            
+            \Log::info('=== EVENT UPDATED IN DATABASE ===');
+            \Log::info('Event ID: ' . $event->id);
+            \Log::info('Foto in DB: ' . ($event->foto ?? 'NULL'));
+            \Log::info('Foto uploaded flag: ' . ($fotoUploaded ? 'YES' : 'NO'));
+            
+            if ($event->foto) {
+                $fullPath = storage_path('app/public/' . $event->foto);
+                \Log::info('Full path: ' . $fullPath);
+                \Log::info('File exists: ' . (file_exists($fullPath) ? 'YES' : 'NO'));
+            }
 
             $kategoriText = match($request->kategori_event) {
                 'akademik' => 'Akademik',
