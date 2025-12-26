@@ -1546,6 +1546,13 @@
             btnSimpan.disabled = true;
             btnSimpan.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
             
+            // Set timeout untuk prevent loading terlalu lama
+            const timeoutId = setTimeout(() => {
+                btnSimpan.disabled = false;
+                btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
+                alert('⚠️ Request timeout!\n\nServer tidak merespons dalam 15 detik.\nSilakan coba lagi atau refresh halaman.');
+            }, 15000); // 15 seconds timeout
+            
             // Send AJAX request to backend
             fetch(`/guru/materi/${currentMateriId}/update-pertemuan`, {
                 method: 'POST',
@@ -1559,6 +1566,7 @@
                 })
             })
             .then(response => {
+                clearTimeout(timeoutId); // Clear timeout jika response diterima
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -1580,12 +1588,13 @@
                 }
             })
             .catch(error => {
+                clearTimeout(timeoutId); // Clear timeout jika error
                 console.error('Error:', error);
                 btnSimpan.disabled = false;
                 btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
                 
                 // Show error alert
-                alert('Gagal menyimpan: Pastikan koneksi internet lancar dan coba lagi.');
+                alert('❌ Gagal menyimpan!\n\n' + error.message + '\n\nPastikan koneksi internet lancar dan coba lagi.');
             });
         }
 
