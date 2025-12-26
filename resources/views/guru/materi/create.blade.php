@@ -355,7 +355,7 @@
                             <!-- File Upload -->
                             <div class="mb-4">
                                 <label class="form-label">File Lampiran</label>
-                                <div class="file-upload-area" onclick="document.getElementById('file').click()">
+                                <div class="file-upload-area" id="fileUploadArea">
                                     <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
                                     <h5 class="text-muted">Klik untuk mengunggah file</h5>
                                     <p class="text-muted mb-0">atau drag & drop file di sini</p>
@@ -365,10 +365,15 @@
                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov">
                                 
                                 <div id="file-info" class="mt-3" style="display: none;">
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-file me-2"></i>
-                                        <span id="file-name"></span>
-                                        <span id="file-size" class="text-muted"></span>
+                                    <div class="alert alert-success d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fas fa-file me-2"></i>
+                                            <span id="file-name"></span>
+                                            <span id="file-size" class="text-muted ms-2"></span>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile()">
+                                            <i class="fas fa-times"></i> Hapus
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -392,41 +397,71 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // File upload handling
-        document.getElementById('file').addEventListener('change', function(e) {
+        const fileInput = document.getElementById('file');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInfo = document.getElementById('file-info');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        
+        // Click handler for upload area
+        fileUploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // File input change handler
+        fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                document.getElementById('file-name').textContent = file.name;
-                document.getElementById('file-size').textContent = '(' + formatFileSize(file.size) + ')';
-                document.getElementById('file-info').style.display = 'block';
+                displayFileInfo(file);
             }
         });
 
         // Drag and drop handling
-        const uploadArea = document.querySelector('.file-upload-area');
-        
-        uploadArea.addEventListener('dragover', function(e) {
+        fileUploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            uploadArea.classList.add('dragover');
+            e.stopPropagation();
+            fileUploadArea.classList.add('dragover');
         });
         
-        uploadArea.addEventListener('dragleave', function(e) {
+        fileUploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            uploadArea.classList.remove('dragover');
+            e.stopPropagation();
+            fileUploadArea.classList.remove('dragover');
         });
         
-        uploadArea.addEventListener('drop', function(e) {
+        fileUploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            uploadArea.classList.remove('dragover');
+            e.stopPropagation();
+            fileUploadArea.classList.remove('dragover');
             
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                document.getElementById('file').files = files;
-                const file = files[0];
-                document.getElementById('file-name').textContent = file.name;
-                document.getElementById('file-size').textContent = '(' + formatFileSize(file.size) + ')';
-                document.getElementById('file-info').style.display = 'block';
+                // Set files to input
+                fileInput.files = files;
+                displayFileInfo(files[0]);
             }
         });
+        
+        function displayFileInfo(file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = '(' + formatFileSize(file.size) + ')';
+            fileInfo.style.display = 'block';
+            
+            // Update upload area to show file is selected
+            fileUploadArea.style.borderColor = '#28a745';
+            fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+        }
+        
+        function removeFile() {
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            fileName.textContent = '';
+            fileSize.textContent = '';
+            
+            // Reset upload area style
+            fileUploadArea.style.borderColor = '#2E7D32';
+            fileUploadArea.style.backgroundColor = '';
+        }
 
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
