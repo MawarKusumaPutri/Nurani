@@ -264,6 +264,41 @@
 
 @section('scripts')
 <script>
+// Toggle field berdasarkan tipe surat - GLOBAL SCOPE
+function toggleTipeSurat() {
+    const tipeSurat = document.getElementById('tipe_surat').value;
+    const penerimaSection = document.getElementById('penerima-section');
+    const pengirimSection = document.getElementById('pengirim-section');
+    const penerima = document.getElementById('penerima');
+    const pengirim = document.getElementById('pengirim');
+    
+    if (tipeSurat === 'keluar') {
+        // Surat Keluar: tampilkan field penerima, sembunyikan pengirim
+        penerimaSection.style.display = 'block';
+        pengirimSection.style.display = 'none';
+        penerima.required = true;
+        pengirim.required = false;
+        pengirim.value = '';
+    } else if (tipeSurat === 'masuk') {
+        // Surat Masuk: tampilkan field pengirim, sembunyikan penerima
+        penerimaSection.style.display = 'none';
+        pengirimSection.style.display = 'block';
+        penerima.required = false;
+        pengirim.required = true;
+        penerima.value = '';
+        const penerimaLainnyaSection = document.getElementById('penerima_lainnya-section');
+        if (penerimaLainnyaSection) {
+            penerimaLainnyaSection.style.display = 'none';
+        }
+    } else {
+        // Belum dipilih: sembunyikan semua
+        penerimaSection.style.display = 'none';
+        pengirimSection.style.display = 'none';
+        penerima.required = false;
+        pengirim.required = false;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Set default tanggal surat to today
     const today = new Date().toISOString().split('T')[0];
@@ -317,38 +352,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     penerima.addEventListener('change', togglePenerimaLainnya);
     togglePenerimaLainnya(); // Initial call
-    
-    // Toggle field berdasarkan tipe surat
-    function toggleTipeSurat() {
-        const tipeSurat = document.getElementById('tipe_surat').value;
-        const penerimaSection = document.getElementById('penerima-section');
-        const pengirimSection = document.getElementById('pengirim-section');
-        const penerima = document.getElementById('penerima');
-        const pengirim = document.getElementById('pengirim');
-        
-        if (tipeSurat === 'keluar') {
-            // Surat Keluar: tampilkan field penerima, sembunyikan pengirim
-            penerimaSection.style.display = 'block';
-            pengirimSection.style.display = 'none';
-            penerima.required = true;
-            pengirim.required = false;
-            pengirim.value = '';
-        } else if (tipeSurat === 'masuk') {
-            // Surat Masuk: tampilkan field pengirim, sembunyikan penerima
-            penerimaSection.style.display = 'none';
-            pengirimSection.style.display = 'block';
-            penerima.required = false;
-            pengirim.required = true;
-            penerima.value = '';
-            document.getElementById('penerima_lainnya-section').style.display = 'none';
-        } else {
-            // Belum dipilih: sembunyikan semua
-            penerimaSection.style.display = 'none';
-            pengirimSection.style.display = 'none';
-            penerima.required = false;
-            pengirim.required = false;
-        }
-    }
     
     // Toggle pengirim lainnya
     const pengirim = document.getElementById('pengirim');
