@@ -202,10 +202,22 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="jabatan_pembuat" class="form-label">Jabatan Pembuat <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control bg-light" id="jabatan_pembuat" name="jabatan_pembuat" value="Tenaga Usaha" readonly style="cursor: not-allowed;">
-                                            <div class="form-text">
-                                                <i class="fas fa-info-circle"></i> Terisi otomatis sesuai jabatan
+                                            <!-- Field untuk Surat dari Sekolah (Internal) -->
+                                            <div id="jabatan-sekolah-section">
+                                                <label for="jabatan_pembuat" class="form-label">Jabatan Pembuat <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control bg-light" id="jabatan_pembuat" name="jabatan_pembuat" value="Tenaga Usaha" readonly style="cursor: not-allowed;">
+                                                <div class="form-text">
+                                                    <i class="fas fa-info-circle"></i> Terisi otomatis sesuai jabatan
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Field untuk Surat dari Yayasan (Eksternal) -->
+                                            <div id="kepada-penerima-section" style="display: none;">
+                                                <label for="kepada_penerima" class="form-label">Kepada Penerima <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="kepada_penerima" name="kepada_penerima" placeholder="Contoh: Kepala Sekolah MTs Nurul Aiman" value="{{ old('kepada_penerima') }}">
+                                                <div class="form-text">
+                                                    <i class="fas fa-info-circle"></i> Isi dengan nama/jabatan penerima surat
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -309,6 +321,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set default tanggal surat to today
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('tanggal_surat').value = today;
+    
+    // Toggle Jabatan Pembuat / Kepada Penerima based on Sumber Surat
+    const sumberSurat = document.getElementById('sumber_surat');
+    const jabatanSekolahSection = document.getElementById('jabatan-sekolah-section');
+    const kepadaPenerimaSection = document.getElementById('kepada-penerima-section');
+    const jabatanPembuat = document.getElementById('jabatan_pembuat');
+    const kepadaPenerima = document.getElementById('kepada_penerima');
+    
+    function toggleSumberSurat() {
+        if (sumberSurat.value === 'yayasan') {
+            // Surat dari Yayasan: tampilkan Kepada Penerima, sembunyikan Jabatan Pembuat
+            jabatanSekolahSection.style.display = 'none';
+            kepadaPenerimaSection.style.display = 'block';
+            jabatanPembuat.required = false;
+            kepadaPenerima.required = true;
+        } else {
+            // Surat dari Sekolah: tampilkan Jabatan Pembuat, sembunyikan Kepada Penerima
+            jabatanSekolahSection.style.display = 'block';
+            kepadaPenerimaSection.style.display = 'none';
+            jabatanPembuat.required = true;
+            kepadaPenerima.required = false;
+            kepadaPenerima.value = '';
+        }
+    }
+    
+    sumberSurat.addEventListener('change', toggleSumberSurat);
+    toggleSumberSurat(); // Initial call
     
     // Auto-generate nomor surat based on jenis surat
     const jenisSurat = document.getElementById('jenis_surat');
