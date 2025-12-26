@@ -4054,6 +4054,9 @@
                 }
             }
         }
+        
+        // Make function globally accessible
+        window.togglePresensiForm = togglePresensiForm;
 
         // Initialize - set hadir as default active and auto-fill jam masuk (OPTIMIZED: gabung dengan DOMContentLoaded utama)
         // Pindahkan ke DOMContentLoaded utama di atas untuk performa
