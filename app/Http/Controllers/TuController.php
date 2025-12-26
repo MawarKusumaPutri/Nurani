@@ -1471,6 +1471,7 @@ class TuController extends Controller
                     'waktu_mulai' => $dbEvent->waktu_mulai ? $dbEvent->waktu_mulai : null,
                     'waktu_selesai' => $dbEvent->waktu_selesai ? $dbEvent->waktu_selesai : null,
                     'is_all_day' => $dbEvent->is_all_day ?? false,
+                    'penanggung_jawab' => $dbEvent->penanggung_jawab ?? null,
                 ];
                 
                 // Log setiap event yang ditambahkan
