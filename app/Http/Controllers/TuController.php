@@ -311,6 +311,24 @@ class TuController extends Controller
         
         return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil diperbarui');
     }
+
+    public function siswaDestroy($id)
+    {
+        try {
+            $siswa = Siswa::findOrFail($id);
+            $nama = $siswa->nama;
+            
+            // Delete related presensi records if any
+            $siswa->presensi()->delete();
+            
+            // Delete the student
+            $siswa->delete();
+            
+            return redirect()->route('tu.siswa.index')->with('success', "Data siswa {$nama} berhasil dihapus");
+        } catch (\Exception $e) {
+            return redirect()->route('tu.siswa.index')->with('error', 'Gagal menghapus data siswa: ' . $e->getMessage());
+        }
+    }
     
     public function downloadTemplate()
     {
