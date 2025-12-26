@@ -2035,129 +2035,121 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if($presensiHistory->count() > 0)
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover table-bordered">
+                                <thead class="table-light">
                                     <tr>
-                                        <th>Tanggal</th>
-                                        <th>Jenis</th>
-                                        <th>Jam Masuk</th>
-                                        <th>Jam Keluar</th>
-                                        <th>Keterangan</th>
-                                        <th>Tugas Pengganti</th>
-                                        <th>Surat Sakit</th>
-                                        <th>Status</th>
+                                        <th style="width: 10%;">Tanggal</th>
+                                        <th style="width: 8%;">Jenis</th>
+                                        <th style="width: 12%;">Jam Masuk</th>
+                                        <th style="width: 12%;">Jam Keluar</th>
+                                        <th style="width: 20%;">Keterangan</th>
+                                        <th style="width: 20%;">Tugas Pengganti</th>
+                                        <th style="width: 10%;">Surat Sakit</th>
+                                        <th style="width: 8%;">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($presensiHistory as $p)
-                                    <tr>
-                                        <td>{{ $p->tanggal->format('d/m/Y') }}</td>
-                                        <td>
-                                            @if($p->jenis === 'hadir')
-                                                <span class="badge badge-hadir text-white">Hadir</span>
-                                            @elseif($p->jenis === 'sakit')
-                                                <span class="badge badge-sakit text-white">Sakit</span>
-                                            @else
-                                                <span class="badge badge-izin">Izin</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($p->jam_masuk)
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fas fa-sign-in-alt me-2 text-primary"></i>
-                                                    @if($p->jenis === 'sakit')
-                                                        <span class="badge bg-danger text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
-                                                        <small class="text-muted d-block ms-4 mt-1">Mulai sakit</small>
-                                                    @else
-                                                        <span class="badge bg-primary text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
-                                                    @endif
-                                                </div>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($p->jam_keluar)
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fas fa-sign-out-alt me-2 text-success"></i>
-                                                    <span class="badge bg-success text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_keluar)) }}</span>
-                                                </div>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{ $p->keterangan ?? '-' }}
-                                            @php
-                                                $tugasList = collect([
-                                                    'Kelas 7' => $p->tugas_kelas7,
-                                                    'Kelas 8' => $p->tugas_kelas8,
-                                                    'Kelas 9' => $p->tugas_kelas9,
-                                                ])->filter(fn($value) => !empty($value));
-                                            @endphp
-                                            @if($tugasList->count() > 0)
-                                                <div class="mt-2">
-                                                    <span class="badge bg-success text-white">
-                                                        <i class="fas fa-book-reader me-1"></i> Tugas Pengganti
-                                                    </span>
-                                                    <ul class="mt-2 mb-0 ps-3 text-muted small">
-                                                        @foreach($tugasList as $kelas => $tugas)
-                                                            <li><strong>{{ $kelas }}:</strong> {{ $tugas }}</li>
-                                                        @endforeach
+                                    @if($presensiHistory->count() > 0)
+                                        @foreach($presensiHistory as $p)
+                                        <tr>
+                                            <td>{{ $p->tanggal->format('d/m/Y') }}</td>
+                                            <td>
+                                                @if($p->jenis === 'hadir')
+                                                    <span class="badge badge-hadir text-white">Hadir</span>
+                                                @elseif($p->jenis === 'sakit')
+                                                    <span class="badge badge-sakit text-white">Sakit</span>
+                                                @else
+                                                    <span class="badge badge-izin">Izin</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($p->jam_masuk)
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-sign-in-alt me-2 text-primary"></i>
+                                                        @if($p->jenis === 'sakit')
+                                                            <span class="badge bg-danger text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
+                                                            <small class="text-muted d-block ms-4 mt-1">Mulai sakit</small>
+                                                        @else
+                                                            <span class="badge bg-primary text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($p->jam_keluar)
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-sign-out-alt me-2 text-success"></i>
+                                                        <span class="badge bg-success text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_keluar)) }}</span>
+                                                    </div>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $p->keterangan ?? '-' }}
+                                            </td>
+                                            <td>
+                                                @if($p->tugas_kelas_7 || $p->tugas_kelas_8 || $p->tugas_kelas_9)
+                                                    <ul class="mb-0 ps-3" style="font-size: 0.85rem;">
+                                                        @if($p->tugas_kelas_7)
+                                                            <li><strong>Kelas 7:</strong> {{ Str::limit($p->tugas_kelas_7, 50) }}</li>
+                                                        @endif
+                                                        @if($p->tugas_kelas_8)
+                                                            <li><strong>Kelas 8:</strong> {{ Str::limit($p->tugas_kelas_8, 50) }}</li>
+                                                        @endif
+                                                        @if($p->tugas_kelas_9)
+                                                            <li><strong>Kelas 9:</strong> {{ Str::limit($p->tugas_kelas_9, 50) }}</li>
+                                                        @endif
                                                     </ul>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($p->surat_sakit)
+                                                    <a href="{{ Storage::url($p->surat_sakit) }}" 
+                                                       target="_blank" 
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-file-pdf me-1"></i>Lihat
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($p->status_verifikasi === 'pending')
+                                                    <span class="badge badge-pending text-white">Menunggu</span>
+                                                @elseif($p->status_verifikasi === 'approved')
+                                                    <span class="badge badge-approved text-white">Disetujui</span>
+                                                @else
+                                                    <span class="badge badge-rejected text-white">Ditolak</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="8" class="text-center py-5">
+                                                <i class="fas fa-calendar-times fa-3x text-muted mb-3 d-block"></i>
+                                                <h5 class="text-muted">Belum Ada Riwayat Presensi</h5>
+                                                <p class="text-muted mb-3">Anda belum melakukan presensi. Silakan isi presensi masuk terlebih dahulu.</p>
+                                                <div class="d-flex gap-2 justify-content-center">
+                                                    <a href="{{ route('guru.presensi.index') }}" class="btn btn-success">
+                                                        <i class="fas fa-sign-in-alt me-1"></i> Isi Presensi Masuk
+                                                    </a>
+                                                    <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" class="btn btn-primary">
+                                                        <i class="fas fa-sign-out-alt me-1"></i> Isi Presensi Keluar
+                                                    </a>
                                                 </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($p->tugas_kelas_7 || $p->tugas_kelas_8 || $p->tugas_kelas_9)
-                                                <ul class="mb-0 ps-3">
-                                                    @if($p->tugas_kelas_7)
-                                                        <li><strong>Kelas 7:</strong> {{ $p->tugas_kelas_7 }}</li>
-                                                    @endif
-                                                    @if($p->tugas_kelas_8)
-                                                        <li><strong>Kelas 8:</strong> {{ $p->tugas_kelas_8 }}</li>
-                                                    @endif
-                                                    @if($p->tugas_kelas_9)
-                                                        <li><strong>Kelas 9:</strong> {{ $p->tugas_kelas_9 }}</li>
-                                                    @endif
-                                                </ul>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($p->surat_sakit)
-                                                <a href="{{ Storage::url($p->surat_sakit) }}" 
-                                                   target="_blank" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-file-pdf me-1"></i>Lihat Surat
-                                                </a>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($p->status_verifikasi === 'pending')
-                                                <span class="badge badge-pending text-white">Menunggu</span>
-                                            @elseif($p->status_verifikasi === 'approved')
-                                                <span class="badge badge-approved text-white">Disetujui</span>
-                                            @else
-                                                <span class="badge badge-rejected text-white">Ditolak</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
-                        @else
-                        <p class="text-muted text-center py-5">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3 d-block"></i>
-                            Belum ada riwayat presensi
-                        </p>
-                        @endif
                     </div>
                 </div>
             </div>
