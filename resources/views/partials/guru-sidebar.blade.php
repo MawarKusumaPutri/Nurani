@@ -146,12 +146,16 @@
             <div class="collapse {{ str_contains($currentRoute, 'guru.presensi') && !str_contains($currentRoute, 'presensi-siswa') ? 'show' : '' }}" id="presensiGuruSubmenu">
                 <div class="nav flex-column ps-4">
                     <a href="{{ route('guru.presensi.index') }}" 
-                       class="nav-link submenu-link {{ str_contains($currentRoute, 'guru.presensi.index') || (str_contains($currentRoute, 'guru.presensi') && !request()->has('type')) ? 'active' : '' }}">
+                       class="nav-link submenu-link {{ str_contains($currentRoute, 'guru.presensi.index') && !request()->has('type') && !request()->has('view') ? 'active' : '' }}">
                         <i class="fas fa-sign-in-alt me-2"></i> Presensi Masuk
                     </a>
                     <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" 
                        class="nav-link submenu-link {{ request()->get('type') == 'keluar' ? 'active' : '' }}">
                         <i class="fas fa-sign-out-alt me-2"></i> Presensi Keluar
+                    </a>
+                    <a href="{{ route('guru.presensi.index', ['view' => 'riwayat']) }}" 
+                       class="nav-link submenu-link {{ request()->get('view') == 'riwayat' ? 'active' : '' }}">
+                        <i class="fas fa-history me-2"></i> Riwayat Presensi
                     </a>
                 </div>
             </div>

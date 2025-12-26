@@ -4,6 +4,10 @@
     $presensiType = request()->get('type', 'masuk');
     $isMasuk = $presensiType !== 'keluar';
     $isKeluar = $presensiType === 'keluar';
+    
+    // Deteksi mode view: 'form' (default) atau 'riwayat'
+    $viewMode = request()->get('view', 'form');
+    $isRiwayat = $viewMode === 'riwayat';
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -1474,25 +1478,32 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h4 class="mb-1" style="font-size: 1.5rem; font-weight: 600;">
-                            @if($isMasuk)
+                            @if($isRiwayat)
+                                <i class="fas fa-history me-2 text-info"></i>Riwayat Presensi
+                            @elseif($isMasuk)
                                 <i class="fas fa-sign-in-alt me-2 text-success"></i>Presensi Masuk
                             @else
                                 <i class="fas fa-sign-out-alt me-2 text-primary"></i>Presensi Keluar
                             @endif
                         </h4>
                         <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                            @if($isMasuk)
+                            @if($isRiwayat)
+                                Lihat semua riwayat presensi Anda
+                            @elseif($isMasuk)
                                 Catat waktu kedatangan Anda hari ini
                             @else
                                 Catat waktu kepulangan Anda hari ini
                             @endif
                         </p>
                     </div>
+                    @if(!$isRiwayat)
                     <button type="button" class="btn btn-secondary btn-sm" onclick="togglePresensiForm()" id="btnTutupForm" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
                         <i class="fas fa-times me-2"></i>Tutup Form
                     </button>
+                    @endif
                 </div>
 
+                @if(!$isRiwayat)
                 <!-- Presensi Form -->
                 <div class="card mb-4" id="presensiFormCard" style="display: block !important; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 0.5rem; overflow: visible;">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, {{ $isMasuk ? '#4CAF50 0%, #2E7D32' : '#2196F3 0%, #1976D2' }} 100%) !important; padding: 1.25rem 1.5rem; border: none; overflow: visible;">
@@ -1629,9 +1640,9 @@
                                                 <i class="fas fa-sign-out-alt me-2"></i>Simpan Jam Keluar
                                             @endif
                                         </button>
-                                        <button type="button" class="btn btn-secondary btn-lg" onclick="document.getElementById('presensiFormCard').style.display='none';" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px;">
+                                        <a href="{{ route('guru.presensi.index', ['view' => 'riwayat']) }}" class="btn btn-secondary btn-lg" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px; text-decoration: none;">
                                             <i class="fas fa-times me-2"></i>Batal
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
 
@@ -1997,14 +2008,15 @@
                 </div>
                 @endif
                 
-                <!-- Presensi History - Dipindahkan ke sini agar muncul setelah form presensi dan status -->
-                <!-- Sembunyikan secara default, hanya muncul setelah klik "Kirim Presensi" -->
-                <div class="card mt-4" id="riwayat-presensi-section" style="display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important; height: 0 !important; overflow: hidden !important;">
-                    <div class="card-header bg-light">
+                @endif
+                
+                <!-- Riwayat Presensi - Tampil ketika mode riwayat atau setelah submit -->
+                <div class="card mt-4" id="riwayat-presensi-section" style="display: {{ $isRiwayat ? 'block' : 'none' }} !important;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;">
                         <h5 class="mb-0">
                             <i class="fas fa-history me-2"></i>Riwayat Presensi (30 Hari Terakhir)
                         </h5>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.85rem;">
+                        <small class="d-block mt-1" style="font-size: 0.85rem; opacity: 0.9;">
                             <i class="fas fa-info-circle me-1"></i>Lihat semua presensi Anda dengan berbagai jenis (Hadir, Sakit, Izin)
                         </small>
                     </div>

@@ -134,8 +134,9 @@ class PresensiController extends Controller
             'status_verifikasi' => 'pending',
         ]);
 
-        $jenisText = ucfirst($request->jenis);
-        return redirect()->route('guru.presensi.index')
-            ->with('success', "Presensi {$jenisText} berhasil dikirim untuk tanggal {$request->tanggal}. Menunggu verifikasi dari TU.");
+    
+    $jenisText = ucfirst($request->jenis);
+    return redirect()->route('guru.presensi.index', ['view' => 'riwayat'])
+        ->with('success', "Presensi {$jenisText} berhasil dikirim untuk tanggal {$request->tanggal}. Menunggu verifikasi dari TU.");
     }
 }
