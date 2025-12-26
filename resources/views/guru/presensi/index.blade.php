@@ -1866,6 +1866,40 @@
                 <div class="alert alert-{{ $todayPresensi->status_verifikasi === 'pending' ? 'warning' : ($todayPresensi->status_verifikasi === 'approved' ? 'success' : 'danger') }}" id="status-presensi-hari-ini" style="display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important;">
                     <i class="fas fa-{{ $todayPresensi->status_verifikasi === 'pending' ? 'clock' : ($todayPresensi->status_verifikasi === 'approved' ? 'check-circle' : 'times-circle') }} me-2"></i>
                     Anda sudah melakukan presensi untuk <strong>hari ini ({{ $todayPresensi->tanggal->format('d/m/Y') }})</strong> sebagai <strong>{{ ucfirst($todayPresensi->jenis) }}</strong>.
+                    
+                    {{-- Informasi Waktu Absen --}}
+                    @if($todayPresensi->jam_masuk || $todayPresensi->jam_keluar)
+                        <div class="mt-3 p-3" style="background-color: rgba(255,255,255,0.3); border-radius: 8px; border-left: 4px solid {{ $todayPresensi->status_verifikasi === 'approved' ? '#28a745' : ($todayPresensi->status_verifikasi === 'pending' ? '#ffc107' : '#dc3545') }};">
+                            <div class="row">
+                                @if($todayPresensi->jam_masuk)
+                                    <div class="col-md-6 mb-2">
+                                        <strong><i class="fas fa-sign-in-alt me-2"></i>Absen Masuk:</strong>
+                                        <div class="mt-1">
+                                            <span class="badge bg-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                                {{ date('H:i', strtotime($todayPresensi->jam_masuk)) }}
+                                            </span>
+                                            @if($todayPresensi->jenis === 'sakit')
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="fas fa-info-circle me-1"></i>Waktu mulai sakit
+                                                </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                                @if($todayPresensi->jam_keluar)
+                                    <div class="col-md-6 mb-2">
+                                        <strong><i class="fas fa-sign-out-alt me-2"></i>Absen Keluar:</strong>
+                                        <div class="mt-1">
+                                            <span class="badge bg-success" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                                {{ date('H:i', strtotime($todayPresensi->jam_keluar)) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                    
                     <br><strong>Status:</strong> 
                     @if($todayPresensi->status_verifikasi === 'pending')
                         <span class="badge badge-pending">Menunggu Verifikasi</span>
@@ -1963,17 +1997,29 @@
                                         </td>
                                         <td>
                                             @if($p->jam_masuk)
-                                                @if($p->jenis === 'sakit')
-                                                    <span class="badge bg-danger text-white">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
-                                                    <small class="text-muted d-block">Mulai sakit</small>
-                                                @else
-                                                    {{ date('H:i', strtotime($p->jam_masuk)) }}
-                                                @endif
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-sign-in-alt me-2 text-primary"></i>
+                                                    @if($p->jenis === 'sakit')
+                                                        <span class="badge bg-danger text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
+                                                        <small class="text-muted d-block ms-4 mt-1">Mulai sakit</small>
+                                                    @else
+                                                        <span class="badge bg-primary text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_masuk)) }}</span>
+                                                    @endif
+                                                </div>
                                             @else
-                                                -
+                                                <span class="text-muted">-</span>
                                             @endif
                                         </td>
-                                        <td>{{ $p->jam_keluar ? date('H:i', strtotime($p->jam_keluar)) : '-' }}</td>
+                                        <td>
+                                            @if($p->jam_keluar)
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-sign-out-alt me-2 text-success"></i>
+                                                    <span class="badge bg-success text-white" style="font-size: 0.9rem;">{{ date('H:i', strtotime($p->jam_keluar)) }}</span>
+                                                </div>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             {{ $p->keterangan ?? '-' }}
                                             @php
