@@ -194,13 +194,19 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="pembuat_surat" class="form-label">Pembuat Surat <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="pembuat_surat" name="pembuat_surat" value="{{ Auth::user()->name }}" readonly>
+                                            <input type="text" class="form-control bg-light" id="pembuat_surat" name="pembuat_surat" value="{{ Auth::user()->name }}" readonly style="cursor: not-allowed;">
+                                            <div class="form-text">
+                                                <i class="fas fa-info-circle"></i> Terisi otomatis dari akun yang login
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="jabatan_pembuat" class="form-label">Jabatan Pembuat</label>
-                                            <input type="text" class="form-control" id="jabatan_pembuat" name="jabatan_pembuat" value="Tenaga Usaha" readonly>
+                                            <label for="jabatan_pembuat" class="form-label">Jabatan Pembuat <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control bg-light" id="jabatan_pembuat" name="jabatan_pembuat" value="Tenaga Usaha" readonly style="cursor: not-allowed;">
+                                            <div class="form-text">
+                                                <i class="fas fa-info-circle"></i> Terisi otomatis sesuai jabatan
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
