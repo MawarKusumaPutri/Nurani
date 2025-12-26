@@ -3,6 +3,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    {{-- Updated: 2025-12-26 - RPP Dropdown with 4 options --}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Materi - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
