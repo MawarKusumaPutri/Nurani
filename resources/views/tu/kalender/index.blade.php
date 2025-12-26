@@ -280,7 +280,7 @@
         border: 2px solid transparent;
         padding: 0;
         position: relative;
-        min-height: 60px;
+        min-height: 80px;
     }
 
     .calendar-day-dark:hover {
@@ -337,13 +337,13 @@
 
     .calendar-day-dark.has-event .event-text {
         font-size: 10px;
-        line-height: 1.2;
+        line-height: 1.3;
         text-align: left;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         padding: 0 3px;
         font-weight: 500;
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const penanggungJawab = dayEvents[0].penanggung_jawab || '';
                     
                     if (penanggungJawab) {
-                        eventText.innerHTML = `<strong>${eventTitle}</strong><br><small style="font-size: 8px; opacity: 0.9;">📋 ${penanggungJawab}</small>`;
+                        eventText.innerHTML = `<strong>${eventTitle}</strong><br><small style="font-size: 9px; opacity: 0.95; display: block; margin-top: 2px;">👤 ${penanggungJawab}</small>`;
                     } else {
                         eventText.textContent = eventTitle;
                     }
