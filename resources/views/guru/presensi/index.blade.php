@@ -2013,12 +2013,26 @@
                 <!-- Riwayat Presensi - Tampil ketika mode riwayat atau setelah submit -->
                 <div class="card mt-4" id="riwayat-presensi-section" style="display: {{ $isRiwayat ? 'block' : 'none' }} !important;">
                     <div class="card-header" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;">
-                        <h5 class="mb-0">
-                            <i class="fas fa-history me-2"></i>Riwayat Presensi (30 Hari Terakhir)
-                        </h5>
-                        <small class="d-block mt-1" style="font-size: 0.85rem; opacity: 0.9;">
-                            <i class="fas fa-info-circle me-1"></i>Lihat semua presensi Anda dengan berbagai jenis (Hadir, Sakit, Izin)
-                        </small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="fas fa-history me-2"></i>Riwayat Presensi (30 Hari Terakhir)
+                                </h5>
+                                <small class="d-block mt-1" style="font-size: 0.85rem; opacity: 0.9;">
+                                    <i class="fas fa-info-circle me-1"></i>Lihat semua presensi Anda dengan berbagai jenis (Hadir, Sakit, Izin)
+                                </small>
+                            </div>
+                            @if($isRiwayat)
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('guru.presensi.index') }}" class="btn btn-light btn-sm">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Presensi Masuk
+                                </a>
+                                <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" class="btn btn-light btn-sm">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Presensi Keluar
+                                </a>
+                            </div>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
                         @if($presensiHistory->count() > 0)
