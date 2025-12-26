@@ -99,40 +99,54 @@ class PresensiController extends Controller
         }
 
         // Check if already presensi on this date
-        $existingPresensi = Presensi::where('guru_id', $guru->id)
-            ->whereDate('tanggal', $request->tanggal)
-            ->first();
+    $existingPresensi = Presensi::where('guru_id', $guru->id)
+        ->whereDate('tanggal', $request->tanggal)
+        ->first();
 
-        if ($existingPresensi) {
-            $jenisLama = ucfirst($existingPresensi->jenis);
-            return redirect()->route('guru.presensi.index')
-                ->with('error', "Anda sudah melakukan presensi untuk tanggal ini ({$request->tanggal}) sebagai {$jenisLama}. Setiap tanggal hanya bisa diisi sekali.");
+    // Deteksi apakah ini presensi keluar (hanya isi jam keluar)
+    $isPresensiKeluar = $request->has('jam_keluar') && $request->jam_masuk == '00:00';
+
+    if ($existingPresensi) {
+        // Jika sudah ada presensi dan ini adalah presensi keluar, update jam_keluar
+        if ($isPresensiKeluar) {
+            $existingPresensi->update([
+                'jam_keluar' => $request->jam_keluar,
+            ]);
+            
+            return redirect()->route('guru.presensi.index', ['view' => 'riwayat'])
+                ->with('success', "Jam keluar berhasil dicatat untuk tanggal {$request->tanggal}. Menunggu verifikasi dari TU.");
         }
+        
+        // Jika bukan presensi keluar, berarti duplikasi
+        $jenisLama = ucfirst($existingPresensi->jenis);
+        return redirect()->route('guru.presensi.index')
+            ->with('error', "Anda sudah melakukan presensi untuk tanggal ini ({$request->tanggal}) sebagai {$jenisLama}. Setiap tanggal hanya bisa diisi sekali.");
+    }
 
-        // Handle file upload surat sakit
-        $suratSakitPath = null;
-        if ($request->hasFile('surat_sakit')) {
-            $file = $request->file('surat_sakit');
-            $filename = time() . '_' . $guru->id . '_' . $file->getClientOriginalName();
-            $suratSakitPath = $file->storeAs('public/presensi/surat_sakit', $filename);
-            // Remove 'public/' prefix for database storage
-            $suratSakitPath = str_replace('public/', '', $suratSakitPath);
-        }
+    // Handle file upload surat sakit
+    $suratSakitPath = null;
+    if ($request->hasFile('surat_sakit')) {
+        $file = $request->file('surat_sakit');
+        $filename = time() . '_' . $guru->id . '_' . $file->getClientOriginalName();
+        $suratSakitPath = $file->storeAs('public/presensi/surat_sakit', $filename);
+        // Remove 'public/' prefix for database storage
+        $suratSakitPath = str_replace('public/', '', $suratSakitPath);
+    }
 
-        // Create presensi
-        Presensi::create([
-            'guru_id' => $guru->id,
-            'tanggal' => $request->tanggal,
-            'jenis' => $request->jenis,
-            'jam_masuk' => ($request->jenis === 'hadir' || $request->jenis === 'sakit') ? $request->jam_masuk : null,
-            'jam_keluar' => $request->jam_keluar ?? null,
-            'keterangan' => $request->keterangan,
-            'surat_sakit' => $suratSakitPath,
-            'tugas_kelas_7' => $tugasKelas7 ?: null,
-            'tugas_kelas_8' => $tugasKelas8 ?: null,
-            'tugas_kelas_9' => $tugasKelas9 ?: null,
-            'status_verifikasi' => 'pending',
-        ]);
+    // Create presensi
+    Presensi::create([
+        'guru_id' => $guru->id,
+        'tanggal' => $request->tanggal,
+        'jenis' => $request->jenis,
+        'jam_masuk' => ($request->jenis === 'hadir' || $request->jenis === 'sakit') ? $request->jam_masuk : null,
+        'jam_keluar' => $request->jam_keluar ?? null,
+        'keterangan' => $request->keterangan,
+        'surat_sakit' => $suratSakitPath,
+        'tugas_kelas_7' => $tugasKelas7 ?: null,
+        'tugas_kelas_8' => $tugasKelas8 ?: null,
+        'tugas_kelas_9' => $tugasKelas9 ?: null,
+        'status_verifikasi' => 'pending',
+    ]);
 
     
     $jenisText = ucfirst($request->jenis);
