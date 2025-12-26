@@ -1503,6 +1503,146 @@
                     @endif
                 </div>
 
+                @if($isRiwayat)
+                <!-- Card Status Presensi Hari Ini -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 0.5rem;">
+                            <div class="card-header" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 1rem 1.5rem;">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar-day me-2"></i>Presensi Hari Ini
+                                </h5>
+                                <small style="opacity: 0.9;">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</small>
+                            </div>
+                            <div class="card-body" style="padding: 1.5rem;">
+                                @if($todayPresensi)
+                                <div class="row">
+                                    <!-- Presensi Masuk -->
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <div class="d-flex align-items-center p-3" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 0.5rem; border-left: 4px solid #4CAF50;">
+                                            <div class="me-3" style="font-size: 2.5rem; color: #4CAF50;">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1" style="color: #2E7D32; font-weight: 600;">Presensi Masuk</h6>
+                                                @if($todayPresensi->jam_masuk)
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-success me-2" style="font-size: 1.1rem; padding: 0.5rem 1rem;">
+                                                            <i class="fas fa-clock me-1"></i>{{ date('H:i', strtotime($todayPresensi->jam_masuk)) }}
+                                                        </span>
+                                                        <small class="text-muted">WIB</small>
+                                                    </div>
+                                                    <small class="text-muted mt-1 d-block">
+                                                        <i class="fas fa-check-circle me-1"></i>Sudah tercatat
+                                                    </small>
+                                                @else
+                                                    <span class="badge bg-secondary">Belum tercatat</span>
+                                                    <small class="text-muted mt-1 d-block">
+                                                        <a href="{{ route('guru.presensi.index') }}" class="text-decoration-none">
+                                                            <i class="fas fa-arrow-right me-1"></i>Isi presensi masuk
+                                                        </a>
+                                                    </small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Presensi Keluar -->
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 0.5rem; border-left: 4px solid #2196F3;">
+                                            <div class="me-3" style="font-size: 2.5rem; color: #2196F3;">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1" style="color: #1976D2; font-weight: 600;">Presensi Keluar</h6>
+                                                @if($todayPresensi->jam_keluar)
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-primary me-2" style="font-size: 1.1rem; padding: 0.5rem 1rem;">
+                                                            <i class="fas fa-clock me-1"></i>{{ date('H:i', strtotime($todayPresensi->jam_keluar)) }}
+                                                        </span>
+                                                        <small class="text-muted">WIB</small>
+                                                    </div>
+                                                    <small class="text-muted mt-1 d-block">
+                                                        <i class="fas fa-check-circle me-1"></i>Sudah tercatat
+                                                    </small>
+                                                @else
+                                                    <span class="badge bg-secondary">Belum tercatat</span>
+                                                    <small class="text-muted mt-1 d-block">
+                                                        <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" class="text-decoration-none">
+                                                            <i class="fas fa-arrow-right me-1"></i>Isi presensi keluar
+                                                        </a>
+                                                    </small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Info Tambahan -->
+                                <div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 0.5rem;">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">Jenis Presensi</small>
+                                            <strong>
+                                                @if($todayPresensi->jenis === 'hadir')
+                                                    <span class="badge bg-success">Hadir</span>
+                                                @elseif($todayPresensi->jenis === 'sakit')
+                                                    <span class="badge bg-danger">Sakit</span>
+                                                @else
+                                                    <span class="badge bg-warning text-dark">Izin</span>
+                                                @endif
+                                            </strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">Status Verifikasi</small>
+                                            <strong>
+                                                @if($todayPresensi->status_verifikasi === 'pending')
+                                                    <span class="badge bg-warning text-dark">Menunggu</span>
+                                                @elseif($todayPresensi->status_verifikasi === 'approved')
+                                                    <span class="badge bg-success">Disetujui</span>
+                                                @else
+                                                    <span class="badge bg-danger">Ditolak</span>
+                                                @endif
+                                            </strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">Durasi Kerja</small>
+                                            <strong>
+                                                @if($todayPresensi->jam_masuk && $todayPresensi->jam_keluar)
+                                                    @php
+                                                        $masuk = \Carbon\Carbon::parse($todayPresensi->jam_masuk);
+                                                        $keluar = \Carbon\Carbon::parse($todayPresensi->jam_keluar);
+                                                        $durasi = $masuk->diff($keluar);
+                                                    @endphp
+                                                    {{ $durasi->h }} jam {{ $durasi->i }} menit
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                @else
+                                <div class="text-center py-4">
+                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Belum Ada Presensi Hari Ini</h5>
+                                    <p class="text-muted mb-3">Anda belum melakukan presensi untuk hari ini</p>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a href="{{ route('guru.presensi.index') }}" class="btn btn-success">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Isi Presensi Masuk
+                                        </a>
+                                        <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" class="btn btn-primary">
+                                            <i class="fas fa-sign-out-alt me-1"></i> Isi Presensi Keluar
+                                        </a>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 @if(!$isRiwayat)
                 <!-- Presensi Form -->
                 <div class="card mb-4" id="presensiFormCard" style="display: block !important; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 0.5rem; overflow: visible;">
