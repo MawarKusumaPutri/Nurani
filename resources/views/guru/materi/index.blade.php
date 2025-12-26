@@ -1266,7 +1266,12 @@
 
                         {{-- Grid Pertemuan --}}
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Klik untuk mengubah status pertemuan:</label>
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-list me-2"></i>Daftar Pertemuan (<span id="modalTotalPertemuan">0</span> Total)
+                            </label>
+                            <p class="text-muted small mb-3">
+                                Klik pada kotak pertemuan untuk menandai status. Hijau = Selesai, Merah = Belum dilaksanakan.
+                            </p>
                             <div id="pertemuanGrid" class="pertemuan-grid"></div>
                         </div>
 
@@ -1274,7 +1279,7 @@
                             <i class="fas fa-info-circle me-2"></i>
                             <small>
                                 <strong>Petunjuk:</strong> Klik pada kotak pertemuan untuk menandai sebagai selesai (hijau) atau belum (merah).
-                                Perubahan akan tersimpan otomatis.
+                                Perubahan akan tersimpan otomatis dan halaman akan di-refresh.
                             </small>
                         </div>
                     </div>
@@ -1459,6 +1464,7 @@
             currentPertemuanSelesai = pertemuanSelesai || [];
             
             document.getElementById('modalMateriJudul').textContent = judul;
+            document.getElementById('modalTotalPertemuan').textContent = jumlahPertemuan;
             
             // Generate grid pertemuan
             const grid = document.getElementById('pertemuanGrid');
