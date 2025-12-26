@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [MateriController::class, 'store'])->name('store');
             Route::post('/youtube', [GuruController::class, 'storeMateri'])->name('youtube.store');
             Route::post('/{materi}/toggle-pertemuan', [MateriController::class, 'togglePertemuan'])->name('toggle-pertemuan');
+            Route::post('/{materi}/update-pertemuan', [MateriController::class, 'updatePertemuan'])->name('update-pertemuan');
             Route::get('/{materi}', [MateriController::class, 'show'])->name('show');
             Route::get('/{materi}/edit', [MateriController::class, 'edit'])->name('edit');
             Route::put('/{materi}', [MateriController::class, 'update'])->name('update');

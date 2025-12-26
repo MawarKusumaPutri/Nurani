@@ -309,4 +309,41 @@ class MateriController extends Controller
             'persentase_selesai' => $materi->persentase_selesai
         ]);
     }
+
+    /**
+     * Update semua pertemuan sekaligus (batch update)
+     */
+    public function updatePertemuan(Request $request, Materi $materi)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru || $materi->guru_id !== $guru->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'pertemuan_selesai' => 'required|array'
+        ]);
+
+        $pertemuanSelesai = $request->pertemuan_selesai;
+        
+        // Validate semua nomor pertemuan tidak melebihi jumlah pertemuan
+        foreach ($pertemuanSelesai as $nomor) {
+            if ($nomor > $materi->jumlah_pertemuan) {
+                return response()->json(['error' => 'Nomor pertemuan tidak valid'], 400);
+            }
+        }
+
+        // Update pertemuan_selesai
+        $materi->pertemuan_selesai = $pertemuanSelesai;
+        $materi->save();
+
+        return response()->json([
+            'success' => true,
+            'pertemuan_selesai' => $materi->pertemuan_selesai,
+            'jumlah_selesai' => $materi->jumlah_selesai,
+            'jumlah_belum_selesai' => $materi->jumlah_belum_selesai,
+            'persentase_selesai' => $materi->persentase_selesai
+        ]);
+    }
 }

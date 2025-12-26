@@ -1279,7 +1279,7 @@
                             <i class="fas fa-info-circle me-2"></i>
                             <small>
                                 <strong>Petunjuk:</strong> Klik pada kotak pertemuan untuk menandai sebagai selesai (hijau) atau belum (merah).
-                                Perubahan akan tersimpan otomatis dan halaman akan di-refresh.
+                                Klik tombol "Simpan" untuk menyimpan perubahan.
                             </small>
                         </div>
                     </div>
@@ -1287,6 +1287,9 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times me-2"></i>Tutup
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="savePertemuanChanges()" id="btnSimpanPertemuan">
+                        <i class="fas fa-save me-2"></i>Simpan Perubahan
                     </button>
                 </div>
             </div>
@@ -1529,30 +1532,46 @@
             }
             
             updateModalStats();
+        }
+
+        function savePertemuanChanges() {
+            const btnSimpan = document.getElementById('btnSimpanPertemuan');
+            btnSimpan.disabled = true;
+            btnSimpan.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
             
             // Send AJAX request to backend
-            fetch(`/guru/materi/${currentMateriId}/toggle-pertemuan`, {
+            fetch(`/guru/materi/${currentMateriId}/update-pertemuan`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
                 body: JSON.stringify({
-                    nomor_pertemuan: nomorPertemuan
+                    pertemuan_selesai: currentPertemuanSelesai
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Pertemuan updated successfully');
-                    // Reload page setelah 500ms untuk update card
+                    // Show success message
+                    btnSimpan.innerHTML = '<i class="fas fa-check me-2"></i>Tersimpan!';
+                    btnSimpan.classList.remove('btn-success');
+                    btnSimpan.classList.add('btn-success');
+                    
+                    // Reload page setelah 1 detik untuk update card
                     setTimeout(() => {
                         location.reload();
-                    }, 500);
+                    }, 1000);
+                } else {
+                    btnSimpan.disabled = false;
+                    btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
+                    alert('Gagal menyimpan perubahan');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                btnSimpan.disabled = false;
+                btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
                 alert('Terjadi kesalahan saat menyimpan data');
             });
         }
