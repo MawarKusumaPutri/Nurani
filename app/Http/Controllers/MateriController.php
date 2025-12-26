@@ -315,9 +315,8 @@ class MateriController extends Controller
      */
     public function updatePertemuan(Request $request, Materi $materi)
     {
-        $guru = Guru::where('user_id', Auth::id())->first();
-        
-        if (!$guru || $materi->guru_id !== $guru->id) {
+        // Quick authorization check without extra query
+        if ($materi->guru_id !== Auth::user()->guru->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -327,23 +326,19 @@ class MateriController extends Controller
 
         $pertemuanSelesai = $request->pertemuan_selesai;
         
-        // Validate semua nomor pertemuan tidak melebihi jumlah pertemuan
-        foreach ($pertemuanSelesai as $nomor) {
-            if ($nomor > $materi->jumlah_pertemuan) {
-                return response()->json(['error' => 'Nomor pertemuan tidak valid'], 400);
-            }
+        // Simple validation - just check max value
+        $maxPertemuan = max($pertemuanSelesai);
+        if ($maxPertemuan > $materi->jumlah_pertemuan) {
+            return response()->json(['error' => 'Nomor pertemuan tidak valid'], 400);
         }
 
         // Update pertemuan_selesai
         $materi->pertemuan_selesai = $pertemuanSelesai;
         $materi->save();
 
+        // Return minimal response for faster processing
         return response()->json([
-            'success' => true,
-            'pertemuan_selesai' => $materi->pertemuan_selesai,
-            'jumlah_selesai' => $materi->jumlah_selesai,
-            'jumlah_belum_selesai' => $materi->jumlah_belum_selesai,
-            'persentase_selesai' => $materi->persentase_selesai
+            'success' => true
         ]);
     }
 }
