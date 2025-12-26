@@ -44,6 +44,25 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             @endif
+            
+            @php
+                // Hitung presensi yang baru update jam keluar (dalam 24 jam terakhir)
+                $recentJamKeluar = $allPresensi->filter(function($p) {
+                    return $p->jam_keluar && 
+                           $p->updated_at && 
+                           $p->updated_at->diffInHours(now()) < 24 &&
+                           $p->created_at->diffInHours($p->updated_at) > 1; // Update setelah create
+                })->count();
+            @endphp
+            
+            @if($recentJamKeluar > 0)
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fas fa-clock me-2"></i>
+                <strong>Ada {{ $recentJamKeluar }} presensi keluar baru!</strong>
+                Guru telah mencatat jam keluar dalam 24 jam terakhir. Silakan cek kolom "Jam Keluar" di tabel.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            @endif
 
             <!-- Tabs Navigation -->
             <ul class="nav nav-tabs mb-4" id="presensiTabs" role="tablist">
