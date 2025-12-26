@@ -396,80 +396,89 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // File upload handling
-        const fileInput = document.getElementById('file');
-        const fileUploadArea = document.getElementById('fileUploadArea');
-        const fileInfo = document.getElementById('file-info');
-        const fileName = document.getElementById('file-name');
-        const fileSize = document.getElementById('file-size');
-        
-        // Click handler for upload area
-        fileUploadArea.addEventListener('click', function() {
-            fileInput.click();
-        });
-        
-        // File input change handler
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                displayFileInfo(file);
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // File upload handling
+            const fileInput = document.getElementById('file');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            
+            // Check if elements exist
+            if (!fileInput || !fileUploadArea || !fileInfo || !fileName || !fileSize) {
+                console.error('File upload elements not found');
+                return;
+            }
+            
+            // Click handler for upload area
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // File input change handler
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    displayFileInfo(file);
+                }
+            });
+
+            // Drag and drop handling
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    // Set files to input
+                    fileInput.files = files;
+                    displayFileInfo(files[0]);
+                }
+            });
+            
+            function displayFileInfo(file) {
+                fileName.textContent = file.name;
+                fileSize.textContent = '(' + formatFileSize(file.size) + ')';
+                fileInfo.style.display = 'block';
+                
+                // Update upload area to show file is selected
+                fileUploadArea.style.borderColor = '#28a745';
+                fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+            }
+            
+            window.removeFile = function() {
+                fileInput.value = '';
+                fileInfo.style.display = 'none';
+                fileName.textContent = '';
+                fileSize.textContent = '';
+                
+                // Reset upload area style
+                fileUploadArea.style.borderColor = '#2E7D32';
+                fileUploadArea.style.backgroundColor = '';
+            };
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
         });
-
-        // Drag and drop handling
-        fileUploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileUploadArea.classList.add('dragover');
-        });
-        
-        fileUploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileUploadArea.classList.remove('dragover');
-        });
-        
-        fileUploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileUploadArea.classList.remove('dragover');
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                // Set files to input
-                fileInput.files = files;
-                displayFileInfo(files[0]);
-            }
-        });
-        
-        function displayFileInfo(file) {
-            fileName.textContent = file.name;
-            fileSize.textContent = '(' + formatFileSize(file.size) + ')';
-            fileInfo.style.display = 'block';
-            
-            // Update upload area to show file is selected
-            fileUploadArea.style.borderColor = '#28a745';
-            fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
-        }
-        
-        function removeFile() {
-            fileInput.value = '';
-            fileInfo.style.display = 'none';
-            fileName.textContent = '';
-            fileSize.textContent = '';
-            
-            // Reset upload area style
-            fileUploadArea.style.borderColor = '#2E7D32';
-            fileUploadArea.style.backgroundColor = '';
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
         
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
