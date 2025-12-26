@@ -525,10 +525,15 @@
                 fileSize.textContent = '(' + formatFileSize(file.size) + ')';
                 fileInfo.style.display = 'block';
                 
-                // Update upload area to show file is selected
+                // Update upload area to show file is selected - VERY VISIBLE
                 fileUploadArea.style.borderColor = '#28a745';
-                fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+                fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.15)';
+                fileUploadArea.style.borderWidth = '3px';
+                fileUploadArea.innerHTML = '<i class="fas fa-check-circle fa-3x text-success mb-3"></i><h5 class="text-success"><strong>✓ File Berhasil Ditambahkan!</strong></h5><p class="text-success mb-1"><strong>' + file.name + '</strong></p><small class="text-muted">' + formatFileSize(file.size) + '</small>';
                 console.log('File info displayed successfully');
+                
+                // Show alert notification
+                alert('✅ FILE BERHASIL DITAMBAHKAN!\n\nNama file: ' + file.name + '\nUkuran: ' + formatFileSize(file.size) + '\n\nSilakan klik "Simpan Materi" untuk menyimpan.');
             }
             
             window.removeFile = function() {
