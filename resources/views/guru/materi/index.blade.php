@@ -1549,13 +1549,19 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     pertemuan_selesai: currentPertemuanSelesai
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Show success message
@@ -1563,21 +1569,21 @@
                     btnSimpan.classList.remove('btn-success');
                     btnSimpan.classList.add('btn-success');
                     
-                    // Reload page setelah 1 detik untuk update card
+                    // Reload page lebih cepat (300ms) agar terasa snappy
                     setTimeout(() => {
                         location.reload();
-                    }, 1000);
+                    }, 300);
                 } else {
-                    btnSimpan.disabled = false;
-                    btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
-                    alert('Gagal menyimpan perubahan');
+                    throw new Error(data.message || 'Gagal menyimpan perubahan');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 btnSimpan.disabled = false;
                 btnSimpan.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Perubahan';
-                alert('Terjadi kesalahan saat menyimpan data');
+                
+                // Show error alert
+                alert('Gagal menyimpan: Pastikan koneksi internet lancar dan coba lagi.');
             });
         }
 
