@@ -396,89 +396,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // File upload handling
-            const fileInput = document.getElementById('file');
-            const fileUploadArea = document.getElementById('fileUploadArea');
-            const fileInfo = document.getElementById('file-info');
-            const fileName = document.getElementById('file-name');
-            const fileSize = document.getElementById('file-size');
-            
-            // Check if elements exist
-            if (!fileInput || !fileUploadArea || !fileInfo || !fileName || !fileSize) {
-                console.error('File upload elements not found');
-                return;
-            }
-            
-            // Click handler for upload area
-            fileUploadArea.addEventListener('click', function() {
-                fileInput.click();
-            });
-            
-            // File input change handler
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    displayFileInfo(file);
-                }
-            });
-
-            // Drag and drop handling
-            fileUploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileUploadArea.classList.add('dragover');
-            });
-            
-            fileUploadArea.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileUploadArea.classList.remove('dragover');
-            });
-            
-            fileUploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileUploadArea.classList.remove('dragover');
-                
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    // Set files to input
-                    fileInput.files = files;
-                    displayFileInfo(files[0]);
-                }
-            });
-            
-            function displayFileInfo(file) {
-                fileName.textContent = file.name;
-                fileSize.textContent = '(' + formatFileSize(file.size) + ')';
-                fileInfo.style.display = 'block';
-                
-                // Update upload area to show file is selected
-                fileUploadArea.style.borderColor = '#28a745';
-                fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
-            }
-            
-            window.removeFile = function() {
-                fileInput.value = '';
-                fileInfo.style.display = 'none';
-                fileName.textContent = '';
-                fileSize.textContent = '';
-                
-                // Reset upload area style
-                fileUploadArea.style.borderColor = '#2E7D32';
-                fileUploadArea.style.backgroundColor = '';
-            };
-
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-        });
         
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -525,7 +442,116 @@
             document.body.style.backgroundColor = '#ffffff';
         }
         
+        // Single DOMContentLoaded event for all initialization
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing file upload...');
+            
+            // File upload handling
+            const fileInput = document.getElementById('file');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            
+            // Check if elements exist
+            if (!fileInput) {
+                console.error('File input not found');
+            }
+            if (!fileUploadArea) {
+                console.error('File upload area not found');
+            }
+            if (!fileInfo) {
+                console.error('File info not found');
+            }
+            
+            if (!fileInput || !fileUploadArea || !fileInfo || !fileName || !fileSize) {
+                console.error('File upload elements not found - upload will not work');
+                return;
+            }
+            
+            console.log('All file upload elements found successfully');
+            
+            // Click handler for upload area
+            fileUploadArea.addEventListener('click', function() {
+                console.log('Upload area clicked');
+                fileInput.click();
+            });
+            
+            // File input change handler
+            fileInput.addEventListener('change', function(e) {
+                console.log('File input changed');
+                const file = e.target.files[0];
+                if (file) {
+                    console.log('File selected:', file.name, file.size);
+                    displayFileInfo(file);
+                }
+            });
+
+            // Drag and drop handling
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.add('dragover');
+                console.log('Drag over');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+                console.log('Drag leave');
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+                console.log('File dropped');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    console.log('Dropped file:', files[0].name, files[0].size);
+                    // Create a new FileList and assign to input
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(files[0]);
+                    fileInput.files = dataTransfer.files;
+                    displayFileInfo(files[0]);
+                }
+            });
+            
+            function displayFileInfo(file) {
+                console.log('Displaying file info:', file.name);
+                fileName.textContent = file.name;
+                fileSize.textContent = '(' + formatFileSize(file.size) + ')';
+                fileInfo.style.display = 'block';
+                
+                // Update upload area to show file is selected
+                fileUploadArea.style.borderColor = '#28a745';
+                fileUploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+                console.log('File info displayed successfully');
+            }
+            
+            window.removeFile = function() {
+                console.log('Removing file');
+                fileInput.value = '';
+                fileInfo.style.display = 'none';
+                fileName.textContent = '';
+                fileSize.textContent = '';
+                
+                // Reset upload area style
+                fileUploadArea.style.borderColor = '#2E7D32';
+                fileUploadArea.style.backgroundColor = '';
+            };
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Reset body styles
             document.body.style.overflow = '';
             document.body.style.position = '';
             document.body.style.width = '';
@@ -533,6 +559,8 @@
             document.body.style.top = '';
             document.body.style.background = '#ffffff';
             document.body.style.backgroundColor = '#ffffff';
+            
+            console.log('File upload initialization complete');
         });
     </script>
 </body>
