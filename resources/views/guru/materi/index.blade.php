@@ -1013,10 +1013,15 @@
                                                             Google Drive
                                                         </a>
                                                     </li>
-                                                    <li>
                                                         <a class="dropdown-item" href="https://www.kemdikbud.go.id" target="_blank">
                                                             <i class="fas fa-landmark me-2 text-danger"></i>
                                                             Kemdikbud
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="https://chat.openai.com" target="_blank">
+                                                            <i class="fas fa-robot me-2 text-info"></i>
+                                                            ChatGPT (Referensi)
                                                         </a>
                                                     </li>
                                                 </ul>
