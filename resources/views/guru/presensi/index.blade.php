@@ -1629,9 +1629,9 @@
                                                 <i class="fas fa-sign-out-alt me-2"></i>Simpan Jam Keluar
                                             @endif
                                         </button>
-                                        <a href="{{ route('guru.presensi.index', request()->only('type')) }}" class="btn btn-secondary btn-lg" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px; text-decoration: none;">
+                                        <button type="button" class="btn btn-secondary btn-lg" onclick="document.getElementById('presensiFormCard').style.display='none';" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px;">
                                             <i class="fas fa-times me-2"></i>Batal
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
 
