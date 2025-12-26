@@ -131,9 +131,32 @@
         <a class="nav-link {{ str_contains($currentRoute, 'guru.jadwal') ? 'active' : '' }}" href="{{ route('guru.jadwal.index') }}">
             <i class="fas fa-calendar-alt me-2"></i> Jadwal Mengajar
         </a>
-        <a class="nav-link {{ str_contains($currentRoute, 'guru.presensi') && !str_contains($currentRoute, 'presensi-siswa') ? 'active' : '' }}" href="{{ route('guru.presensi.index') }}">
-            <i class="fas fa-calendar-check me-2"></i> Presensi Guru
-        </a>
+        
+        <!-- Presensi Guru Dropdown Menu -->
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle {{ str_contains($currentRoute, 'guru.presensi') && !str_contains($currentRoute, 'presensi-siswa') ? 'active' : '' }}" 
+               id="presensiGuruDropdown" 
+               role="button" 
+               data-bs-toggle="collapse" 
+               data-bs-target="#presensiGuruSubmenu" 
+               aria-expanded="{{ str_contains($currentRoute, 'guru.presensi') && !str_contains($currentRoute, 'presensi-siswa') ? 'true' : 'false' }}">
+                <i class="fas fa-calendar-check me-2"></i> Presensi Guru
+                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+            </a>
+            <div class="collapse {{ str_contains($currentRoute, 'guru.presensi') && !str_contains($currentRoute, 'presensi-siswa') ? 'show' : '' }}" id="presensiGuruSubmenu">
+                <div class="nav flex-column ps-4">
+                    <a href="{{ route('guru.presensi.index') }}" 
+                       class="nav-link submenu-link {{ str_contains($currentRoute, 'guru.presensi.index') || (str_contains($currentRoute, 'guru.presensi') && !request()->has('type')) ? 'active' : '' }}">
+                        <i class="fas fa-sign-in-alt me-2"></i> Presensi Masuk
+                    </a>
+                    <a href="{{ route('guru.presensi.index', ['type' => 'keluar']) }}" 
+                       class="nav-link submenu-link {{ request()->get('type') == 'keluar' ? 'active' : '' }}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Presensi Keluar
+                    </a>
+                </div>
+            </div>
+        </div>
+        
         <a class="nav-link {{ str_contains($currentRoute, 'presensi-siswa') ? 'active' : '' }}" href="{{ route('guru.presensi-siswa.index') }}">
             <i class="fas fa-user-graduate me-2"></i> Presensi Siswa
         </a>
@@ -552,6 +575,40 @@
         color: white !important;
         background: rgba(255, 255, 255, 0.1) !important;
         font-weight: 600 !important;
+    }
+    
+    /* Submenu Styling for Collapse */
+    .sidebar .submenu-link {
+        color: rgba(255, 255, 255, 0.7) !important;
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
+        transition: all 0.3s ease !important;
+        border-radius: 6px !important;
+        margin: 2px 0 !important;
+    }
+    
+    .sidebar .submenu-link:hover {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        transform: translateX(5px) !important;
+    }
+    
+    .sidebar .submenu-link.active {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        font-weight: 600 !important;
+    }
+    
+    .sidebar .collapse {
+        transition: height 0.3s ease !important;
+    }
+    
+    .sidebar .dropdown-toggle .fa-chevron-down {
+        transition: transform 0.3s ease !important;
+    }
+    
+    .sidebar .dropdown-toggle[aria-expanded="true"] .fa-chevron-down {
+        transform: rotate(180deg) !important;
     }
     
     /* Profile Section Styling - Ensure Consistency */

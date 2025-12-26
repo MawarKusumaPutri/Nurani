@@ -1,10 +1,16 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+@php 
+    use Illuminate\Support\Facades\Storage; 
+    // Deteksi mode presensi: 'masuk' (default) atau 'keluar'
+    $presensiType = request()->get('type', 'masuk');
+    $isMasuk = $presensiType !== 'keluar';
+    $isKeluar = $presensiType === 'keluar';
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presensi Guru - {{ $guru->user->name }}</title>
+    <title>{{ $isMasuk ? 'Presensi Masuk' : 'Presensi Keluar' }} - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -1467,8 +1473,20 @@
                 <!-- Header Manajemen Presensi -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h4 class="mb-1" style="font-size: 1.5rem; font-weight: 600;">Manajemen Presensi</h4>
-                        <p class="text-muted mb-0" style="font-size: 0.9rem;">Kelola presensi Anda untuk berbagai tanggal</p>
+                        <h4 class="mb-1" style="font-size: 1.5rem; font-weight: 600;">
+                            @if($isMasuk)
+                                <i class="fas fa-sign-in-alt me-2 text-success"></i>Presensi Masuk
+                            @else
+                                <i class="fas fa-sign-out-alt me-2 text-primary"></i>Presensi Keluar
+                            @endif
+                        </h4>
+                        <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                            @if($isMasuk)
+                                Catat waktu kedatangan Anda hari ini
+                            @else
+                                Catat waktu kepulangan Anda hari ini
+                            @endif
+                        </p>
                     </div>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="togglePresensiForm()" id="btnTutupForm" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
                         <i class="fas fa-times me-2"></i>Tutup Form
@@ -1477,12 +1495,20 @@
 
                 <!-- Presensi Form -->
                 <div class="card mb-4" id="presensiFormCard" style="display: block !important; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 0.5rem; overflow: visible;">
-                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%) !important; padding: 1.25rem 1.5rem; border: none; overflow: visible;">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, {{ $isMasuk ? '#4CAF50 0%, #2E7D32' : '#2196F3 0%, #1976D2' }} 100%) !important; padding: 1.25rem 1.5rem; border: none; overflow: visible;">
                         <div>
                             <h5 class="mb-0" style="font-size: 1.1rem; font-weight: 600;">
-                                <i class="fas fa-plus-circle me-2"></i>Tambah Presensi Baru
+                                @if($isMasuk)
+                                    <i class="fas fa-clock me-2"></i>Catat Jam Masuk
+                                @else
+                                    <i class="fas fa-clock me-2"></i>Catat Jam Keluar
+                                @endif
                                 <small class="d-block mt-2" style="font-size: 0.85rem; opacity: 0.95; font-weight: 400;">
-                                    <i class="fas fa-info-circle me-1"></i>Anda dapat melakukan presensi untuk berbagai tanggal dengan jenis berbeda (Hadir, Sakit, atau Izin)
+                                    @if($isMasuk)
+                                        <i class="fas fa-info-circle me-1"></i>Isi jam masuk saat Anda tiba di sekolah
+                                    @else
+                                        <i class="fas fa-info-circle me-1"></i>Isi jam keluar saat Anda pulang dari sekolah
+                                    @endif
                                 </small>
                             </h5>
                         </div>
@@ -1515,6 +1541,7 @@
                                         </div>
                                     </div>
 
+                                    @if($isMasuk)
                                     <div class="mb-2">
                                         <label class="form-label">Jenis Presensi <span class="text-danger">*</span></label>
                                         <small class="text-muted d-block mb-1" style="font-size: 0.875rem;">
@@ -1550,9 +1577,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @else
+                                    <!-- Hidden input untuk jenis presensi di mode keluar -->
+                                    <input type="hidden" name="jenis" value="hadir">
+                                    @endif
+
 
                                     <div id="jam-section" class="row mb-3">
-                                        <div class="col-md-6">
+                                        @if($isMasuk)
+                                        <!-- Mode Presensi Masuk -->
+                                        <div class="col-md-12">
                                             <label class="form-label">Jam Masuk <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="time" name="jam_masuk" class="form-control" 
@@ -1563,16 +1597,17 @@
                                             </div>
                                             <small class="text-muted">
                                                 <i class="fas fa-info-circle"></i> 
-                                                <span id="jamMasukInfo">Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini</span>
-                                                <span id="jamMasukSakitInfo" style="display: none;">Jam masuk akan otomatis terisi untuk menunjukkan waktu mulai sakit</span>
+                                                Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini
                                             </small>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Jam Keluar</label>
+                                        @else
+                                        <!-- Mode Presensi Keluar -->
+                                        <div class="col-md-12">
+                                            <label class="form-label">Jam Keluar <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="time" name="jam_keluar" class="form-control" 
-                                                       id="jam_keluar" value="{{ old('jam_keluar') }}">
-                                                <button type="button" class="btn btn-outline-success" onclick="setCurrentTime('jam_keluar')" title="Gunakan waktu saat ini">
+                                                       id="jam_keluar" value="{{ old('jam_keluar') }}" required>
+                                                <button type="button" class="btn btn-outline-primary" onclick="setCurrentTime('jam_keluar')" title="Gunakan waktu saat ini">
                                                     <i class="fas fa-clock"></i> Sekarang
                                                 </button>
                                             </div>
@@ -1580,12 +1615,19 @@
                                                 <i class="fas fa-info-circle"></i> Klik tombol "Sekarang" untuk mengisi otomatis dengan waktu saat ini
                                             </small>
                                         </div>
+                                        <!-- Hidden input untuk jam masuk di mode keluar -->
+                                        <input type="hidden" name="jam_masuk" value="00:00">
+                                        @endif
                                     </div>
 
                                     <!-- Tombol Aksi -->
                                     <div class="d-flex gap-3 mt-4 mb-3" style="justify-content: flex-start; align-items: center; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
-                                        <button type="submit" class="btn btn-primary btn-lg" id="btnKirimPresensi" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 180px; display: block !important; visibility: visible !important; opacity: 1 !important;">
-                                            <i class="fas fa-paper-plane me-2"></i>Kirim Presensi
+                                        <button type="submit" class="btn {{ $isMasuk ? 'btn-success' : 'btn-primary' }} btn-lg" id="btnKirimPresensi" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 180px; display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                            @if($isMasuk)
+                                                <i class="fas fa-sign-in-alt me-2"></i>Simpan Jam Masuk
+                                            @else
+                                                <i class="fas fa-sign-out-alt me-2"></i>Simpan Jam Keluar
+                                            @endif
                                         </button>
                                         <button type="button" class="btn btn-secondary btn-lg" id="btnBatalPresensi" onclick="togglePresensiForm()" style="padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; min-width: 120px; display: block !important; visibility: visible !important; opacity: 1 !important;">
                                             <i class="fas fa-times me-2"></i>Batal
