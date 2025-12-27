@@ -132,14 +132,14 @@ Route::middleware('auth')->group(function () {
             Route::put('/', [MateriPembelajaranController::class, 'update'])->name('update');
         });
         
-        // Redirect RPP (fitur sudah dihapus)
-        Route::prefix('rpp')->group(function () {
-            Route::any('/', function () {
-                return redirect()->route('guru.dashboard')->with('info', 'Fitur RPP telah dihapus');
-            });
-            Route::any('{any}', function () {
-                return redirect()->route('guru.dashboard')->with('info', 'Fitur RPP telah dihapus');
-            })->where('any', '.*');
+        // RPP Routes
+        Route::prefix('rpp')->name('rpp.')->group(function () {
+            Route::get('/create', [App\Http\Controllers\RppController::class, 'create'])->name('create');
+            Route::post('/', [App\Http\Controllers\RppController::class, 'store'])->name('store');
+            Route::get('/{id}', [App\Http\Controllers\RppController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [App\Http\Controllers\RppController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\RppController::class, 'update'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\RppController::class, 'destroy'])->name('destroy');
         });
         
         // Evaluasi Guru Routes

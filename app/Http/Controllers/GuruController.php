@@ -178,6 +178,15 @@ class GuruController extends Controller
             }
         }
 
+        // Get RPP untuk mata pelajaran yang dipilih
+        $rppList = [];
+        if ($selectedMataPelajaran) {
+            $rppList = \App\Models\Rpp::where('guru_id', $guru->id)
+                ->where('mata_pelajaran', $selectedMataPelajaran)
+                ->orderBy('pertemuan_ke', 'asc')
+                ->get();
+        }
+
         return view('guru.dashboard', compact(
             'guru',
             'mataPelajaranList',
@@ -193,7 +202,8 @@ class GuruController extends Controller
             'totalJadwalHariIni',
             'jadwalMingguIni',
             'jadwalMendatang',
-            'materiPembelajaran'
+            'materiPembelajaran',
+            'rppList'
         ));
     }
 
