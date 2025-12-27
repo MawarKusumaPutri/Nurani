@@ -351,11 +351,92 @@
                                                        value="{{ old('alokasi_waktu', $identitasData['4'] ?? '12 x 40 menit per unit') }}" 
                                                        placeholder="Contoh: 12 x 40 menit per unit">
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="jumlah_pertemuan" class="form-label fw-bold">5. Jumlah Pertemuan</label>
-                                                <input type="text" class="form-control" id="jumlah_pertemuan" name="jumlah_pertemuan" 
-                                                       value="{{ old('jumlah_pertemuan', $identitasData['5'] ?? '6 pertemuan per unit') }}" 
-                                                       placeholder="Contoh: 6 pertemuan per unit">
+                                            <div class="col-md-12 mb-4">
+                                                <label class="form-label fw-bold">5. Jumlah Pertemuan & RPP</label>
+                                                
+                                                <!-- Input jumlah pertemuan -->
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="jumlah_pertemuan_angka" class="form-label">Jumlah Pertemuan:</label>
+                                                        <input type="number" class="form-control" id="jumlah_pertemuan_angka" 
+                                                               value="6" min="1" max="20" 
+                                                               onchange="updatePertemuanButtons(this.value)">
+                                                        <small class="text-muted">Masukkan jumlah pertemuan (1-20)</small>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="alokasi_waktu_pertemuan" class="form-label">Alokasi Waktu per Pertemuan:</label>
+                                                        <input type="number" class="form-control" id="alokasi_waktu_pertemuan" 
+                                                               value="80" min="40" step="10">
+                                                        <small class="text-muted">Dalam menit (default: 80 menit)</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Hidden field untuk menyimpan format lama -->
+                                                <input type="hidden" id="jumlah_pertemuan" name="jumlah_pertemuan" value="6 pertemuan per unit">
+                                                
+                                                <!-- Daftar pertemuan dengan tombol buat RPP -->
+                                                <div class="card bg-light">
+                                                    <div class="card-header bg-primary text-white">
+                                                        <i class="fas fa-list me-2"></i>Daftar Pertemuan & RPP
+                                                    </div>
+                                                    <div class="card-body" id="pertemuan-list" style="max-height: 400px; overflow-y: auto;">
+                                                        @php
+                                                            // Get existing RPP for this mata pelajaran
+                                                            $existingRpp = [];
+                                                            if ($mataPelajaran) {
+                                                                $existingRpp = \App\Models\Rpp::where('guru_id', $guru->id)
+                                                                    ->where('mata_pelajaran', $mataPelajaran)
+                                                                    ->orderBy('pertemuan_ke')
+                                                                    ->get()
+                                                                    ->keyBy('pertemuan_ke');
+                                                            }
+                                                            $jumlahPertemuan = 6; // Default
+                                                        @endphp
+                                                        
+                                                        <div class="row" id="pertemuan-buttons">
+                                                            @for($i = 1; $i <= $jumlahPertemuan; $i++)
+                                                                <div class="col-md-6 col-lg-4 mb-3 pertemuan-item">
+                                                                    <div class="card h-100 {{ isset($existingRpp[$i]) ? 'border-success' : 'border-secondary' }}">
+                                                                        <div class="card-body">
+                                                                            <h6 class="card-title">
+                                                                                <i class="fas fa-calendar-day me-2 {{ isset($existingRpp[$i]) ? 'text-success' : 'text-secondary' }}"></i>
+                                                                                Pertemuan {{ $i }}
+                                                                            </h6>
+                                                                            @if(isset($existingRpp[$i]))
+                                                                                <p class="card-text small text-muted mb-2">
+                                                                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                                                                    RPP sudah dibuat
+                                                                                </p>
+                                                                                <p class="card-text small mb-2">{{ $existingRpp[$i]->judul }}</p>
+                                                                                <div class="d-grid gap-2">
+                                                                                    <a href="{{ route('guru.rpp.show', $existingRpp[$i]->id) }}" 
+                                                                                       class="btn btn-sm btn-outline-primary" target="_blank">
+                                                                                        <i class="fas fa-eye me-1"></i>Lihat RPP
+                                                                                    </a>
+                                                                                    <a href="{{ route('guru.rpp.edit', $existingRpp[$i]->id) }}" 
+                                                                                       class="btn btn-sm btn-outline-warning" target="_blank">
+                                                                                        <i class="fas fa-edit me-1"></i>Edit RPP
+                                                                                    </a>
+                                                                                </div>
+                                                                            @else
+                                                                                <p class="card-text small text-muted mb-2">
+                                                                                    <i class="fas fa-info-circle me-1"></i>
+                                                                                    Belum ada RPP
+                                                                                </p>
+                                                                                <div class="d-grid">
+                                                                                    <a href="{{ route('guru.rpp.create', ['mata_pelajaran' => $mataPelajaran, 'pertemuan_ke' => $i]) }}" 
+                                                                                       class="btn btn-sm btn-success" target="_blank">
+                                                                                        <i class="fas fa-plus me-1"></i>Buat RPP
+                                                                                    </a>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label for="tahun_ajaran" class="form-label fw-bold">6. Tahun Ajaran</label>
@@ -557,6 +638,49 @@
                 }
             });
         });
+        
+        // Function to update pertemuan buttons dynamically
+        function updatePertemuanButtons(jumlah) {
+            const container = document.getElementById('pertemuan-buttons');
+            const mataPelajaran = '{{ $mataPelajaran }}';
+            
+            if (!container || !mataPelajaran) return;
+            
+            // Update hidden field
+            document.getElementById('jumlah_pertemuan').value = jumlah + ' pertemuan per unit';
+            
+            // Clear existing buttons
+            container.innerHTML = '';
+            
+            // Create new buttons
+            for (let i = 1; i <= jumlah; i++) {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'col-md-6 col-lg-4 mb-3 pertemuan-item';
+                
+                colDiv.innerHTML = `
+                    <div class="card h-100 border-secondary">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-calendar-day me-2 text-secondary"></i>
+                                Pertemuan ${i}
+                            </h6>
+                            <p class="card-text small text-muted mb-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Belum ada RPP
+                            </p>
+                            <div class="d-grid">
+                                <a href="{{ route('guru.rpp.create') }}?mata_pelajaran=${encodeURIComponent(mataPelajaran)}&pertemuan_ke=${i}" 
+                                   class="btn btn-sm btn-success" target="_blank">
+                                    <i class="fas fa-plus me-1"></i>Buat RPP
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(colDiv);
+            }
+        }
         
         forceWhiteBackground();
         if (document.readyState === 'loading') {
