@@ -174,6 +174,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Navigation Buttons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ route('tu.dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Kembali
+                        </a>
+                        <a href="{{ route('tu.profile.edit') }}" class="btn btn-primary">
+                            Edit Profil<i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </div>
