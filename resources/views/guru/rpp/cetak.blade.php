@@ -115,6 +115,16 @@
         <!-- Identitas Pembelajaran -->
         <table class="identitas-table">
             <tr>
+                <td>Nama Sekolah</td>
+                <td>:</td>
+                <td>{{ $rpp->sekolah ?? 'MTs Nurul Aiman' }}</td>
+            </tr>
+            <tr>
+                <td>Nama Guru</td>
+                <td>:</td>
+                <td>{{ $guru->user->name }}</td>
+            </tr>
+            <tr>
                 <td>Mata Pelajaran</td>
                 <td>:</td>
                 <td>{{ $rpp->mata_pelajaran }}</td>

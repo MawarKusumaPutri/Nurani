@@ -87,6 +87,12 @@
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
+                                    <label for="nama_guru" class="form-label fw-bold">Nama Guru</label>
+                                    <input type="text" class="form-control" id="nama_guru" name="nama_guru" 
+                                           value="{{ $guru->user->name }}" readonly style="background-color: #e9ecef;">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
                                     <label for="mata_pelajaran" class="form-label fw-bold">Mata Pelajaran <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="mata_pelajaran" name="mata_pelajaran" 
                                            value="{{ $mataPelajaran }}" readonly style="background-color: #e9ecef;">

@@ -85,6 +85,10 @@
                                 <div class="info-content">{{ $rpp->sekolah ?? 'MTs Nurul Aiman' }}</div>
                             </div>
                             <div class="col-md-6">
+                                <div class="info-label">Nama Guru</div>
+                                <div class="info-content">{{ $guru->user->name }}</div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="info-label">Mata Pelajaran</div>
                                 <div class="info-content">{{ $rpp->mata_pelajaran }}</div>
                             </div>
