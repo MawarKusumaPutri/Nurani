@@ -102,8 +102,15 @@
                                 <div class="col-md-3 mb-3">
                                     <a href="{{ route('tu.presensi.index') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
                                         <i class="fas fa-calendar-check fa-3x mb-3"></i>
-                                        <h6>Presensi</h6>
-                                        <small class="text-muted">Presensi, Izin & Sakit</small>
+                                        <h6>Presensi Guru</h6>
+                                        <small class="text-muted">Presensi guru</small>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ route('tu.presensi-siswa.index') }}" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                        <i class="fas fa-user-check fa-3x mb-3"></i>
+                                        <h6>Presensi Siswa</h6>
+                                        <small class="text-muted">Presensi siswa</small>
                                     </a>
                                 </div>
                                 <div class="col-md-3 mb-3">
