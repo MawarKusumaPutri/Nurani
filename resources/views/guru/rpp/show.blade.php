@@ -66,6 +66,16 @@
                         <a href="{{ route('guru.rpp.edit', $rpp->id) }}" class="btn btn-warning">
                             <i class="fas fa-edit me-2"></i>Edit
                         </a>
+                        <form action="{{ route('guru.rpp.destroy', $rpp->id) }}" 
+                              method="POST" 
+                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus RPP ini? Data yang dihapus tidak dapat dikembalikan.');"
+                              class="mb-0">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Hapus
+                            </button>
+                        </form>
                         <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $rpp->mata_pelajaran]) }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Kembali
                         </a>
@@ -258,6 +268,16 @@
                             <a href="{{ route('guru.rpp.edit', $rpp->id) }}" class="btn btn-warning">
                                 <i class="fas fa-edit me-2"></i>Edit RPP
                             </a>
+                            <form action="{{ route('guru.rpp.destroy', $rpp->id) }}" 
+                                  method="POST" 
+                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus RPP ini? Data yang dihapus tidak dapat dikembalikan.');"
+                                  class="mb-0">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i>Hapus RPP
+                                </button>
+                            </form>
                             <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $rpp->mata_pelajaran]) }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
                             </a>

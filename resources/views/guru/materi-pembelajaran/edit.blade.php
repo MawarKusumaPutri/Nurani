@@ -421,6 +421,16 @@
                                                                                        class="btn btn-sm btn-outline-success" target="_blank">
                                                                                         <i class="fas fa-print me-1"></i>Cetak
                                                                                     </a>
+                                                                                    <form action="{{ route('guru.rpp.destroy', $existingRpp[$i]->id) }}" 
+                                                                                          method="POST" 
+                                                                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus RPP Pertemuan {{ $i }}? Data yang dihapus tidak dapat dikembalikan.');"
+                                                                                          class="mb-0">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                                                                            <i class="fas fa-trash me-1"></i>Hapus
+                                                                                        </button>
+                                                                                    </form>
                                                                                 </div>
                                                                             @else
                                                                                 <p class="card-text small text-muted mb-2">
