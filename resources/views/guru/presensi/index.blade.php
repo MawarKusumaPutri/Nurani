@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
         
-        /* Layout - sama seperti dashboard (biarkan Bootstrap yang mengatur) */
+        /* Layout - Sidebar Fixed di Kiri */
         /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
         @media (min-width: 768px) {
             .container-fluid > .row {
@@ -35,7 +35,7 @@
                 flex-wrap: nowrap !important;
             }
             
-            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen - ULTRA VISIBLE */
+            /* Sidebar FIXED di sisi kiri - Medium screen */
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 flex: 0 0 25% !important;
@@ -45,8 +45,10 @@
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 z-index: 1000 !important;
                 margin-left: 0 !important;
@@ -55,13 +57,17 @@
                 padding-right: 0 !important;
             }
             
+            /* Konten utama dengan margin kiri dan padding yang seimbang */
             .col-md-9.col-lg-10 {
                 flex: 0 0 75% !important;
                 width: 75% !important; /* col-md-9 = 75% */
+                margin-left: 25% !important;
+                padding-left: 2.5rem !important;
+                padding-right: 2.5rem !important;
             }
         }
         
-            /* Large screen - sidebar lebih kecil - ULTRA VISIBLE */
+            /* Large screen - sidebar lebih kecil - FIXED */
         @media (min-width: 992px) {
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
@@ -72,8 +78,10 @@
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 z-index: 1000 !important;
                 margin-left: 0 !important;
@@ -82,9 +90,13 @@
                 padding-right: 0 !important;
             }
             
+            /* Konten utama dengan margin kiri dan padding yang seimbang */
             .col-md-9.col-lg-10 {
                 flex: 0 0 83.33333333% !important;
                 width: 83.33333333% !important; /* col-lg-10 = 83.33% */
+                margin-left: 16.66666667% !important;
+                padding-left: 3rem !important;
+                padding-right: 3rem !important;
             }
         }
         
@@ -94,7 +106,7 @@
             padding-right: 15px;
         }
         
-        /* Main content - di samping sidebar (kanan) */
+        /* Main content - di samping sidebar (kanan) dengan padding seimbang */
         .col-md-9.col-lg-10 {
             display: block !important;
             visibility: visible !important;
@@ -102,7 +114,7 @@
             position: relative !important;
             z-index: 1 !important;
             min-height: 100vh !important;
-            padding: 1rem 1.5rem !important;
+            padding: 2rem 2.5rem !important;
             background-color: #ffffff !important;
             box-sizing: border-box !important;
         }
@@ -481,10 +493,10 @@
             transform: translateX(0) !important;
         }
         
-        /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
+        /* Pastikan sidebar fixed di desktop */
         @media (min-width: 768px) {
             .col-md-3.col-lg-2.sidebar {
-                position: relative !important;
+                position: fixed !important;
                 float: none !important;
             }
         }
@@ -508,15 +520,17 @@
             width: 100% !important;
         }
         
-        /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
+        /* PASTIKAN SIDEBAR FIXED DAN TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
         @media (min-width: 768px) {
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
