@@ -1368,54 +1368,44 @@
             }
         }
         
-        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE - FIXED SIDEBAR */
+        /* FIXED SIDEBAR & CENTERED CONTENT - FINAL OVERRIDE */
         @media (min-width: 768px) {
             .sidebar.col-md-3.col-lg-2,
             #guru-sidebar.col-md-3.col-lg-2,
             .col-md-3.col-lg-2#guru-sidebar,
             .col-md-3.col-lg-2.sidebar#guru-sidebar {
                 position: fixed !important;
-                top: 0 !important;
                 left: 0 !important;
+                top: 0 !important;
                 height: 100vh !important;
                 transform: translateX(0) !important;
                 transition: none !important;
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-            }
-        }
-        
-        /* PASTIKAN SIDEBAR TERLIHAT DI DESKTOP - ULTRA AGGRESSIVE - OVERRIDE SEMUA - FINAL FIX - FIXED POSITION */
-        @media (min-width: 768px) {
-            .col-md-3.col-lg-2.sidebar,
-            #guru-sidebar,
-            div.col-md-3.col-lg-2.sidebar,
-            div#guru-sidebar,
-            .sidebar.col-md-3.col-lg-2,
-            .sidebar#guru-sidebar {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                height: 100vh !important;
-                transform: translateX(0) !important;
-                transition: none !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
+                z-index: 1000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                
+                /* Width for tablet */
                 width: 25% !important;
                 min-width: 250px !important;
                 max-width: 25% !important;
                 flex: 0 0 25% !important;
-                z-index: 1000 !important;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
             }
             
+            /* Content for tablet */
+            .col-md-9.col-lg-10 {
+                width: 75% !important;
+                flex: 0 0 75% !important;
+                margin-left: 25% !important;
+                padding-left: 2.5rem !important;
+                padding-right: 2.5rem !important;
+                display: block !important;
+                float: none !important;
+            }
+
+            /* Desktop Specifics */
             @media (min-width: 992px) {
                 .col-md-3.col-lg-2.sidebar,
                 #guru-sidebar,
@@ -1427,29 +1417,19 @@
                     min-width: 200px !important;
                     max-width: 16.66666667% !important;
                     flex: 0 0 16.66666667% !important;
-                    display: flex !important;
                 }
-            }
-            
-            .col-md-9.col-lg-10 {
-                width: 75% !important;
-                margin-left: 25% !important;
-                padding-left: 2.5rem !important;
-                padding-right: 2.5rem !important;
-                flex: 0 0 75% !important;
-            }
-            
-            @media (min-width: 992px) {
+
                 .col-md-9.col-lg-10 {
                     width: 83.33333333% !important;
+                    flex: 0 0 83.33333333% !important;
                     margin-left: 16.66666667% !important;
                     padding-left: 3rem !important;
                     padding-right: 3rem !important;
-                    flex: 0 0 83.33333333% !important;
                 }
             }
         }
     </style>
+    <!-- Final Fix for Presensi Sidebar & Layout: 2025-12-29 -->
     @include('partials.guru-dynamic-ui')
 </head>
 <body>
