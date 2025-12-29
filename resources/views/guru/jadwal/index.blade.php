@@ -17,6 +17,8 @@
             overflow-x: hidden;
         }
         
+        /* Layout CSS - DISABLED - Menggunakan CSS Global dari guru-fixed-layout.blade.php */
+        /*
         /* Layout - sama seperti presensi (biarkan Bootstrap yang mengatur) */
         /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
         @media (min-width: 768px) {
@@ -502,6 +504,10 @@
             }
         }
         
+        */
+        
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - DISABLED */
+        /*
         /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
         @media (min-width: 768px) {
             .sidebar.col-md-3.col-lg-2,
@@ -516,8 +522,9 @@
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-            }
+                    }
         }
+        */
     </style>
     @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')

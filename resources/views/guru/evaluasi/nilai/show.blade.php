@@ -34,6 +34,8 @@
             background: #ffffff !important;
         }
         
+        /* Layout CSS - DISABLED - Menggunakan CSS Global dari guru-fixed-layout.blade.php */
+        /*
         /* Layout - sama seperti presensi (biarkan Bootstrap yang mengatur) */
         @media (min-width: 768px) {
             .container-fluid > .row {
@@ -183,8 +185,9 @@
             .col-md-9.col-lg-10 {
                 width: 100% !important;
                 margin-left: 0 !important;
-            }
+                    }
         }
+        */
     </style>
     @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
