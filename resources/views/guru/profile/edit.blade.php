@@ -208,7 +208,7 @@
             margin-right: 0;
         }
         
-        /* Pastikan sidebar dan main content berada di samping - sama seperti Tenaga Usaha */
+        /* Pastikan sidebar dan main content berada di samping - FIXED SIDEBAR */
         @media (min-width: 768px) {
             .container-fluid {
                 padding-left: 0 !important;
@@ -222,7 +222,7 @@
                 margin-right: 0 !important;
             }
             
-            /* Sidebar di samping kiri - lebar tetap, tidak full width */
+            /* Sidebar FIXED di samping kiri */
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 flex: 0 0 25% !important;
@@ -232,17 +232,17 @@
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 z-index: 1000 !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
-            /* Main content di samping kanan sidebar */
+            /* Main content dengan margin dan padding seimbang */
             .col-md-9.col-lg-10,
             main.col-md-9,
             main.col-md-9.col-lg-10 {
@@ -257,9 +257,9 @@
                 min-height: 100vh !important;
                 background-color: #ffffff !important;
                 box-sizing: border-box !important;
-                margin-left: 0 !important;
-                padding-left: 1.5rem !important;
-                padding-right: 1.5rem !important;
+                margin-left: 25% !important;
+                padding-left: 2.5rem !important;
+                padding-right: 2.5rem !important;
             }
         }
         
@@ -279,10 +279,14 @@
                 flex: 0 0 83.33333333% !important;
                 width: 83.33333333% !important;
                 max-width: 83.33333333% !important;
+                margin-left: 16.66666667% !important;
+                padding-left: 3rem !important;
+                padding-right: 3rem !important;
             }
         }
         }
     </style>
+    <!-- Fixed Sidebar & Centered Content: 2025-12-30 -->
     @include('partials.guru-dynamic-ui')
 </head>
 <body>
