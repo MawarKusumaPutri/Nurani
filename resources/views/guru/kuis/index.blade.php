@@ -17,19 +17,19 @@
             overflow-x: hidden;
         }
         
-        /* Layout - sama seperti presensi (biarkan Bootstrap yang mengatur) */
-        /* Pastikan di desktop, konten di samping sidebar - ULTRA VISIBLE */
+        
+        /* Layout CSS - DISABLED - Menggunakan CSS Global dari guru-fixed-layout.blade.php */
+        /*
         @media (min-width: 768px) {
             .container-fluid > .row {
                 display: flex !important;
                 flex-wrap: nowrap !important;
             }
             
-            /* Pastikan sidebar menggunakan ukuran Bootstrap default - Medium screen - ULTRA VISIBLE */
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 flex: 0 0 25% !important;
-                width: 25% !important; /* col-md-3 = 25% */
+                width: 25% !important;
                 max-width: 25% !important;
                 min-width: 250px !important;
                 display: flex !important;
@@ -47,16 +47,15 @@
             
             .col-md-9.col-lg-10 {
                 flex: 0 0 75% !important;
-                width: 75% !important; /* col-md-9 = 75% */
+                width: 75% !important;
             }
         }
         
-        /* Large screen - sidebar lebih kecil - ULTRA VISIBLE */
         @media (min-width: 992px) {
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
                 flex: 0 0 16.66666667% !important;
-                width: 16.66666667% !important; /* col-lg-2 = 16.67% */
+                width: 16.66666667% !important;
                 max-width: 16.66666667% !important;
                 min-width: 200px !important;
                 display: flex !important;
@@ -74,11 +73,10 @@
             
             .col-md-9.col-lg-10 {
                 flex: 0 0 83.33333333% !important;
-                width: 83.33333333% !important; /* col-lg-10 = 83.33% */
+                width: 83.33333333% !important;
             }
         }
         
-        /* Main content - di samping sidebar (kanan) */
         .col-md-9.col-lg-10 {
             display: block !important;
             visibility: visible !important;
@@ -107,7 +105,6 @@
             transform: translateX(0) !important;
         }
         
-        /* Pastikan sidebar tidak memaksa konten ke bawah di desktop */
         @media (min-width: 768px) {
             .col-md-3.col-lg-2.sidebar {
                 position: relative !important;
@@ -115,7 +112,6 @@
             }
         }
         
-        /* Ensure sidebar content is scrollable - ULTRA VISIBLE */
         #guru-sidebar {
             display: flex !important;
             flex-direction: column;
@@ -134,7 +130,6 @@
             width: 100% !important;
         }
         
-        /* PASTIKAN SIDEBAR TIDAK TERSEMBUNYI - ULTRA AGGRESSIVE */
         @media (min-width: 768px) {
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar {
@@ -148,291 +143,10 @@
                 margin-right: 0 !important;
             }
         }
+        */
         
-        /* Pastikan konten tidak tersembunyi */
-        .col-md-9.col-lg-10 > * {
-            display: block !important;
-            visibility: visible !important;
-        }
-        
-        .col-md-9.col-lg-10 h2,
-        .col-md-9.col-lg-10 .row,
-        .col-md-9.col-lg-10 .card,
-        .col-md-9.col-lg-10 .alert {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-        
-        #guru-sidebar .p-4 {
-            flex-shrink: 0;
-        }
-        
-        #guru-sidebar nav {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 20px;
-        }
-        
-        /* Ensure nav items are in single column */
-        .sidebar .nav {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            width: 100%;
-        }
-        
-        .sidebar .nav-link,
-        .sidebar .nav form {
-            width: 100%;
-            flex-shrink: 0;
-        }
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 4px 0;
-            transition: all 0.3s ease;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
-            border: none;
-            border-radius: 8px;
-        }
-        
-        /* Responsive Styles */
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 9999;
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            cursor: pointer;
-            pointer-events: auto;
-            touch-action: manipulation;
-        }
-        
-        .sidebar-toggle:hover {
-            background: linear-gradient(135deg, #1B5E20 0%, #388E3C 100%);
-            transform: scale(1.05);
-        }
-        
-        .sidebar-toggle:active {
-            transform: scale(0.95);
-        }
-        
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.05) !important;
-            z-index: 1040;
-            transition: background 0.3s ease;
-        }
-        
-        .sidebar-overlay.show {
-            background: rgba(0,0,0,0.05) !important;
-            z-index: 1040 !important;
-        }
-        
-        /* Pastikan sidebar lebih tinggi dari overlay dan hijau terang */
-        .sidebar.show {
-            z-index: 1061 !important;
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
-            background-color: #2E7D32 !important;
-        }
-        
-        #sidebar.show {
-            z-index: 1061 !important;
-            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
-            background-color: #2E7D32 !important;
-        }
-        
-        /* Pastikan semua elemen di sidebar tidak hitam */
-        .sidebar * {
-            background-color: transparent !important;
-        }
-        
-        .sidebar .p-4 {
-            background: transparent !important;
-        }
-        
-        .sidebar nav {
-            background: transparent !important;
-        }
-        
-        .sidebar .nav {
-            background: transparent !important;
-        }
-        
-        .sidebar .nav-link {
-            background: transparent !important;
-            background-color: transparent !important;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background: rgba(255, 255, 255, 0.1) !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        /* Make sure nav links are always clickable */
-        .sidebar .nav-link {
-            pointer-events: auto !important;
-            cursor: pointer !important;
-            z-index: 1001 !important;
-            position: relative !important;
-            display: block !important;
-            touch-action: manipulation !important;
-        }
-        
-        .sidebar .nav-link:hover {
-            pointer-events: auto !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        .sidebar .nav-link:active {
-            pointer-events: auto !important;
-        }
-        
-        /* Ensure sidebar is always above overlay */
-        .sidebar.show {
-            z-index: 1061 !important;
-        }
-        
-        @media (max-width: 991px) {
-            .sidebar-toggle {
-                display: block !important;
-            }
-            
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                z-index: 1061 !important;
-                transition: left 0.3s ease;
-                width: 280px;
-                max-width: 80%;
-                height: 100vh;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
-                -webkit-overflow-scrolling: touch !important;
-            }
-            
-            #guru-sidebar {
-                height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            #guru-sidebar nav {
-                max-height: calc(100vh - 250px);
-                overflow-y: auto;
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            /* Prevent any wrapping or multi-column layout */
-            .sidebar .nav {
-                display: flex !important;
-                flex-direction: column !important;
-                flex-wrap: nowrap !important;
-                width: 100% !important;
-            }
-            
-            .sidebar .nav-link,
-            .sidebar .nav form {
-                width: 100% !important;
-                max-width: 100% !important;
-                flex: 0 0 auto !important;
-            }
-            
-            .sidebar.show {
-                left: 0;
-                background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%) !important;
-                background-color: #2E7D32 !important;
-            }
-            
-            .sidebar-overlay.show {
-                display: block;
-                background: rgba(0,0,0,0.05) !important;
-                z-index: 1040 !important;
-            }
-            
-            /* Pastikan semua elemen di sidebar tidak hitam di mobile */
-            .sidebar * {
-                background-color: transparent !important;
-            }
-            
-            .sidebar .p-4 {
-                background: transparent !important;
-            }
-            
-            .sidebar nav {
-                background: transparent !important;
-            }
-            
-            .sidebar .nav {
-                background: transparent !important;
-            }
-            
-            .sidebar .nav-link {
-                background: transparent !important;
-                background-color: transparent !important;
-            }
-            
-            .sidebar .nav-link:hover, .sidebar .nav-link.active {
-                background: rgba(255, 255, 255, 0.1) !important;
-                background-color: rgba(255, 255, 255, 0.1) !important;
-            }
-            
-            /* Ensure sidebar is always clickable when shown */
-            .sidebar.show {
-                pointer-events: auto !important;
-            }
-            
-            .sidebar.show * {
-                pointer-events: auto !important;
-            }
-            
-            /* Di mobile, konten tetap di bawah sidebar */
-            .col-md-9.col-lg-10 {
-                width: 100% !important;
-                margin-left: 0 !important;
-                padding: 1rem !important;
-            }
-            
-            .col-md-3.col-lg-2.sidebar {
-                width: 100% !important;
-            }
-        }
-        
-        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - DISABLED */
+        /*
         @media (min-width: 768px) {
             .sidebar.col-md-3.col-lg-2,
             #guru-sidebar.col-md-3.col-lg-2,
@@ -448,6 +162,7 @@
                 opacity: 1 !important;
             }
         }
+        */
     </style>
     @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
