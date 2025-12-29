@@ -268,6 +268,17 @@ Route::middleware('auth')->group(function () {
             Route::post('/import-paste', [App\Http\Controllers\TuController::class, 'importPaste'])->name('import-paste');
         });
         
+        // Data Alumni Management
+        Route::prefix('alumni')->name('alumni.')->group(function () {
+            Route::get('/', [App\Http\Controllers\AlumniController::class, 'index'])->name('index');
+            Route::get('/create', [App\Http\Controllers\AlumniController::class, 'create'])->name('create');
+            Route::post('/', [App\Http\Controllers\AlumniController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [App\Http\Controllers\AlumniController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\AlumniController::class, 'update'])->name('update');
+            Route::delete('/{id}', [App\Http\Controllers\AlumniController::class, 'destroy'])->name('destroy');
+            Route::get('/export', [App\Http\Controllers\AlumniController::class, 'export'])->name('export');
+        });
+        
         // Presensi Management
         Route::prefix('presensi')->name('presensi.')->group(function () {
             Route::get('/', [App\Http\Controllers\TuController::class, 'presensiIndex'])->name('index');
