@@ -116,14 +116,24 @@
         }
         
         /* Container & Row - Flexbox side by side */
-        .container-fluid > .row {
+        .container-fluid > .row,
+        body .container-fluid > .row,
+        html body .container-fluid > .row {
             display: flex !important;
             flex-wrap: nowrap !important;
         }
         
-        /* SIDEBAR - FIXED di sisi kiri */
+        /* SIDEBAR - FIXED di sisi kiri - ULTRA SPECIFIC */
         .col-md-3.col-lg-2.sidebar,
-        #guru-sidebar {
+        #guru-sidebar,
+        div.col-md-3.col-lg-2.sidebar,
+        div#guru-sidebar,
+        .sidebar.col-md-3.col-lg-2,
+        .sidebar#guru-sidebar,
+        body .col-md-3.col-lg-2.sidebar,
+        body #guru-sidebar,
+        html body .col-md-3.col-lg-2.sidebar,
+        html body #guru-sidebar {
             /* Position */
             position: fixed !important;
             top: 0 !important;
@@ -160,10 +170,17 @@
             background-color: #2E7D32 !important;
         }
         
-        /* MAIN CONTENT - Offset by sidebar width */
+        /* MAIN CONTENT - Offset by sidebar width - ULTRA SPECIFIC */
         .col-md-9.col-lg-10,
         main.col-md-9,
-        main.col-md-9.col-lg-10 {
+        main.col-md-9.col-lg-10,
+        div.col-md-9.col-lg-10,
+        body .col-md-9.col-lg-10,
+        body main.col-md-9,
+        body main.col-md-9.col-lg-10,
+        html body .col-md-9.col-lg-10,
+        html body main.col-md-9,
+        html body main.col-md-9.col-lg-10 {
             /* Size */
             flex: 0 0 75% !important;
             width: 75% !important;
@@ -173,10 +190,11 @@
             position: relative !important;
             z-index: 1 !important;
             
-            /* Offset & Padding */
+            /* Offset & Padding - KUNCI UTAMA */
             margin-left: 25% !important;
-            padding-left: 2.5rem !important;
-            padding-right: 2.5rem !important;
+            margin-right: 0 !important;
+            padding-left: 3rem !important;
+            padding-right: 3rem !important;
             padding-top: 2rem !important;
             padding-bottom: 2rem !important;
             
@@ -198,25 +216,41 @@
        DESKTOP LAYOUT (≥ 992px)
        ======================================== */
     @media (min-width: 992px) {
-        /* SIDEBAR - Narrower on desktop */
+        /* SIDEBAR - Narrower on desktop - ULTRA SPECIFIC */
         .col-md-3.col-lg-2.sidebar,
-        #guru-sidebar {
+        #guru-sidebar,
+        div.col-md-3.col-lg-2.sidebar,
+        div#guru-sidebar,
+        .sidebar.col-md-3.col-lg-2,
+        .sidebar#guru-sidebar,
+        body .col-md-3.col-lg-2.sidebar,
+        body #guru-sidebar,
+        html body .col-md-3.col-lg-2.sidebar,
+        html body #guru-sidebar {
             flex: 0 0 16.66666667% !important;
             width: 16.66666667% !important;
             max-width: 16.66666667% !important;
             min-width: 200px !important;
         }
         
-        /* MAIN CONTENT - Wider on desktop */
+        /* MAIN CONTENT - Wider on desktop - ULTRA SPECIFIC */
         .col-md-9.col-lg-10,
         main.col-md-9,
-        main.col-md-9.col-lg-10 {
+        main.col-md-9.col-lg-10,
+        div.col-md-9.col-lg-10,
+        body .col-md-9.col-lg-10,
+        body main.col-md-9,
+        body main.col-md-9.col-lg-10,
+        html body .col-md-9.col-lg-10,
+        html body main.col-md-9,
+        html body main.col-md-9.col-lg-10 {
             flex: 0 0 83.33333333% !important;
             width: 83.33333333% !important;
             max-width: 83.33333333% !important;
             margin-left: 16.66666667% !important;
-            padding-left: 3rem !important;
-            padding-right: 3rem !important;
+            margin-right: 0 !important;
+            padding-left: 4rem !important;
+            padding-right: 4rem !important;
         }
     }
     
