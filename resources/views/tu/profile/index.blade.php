@@ -12,6 +12,11 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Profil Saya</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <a href="{{ route('tu.dashboard') }}" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                    </div>
                     <a href="{{ route('tu.profile.edit') }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-edit"></i> Edit Profil
                     </a>
@@ -172,14 +177,7 @@
                 </div>
             </div>
 
-            <!-- Navigation Buttons -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <a href="{{ route('tu.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Kembali
-                    </a>
-                </div>
-            </div>
+
         </main>
     </div>
 </div>
