@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -61,6 +61,7 @@
             margin-right: 15px;
         }
     </style>
+    @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
 </head>
 <body>

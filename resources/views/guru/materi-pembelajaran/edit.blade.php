@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -246,6 +246,7 @@
         }
     </style>
     <!-- Fixed Sidebar & Centered Content Update: 2025-12-29 -->
+    @include('partials.guru-fixed-layout')
 </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()" type="button" aria-label="Toggle sidebar">

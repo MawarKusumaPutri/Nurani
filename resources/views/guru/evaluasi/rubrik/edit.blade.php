@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -278,6 +278,7 @@
             }
         }
     </style>
+    @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
 </head>
 <body>

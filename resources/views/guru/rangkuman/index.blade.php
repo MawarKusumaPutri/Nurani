@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -49,6 +49,7 @@
             color: #856404;
         }
     </style>
+    @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
 </head>
 <body>

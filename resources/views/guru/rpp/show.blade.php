@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -41,6 +41,7 @@
             white-space: pre-line;
         }
     </style>
+    @include('partials.guru-fixed-layout')
 </head>
 <body>
     <div class="container-fluid">

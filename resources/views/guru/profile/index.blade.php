@@ -1,4 +1,4 @@
-@php
+﻿@php
     use Illuminate\Support\Facades\Storage;
 @endphp
 
@@ -33,6 +33,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
     </style>
+    @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
 </head>
 <body>

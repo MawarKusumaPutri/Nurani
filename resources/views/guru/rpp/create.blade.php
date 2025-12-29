@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -28,6 +28,7 @@
             margin-bottom: 1.5rem;
         }
     </style>
+    @include('partials.guru-fixed-layout')
 </head>
 <body>
     <div class="container-fluid">
