@@ -417,6 +417,10 @@
                                                                                        class="btn btn-sm btn-outline-warning" target="_blank">
                                                                                         <i class="fas fa-edit me-1"></i>Edit RPP
                                                                                     </a>
+                                                                                    <a href="{{ route('guru.rpp.cetak', $existingRpp[$i]->id) }}" 
+                                                                                       class="btn btn-sm btn-outline-success" target="_blank">
+                                                                                        <i class="fas fa-print me-1"></i>Cetak
+                                                                                    </a>
                                                                                 </div>
                                                                             @else
                                                                                 <p class="card-text small text-muted mb-2">

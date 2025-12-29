@@ -221,4 +221,22 @@ class RppController extends Controller
 
         return view('guru.rpp.show', compact('guru', 'rpp'));
     }
+
+    /**
+     * Tampilkan halaman cetak RPP
+     */
+    public function cetak($id)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru) {
+            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
+        }
+
+        $rpp = Rpp::where('id', $id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
+
+        return view('guru.rpp.cetak', compact('guru', 'rpp'));
+    }
 }
