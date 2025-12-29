@@ -167,9 +167,6 @@
                                     <small class="text-danger">Path: {{ $photoPath }}</small>
                                 @endif
                             @endif
-                            <a href="{{ route('tu.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
-                                <i class="fas fa-edit"></i> {{ $user->photo ? 'Ganti Foto' : 'Upload Foto' }}
-                            </a>
                         </div>
                     </div>
                 </div>
