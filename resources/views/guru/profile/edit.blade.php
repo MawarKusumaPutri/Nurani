@@ -286,7 +286,7 @@
         }
         }
     </style>
-    <!-- Fixed Sidebar & Centered Content: 2025-12-30 -->
+    @include('partials.guru-fixed-layout')
     @include('partials.guru-dynamic-ui')
 </head>
 <body>
