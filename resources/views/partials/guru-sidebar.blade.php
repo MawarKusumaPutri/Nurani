@@ -190,18 +190,24 @@
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
-        position: relative !important;
+        position: fixed !important;
+        top: 0 !important;
         left: 0 !important;
+        height: 100vh !important;
         transform: translateX(0) !important;
     }
     
-    /* Pastikan sidebar memiliki lebar tetap di desktop - tidak full width */
+    /* Pastikan sidebar memiliki lebar tetap di desktop - FIXED POSITION */
     @media (min-width: 768px) {
         .sidebar.col-md-3,
         #guru-sidebar.col-md-3 {
             flex: 0 0 25% !important;
             max-width: 25% !important;
             width: 25% !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
         }
     }
     
@@ -211,6 +217,10 @@
             flex: 0 0 16.66666667% !important;
             max-width: 16.66666667% !important;
             width: 16.66666667% !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
         }
     }
     
@@ -239,7 +249,7 @@
         scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
     }
     
-    /* Ensure sidebar content is scrollable - Sama seperti TU */
+    /* Ensure sidebar content is scrollable - FIXED POSITION */
     #guru-sidebar {
         display: flex;
         flex-direction: column;
@@ -251,7 +261,8 @@
         background-color: #2E7D32 !important;
         visibility: visible !important;
         opacity: 1 !important;
-        position: relative !important;
+        position: fixed !important;
+        top: 0 !important;
         left: 0 !important;
         transform: translateX(0) !important;
         z-index: 1000 !important;
@@ -283,11 +294,14 @@
         scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
     }
     
-    /* Pastikan sidebar memiliki lebar tetap - tidak full width */
+    /* Pastikan sidebar memiliki lebar tetap dan FIXED - tidak full width */
     @media (min-width: 768px) {
         .col-md-3.col-lg-2.sidebar,
         #guru-sidebar {
-            position: relative !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
             float: none !important;
             flex: 0 0 25% !important;
             width: 25% !important;
@@ -296,7 +310,6 @@
             display: flex !important;
             visibility: visible !important;
             opacity: 1 !important;
-            left: 0 !important;
             transform: translateX(0) !important;
             margin-left: 0 !important;
             margin-right: 0 !important;
@@ -310,6 +323,10 @@
             width: 16.66666667% !important;
             max-width: 16.66666667% !important;
             min-width: 200px !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
         }
     }
     
