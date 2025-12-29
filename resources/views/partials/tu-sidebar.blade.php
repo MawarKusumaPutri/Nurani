@@ -84,9 +84,6 @@
         <a href="{{ route('tu.siswa.index') }}" class="nav-link {{ request()->routeIs('tu.siswa.*') ? 'active' : '' }}">
             <i class="fas fa-user-graduate me-2"></i> Data Siswa
         </a>
-        <a href="{{ route('tu.alumni.index') }}" class="nav-link {{ request()->routeIs('tu.alumni.*') ? 'active' : '' }}">
-            <i class="fas fa-graduation-cap me-2"></i> Data Alumni
-        </a>
         <a href="{{ route('tu.presensi.index') }}" class="nav-link {{ request()->routeIs('tu.presensi.*') ? 'active' : '' }}">
             <i class="fas fa-calendar-check me-2"></i> Presensi Guru
         </a>
