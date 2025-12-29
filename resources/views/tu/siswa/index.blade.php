@@ -16,6 +16,9 @@
                         <a href="{{ route('tu.siswa.create') }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Siswa
                         </a>
+                        <a href="{{ route('tu.alumni.index') }}" class="btn btn-sm btn-info">
+                            <i class="fas fa-user-graduate"></i> Data Alumni
+                        </a>
                         <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
                             <i class="fas fa-file-excel"></i> Import Excel
                         </button>
