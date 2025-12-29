@@ -75,11 +75,10 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="row">
+            <!-- Quick Actions -->\n            <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-success text-white">
                             <h5 class="card-title mb-0">
                                 <i class="fas fa-tachometer-alt"></i> Menu Utama
                             </h5>
@@ -119,6 +118,34 @@
                                         <i class="fas fa-archive fa-3x mb-3"></i>
                                         <h6>Arsip</h6>
                                         <small class="text-muted">Arsip dokumen</small>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ route('tu.kalender.index') }}" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                        <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+                                        <h6>Kalender</h6>
+                                        <small class="text-muted">Kalender kegiatan</small>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ route('tu.surat.index') }}" class="btn btn-outline-danger w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                        <i class="fas fa-envelope fa-3x mb-3"></i>
+                                        <h6>Surat</h6>
+                                        <small class="text-muted">Surat masuk & keluar</small>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ route('tu.pengumuman.index') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                        <i class="fas fa-bullhorn fa-3x mb-3"></i>
+                                        <h6>Pengumuman</h6>
+                                        <small class="text-muted">Kelola pengumuman</small>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ route('tu.kegiatan-kesiswaan.index') }}" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                        <i class="fas fa-users fa-3x mb-3"></i>
+                                        <h6>Kegiatan Kesiswaan</h6>
+                                        <small class="text-muted">Kegiatan siswa</small>
                                     </a>
                                 </div>
                             </div>
