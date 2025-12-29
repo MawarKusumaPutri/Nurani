@@ -421,16 +421,11 @@
                                                                                        class="btn btn-sm btn-outline-success" target="_blank">
                                                                                         <i class="fas fa-print me-1"></i>Cetak
                                                                                     </a>
-                                                                                    <form action="{{ route('guru.rpp.destroy', $existingRpp[$i]->id) }}" 
-                                                                                          method="POST" 
-                                                                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus RPP Pertemuan {{ $i }}? Data yang dihapus tidak dapat dikembalikan.');"
-                                                                                          class="mb-0">
-                                                                                        @csrf
-                                                                                        @method('DELETE')
-                                                                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                                                                            <i class="fas fa-trash me-1"></i>Hapus
-                                                                                        </button>
-                                                                                    </form>
+                                                                                    <button type="button" 
+                                                                                            class="btn btn-sm btn-outline-danger w-100"
+                                                                                            onclick="deleteRpp({{ $existingRpp[$i]->id }}, {{ $i }})">
+                                                                                        <i class="fas fa-trash me-1"></i>Hapus
+                                                                                    </button>
                                                                                 </div>
                                                                             @else
                                                                                 <p class="card-text small text-muted mb-2">
@@ -693,6 +688,34 @@
                 `;
                 
                 container.appendChild(colDiv);
+            }
+        }
+        
+        // Function to delete RPP with confirmation
+        function deleteRpp(rppId, pertemuanKe) {
+            if (confirm('Apakah Anda yakin ingin menghapus RPP Pertemuan ' + pertemuanKe + '? Data yang dihapus tidak dapat dikembalikan.')) {
+                // Create form dynamically
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ url("guru/rpp") }}/' + rppId;
+                
+                // Add CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+                
+                // Add DELETE method
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                // Append to body and submit
+                document.body.appendChild(form);
+                form.submit();
             }
         }
         
