@@ -1368,15 +1368,16 @@
             }
         }
         
-        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE */
+        /* OVERRIDE MOBILE CSS UNTUK DESKTOP - ULTRA AGGRESSIVE - FIXED SIDEBAR */
         @media (min-width: 768px) {
             .sidebar.col-md-3.col-lg-2,
             #guru-sidebar.col-md-3.col-lg-2,
             .col-md-3.col-lg-2#guru-sidebar,
             .col-md-3.col-lg-2.sidebar#guru-sidebar {
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
-                top: auto !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 transition: none !important;
                 display: flex !important;
@@ -1385,7 +1386,7 @@
             }
         }
         
-        /* PASTIKAN SIDEBAR TERLIHAT DI DESKTOP - ULTRA AGGRESSIVE - OVERRIDE SEMUA - FINAL FIX */
+        /* PASTIKAN SIDEBAR TERLIHAT DI DESKTOP - ULTRA AGGRESSIVE - OVERRIDE SEMUA - FINAL FIX - FIXED POSITION */
         @media (min-width: 768px) {
             .col-md-3.col-lg-2.sidebar,
             #guru-sidebar,
@@ -1396,9 +1397,10 @@
                 display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                position: relative !important;
+                position: fixed !important;
+                top: 0 !important;
                 left: 0 !important;
-                top: auto !important;
+                height: 100vh !important;
                 transform: translateX(0) !important;
                 transition: none !important;
                 margin-left: 0 !important;
@@ -1410,7 +1412,6 @@
                 max-width: 25% !important;
                 flex: 0 0 25% !important;
                 z-index: 1000 !important;
-                height: auto !important;
                 overflow-y: auto !important;
                 overflow-x: hidden !important;
             }
@@ -1432,13 +1433,18 @@
             
             .col-md-9.col-lg-10 {
                 width: 75% !important;
-                margin-left: 0 !important;
+                margin-left: 25% !important;
+                padding-left: 2.5rem !important;
+                padding-right: 2.5rem !important;
                 flex: 0 0 75% !important;
             }
             
             @media (min-width: 992px) {
                 .col-md-9.col-lg-10 {
                     width: 83.33333333% !important;
+                    margin-left: 16.66666667% !important;
+                    padding-left: 3rem !important;
+                    padding-right: 3rem !important;
                     flex: 0 0 83.33333333% !important;
                 }
             }
