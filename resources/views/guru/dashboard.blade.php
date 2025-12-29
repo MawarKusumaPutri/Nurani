@@ -491,6 +491,7 @@
         }
     </style>
     @include('partials.guru-dynamic-ui')
+    <!-- Fixed Sidebar Update: 2025-12-29 -->
 </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">

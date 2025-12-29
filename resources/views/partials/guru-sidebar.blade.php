@@ -808,6 +808,7 @@
         }
     }
 </style>
+<!-- Fixed Sidebar Update: 2025-12-29 -->
 
 <script>
     function toggleSidebar() {
