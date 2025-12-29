@@ -75,7 +75,8 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->\n            <div class="row">
+            <!-- Quick Actions -->
+            <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-success text-white">
