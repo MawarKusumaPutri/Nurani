@@ -47,7 +47,16 @@
                         <div class="card-body">
                             <form method="GET" action="{{ route('tu.alumni.index') }}" id="filterForm">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Kelas Terakhir</label>
+                                        <select name="kelas" class="form-select" id="kelasFilter" onchange="document.getElementById('filterForm').submit();">
+                                            <option value="">Semua Kelas</option>
+                                            <option value="7" {{ request('kelas') == '7' ? 'selected' : '' }}>Kelas 7</option>
+                                            <option value="8" {{ request('kelas') == '8' ? 'selected' : '' }}>Kelas 8</option>
+                                            <option value="9" {{ request('kelas') == '9' ? 'selected' : '' }}>Kelas 9</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label class="form-label">Tahun Lulus</label>
                                         <select name="tahun_lulus" class="form-select" id="tahunLulusFilter" onchange="document.getElementById('filterForm').submit();">
                                             <option value="">Semua Tahun</option>
@@ -56,7 +65,7 @@
                                             @endfor
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label class="form-label">Cari Alumni</label>
                                         <input type="text" name="search" class="form-control" id="searchInput" placeholder="Nama atau NIS" value="{{ $search }}" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }">
                                     </div>
@@ -67,12 +76,15 @@
                                         </button>
                                     </div>
                                 </div>
-                                @if($tahunLulus || $search)
+                                @if(request('kelas') || $tahunLulus || $search)
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <a href="{{ route('tu.alumni.index') }}" class="btn btn-sm btn-outline-secondary">
                                             <i class="fas fa-times"></i> Reset Filter
                                         </a>
+                                        @if(request('kelas'))
+                                            <span class="badge bg-info ms-2">Kelas: {{ request('kelas') }}</span>
+                                        @endif
                                         @if($tahunLulus)
                                             <span class="badge bg-info ms-2">Tahun: {{ $tahunLulus }}</span>
                                         @endif

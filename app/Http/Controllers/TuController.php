@@ -334,11 +334,17 @@ class TuController extends Controller
     public function alumniIndex(Request $request)
     {
         // Get filter parameters from request
+        $kelas = $request->get('kelas', '');
         $tahunLulus = $request->get('tahun_lulus', '');
         $search = $request->get('search', '');
         
         // Base query - Alumni adalah siswa dengan status 'lulus' atau 'tidak_aktif'
         $query = Siswa::whereIn('status', ['lulus', 'tidak_aktif']);
+        
+        // Apply kelas filter
+        if (!empty($kelas)) {
+            $query->where('kelas', $kelas);
+        }
         
         // Apply tahun lulus filter (jika ada kolom tahun_lulus)
         if (!empty($tahunLulus)) {
@@ -356,7 +362,7 @@ class TuController extends Controller
         // Order and paginate
         $alumni = $query->orderBy('nama')->paginate(20)->withQueryString();
         
-        return view('tu.alumni.index', compact('alumni', 'tahunLulus', 'search'));
+        return view('tu.alumni.index', compact('alumni', 'kelas', 'tahunLulus', 'search'));
     }
     
     public function downloadTemplate()
