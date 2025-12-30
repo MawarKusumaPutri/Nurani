@@ -304,6 +304,18 @@
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
                             </div>
+                            
+                            <!-- Dirjen Pendidikan Islam -->
+                            <div class="mt-4 p-3 bg-light border-start border-4 border-success">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-mosque text-success me-3" style="font-size: 2rem;"></i>
+                                    <div>
+                                        <h6 class="mb-1 text-success fw-bold">Direktorat Jenderal Pendidikan Islam</h6>
+                                        <p class="mb-0 text-muted small">Kementerian Agama Republik Indonesia</p>
+                                        <p class="mb-0 text-muted small">Jl. Lapangan Banteng Barat No. 3-4, Jakarta Pusat 10110</p>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
