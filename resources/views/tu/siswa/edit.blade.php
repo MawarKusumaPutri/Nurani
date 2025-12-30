@@ -107,9 +107,9 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="no_telp" class="form-label">No. Telepon</label>
+                                        <label for="no_telp" class="form-label">No. Telepon Orangtua</label>
                                         <input type="text" class="form-control" id="no_telp" name="no_telp" 
-                                               placeholder="Masukkan nomor telepon" value="{{ old('no_telp', $siswa->no_telp) }}">
+                                               placeholder="Masukkan nomor telepon orangtua" value="{{ old('no_telp', $siswa->no_telp) }}">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email</label>

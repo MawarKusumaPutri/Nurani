@@ -168,7 +168,7 @@
                                                                 <td>{{ $alum->alamat ?? '-' }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>No. Telepon</th>
+                                                                <th>No. Telepon Orangtua</th>
                                                                 <td>{{ $alum->no_telp ?? '-' }}</td>
                                                             </tr>
                                                             <tr>

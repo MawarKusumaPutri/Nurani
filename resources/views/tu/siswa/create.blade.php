@@ -106,9 +106,9 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="no_telp" class="form-label">No. Telepon</label>
+                                        <label for="no_telp" class="form-label">No. Telepon Orangtua</label>
                                         <input type="text" class="form-control" id="no_telp" name="no_telp" 
-                                               placeholder="Masukkan nomor telepon">
+                                               placeholder="Masukkan nomor telepon orangtua">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email</label>
