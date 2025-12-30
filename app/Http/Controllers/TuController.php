@@ -330,6 +330,35 @@ class TuController extends Controller
         }
     }
     
+    // Data Alumni Management
+    public function alumniIndex(Request $request)
+    {
+        // Get filter parameters from request
+        $tahunLulus = $request->get('tahun_lulus', '');
+        $search = $request->get('search', '');
+        
+        // Base query - Alumni adalah siswa dengan status 'lulus' atau 'tidak_aktif'
+        $query = Siswa::whereIn('status', ['lulus', 'tidak_aktif']);
+        
+        // Apply tahun lulus filter (jika ada kolom tahun_lulus)
+        if (!empty($tahunLulus)) {
+            $query->where('tahun_lulus', $tahunLulus);
+        }
+        
+        // Apply search filter (nama atau NIS)
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%')
+                  ->orWhere('nis', 'like', '%' . $search . '%');
+            });
+        }
+        
+        // Order and paginate
+        $alumni = $query->orderBy('nama')->paginate(20)->withQueryString();
+        
+        return view('tu.alumni.index', compact('alumni', 'tahunLulus', 'search'));
+    }
+    
     public function downloadTemplate()
     {
         $filename = 'template_data_siswa.csv';
