@@ -296,6 +296,42 @@
                                           placeholder="Contoh: Pilihan ganda, uraian, lembar observasi...">{{ old('bentuk_instrumen') }}</textarea>
                             </div>
 
+                            <!-- Dirjen Pendidikan Islam - Input Alamat Lokal -->
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-mosque me-2"></i>Dirjen Pendidikan Islam Setempat</h5>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Petunjuk:</strong> Isi alamat kantor Dirjen Pendidikan Islam yang terdekat dengan lokasi sekolah Anda.
+                                <br><small class="text-muted">Contoh: Kantor Kementerian Agama Kabupaten Sumedang, Jl. Raya Sumedang No. 123</small>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dirjen_nama_kantor" class="form-label fw-bold">Nama Kantor</label>
+                                    <input type="text" class="form-control" id="dirjen_nama_kantor" name="dirjen_nama_kantor" 
+                                           value="{{ old('dirjen_nama_kantor', 'Kantor Kementerian Agama Kabupaten/Kota') }}" 
+                                           placeholder="Contoh: Kantor Kementerian Agama Kabupaten Sumedang">
+                                    <small class="text-muted">Nama kantor Kemenag setempat</small>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="dirjen_kota" class="form-label fw-bold">Kota/Kabupaten</label>
+                                    <input type="text" class="form-control" id="dirjen_kota" name="dirjen_kota" 
+                                           value="{{ old('dirjen_kota') }}" 
+                                           placeholder="Contoh: Sumedang, Bandung, Jakarta">
+                                    <small class="text-muted">Kota/Kabupaten lokasi kantor</small>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label for="dirjen_alamat" class="form-label fw-bold">Alamat Lengkap</label>
+                                    <textarea class="form-control" id="dirjen_alamat" name="dirjen_alamat" rows="2" 
+                                              placeholder="Contoh: Jl. Raya Sumedang No. 123, Sumedang, Jawa Barat">{{ old('dirjen_alamat') }}</textarea>
+                                    <small class="text-muted">Alamat lengkap kantor Kemenag setempat</small>
+                                </div>
+                            </div>
+
                             <div class="d-flex gap-2 mt-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Simpan RPP
@@ -303,37 +339,6 @@
                                 <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $mataPelajaran]) }}" class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
-                            </div>
-                            
-                            <!-- Dirjen Pendidikan Islam dengan Maps -->
-                            <div class="mt-4 p-3 bg-light border-start border-4 border-success">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-start mb-3">
-                                            <i class="fas fa-mosque text-success me-3 mt-1" style="font-size: 2rem;"></i>
-                                            <div>
-                                                <h6 class="mb-1 text-success fw-bold">Direktorat Jenderal Pendidikan Islam</h6>
-                                                <p class="mb-1 text-muted small">Kementerian Agama Republik Indonesia</p>
-                                                <p class="mb-0 text-muted small">
-                                                    <i class="fas fa-map-marker-alt me-1"></i>
-                                                    Jl. Lapangan Banteng Barat No. 3-4, Jakarta Pusat 10110
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <!-- Google Maps Embed -->
-                                        <div class="ratio ratio-16x9" style="max-height: 200px;">
-                                            <iframe 
-                                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.8662820842844!2d106.83886931476896!3d-6.165419995528252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sDirektorat%20Jenderal%20Pendidikan%20Islam!5e0!3m2!1sid!2sid!4v1735554000000!5m2!1sid!2sid" 
-                                                style="border:0; border-radius: 0.5rem;" 
-                                                allowfullscreen="" 
-                                                loading="lazy" 
-                                                referrerpolicy="no-referrer-when-downgrade">
-                                            </iframe>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </form>
                     </div>
