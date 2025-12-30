@@ -91,6 +91,7 @@
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="aktif" selected>Aktif</option>
                                             <option value="tidak_aktif">Tidak Aktif</option>
+                                            <option value="lulus">Lulus</option>
                                         </select>
                                     </div>
                                 </div>
