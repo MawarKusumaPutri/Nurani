@@ -1,0 +1,5 @@
+# Railway Build Configuration
+# Force rebuild to install PhpSpreadsheet
+
+# This file forces Railway to rebuild from scratch
+# Timestamp: 2025-12-30 12:18:00
