@@ -367,27 +367,70 @@ class TuController extends Controller
     
     public function downloadTemplate()
     {
-        $filename = 'template_data_siswa.csv';
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-
-        $callback = function() {
-            $file = fopen('php://output', 'w');
+        try {
+            // Create new Spreadsheet
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
             
-            // Header
-            fputcsv($file, ['NIS', 'Nama', 'Kelas', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Alamat', 'Status']);
+            // Set header
+            $sheet->setCellValue('A1', 'NIS');
+            $sheet->setCellValue('B1', 'Nama');
+            $sheet->setCellValue('C1', 'Kelas');
+            $sheet->setCellValue('D1', 'Jenis Kelamin');
+            $sheet->setCellValue('E1', 'Tempat Lahir');
+            $sheet->setCellValue('F1', 'Tanggal Lahir');
+            $sheet->setCellValue('G1', 'Alamat');
+            $sheet->setCellValue('H1', 'Status');
             
-            // Sample data
-            fputcsv($file, ['10120', 'Ahmad Fauzi', '7', 'Laki-laki', 'Jakarta', '2010-05-15', 'Jl. Merdeka No. 10', 'aktif']);
-            fputcsv($file, ['10121', 'Siti Nurhaliza', '7', 'Perempuan', 'Bandung', '2010-06-20', 'Jl. Sudirman No. 15', 'aktif']);
-            fputcsv($file, ['', '', '', '', '', '', '', '']);
+            // Style header
+            $headerStyle = [
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '4CAF50']
+                ],
+            ];
+            $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
             
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+            // Add sample data
+            $sheet->setCellValue('A2', '10120');
+            $sheet->setCellValue('B2', 'Ahmad Fauzi');
+            $sheet->setCellValue('C2', '7');
+            $sheet->setCellValue('D2', 'Laki-laki');
+            $sheet->setCellValue('E2', 'Jakarta');
+            $sheet->setCellValue('F2', '2010-05-15');
+            $sheet->setCellValue('G2', 'Jl. Merdeka No. 10');
+            $sheet->setCellValue('H2', 'aktif');
+            
+            $sheet->setCellValue('A3', '10121');
+            $sheet->setCellValue('B3', 'Siti Nurhaliza');
+            $sheet->setCellValue('C3', '7');
+            $sheet->setCellValue('D3', 'Perempuan');
+            $sheet->setCellValue('E3', 'Bandung');
+            $sheet->setCellValue('F3', '2010-06-20');
+            $sheet->setCellValue('G3', 'Jl. Sudirman No. 15');
+            $sheet->setCellValue('H3', 'aktif');
+            
+            // Auto size columns
+            foreach (range('A', 'H') as $col) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+            
+            // Create Excel file
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            
+            // Set headers for download
+            $filename = 'template_data_siswa.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+            
+            $writer->save('php://output');
+            exit;
+        } catch (\Exception $e) {
+            return redirect()->route('tu.siswa.index')
+                ->with('error', 'Gagal membuat template: ' . $e->getMessage());
+        }
     }
     
     public function importExcel(Request $request)
@@ -447,9 +490,55 @@ class TuController extends Controller
                 
                 fclose($handle);
             } else {
-                // For XLSX/XLS, we need PhpSpreadsheet
-                return redirect()->route('tu.siswa.index')
-                    ->with('error', 'Format Excel (.xlsx/.xls) belum didukung. Silakan gunakan format CSV atau convert ke CSV terlebih dahulu.');
+                // For XLSX/XLS, use PhpSpreadsheet
+                try {
+                    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+                    $worksheet = $spreadsheet->getActiveSheet();
+                    $rows = $worksheet->toArray();
+                    
+                    // Skip header row
+                    array_shift($rows);
+                    
+                    foreach ($rows as $row) {
+                        // Skip empty rows
+                        if (empty(array_filter($row))) {
+                            continue;
+                        }
+                        
+                        try {
+                            // Validate required fields
+                            if (empty($row[0]) || empty($row[1]) || empty($row[2])) {
+                                $errors[] = "Baris dengan NIS '{$row[0]}' - Data tidak lengkap";
+                                continue;
+                            }
+                            
+                            // Check if NIS already exists
+                            if (Siswa::where('nis', $row[0])->exists()) {
+                                $errors[] = "NIS '{$row[0]}' sudah ada di database";
+                                continue;
+                            }
+                            
+                            // Create siswa
+                            Siswa::create([
+                                'nis' => $row[0],
+                                'nama' => $row[1],
+                                'kelas' => $row[2],
+                                'jenis_kelamin' => $row[3] ?? 'Laki-laki',
+                                'tempat_lahir' => $row[4] ?? null,
+                                'tanggal_lahir' => !empty($row[5]) ? $row[5] : null,
+                                'alamat' => $row[6] ?? null,
+                                'status' => $row[7] ?? 'aktif',
+                            ]);
+                            
+                            $imported++;
+                        } catch (\Exception $e) {
+                            $errors[] = "Baris dengan NIS '{$row[0]}' - " . $e->getMessage();
+                        }
+                    }
+                } catch (\Exception $e) {
+                    return redirect()->route('tu.siswa.index')
+                        ->with('error', 'Gagal membaca file Excel: ' . $e->getMessage());
+                }
             }
             
             // Prepare success message
