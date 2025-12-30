@@ -305,14 +305,33 @@
                                 </a>
                             </div>
                             
-                            <!-- Dirjen Pendidikan Islam -->
+                            <!-- Dirjen Pendidikan Islam dengan Maps -->
                             <div class="mt-4 p-3 bg-light border-start border-4 border-success">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-mosque text-success me-3" style="font-size: 2rem;"></i>
-                                    <div>
-                                        <h6 class="mb-1 text-success fw-bold">Direktorat Jenderal Pendidikan Islam</h6>
-                                        <p class="mb-0 text-muted small">Kementerian Agama Republik Indonesia</p>
-                                        <p class="mb-0 text-muted small">Jl. Lapangan Banteng Barat No. 3-4, Jakarta Pusat 10110</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <i class="fas fa-mosque text-success me-3 mt-1" style="font-size: 2rem;"></i>
+                                            <div>
+                                                <h6 class="mb-1 text-success fw-bold">Direktorat Jenderal Pendidikan Islam</h6>
+                                                <p class="mb-1 text-muted small">Kementerian Agama Republik Indonesia</p>
+                                                <p class="mb-0 text-muted small">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                                    Jl. Lapangan Banteng Barat No. 3-4, Jakarta Pusat 10110
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Google Maps Embed -->
+                                        <div class="ratio ratio-16x9" style="max-height: 200px;">
+                                            <iframe 
+                                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.8662820842844!2d106.83886931476896!3d-6.165419995528252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sDirektorat%20Jenderal%20Pendidikan%20Islam!5e0!3m2!1sid!2sid!4v1735554000000!5m2!1sid!2sid" 
+                                                style="border:0; border-radius: 0.5rem;" 
+                                                allowfullscreen="" 
+                                                loading="lazy" 
+                                                referrerpolicy="no-referrer-when-downgrade">
+                                            </iframe>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
