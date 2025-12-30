@@ -51,7 +51,7 @@
                                         <label class="form-label">Tahun Lulus</label>
                                         <select name="tahun_lulus" class="form-select" id="tahunLulusFilter" onchange="document.getElementById('filterForm').submit();">
                                             <option value="">Semua Tahun</option>
-                                            @for($year = date('Y'); $year >= 2000; $year--)
+                                            @for($year = 2022; $year <= date('Y'); $year++)
                                                 <option value="{{ $year }}" {{ $tahunLulus == $year ? 'selected' : '' }}>{{ $year }}</option>
                                             @endfor
                                         </select>
