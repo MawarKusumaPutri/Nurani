@@ -332,6 +332,66 @@
                                 </div>
                             </div>
 
+                            <!-- Tanda Tangan Kepala Sekolah -->
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-signature me-2"></i>Pengesahan</h5>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Mengetahui,</label>
+                                    <p class="mb-2 text-muted">Kepala Sekolah</p>
+                                    
+                                    <div class="mb-3">
+                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah</label>
+                                        <input type="text" class="form-control" id="kepala_sekolah_nama" name="kepala_sekolah_nama" 
+                                               value="{{ old('kepala_sekolah_nama') }}" 
+                                               placeholder="Nama Kepala Sekolah">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah</label>
+                                        <input type="text" class="form-control" id="kepala_sekolah_nip" name="kepala_sekolah_nip" 
+                                               value="{{ old('kepala_sekolah_nip') }}" 
+                                               placeholder="NIP Kepala Sekolah">
+                                    </div>
+                                    
+                                    <div class="border rounded p-3 text-center bg-light" style="min-height: 120px;">
+                                        <p class="text-muted mb-0 small">Tempat Tanda Tangan</p>
+                                        <div class="mt-4 mb-2">
+                                            <p class="mb-0 small text-muted">(Tanda Tangan & Stempel)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Guru Mata Pelajaran,</label>
+                                    <p class="mb-2 text-muted">{{ $mataPelajaran }}</p>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama Guru</label>
+                                        <input type="text" class="form-control" value="{{ $guru->user->name }}" readonly style="background-color: #e9ecef;">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">NIP Guru</label>
+                                        <input type="text" class="form-control" value="{{ $guru->nip ?? '-' }}" readonly style="background-color: #e9ecef;">
+                                    </div>
+                                    
+                                    <div class="border rounded p-3 text-center bg-light" style="min-height: 120px;">
+                                        <p class="text-muted mb-0 small">Tempat Tanda Tangan</p>
+                                        <div class="mt-4 mb-2">
+                                            <p class="mb-0 small text-muted">(Tanda Tangan)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Catatan:</strong> Setelah RPP disimpan, cetak dokumen untuk ditandatangani oleh Kepala Sekolah dan Guru yang bersangkutan.
+                            </div>
+
                             <div class="d-flex gap-2 mt-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Simpan RPP
