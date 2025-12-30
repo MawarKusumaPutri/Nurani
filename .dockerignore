@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+/.idea
+/.vscode
+/vendor
+/storage/*.key
+/public/hot
+/public/storage
