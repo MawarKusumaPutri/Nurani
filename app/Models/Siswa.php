@@ -18,6 +18,7 @@ class Siswa extends Model
         'jenis_kelamin',
         'tanggal_lahir',
         'status',
+        'tahun_lulus',
         'alamat',
         'no_telp',
         'email',
