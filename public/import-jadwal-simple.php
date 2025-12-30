@@ -14,6 +14,7 @@ $kernel->bootstrap();
 use App\Models\Jadwal;
 use App\Models\Guru;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // Cek jika ada upload file
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
@@ -23,11 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
     
     $file = $_FILES['excel_file'];
     $filePath = $file['tmp_name'];
-    
-    // Load PhpSpreadsheet
-    require __DIR__.'/../vendor/autoload.php';
-    
-    use PhpOffice\PhpSpreadsheet\IOFactory;
     
     try {
         $spreadsheet = IOFactory::load($filePath);
