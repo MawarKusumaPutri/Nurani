@@ -61,7 +61,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('guru.rpp.update', $rpp->id) }}" method="POST">
+                        <form action="{{ route('guru.rpp.update', $rpp->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             
@@ -297,6 +297,102 @@
                                           placeholder="Contoh: Pilihan ganda, uraian, lembar observasi...">{{ old('bentuk_instrumen', $rpp->bentuk_instrumen) }}</textarea>
                             </div>
 
+                            <!-- Pengesahan / Tanda Tangan -->
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-signature me-2"></i>Pengesahan</h5>
+                            </div>
+                            
+                            <div class="row">
+                                <!-- Kepala Sekolah -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Mengetahui,</label>
+                                    <p class="mb-2 text-muted">Kepala Sekolah</p>
+                                    
+                                    <div class="mb-3">
+                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah</label>
+                                        <input type="text" class="form-control" id="kepala_sekolah_nama" name="kepala_sekolah_nama" 
+                                               value="{{ old('kepala_sekolah_nama', $rpp->kepala_sekolah_nama) }}" 
+                                               placeholder="Nama Kepala Sekolah">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah</label>
+                                        <input type="text" class="form-control" id="kepala_sekolah_nip" name="kepala_sekolah_nip" 
+                                               value="{{ old('kepala_sekolah_nip', $rpp->kepala_sekolah_nip) }}" 
+                                               placeholder="NIP Kepala Sekolah">
+                                    </div>
+                                    
+                                    <!-- Upload Tanda Tangan Kepala Sekolah -->
+                                    <div class="mb-3">
+                                        <label for="ttd_kepala_sekolah" class="form-label">Upload Tanda Tangan & Stempel</label>
+                                        <input type="file" class="form-control" id="ttd_kepala_sekolah" name="ttd_kepala_sekolah" 
+                                               accept="image/*" onchange="previewSignature(this, 'preview_ttd_kepsek')">
+                                        <small class="text-muted">Format: JPG, PNG (Max: 2MB)</small>
+                                    </div>
+                                    
+                                    <div class="border rounded p-3 text-center bg-light" id="preview_ttd_kepsek" style="min-height: 150px;">
+                                        @if($rpp->ttd_kepala_sekolah)
+                                            <img src="{{ Storage::url($rpp->ttd_kepala_sekolah) }}" 
+                                                 alt="Tanda Tangan Kepala Sekolah" 
+                                                 style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                                            <p class="text-success mb-0 small mt-2">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                Tanda tangan sudah ada (upload baru untuk mengganti)
+                                            </p>
+                                        @else
+                                            <i class="fas fa-image text-muted mb-2" style="font-size: 2rem;"></i>
+                                            <p class="text-muted mb-0 small">Preview Tanda Tangan & Stempel</p>
+                                            <p class="text-muted mb-0 small">Akan muncul setelah upload</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <!-- Guru Mata Pelajaran -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Guru Mata Pelajaran,</label>
+                                    <p class="mb-2 text-muted">{{ $rpp->mata_pelajaran }}</p>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama Guru</label>
+                                        <input type="text" class="form-control" value="{{ $guru->user->name }}" readonly style="background-color: #e9ecef;">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">NIP Guru</label>
+                                        <input type="text" class="form-control" value="{{ $guru->nip ?? '-' }}" readonly style="background-color: #e9ecef;">
+                                    </div>
+                                    
+                                    <!-- Upload Tanda Tangan Guru -->
+                                    <div class="mb-3">
+                                        <label for="ttd_guru" class="form-label">Upload Tanda Tangan</label>
+                                        <input type="file" class="form-control" id="ttd_guru" name="ttd_guru" 
+                                               accept="image/*" onchange="previewSignature(this, 'preview_ttd_guru')">
+                                        <small class="text-muted">Format: JPG, PNG (Max: 2MB)</small>
+                                    </div>
+                                    
+                                    <div class="border rounded p-3 text-center bg-light" id="preview_ttd_guru" style="min-height: 150px;">
+                                        @if($rpp->ttd_guru)
+                                            <img src="{{ Storage::url($rpp->ttd_guru) }}" 
+                                                 alt="Tanda Tangan Guru" 
+                                                 style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                                            <p class="text-success mb-0 small mt-2">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                Tanda tangan sudah ada (upload baru untuk mengganti)
+                                            </p>
+                                        @else
+                                            <i class="fas fa-image text-muted mb-2" style="font-size: 2rem;"></i>
+                                            <p class="text-muted mb-0 small">Preview Tanda Tangan</p>
+                                            <p class="text-muted mb-0 small">Akan muncul setelah upload</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Catatan:</strong> Setelah RPP disimpan, cetak dokumen untuk ditandatangani oleh Kepala Sekolah dan Guru yang bersangkutan.
+                            </div>
+
                             <div class="d-flex gap-2 mt-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Update RPP
@@ -312,6 +408,32 @@
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    // Preview signature image
+    function previewSignature(input, previewId) {
+        const preview = document.getElementById(previewId);
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview Tanda Tangan" 
+                         style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                    <p class="text-success mb-0 small mt-2">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Gambar berhasil dipilih
+                    </p>
+                `;
+            };
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
+
 </body>
 </html>
