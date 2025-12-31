@@ -109,6 +109,56 @@ try {
     echo "[WARNING] Gagal verifikasi kolom foto: " . $e->getMessage() . "\n";
 }
 
+// Step 2.6: Verify and fix signature columns in rpps table
+echo "\n[2.6/3] Verifikasi kolom tanda tangan di tabel rpps...\n";
+try {
+    // Check if rpps table exists
+    if (Schema::hasTable('rpps')) {
+        $columnsToAdd = [];
+        
+        // Check each signature column
+        if (!Schema::hasColumn('rpps', 'kepala_sekolah_nama')) {
+            $columnsToAdd[] = 'kepala_sekolah_nama';
+        }
+        if (!Schema::hasColumn('rpps', 'kepala_sekolah_nip')) {
+            $columnsToAdd[] = 'kepala_sekolah_nip';
+        }
+        if (!Schema::hasColumn('rpps', 'ttd_kepala_sekolah')) {
+            $columnsToAdd[] = 'ttd_kepala_sekolah';
+        }
+        if (!Schema::hasColumn('rpps', 'ttd_guru')) {
+            $columnsToAdd[] = 'ttd_guru';
+        }
+        
+        if (count($columnsToAdd) > 0) {
+            echo "[INFO] Menambahkan kolom: " . implode(', ', $columnsToAdd) . "...\n";
+            
+            Schema::table('rpps', function ($table) use ($columnsToAdd) {
+                if (in_array('kepala_sekolah_nama', $columnsToAdd)) {
+                    $table->string('kepala_sekolah_nama')->nullable();
+                }
+                if (in_array('kepala_sekolah_nip', $columnsToAdd)) {
+                    $table->string('kepala_sekolah_nip')->nullable();
+                }
+                if (in_array('ttd_kepala_sekolah', $columnsToAdd)) {
+                    $table->string('ttd_kepala_sekolah')->nullable();
+                }
+                if (in_array('ttd_guru', $columnsToAdd)) {
+                    $table->string('ttd_guru')->nullable();
+                }
+            });
+            
+            echo "[SUKSES] Kolom tanda tangan berhasil ditambahkan!\n";
+        } else {
+            echo "[INFO] Semua kolom tanda tangan sudah ada di tabel rpps\n";
+        }
+    } else {
+        echo "[WARNING] Tabel 'rpps' belum ada\n";
+    }
+} catch (\Exception $e) {
+    echo "[WARNING] Gagal verifikasi kolom tanda tangan: " . $e->getMessage() . "\n";
+}
+
 // Step 3: Verify
 echo "[INFO] Verifikasi data...\n";
 try {
