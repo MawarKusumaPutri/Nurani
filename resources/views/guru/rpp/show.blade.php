@@ -262,6 +262,63 @@
                         @endif
                         @endif
 
+                        <!-- Pengesahan / Tanda Tangan -->
+                        <div class="section-header mt-4">
+                            <h5 class="mb-0"><i class="fas fa-signature me-2"></i>Pengesahan</h5>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Kepala Sekolah -->
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <p class="fw-bold mb-1">Mengetahui,</p>
+                                    <p class="text-muted mb-3">Kepala Sekolah</p>
+                                    
+                                    @if($rpp->ttd_kepala_sekolah)
+                                        <div class="border rounded p-3 bg-light mb-3" style="min-height: 150px;">
+                                            <img src="{{ Storage::url($rpp->ttd_kepala_sekolah) }}" 
+                                                 alt="Tanda Tangan Kepala Sekolah" 
+                                                 style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                                        </div>
+                                    @else
+                                        <div class="border rounded p-3 bg-light mb-3" style="min-height: 150px;">
+                                            <p class="text-muted mb-0 small pt-5">
+                                                (Tanda Tangan & Stempel)
+                                            </p>
+                                        </div>
+                                    @endif
+                                    
+                                    <p class="mb-0 fw-bold">{{ $rpp->kepala_sekolah_nama ?? '___________________' }}</p>
+                                    <p class="text-muted small mb-0">NIP: {{ $rpp->kepala_sekolah_nip ?? '___________________' }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Guru Mata Pelajaran -->
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <p class="fw-bold mb-1">Guru Mata Pelajaran,</p>
+                                    <p class="text-muted mb-3">{{ $rpp->mata_pelajaran }}</p>
+                                    
+                                    @if($rpp->ttd_guru)
+                                        <div class="border rounded p-3 bg-light mb-3" style="min-height: 150px;">
+                                            <img src="{{ Storage::url($rpp->ttd_guru) }}" 
+                                                 alt="Tanda Tangan Guru" 
+                                                 style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                                        </div>
+                                    @else
+                                        <div class="border rounded p-3 bg-light mb-3" style="min-height: 150px;">
+                                            <p class="text-muted mb-0 small pt-5">
+                                                (Tanda Tangan)
+                                            </p>
+                                        </div>
+                                    @endif
+                                    
+                                    <p class="mb-0 fw-bold">{{ $guru->user->name }}</p>
+                                    <p class="text-muted small mb-0">NIP: {{ $guru->nip ?? '-' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex gap-2 mt-4">
                             <a href="{{ route('guru.rpp.cetak', $rpp->id) }}" class="btn btn-success" target="_blank">
                                 <i class="fas fa-print me-2"></i>Cetak RPP
