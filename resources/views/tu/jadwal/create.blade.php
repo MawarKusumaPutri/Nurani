@@ -729,10 +729,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('selected-day-name').textContent = 
             `${dayName}, ${dayNumber.toString().padStart(2, '0')} ${monthName}`;
         
-        // Update hidden inputs
+        // Update hidden inputs with timezone adjustment
         const hariValue = getHariValue(hariNamaEn[selectedDate.getDay()]);
         document.getElementById('hari').value = hariValue;
-        document.getElementById('tanggal').value = selectedDate.toISOString().split('T')[0];
+        
+        // Adjust for timezone offset to prevent date shift on UTC server
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(selectedDate.getDate()).padStart(2, '0');
+        document.getElementById('tanggal').value = `${year}-${month}-${day}`;
         
         // Re-render calendar to update selected state
         renderCalendar();
