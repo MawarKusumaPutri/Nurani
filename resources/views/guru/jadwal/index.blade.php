@@ -659,7 +659,7 @@
                                         @if($jadwal->is_berulang)
                                             <div class="mt-2">
                                                 <span class="badge bg-primary">
-                                                    <i class="fas fa-sync-alt me-1"></i>Berulang Setiap Minggu
+                                                    <i class="fas fa-sync-alt me-1"></i>Jadwal Tetap 1 Semester
                                                 </span>
                                             </div>
                                         @endif
