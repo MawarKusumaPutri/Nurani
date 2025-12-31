@@ -137,7 +137,6 @@
                                             <th>Kelas</th>
                                             <th>Hari</th>
                                             <th>Waktu</th>
-                                            <th>Ruang</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -189,7 +188,6 @@
                                                     </td>
                                                     <td>{{ $jadwal->hari_nama }}</td>
                                                     <td>{{ date('H:i', strtotime($jadwal->jam_mulai)) }} - {{ date('H:i', strtotime($jadwal->jam_selesai)) }}</td>
-                                                    <td>{{ $jadwal->ruang ?? 'Ruang ' . $jadwal->kelas }}</td>
                                                     <td>
                                                         <span class="badge {{ $statusColor }}">{{ ucfirst($jadwal->status) }}</span>
                                                     </td>
@@ -209,7 +207,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="9" class="text-center py-4">
+                                                <td colspan="8" class="text-center py-4">
                                                     <div class="text-muted">
                                                         <i class="fas fa-calendar-times fa-3x mb-3"></i>
                                                         <p class="mb-0">Belum ada jadwal pelajaran. Silakan tambah jadwal baru.</p>
