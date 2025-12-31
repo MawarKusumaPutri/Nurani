@@ -77,6 +77,11 @@ class RppController extends Controller
             'bentuk_instrumen' => 'nullable|string',
             'rubrik_penilaian' => 'nullable|string',
             'kriteria_ketuntasan' => 'nullable|string',
+            // Pengesahan
+            'kepala_sekolah_nama' => 'nullable|string|max:255',
+            'kepala_sekolah_nip' => 'nullable|string|max:255',
+            'ttd_kepala_sekolah' => 'nullable|image|max:2048',
+            'ttd_guru' => 'nullable|image|max:2048',
         ]);
 
         // Cek apakah RPP untuk pertemuan ini sudah ada
@@ -96,6 +101,17 @@ class RppController extends Controller
         $validated['mata_pelajaran_detail'] = $validated['mata_pelajaran'];
         $validated['kelas_detail'] = $validated['kelas'];
         $validated['semester_detail'] = $validated['semester'];
+
+        // Handle file uploads
+        if ($request->hasFile('ttd_kepala_sekolah')) {
+            $validated['ttd_kepala_sekolah'] = $request->file('ttd_kepala_sekolah')
+                ->store('signatures/kepala_sekolah', 'public');
+        }
+
+        if ($request->hasFile('ttd_guru')) {
+            $validated['ttd_guru'] = $request->file('ttd_guru')
+                ->store('signatures/guru', 'public');
+        }
 
         // Simpan RPP
         $rpp = Rpp::create($validated);
@@ -168,11 +184,37 @@ class RppController extends Controller
             'bentuk_instrumen' => 'nullable|string',
             'rubrik_penilaian' => 'nullable|string',
             'kriteria_ketuntasan' => 'nullable|string',
+            // Pengesahan
+            'kepala_sekolah_nama' => 'nullable|string|max:255',
+            'kepala_sekolah_nip' => 'nullable|string|max:255',
+            'ttd_kepala_sekolah' => 'nullable|image|max:2048',
+            'ttd_guru' => 'nullable|image|max:2048',
         ]);
 
         $validated['mata_pelajaran_detail'] = $validated['mata_pelajaran'];
         $validated['kelas_detail'] = $validated['kelas'];
         $validated['semester_detail'] = $validated['semester'];
+
+        // Handle file uploads
+        if ($request->hasFile('ttd_kepala_sekolah')) {
+            // Delete old file if exists
+            if ($rpp->ttd_kepala_sekolah) {
+                Storage::disk('public')->delete($rpp->ttd_kepala_sekolah);
+            }
+            // Store new file
+            $validated['ttd_kepala_sekolah'] = $request->file('ttd_kepala_sekolah')
+                ->store('signatures/kepala_sekolah', 'public');
+        }
+
+        if ($request->hasFile('ttd_guru')) {
+            // Delete old file if exists
+            if ($rpp->ttd_guru) {
+                Storage::disk('public')->delete($rpp->ttd_guru);
+            }
+            // Store new file
+            $validated['ttd_guru'] = $request->file('ttd_guru')
+                ->store('signatures/guru', 'public');
+        }
 
         $rpp->update($validated);
 
