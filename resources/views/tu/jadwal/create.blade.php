@@ -248,7 +248,7 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="is_berulang" name="is_berulang">
                                                 <label class="form-check-label" for="is_berulang">
-                                                    Jadwal Berulang (Setiap Minggu)
+                                                    Jadwal Tetap 1 Semester
                                                 </label>
                                             </div>
                                         </div>
