@@ -10,7 +10,20 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Surat Menyurat</h1>
+                <div>
+                    <h1 class="h2">Riwayat Surat</h1>
+                    @php
+                        $currentJenis = request()->get('jenis', 'sekolah');
+                        $badgeClass = $currentJenis === 'yayasan' ? 'bg-warning' : 'bg-success';
+                        $badgeText = $currentJenis === 'yayasan' ? 'Surat dari Yayasan' : 'Surat dari Sekolah';
+                    @endphp
+                    <p class="text-muted mb-0">
+                        <span class="badge {{ $badgeClass }}">
+                            <i class="fas fa-{{ $currentJenis === 'yayasan' ? 'building' : 'school' }} me-1"></i>
+                            {{ $badgeText }}
+                        </span>
+                    </p>
+                </div>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <a href="{{ route('tu.surat.create', ['jenis' => $jenis ?? 'sekolah']) }}" class="btn btn-sm btn-primary">
@@ -38,7 +51,16 @@
                     <div class="card">
                         <div class="card-body">
                             <form method="GET" action="{{ route('tu.surat.index') }}">
+                                <input type="hidden" name="jenis" value="{{ request('jenis', 'sekolah') }}">
                                 <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="form-label">Sumber Surat</label>
+                                        <select class="form-select" name="sumber_surat">
+                                            <option value="">Semua Sumber</option>
+                                            <option value="yayasan" {{ request('sumber_surat') == 'yayasan' ? 'selected' : '' }}>Yayasan</option>
+                                            <option value="sekolah" {{ request('sumber_surat') == 'sekolah' ? 'selected' : '' }}>Sekolah</option>
+                                        </select>
+                                    </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Tipe Surat</label>
                                         <select class="form-select" name="tipe_surat">
@@ -70,11 +92,11 @@
                                             <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label">Cari Surat</label>
                                         <input type="text" class="form-control" name="search" placeholder="Nomor surat atau perihal" value="{{ request('search') }}">
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <label class="form-label">&nbsp;</label>
                                         <button type="submit" class="btn btn-primary d-block w-100">
                                             <i class="fas fa-search"></i> Filter
@@ -141,6 +163,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tipe</th>
+                                            <th>Sumber</th>
                                             <th>Nomor Surat</th>
                                             <th>Jenis</th>
                                             <th>Perihal</th>
@@ -230,10 +253,24 @@
                                                             $pengirimText = $surat->pengirim ?? '-';
                                                         }
                                                     }
+                                                    
+                                                    // Badge untuk sumber surat
+                                                    $sumberBadge = match($surat->sumber_surat ?? 'sekolah') {
+                                                        'yayasan' => 'bg-warning',
+                                                        'sekolah' => 'bg-success',
+                                                        default => 'bg-secondary'
+                                                    };
+                                                    
+                                                    $sumberLabel = match($surat->sumber_surat ?? 'sekolah') {
+                                                        'yayasan' => 'Yayasan',
+                                                        'sekolah' => 'Sekolah',
+                                                        default => 'Sekolah'
+                                                    };
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $surats->firstItem() + $index }}</td>
                                                     <td><span class="badge {{ $tipeBadge }}">{{ $tipeLabel }}</span></td>
+                                                    <td><span class="badge {{ $sumberBadge }}">{{ $sumberLabel }}</span></td>
                                                     <td>{{ $surat->nomor_surat }}</td>
                                                     <td><span class="badge {{ $jenisBadge }}">{{ $jenisLabel }}</span></td>
                                                     <td>{{ $surat->perihal }}</td>

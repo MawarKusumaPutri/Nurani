@@ -2476,6 +2476,11 @@ class TuController extends Controller
                 }
             }
             
+            // Filter berdasarkan sumber_surat dari dropdown filter
+            if ($request->filled('sumber_surat')) {
+                $query->where('sumber_surat', $request->sumber_surat);
+            }
+            
             // Filter berdasarkan tipe surat (masuk/keluar)
             if ($request->filled('tipe_surat')) {
                 $query->where('tipe_surat', $request->tipe_surat);

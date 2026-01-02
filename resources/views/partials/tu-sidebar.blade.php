@@ -99,7 +99,7 @@
         <a href="{{ route('tu.arsip.index') }}" class="nav-link {{ request()->routeIs('tu.arsip.*') ? 'active' : '' }}">
             <i class="fas fa-archive me-2"></i> Arsip
         </a>
-        <!-- Surat Dropdown Menu -->
+        <!-- Riwayat Surat Dropdown Menu -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('tu.surat.*') ? 'active' : '' }}" 
                id="suratDropdown" 
@@ -107,7 +107,7 @@
                data-bs-toggle="collapse" 
                data-bs-target="#suratSubmenu" 
                aria-expanded="{{ request()->routeIs('tu.surat.*') ? 'true' : 'false' }}">
-                <i class="fas fa-envelope me-2"></i> Surat
+                <i class="fas fa-history me-2"></i> Riwayat Surat
                 <i class="fas fa-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
             </a>
             <div class="collapse {{ request()->routeIs('tu.surat.*') ? 'show' : '' }}" id="suratSubmenu">
