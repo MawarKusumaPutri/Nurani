@@ -134,9 +134,10 @@
         }
         
         .sidebar .submenu-link.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            font-weight: 500;
+            color: #2E7D32 !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .sidebar #suratSubmenu {

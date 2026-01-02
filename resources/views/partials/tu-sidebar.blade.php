@@ -112,16 +112,22 @@
             </a>
             <div class="collapse {{ request()->routeIs('tu.surat.*') ? 'show' : '' }}" id="suratSubmenu">
                 <div class="nav flex-column ps-4">
+                    @php
+                        $currentJenis = request()->get('jenis');
+                        $isYayasanActive = $currentJenis === 'yayasan';
+                        $isSekolahActive = $currentJenis === 'sekolah';
+                        $isRiwayatActive = !request()->has('jenis') && request()->routeIs('tu.surat.index');
+                    @endphp
                     <a href="{{ route('tu.surat.index', ['jenis' => 'yayasan']) }}" 
-                       class="nav-link submenu-link {{ request()->get('jenis') == 'yayasan' ? 'active' : '' }}">
+                       class="nav-link submenu-link {{ $isYayasanActive ? 'active' : '' }}">
                         <i class="fas fa-building me-2"></i> Surat dari Yayasan
                     </a>
                     <a href="{{ route('tu.surat.index', ['jenis' => 'sekolah']) }}" 
-                       class="nav-link submenu-link {{ request()->get('jenis') == 'sekolah' ? 'active' : '' }}">
+                       class="nav-link submenu-link {{ $isSekolahActive ? 'active' : '' }}">
                         <i class="fas fa-school me-2"></i> Surat dari Sekolah
                     </a>
                     <a href="{{ route('tu.surat.index') }}" 
-                       class="nav-link submenu-link {{ !request()->has('jenis') ? 'active' : '' }}">
+                       class="nav-link submenu-link {{ $isRiwayatActive ? 'active' : '' }}">
                         <i class="fas fa-list me-2"></i> Riwayat Surat
                     </a>
                 </div>
