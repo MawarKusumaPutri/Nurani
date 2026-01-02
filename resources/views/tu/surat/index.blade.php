@@ -13,13 +13,24 @@
                 <div>
                     <h1 class="h2">Riwayat Surat</h1>
                     @php
-                        $currentJenis = request()->get('jenis', 'sekolah');
-                        $badgeClass = $currentJenis === 'yayasan' ? 'bg-warning' : 'bg-success';
-                        $badgeText = $currentJenis === 'yayasan' ? 'Surat dari Yayasan' : 'Surat dari Sekolah';
+                        $currentJenis = request()->get('jenis', null);
+                        if ($currentJenis === 'yayasan') {
+                            $badgeClass = 'bg-warning';
+                            $badgeText = 'Surat dari Yayasan';
+                            $badgeIcon = 'building';
+                        } elseif ($currentJenis === 'sekolah') {
+                            $badgeClass = 'bg-success';
+                            $badgeText = 'Surat dari Sekolah';
+                            $badgeIcon = 'school';
+                        } else {
+                            $badgeClass = 'bg-primary';
+                            $badgeText = 'Semua Surat';
+                            $badgeIcon = 'list';
+                        }
                     @endphp
                     <p class="text-muted mb-0">
                         <span class="badge {{ $badgeClass }}">
-                            <i class="fas fa-{{ $currentJenis === 'yayasan' ? 'building' : 'school' }} me-1"></i>
+                            <i class="fas fa-{{ $badgeIcon }} me-1"></i>
                             {{ $badgeText }}
                         </span>
                     </p>
