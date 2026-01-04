@@ -81,9 +81,8 @@
                                         <label for="tanggal_lahir" class="form-label">
                                             Tanggal Lahir <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" class="form-control" id="tanggal_lahir" 
-                                               name="tanggal_lahir" placeholder="04/01/2015" required>
-                                        <small class="text-muted">Format: DD/MM/YYYY</small>
+                                        <input type="date" class="form-control" id="tanggal_lahir" 
+                                               name="tanggal_lahir" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="status" class="form-label">

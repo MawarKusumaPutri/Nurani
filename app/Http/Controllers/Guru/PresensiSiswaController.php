@@ -58,41 +58,13 @@ class PresensiSiswaController extends Controller
                 ->get();
         }
 
-        // Get statistics for pie charts - untuk setiap kelas
-        $statistikKelas = [];
-        foreach (['7', '8', '9'] as $kelas) {
-            // Get all students in this class
-            $totalSiswaKelas = Siswa::where('kelas', $kelas)->count();
-            
-            // Get presensi data for this class (last 30 days)
-            $presensiKelas = PresensiSiswa::whereHas('siswa', function($query) use ($kelas) {
-                    $query->where('kelas', $kelas);
-                })
-                ->where('tanggal', '>=', Carbon::now()->subDays(30))
-                ->get();
-            
-            // Count aktivitas
-            $aktifCount = $presensiKelas->where('aktivitas', 'aktif di kelas')->count();
-            $tidakAktifCount = $presensiKelas->where('aktivitas', 'tidak aktif di kelas')->count();
-            $belumDiisiCount = $presensiKelas->where('aktivitas', null)->count();
-            
-            $statistikKelas[$kelas] = [
-                'total_siswa' => $totalSiswaKelas,
-                'aktif' => $aktifCount,
-                'tidak_aktif' => $tidakAktifCount,
-                'belum_diisi' => $belumDiisiCount,
-                'total_presensi' => $presensiKelas->count()
-            ];
-        }
-
         return view('guru.presensi-siswa.index', compact(
             'guru', 
             'siswas', 
             'selectedKelas', 
             'selectedTanggal',
             'presensiHariIni',
-            'presensiHistory',
-            'statistikKelas'
+            'presensiHistory'
         ));
     }
 
@@ -232,5 +204,72 @@ class PresensiSiswaController extends Controller
         $presensi->delete();
 
         return redirect()->back()->with('success', 'Presensi siswa berhasil dihapus');
+    }
+
+    /**
+     * Display statistik presensi siswa dengan grafik lingkaran per kelas
+     */
+    public function statistik(Request $request)
+    {
+        $guru = Guru::where('user_id', Auth::id())->first();
+        
+        if (!$guru) {
+            return redirect()->route('login')->with('error', 'Data guru tidak ditemukan');
+        }
+
+        // Get date range from request or default to current month
+        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
+
+        // Initialize statistics for each class
+        $statistikPerKelas = [];
+        
+        foreach (['7', '8', '9'] as $kelas) {
+            // Get all siswa in this class
+            $totalSiswa = Siswa::where('kelas', $kelas)->count();
+            
+            // Get presensi data for this class within date range
+            $presensiData = PresensiSiswa::where('guru_id', $guru->id)
+                ->whereBetween('tanggal', [$startDate, $endDate])
+                ->whereHas('siswa', function($query) use ($kelas) {
+                    $query->where('kelas', $kelas);
+                })
+                ->with('siswa')
+                ->get();
+
+            // Count aktivitas
+            $aktifCount = $presensiData->where('aktivitas', 'aktif di kelas')->count();
+            $tidakAktifCount = $presensiData->where('aktivitas', 'tidak aktif di kelas')->count();
+            $belumDiisiCount = $presensiData->whereNull('aktivitas')->count();
+
+            // Count status presensi
+            $hadirCount = $presensiData->where('status', 'hadir')->count();
+            $sakitCount = $presensiData->where('status', 'sakit')->count();
+            $izinCount = $presensiData->where('status', 'izin')->count();
+            $alfaCount = $presensiData->where('status', 'alfa')->count();
+
+            $statistikPerKelas[$kelas] = [
+                'total_siswa' => $totalSiswa,
+                'total_presensi' => $presensiData->count(),
+                'aktivitas' => [
+                    'aktif' => $aktifCount,
+                    'tidak_aktif' => $tidakAktifCount,
+                    'belum_diisi' => $belumDiisiCount,
+                ],
+                'status' => [
+                    'hadir' => $hadirCount,
+                    'sakit' => $sakitCount,
+                    'izin' => $izinCount,
+                    'alfa' => $alfaCount,
+                ],
+            ];
+        }
+
+        return view('guru.presensi-siswa.statistik', compact(
+            'guru',
+            'statistikPerKelas',
+            'startDate',
+            'endDate'
+        ));
     }
 }

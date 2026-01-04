@@ -210,6 +210,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'store'])->name('store');
             Route::put('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'update'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'destroy'])->name('destroy');
+            Route::get('/statistik', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'statistik'])->name('statistik');
         });
     });
     

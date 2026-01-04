@@ -7,7 +7,6 @@
     <title>Presensi Siswa - {{ $guru->user->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         html, body {
             background-color: #ffffff !important;
@@ -846,6 +845,12 @@
                         </h2>
                         <p class="text-muted mb-0" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Kelola presensi siswa untuk berbagai kelas dan tanggal</p>
                     </div>
+                    <div>
+                        <a href="{{ route('guru.presensi-siswa.statistik') }}" class="btn btn-success">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Lihat Statistik
+                        </a>
+                    </div>
                 </div>
 
                 @if(session('success'))
@@ -896,57 +901,6 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Statistik Presensi Siswa per Kelas - Grafik Lingkaran -->
-                <div class="card mb-4" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
-                    <div class="card-header" style="background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%); color: white;">
-                        <h5 class="mb-0">
-                            <i class="fas fa-chart-pie me-2"></i>
-                            Statistik Aktivitas Siswa per Kelas (30 Hari Terakhir)
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach(['7', '8', '9'] as $kelas)
-                            <div class="col-md-4 mb-4">
-                                <div class="chart-container" style="position: relative; background: #f8f9fa; padding: 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: all 0.3s ease;">
-                                    <h6 class="text-center mb-3" style="font-weight: 600; color: #2E7D32;">
-                                        <i class="fas fa-users me-2"></i>Kelas {{ $kelas }}
-                                    </h6>
-                                    <div style="position: relative; height: 250px;">
-                                        <canvas id="chartKelas{{ $kelas }}"></canvas>
-                                    </div>
-                                    <div class="mt-3 text-center">
-                                        <small class="text-muted">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            Total Siswa: <strong>{{ $statistikKelas[$kelas]['total_siswa'] ?? 0 }}</strong>
-                                        </small>
-                                    </div>
-                                    <div class="mt-2" style="font-size: 12px;">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span><i class="fas fa-circle" style="color: #28a745;"></i> Aktif:</span>
-                                            <strong>{{ $statistikKelas[$kelas]['aktif'] ?? 0 }}</strong>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span><i class="fas fa-circle" style="color: #dc3545;"></i> Tidak Aktif:</span>
-                                            <strong>{{ $statistikKelas[$kelas]['tidak_aktif'] ?? 0 }}</strong>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span><i class="fas fa-circle" style="color: #ffc107;"></i> Belum Diisi:</span>
-                                            <strong>{{ $statistikKelas[$kelas]['belum_diisi'] ?? 0 }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                        <div class="alert alert-info mt-3" style="border-left: 4px solid #17a2b8;">
-                            <i class="fas fa-lightbulb me-2"></i>
-                            <strong>Info:</strong> Grafik menampilkan data aktivitas siswa berdasarkan presensi 30 hari terakhir. 
-                            Gunakan data ini untuk memantau keterlibatan siswa di kelas.
-                        </div>
                     </div>
                 </div>
 
@@ -1563,121 +1517,6 @@
             sidebar.style.pointerEvents = 'auto';
             sidebar.style.zIndex = '1061';
         }
-
-        // Initialize Pie Charts untuk setiap kelas
-        document.addEventListener('DOMContentLoaded', function() {
-            const chartData = {
-                '7': {
-                    aktif: {{ $statistikKelas['7']['aktif'] ?? 0 }},
-                    tidakAktif: {{ $statistikKelas['7']['tidak_aktif'] ?? 0 }},
-                    belumDiisi: {{ $statistikKelas['7']['belum_diisi'] ?? 0 }}
-                },
-                '8': {
-                    aktif: {{ $statistikKelas['8']['aktif'] ?? 0 }},
-                    tidakAktif: {{ $statistikKelas['8']['tidak_aktif'] ?? 0 }},
-                    belumDiisi: {{ $statistikKelas['8']['belum_diisi'] ?? 0 }}
-                },
-                '9': {
-                    aktif: {{ $statistikKelas['9']['aktif'] ?? 0 }},
-                    tidakAktif: {{ $statistikKelas['9']['tidak_aktif'] ?? 0 }},
-                    belumDiisi: {{ $statistikKelas['9']['belum_diisi'] ?? 0 }}
-                }
-            };
-
-            // Create chart untuk setiap kelas
-            ['7', '8', '9'].forEach(function(kelas) {
-                const ctx = document.getElementById('chartKelas' + kelas);
-                if (ctx) {
-                    const data = chartData[kelas];
-                    const total = data.aktif + data.tidakAktif + data.belumDiisi;
-                    
-                    // Hanya tampilkan chart jika ada data
-                    if (total > 0) {
-                        new Chart(ctx, {
-                            type: 'pie',
-                            data: {
-                                labels: ['Aktif di Kelas', 'Tidak Aktif di Kelas', 'Belum Diisi'],
-                                datasets: [{
-                                    data: [data.aktif, data.tidakAktif, data.belumDiisi],
-                                    backgroundColor: [
-                                        '#28a745', // Hijau untuk aktif
-                                        '#dc3545', // Merah untuk tidak aktif
-                                        '#ffc107'  // Kuning untuk belum diisi
-                                    ],
-                                    borderColor: [
-                                        '#ffffff',
-                                        '#ffffff',
-                                        '#ffffff'
-                                    ],
-                                    borderWidth: 3,
-                                    hoverOffset: 15
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'bottom',
-                                        labels: {
-                                            padding: 15,
-                                            font: {
-                                                size: 11,
-                                                family: "'Inter', sans-serif"
-                                            },
-                                            usePointStyle: true,
-                                            pointStyle: 'circle'
-                                        }
-                                    },
-                                    tooltip: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                        padding: 12,
-                                        cornerRadius: 8,
-                                        titleFont: {
-                                            size: 13,
-                                            weight: 'bold'
-                                        },
-                                        bodyFont: {
-                                            size: 12
-                                        },
-                                        callbacks: {
-                                            label: function(context) {
-                                                const label = context.label || '';
-                                                const value = context.parsed || 0;
-                                                const percentage = ((value / total) * 100).toFixed(1);
-                                                return label + ': ' + value + ' (' + percentage + '%)';
-                                            }
-                                        }
-                                    }
-                                },
-                                animation: {
-                                    animateRotate: true,
-                                    animateScale: true,
-                                    duration: 1500,
-                                    easing: 'easeInOutQuart'
-                                }
-                            }
-                        });
-                    } else {
-                        // Tampilkan pesan jika tidak ada data
-                        ctx.parentElement.innerHTML = '<div class="text-center text-muted py-5"><i class="fas fa-chart-pie fa-3x mb-3 opacity-25"></i><p>Belum ada data presensi</p></div>';
-                    }
-                }
-            });
-
-            // Add hover effect untuk chart containers
-            const chartContainers = document.querySelectorAll('.chart-container');
-            chartContainers.forEach(function(container) {
-                container.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
-                });
-                container.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = '0 3px 10px rgba(0,0,0,0.1)';
-                });
-            });
-        });
     </script>
 </body>
 </html>

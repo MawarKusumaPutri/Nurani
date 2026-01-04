@@ -273,20 +273,14 @@ class TuController extends Controller
             'nama' => 'required|string',
             'kelas' => 'required|string|in:7,8,9',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'tanggal_lahir' => 'required|string',
+            'tanggal_lahir' => 'required|date',
             'status' => 'required|string|in:aktif,tidak_aktif,lulus',
             'alamat' => 'nullable|string',
             'no_telp' => 'nullable|string',
             'email' => 'nullable|email',
         ]);
         
-        // Convert tanggal_lahir from DD/MM/YYYY to Y-m-d
-        $data = $request->all();
-        if (isset($data['tanggal_lahir'])) {
-            $data['tanggal_lahir'] = Carbon::createFromFormat('d/m/Y', $data['tanggal_lahir'])->format('Y-m-d');
-        }
-        
-        Siswa::create($data);
+        Siswa::create($request->all());
         
         return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil ditambahkan');
     }
@@ -306,20 +300,14 @@ class TuController extends Controller
             'nama' => 'required|string',
             'kelas' => 'required|string|in:7,8,9',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'tanggal_lahir' => 'required|string',
+            'tanggal_lahir' => 'required|date',
             'status' => 'required|string|in:aktif,tidak_aktif,lulus',
             'alamat' => 'nullable|string',
             'no_telp' => 'nullable|string',
             'email' => 'nullable|email',
         ]);
         
-        // Convert tanggal_lahir from DD/MM/YYYY to Y-m-d
-        $data = $request->all();
-        if (isset($data['tanggal_lahir'])) {
-            $data['tanggal_lahir'] = Carbon::createFromFormat('d/m/Y', $data['tanggal_lahir'])->format('Y-m-d');
-        }
-        
-        $siswa->update($data);
+        $siswa->update($request->all());
         
         return redirect()->route('tu.siswa.index')->with('success', 'Data siswa berhasil diperbarui');
     }
