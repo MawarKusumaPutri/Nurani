@@ -207,10 +207,10 @@ Route::middleware('auth')->group(function () {
         // Presensi Siswa Routes
         Route::prefix('presensi-siswa')->name('presensi-siswa.')->group(function () {
             Route::get('/', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'index'])->name('index');
+            Route::get('/statistik', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'statistik'])->name('statistik');
             Route::post('/', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'store'])->name('store');
             Route::put('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'update'])->name('update');
             Route::delete('/{id}', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'destroy'])->name('destroy');
-            Route::get('/statistik', [App\Http\Controllers\Guru\PresensiSiswaController::class, 'statistik'])->name('statistik');
         });
     });
     
