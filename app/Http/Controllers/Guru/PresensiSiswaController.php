@@ -58,13 +58,41 @@ class PresensiSiswaController extends Controller
                 ->get();
         }
 
+        // Get statistics for pie charts - untuk setiap kelas
+        $statistikKelas = [];
+        foreach (['7', '8', '9'] as $kelas) {
+            // Get all students in this class
+            $totalSiswaKelas = Siswa::where('kelas', $kelas)->count();
+            
+            // Get presensi data for this class (last 30 days)
+            $presensiKelas = PresensiSiswa::whereHas('siswa', function($query) use ($kelas) {
+                    $query->where('kelas', $kelas);
+                })
+                ->where('tanggal', '>=', Carbon::now()->subDays(30))
+                ->get();
+            
+            // Count aktivitas
+            $aktifCount = $presensiKelas->where('aktivitas', 'aktif di kelas')->count();
+            $tidakAktifCount = $presensiKelas->where('aktivitas', 'tidak aktif di kelas')->count();
+            $belumDiisiCount = $presensiKelas->where('aktivitas', null)->count();
+            
+            $statistikKelas[$kelas] = [
+                'total_siswa' => $totalSiswaKelas,
+                'aktif' => $aktifCount,
+                'tidak_aktif' => $tidakAktifCount,
+                'belum_diisi' => $belumDiisiCount,
+                'total_presensi' => $presensiKelas->count()
+            ];
+        }
+
         return view('guru.presensi-siswa.index', compact(
             'guru', 
             'siswas', 
             'selectedKelas', 
             'selectedTanggal',
             'presensiHariIni',
-            'presensiHistory'
+            'presensiHistory',
+            'statistikKelas'
         ));
     }
 
