@@ -264,15 +264,11 @@
                             <div class="text-center mb-3">
                                 <div class="legend-item">
                                     <div class="legend-color" style="background: #4CAF50;"></div>
-                                    <span>Aktif</span>
+                                    <span>Aktif di Kelas</span>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-color" style="background: #FF5252;"></div>
-                                    <span>Tidak Aktif</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #9E9E9E;"></div>
-                                    <span>Belum Diisi</span>
+                                    <span>Tidak Aktif di Kelas</span>
                                 </div>
                             </div>
 
@@ -306,13 +302,7 @@
                                     </span>
                                     <span class="stat-value text-danger">{{ $stats['aktivitas']['tidak_aktif'] }}</span>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">
-                                        <i class="fas fa-question-circle me-2 text-muted"></i>
-                                        Belum Diisi
-                                    </span>
-                                    <span class="stat-value text-muted">{{ $stats['aktivitas']['belum_diisi'] }}</span>
-                                </div>
+
                             </div>
 
                             <!-- Status Presensi Summary -->
@@ -407,17 +397,15 @@
         new Chart(document.getElementById('chartKelas{{ $kelas }}'), {
             ...chartConfig,
             data: {
-                labels: ['Aktif di Kelas', 'Tidak Aktif di Kelas', 'Belum Diisi'],
+                labels: ['Aktif di Kelas', 'Tidak Aktif di Kelas'],
                 datasets: [{
                     data: [
                         {{ $stats['aktivitas']['aktif'] }},
-                        {{ $stats['aktivitas']['tidak_aktif'] }},
-                        {{ $stats['aktivitas']['belum_diisi'] }}
+                        {{ $stats['aktivitas']['tidak_aktif'] }}
                     ],
                     backgroundColor: [
                         '#4CAF50',  // Green for active
-                        '#FF5252',  // Red for inactive
-                        '#9E9E9E'   // Grey for not filled
+                        '#FF5252'   // Red for inactive
                     ],
                     borderWidth: 3,
                     borderColor: '#ffffff',
