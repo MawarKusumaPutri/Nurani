@@ -11,11 +11,14 @@
     <style>
         * {
             font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
         }
 
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         .sidebar {
@@ -47,6 +50,15 @@
         .main-content {
             margin-left: 250px;
             padding: 2rem;
+            max-width: calc(100% - 250px);
+            width: 100%;
+        }
+
+        /* Container untuk membatasi lebar maksimal */
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .stats-card {
@@ -56,6 +68,9 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             margin-bottom: 2rem;
             transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .stats-card:hover {
@@ -65,8 +80,12 @@
 
         .chart-container {
             position: relative;
-            height: 350px;
+            height: 300px;
             margin: 1.5rem 0;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .kelas-badge {
@@ -108,6 +127,7 @@
         .stat-label {
             font-weight: 500;
             color: #666;
+            font-size: 0.95rem;
         }
 
         .stat-value {
@@ -166,6 +186,21 @@
             margin-right: 0.5rem;
         }
 
+        /* Grid Layout untuk Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -175,11 +210,72 @@
 
             .main-content {
                 margin-left: 0;
+                padding: 1rem;
+                max-width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .chart-container {
-                height: 300px;
+                height: 250px;
             }
+
+            .filter-card .row {
+                gap: 1rem;
+            }
+
+            .filter-card .col-md-4 {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .page-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .stats-card {
+                padding: 1.5rem;
+            }
+
+            .chart-container {
+                height: 220px;
+            }
+        }
+
+        /* Perbaikan untuk status summary boxes */
+        .status-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .status-box {
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-box:hover {
+            transform: scale(1.05);
+        }
+
+        .status-box small {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-box strong {
+            font-size: 1.3rem;
         }
     </style>
 </head>
@@ -191,156 +287,150 @@
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div class="d-flex justify-content-between align-items-center">
+                <div class="content-wrapper">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="mb-3 mb-md-0">
+                                <h2>
+                                    <i class="fas fa-chart-pie me-2"></i>
+                                    Statistik Presensi Siswa
+                                </h2>
+                                <p class="text-muted mb-0">Grafik aktivitas siswa per kelas berdasarkan presensi</p>
+                            </div>
+                            <a href="{{ route('guru.presensi-siswa.index') }}" class="btn btn-outline-success">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Kembali
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Filter Card -->
+                    <div class="filter-card">
+                        <form method="GET" action="{{ route('guru.presensi-siswa.statistik') }}">
+                            <div class="row align-items-end g-3">
+                                <div class="col-md-4">
+                                    <label for="start_date" class="form-label fw-semibold">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        Tanggal Mulai
+                                    </label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" 
+                                           value="{{ $startDate }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="end_date" class="form-label fw-semibold">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        Tanggal Akhir
+                                    </label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" 
+                                           value="{{ $endDate }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-filter me-2"></i>
+                                        Filter Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Statistics Cards with Grid Layout -->
+                    <div class="stats-grid">
+                        @foreach(['7', '8', '9'] as $kelas)
+                        @php
+                            $stats = $statistikPerKelas[$kelas];
+                            $kelasClass = 'kelas-' . $kelas;
+                        @endphp
                         <div>
-                            <h2>
-                                <i class="fas fa-chart-pie me-2"></i>
-                                Statistik Presensi Siswa
-                            </h2>
-                            <p class="text-muted mb-0">Grafik aktivitas siswa per kelas berdasarkan presensi</p>
+                            <div class="stats-card">
+                                <div class="text-center">
+                                    <span class="kelas-badge {{ $kelasClass }}">
+                                        <i class="fas fa-users me-2"></i>
+                                        Kelas {{ $kelas }}
+                                    </span>
+                                </div>
+
+                                <!-- Pie Chart for Aktivitas -->
+                                <h5 class="text-center mt-3 mb-3 fw-bold">Aktivitas Siswa di Kelas</h5>
+                                <div class="chart-container">
+                                    <canvas id="chartKelas{{ $kelas }}"></canvas>
+                                </div>
+
+                                <!-- Legend -->
+                                <div class="text-center mb-3">
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #4CAF50;"></div>
+                                        <span>Aktif di Kelas</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #FF5252;"></div>
+                                        <span>Tidak Aktif di Kelas</span>
+                                    </div>
+                                </div>
+
+                                <!-- Statistics Details -->
+                                <div class="mt-4">
+                                    <div class="stat-item">
+                                        <span class="stat-label">
+                                            <i class="fas fa-user-graduate me-2"></i>
+                                            Total Siswa
+                                        </span>
+                                        <span class="stat-value">{{ $stats['total_siswa'] }}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">
+                                            <i class="fas fa-clipboard-check me-2"></i>
+                                            Total Presensi
+                                        </span>
+                                        <span class="stat-value">{{ $stats['total_presensi'] }}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">
+                                            <i class="fas fa-check-circle me-2 text-success"></i>
+                                            Aktif di Kelas
+                                        </span>
+                                        <span class="stat-value text-success">{{ $stats['aktivitas']['aktif'] }}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">
+                                            <i class="fas fa-times-circle me-2 text-danger"></i>
+                                            Tidak Aktif
+                                        </span>
+                                        <span class="stat-value text-danger">{{ $stats['aktivitas']['tidak_aktif'] }}</span>
+                                    </div>
+
+                                </div>
+
+                                <!-- Status Presensi Summary -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <h6 class="fw-bold mb-3">
+                                        <i class="fas fa-chart-bar me-2"></i>
+                                        Ringkasan Status Presensi
+                                    </h6>
+                                    <div class="status-summary-grid">
+                                        <div class="status-box" style="background: #E8F5E9;">
+                                            <small class="text-muted">Hadir</small>
+                                            <strong class="text-success d-block">{{ $stats['status']['hadir'] }}</strong>
+                                        </div>
+                                        <div class="status-box" style="background: #FFF3E0;">
+                                            <small class="text-muted">Sakit</small>
+                                            <strong class="text-warning d-block">{{ $stats['status']['sakit'] }}</strong>
+                                        </div>
+                                        <div class="status-box" style="background: #E3F2FD;">
+                                            <small class="text-muted">Izin</small>
+                                            <strong class="text-info d-block">{{ $stats['status']['izin'] }}</strong>
+                                        </div>
+                                        <div class="status-box" style="background: #FFEBEE;">
+                                            <small class="text-muted">Alfa</small>
+                                            <strong class="text-danger d-block">{{ $stats['status']['alfa'] }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <a href="{{ route('guru.presensi-siswa.index') }}" class="btn btn-outline-success">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            Kembali
-                        </a>
+                        @endforeach
                     </div>
-                </div>
-
-                <!-- Filter Card -->
-                <div class="filter-card">
-                    <form method="GET" action="{{ route('guru.presensi-siswa.statistik') }}">
-                        <div class="row align-items-end">
-                            <div class="col-md-4">
-                                <label for="start_date" class="form-label fw-semibold">
-                                    <i class="fas fa-calendar-alt me-1"></i>
-                                    Tanggal Mulai
-                                </label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" 
-                                       value="{{ $startDate }}" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="end_date" class="form-label fw-semibold">
-                                    <i class="fas fa-calendar-alt me-1"></i>
-                                    Tanggal Akhir
-                                </label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" 
-                                       value="{{ $endDate }}" required>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-filter me-2"></i>
-                                    Filter Data
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="row">
-                    @foreach(['7', '8', '9'] as $kelas)
-                    @php
-                        $stats = $statistikPerKelas[$kelas];
-                        $kelasClass = 'kelas-' . $kelas;
-                    @endphp
-                    <div class="col-lg-4 mb-4">
-                        <div class="stats-card">
-                            <div class="text-center">
-                                <span class="kelas-badge {{ $kelasClass }}">
-                                    <i class="fas fa-users me-2"></i>
-                                    Kelas {{ $kelas }}
-                                </span>
-                            </div>
-
-                            <!-- Pie Chart for Aktivitas -->
-                            <h5 class="text-center mt-3 mb-3 fw-bold">Aktivitas Siswa di Kelas</h5>
-                            <div class="chart-container">
-                                <canvas id="chartKelas{{ $kelas }}"></canvas>
-                            </div>
-
-                            <!-- Legend -->
-                            <div class="text-center mb-3">
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #4CAF50;"></div>
-                                    <span>Aktif di Kelas</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #FF5252;"></div>
-                                    <span>Tidak Aktif di Kelas</span>
-                                </div>
-                            </div>
-
-                            <!-- Statistics Details -->
-                            <div class="mt-4">
-                                <div class="stat-item">
-                                    <span class="stat-label">
-                                        <i class="fas fa-user-graduate me-2"></i>
-                                        Total Siswa
-                                    </span>
-                                    <span class="stat-value">{{ $stats['total_siswa'] }}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">
-                                        <i class="fas fa-clipboard-check me-2"></i>
-                                        Total Presensi
-                                    </span>
-                                    <span class="stat-value">{{ $stats['total_presensi'] }}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">
-                                        <i class="fas fa-check-circle me-2 text-success"></i>
-                                        Aktif di Kelas
-                                    </span>
-                                    <span class="stat-value text-success">{{ $stats['aktivitas']['aktif'] }}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">
-                                        <i class="fas fa-times-circle me-2 text-danger"></i>
-                                        Tidak Aktif
-                                    </span>
-                                    <span class="stat-value text-danger">{{ $stats['aktivitas']['tidak_aktif'] }}</span>
-                                </div>
-
-                            </div>
-
-                            <!-- Status Presensi Summary -->
-                            <div class="mt-4 pt-3 border-top">
-                                <h6 class="fw-bold mb-3">
-                                    <i class="fas fa-chart-bar me-2"></i>
-                                    Ringkasan Status Presensi
-                                </h6>
-                                <div class="row text-center">
-                                    <div class="col-6 mb-2">
-                                        <div class="p-2 rounded" style="background: #E8F5E9;">
-                                            <small class="text-muted d-block">Hadir</small>
-                                            <strong class="text-success">{{ $stats['status']['hadir'] }}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="p-2 rounded" style="background: #FFF3E0;">
-                                            <small class="text-muted d-block">Sakit</small>
-                                            <strong class="text-warning">{{ $stats['status']['sakit'] }}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="p-2 rounded" style="background: #E3F2FD;">
-                                            <small class="text-muted d-block">Izin</small>
-                                            <strong class="text-info">{{ $stats['status']['izin'] }}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="p-2 rounded" style="background: #FFEBEE;">
-                                            <small class="text-muted d-block">Alfa</small>
-                                            <strong class="text-danger">{{ $stats['status']['alfa'] }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
                 </div>
             </div>
         </div>
