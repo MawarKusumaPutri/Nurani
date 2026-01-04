@@ -249,34 +249,6 @@
                 height: 220px;
             }
         }
-
-        /* Perbaikan untuk status summary boxes */
-        .status-summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-
-        .status-box {
-            padding: 0.75rem;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .status-box:hover {
-            transform: scale(1.05);
-        }
-
-        .status-box small {
-            display: block;
-            font-size: 0.85rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .status-box strong {
-            font-size: 1.3rem;
-        }
     </style>
 </head>
 <body>
