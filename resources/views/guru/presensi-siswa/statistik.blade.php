@@ -401,32 +401,6 @@
                                     </div>
 
                                 </div>
-
-                                <!-- Status Presensi Summary -->
-                                <div class="mt-4 pt-3 border-top">
-                                    <h6 class="fw-bold mb-3">
-                                        <i class="fas fa-chart-bar me-2"></i>
-                                        Ringkasan Status Presensi
-                                    </h6>
-                                    <div class="status-summary-grid">
-                                        <div class="status-box" style="background: #E8F5E9;">
-                                            <small class="text-muted">Hadir</small>
-                                            <strong class="text-success d-block">{{ $stats['status']['hadir'] }}</strong>
-                                        </div>
-                                        <div class="status-box" style="background: #FFF3E0;">
-                                            <small class="text-muted">Sakit</small>
-                                            <strong class="text-warning d-block">{{ $stats['status']['sakit'] }}</strong>
-                                        </div>
-                                        <div class="status-box" style="background: #E3F2FD;">
-                                            <small class="text-muted">Izin</small>
-                                            <strong class="text-info d-block">{{ $stats['status']['izin'] }}</strong>
-                                        </div>
-                                        <div class="status-box" style="background: #FFEBEE;">
-                                            <small class="text-muted">Alfa</small>
-                                            <strong class="text-danger d-block">{{ $stats['status']['alfa'] }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         @endforeach
