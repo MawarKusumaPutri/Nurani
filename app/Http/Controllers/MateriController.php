@@ -21,18 +21,26 @@ class MateriController extends Controller
 
         // Get mata pelajaran yang dipilih
         $selectedMataPelajaran = $request->get('mata_pelajaran');
+        $mataPelajaranList = $guru->mataPelajaranAktif;
         
-        // Jika tidak ada mata pelajaran yang dipilih, gunakan mata pelajaran guru
-        if (!$selectedMataPelajaran && $guru->mata_pelajaran) {
-            $selectedMataPelajaran = $guru->mata_pelajaran;
+        // Jika tidak ada mata pelajaran yang dipilih dan tidak ada di mataPelajaranAktif,
+        // ambil dari materi yang sudah ada
+        if (!$selectedMataPelajaran) {
+            if ($mataPelajaranList->count() > 0) {
+                // Gunakan mata pelajaran pertama dari list aktif
+                $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+            } else {
+                // Jika tidak ada di mataPelajaranAktif, ambil dari materi yang sudah dibuat
+                $existingMataPelajaran = $guru->materi()
+                    ->select('mata_pelajaran')
+                    ->distinct()
+                    ->pluck('mata_pelajaran');
+                
+                if ($existingMataPelajaran->count() > 0) {
+                    $selectedMataPelajaran = $existingMataPelajaran->first();
+                }
+            }
         }
-        
-        // Get list mata pelajaran untuk filter (dari materi yang sudah dibuat)
-        $mataPelajaranList = $guru->materi()
-            ->select('mata_pelajaran')
-            ->distinct()
-            ->orderBy('mata_pelajaran')
-            ->get();
 
         $query = $guru->materi();
         
@@ -40,6 +48,8 @@ class MateriController extends Controller
         if ($selectedMataPelajaran) {
             $query->where('mata_pelajaran', $selectedMataPelajaran);
         }
+        // Jika tidak ada mata pelajaran yang dipilih, tampilkan SEMUA materi
+        // (tidak perlu filter)
 
         // Filter by kelas if selected
         if ($request->filled('kelas')) {
@@ -51,7 +61,7 @@ class MateriController extends Controller
             $query->where(function($q) use ($request) {
                 $q->where('judul', 'like', '%' . $request->search . '%')
                   ->orWhere('deskripsi', 'like', '%' . $request->search . '%')
-                  ->orWhere('topik', 'like', '%' . $request->search . '%');
+                  ->orWhere('topik', 'like', '%' . $request->topik . '%');
             });
         }
 
