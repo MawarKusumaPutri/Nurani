@@ -187,14 +187,21 @@
                                     </div>
                                 @endif
                                 
-                                <div class="file-upload-area" onclick="document.getElementById('file').click()">
-                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">{{ $materi->file_path ? 'Klik untuk mengganti file' : 'Klik untuk mengunggah file' }}</h5>
-                                    <p class="text-muted mb-0">atau drag & drop file di sini</p>
-                                    <small class="text-muted">Format: PDF, DOC, PPT, JPG, PNG, MP4 (Maks. 10MB)</small>
+                                <div class="file-upload-area" onclick="document.getElementById('file').click()" style="cursor: pointer; position: relative; z-index: 1;">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3" style="pointer-events: none;"></i>
+                                    <h5 class="text-muted" style="pointer-events: none;">{{ $materi->file_path ? 'Klik untuk mengganti file' : 'Klik untuk mengunggah file' }}</h5>
+                                    <p class="text-muted mb-0" style="pointer-events: none;">atau drag & drop file di sini</p>
+                                    <small class="text-muted" style="pointer-events: none;">Format: PDF, DOC, PPT, JPG, PNG, MP4 (Maks. 10MB)</small>
                                 </div>
                                 <input type="file" class="form-control d-none" id="file" name="file" 
                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov">
+                                
+                                <!-- Tombol alternatif untuk upload -->
+                                <div class="text-center mt-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('file').click()">
+                                        <i class="fas fa-folder-open me-2"></i>Pilih File
+                                    </button>
+                                </div>
                                 
                                 <div id="file-info" class="mt-3" style="display: none;">
                                     <div class="alert alert-info">
