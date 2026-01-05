@@ -159,6 +159,50 @@ try {
     echo "[WARNING] Gagal verifikasi kolom tanda tangan: " . $e->getMessage() . "\n";
 }
 
+// Step 2.7: Verify and fix Dirjen Pendidikan Islam columns in rpp table
+echo "\n[2.7/3] Verifikasi kolom Dirjen Pendidikan Islam di tabel rpp...\n";
+try {
+    // Check if rpp table exists
+    if (Schema::hasTable('rpp')) {
+        $columnsToAdd = [];
+        
+        // Check each Dirjen Pendidikan Islam column
+        if (!Schema::hasColumn('rpp', 'nama_kantor')) {
+            $columnsToAdd[] = 'nama_kantor';
+        }
+        if (!Schema::hasColumn('rpp', 'kota_kabupaten')) {
+            $columnsToAdd[] = 'kota_kabupaten';
+        }
+        if (!Schema::hasColumn('rpp', 'alamat_lengkap')) {
+            $columnsToAdd[] = 'alamat_lengkap';
+        }
+        
+        if (count($columnsToAdd) > 0) {
+            echo "[INFO] Menambahkan kolom: " . implode(', ', $columnsToAdd) . "...\n";
+            
+            Schema::table('rpp', function ($table) use ($columnsToAdd) {
+                if (in_array('nama_kantor', $columnsToAdd)) {
+                    $table->string('nama_kantor')->nullable();
+                }
+                if (in_array('kota_kabupaten', $columnsToAdd)) {
+                    $table->string('kota_kabupaten')->nullable();
+                }
+                if (in_array('alamat_lengkap', $columnsToAdd)) {
+                    $table->text('alamat_lengkap')->nullable();
+                }
+            });
+            
+            echo "[SUKSES] Kolom Dirjen Pendidikan Islam berhasil ditambahkan!\n";
+        } else {
+            echo "[INFO] Semua kolom Dirjen Pendidikan Islam sudah ada di tabel rpp\n";
+        }
+    } else {
+        echo "[WARNING] Tabel 'rpp' belum ada\n";
+    }
+} catch (\Exception $e) {
+    echo "[WARNING] Gagal verifikasi kolom Dirjen Pendidikan Islam: " . $e->getMessage() . "\n";
+}
+
 // Step 3: Verify
 echo "[INFO] Verifikasi data...\n";
 try {
