@@ -283,6 +283,27 @@
         </div>
         @endif
 
+        <!-- Dirjen Pendidikan Islam Setempat -->
+        @if($rpp->nama_kantor || $rpp->kota_kabupaten || $rpp->alamat_lengkap)
+        <div class="section-title">DIRJEN PENDIDIKAN ISLAM SETEMPAT</div>
+        <div class="content-section">
+            @if($rpp->nama_kantor)
+            <div class="sub-title">Nama Kantor</div>
+            <p>{{ $rpp->nama_kantor }}</p>
+            @endif
+            
+            @if($rpp->kota_kabupaten)
+            <div class="sub-title">Kota/Kabupaten</div>
+            <p>{{ $rpp->kota_kabupaten }}</p>
+            @endif
+            
+            @if($rpp->alamat_lengkap)
+            <div class="sub-title">Alamat Lengkap</div>
+            <p>{{ $rpp->alamat_lengkap }}</p>
+            @endif
+        </div>
+        @endif
+
         <!-- Tanda Tangan -->
         <div style="margin-top: 50px;">
             <table style="width: 100%;">

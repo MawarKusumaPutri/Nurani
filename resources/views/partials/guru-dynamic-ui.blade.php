@@ -550,20 +550,6 @@
                 }, 5000);
             });
 
-            // Show success notification dari session
-            @if(session('success'))
-                setTimeout(function() {
-                    showSuccessNotification('{{ addslashes(session('success')) }}');
-                }, 500);
-            @endif
-
-            // Show error notification dari session
-            @if(session('error'))
-                setTimeout(function() {
-                    showErrorNotification('{{ addslashes(session('error')) }}');
-                }, 500);
-            @endif
-
             // Loading overlay untuk semua form submit
             const forms = document.querySelectorAll('form');
             forms.forEach(function(form) {

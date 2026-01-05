@@ -968,12 +968,6 @@
                         <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                    <script>
-                        // Show success notification
-                        setTimeout(function() {
-                            showSuccessNotification('{{ session('success') }}');
-                        }, 500);
-                    </script>
                 @endif
 
                 @if(session('error'))
