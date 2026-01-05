@@ -49,6 +49,9 @@ class Rpp extends Model
         'nama_kepala_sekolah',
         'nip_kepala_sekolah',
         'ttd_kepala_sekolah',
+        'nama_kantor',
+        'kota_kabupaten',
+        'alamat_lengkap',
     ];
 
     /**

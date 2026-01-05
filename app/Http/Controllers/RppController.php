@@ -82,6 +82,10 @@ class RppController extends Controller
             'nip_kepala_sekolah' => 'required|string|max:255',
             'ttd_kepala_sekolah' => 'nullable|image|max:2048',
             'ttd_guru' => 'nullable|image|max:2048',
+            // Dirjen Pendidikan Islam
+            'nama_kantor' => 'nullable|string|max:255',
+            'kota_kabupaten' => 'nullable|string|max:255',
+            'alamat_lengkap' => 'nullable|string',
         ]);
 
         // Cek apakah RPP untuk pertemuan ini sudah ada
@@ -189,6 +193,10 @@ class RppController extends Controller
             'nip_kepala_sekolah' => 'required|string|max:255',
             'ttd_kepala_sekolah' => 'nullable|image|max:2048',
             'ttd_guru' => 'nullable|image|max:2048',
+            // Dirjen Pendidikan Islam
+            'nama_kantor' => 'nullable|string|max:255',
+            'kota_kabupaten' => 'nullable|string|max:255',
+            'alamat_lengkap' => 'nullable|string',
         ]);
 
         $validated['mata_pelajaran_detail'] = $validated['mata_pelajaran'];

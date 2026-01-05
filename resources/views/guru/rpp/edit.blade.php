@@ -297,6 +297,42 @@
                                           placeholder="Contoh: Pilihan ganda, uraian, lembar observasi...">{{ old('bentuk_instrumen', $rpp->bentuk_instrumen) }}</textarea>
                             </div>
 
+                            <!-- Dirjen Pendidikan Islam Setempat -->
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-building me-2"></i>Dirjen Pendidikan Islam Setempat</h5>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Petunjuk:</strong> Isi alamat kantor Dirjen Pendidikan Islam yang terdekat dengan lokasi sekolah Anda.
+                                <br><small>Contoh: Kantor Kementerian Agama Kabupaten Sumedang, Jl. Raya Sumedang No. 123</small>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nama_kantor" class="form-label fw-bold">Nama Kantor</label>
+                                    <input type="text" class="form-control" id="nama_kantor" name="nama_kantor" 
+                                           value="{{ old('nama_kantor', $rpp->nama_kantor) }}" 
+                                           placeholder="Contoh: Kantor Kementerian Agama Kabupaten/Kota">
+                                    <small class="text-muted">Nama kantor Kemenag setempat</small>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="kota_kabupaten" class="form-label fw-bold">Kota/Kabupaten</label>
+                                    <input type="text" class="form-control" id="kota_kabupaten" name="kota_kabupaten" 
+                                           value="{{ old('kota_kabupaten', $rpp->kota_kabupaten) }}" 
+                                           placeholder="Contoh: Sumedang, Bandung, Jakarta">
+                                    <small class="text-muted">Kota/Kabupaten lokasi kantor</small>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label for="alamat_lengkap" class="form-label fw-bold">Alamat Lengkap</label>
+                                    <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" rows="3" 
+                                              placeholder="Contoh: Jl. Raya Sumedang No. 123, Sumedang, Jawa Barat">{{ old('alamat_lengkap', $rpp->alamat_lengkap) }}</textarea>
+                                    <small class="text-muted">Alamat lengkap kantor Kemenag setempat</small>
+                                </div>
+                            </div>
+
                             <!-- Pengesahan / Tanda Tangan -->
                             <div class="section-header">
                                 <h5 class="mb-0"><i class="fas fa-signature me-2"></i>Pengesahan</h5>

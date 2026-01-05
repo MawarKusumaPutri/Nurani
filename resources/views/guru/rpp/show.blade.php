@@ -262,6 +262,36 @@
                         @endif
                         @endif
 
+                        <!-- Dirjen Pendidikan Islam Setempat -->
+                        @if($rpp->nama_kantor || $rpp->kota_kabupaten || $rpp->alamat_lengkap)
+                        <div class="section-header mt-4">
+                            <h5 class="mb-0"><i class="fas fa-building me-2"></i>Dirjen Pendidikan Islam Setempat</h5>
+                        </div>
+                        
+                        <div class="row">
+                            @if($rpp->nama_kantor)
+                            <div class="col-md-6">
+                                <div class="info-label">Nama Kantor</div>
+                                <div class="info-content">{{ $rpp->nama_kantor }}</div>
+                            </div>
+                            @endif
+                            
+                            @if($rpp->kota_kabupaten)
+                            <div class="col-md-6">
+                                <div class="info-label">Kota/Kabupaten</div>
+                                <div class="info-content">{{ $rpp->kota_kabupaten }}</div>
+                            </div>
+                            @endif
+                            
+                            @if($rpp->alamat_lengkap)
+                            <div class="col-md-12">
+                                <div class="info-label">Alamat Lengkap</div>
+                                <div class="info-content">{{ $rpp->alamat_lengkap }}</div>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
+
                         <!-- Pengesahan / Tanda Tangan -->
                         <div class="section-header mt-4">
                             <h5 class="mb-0"><i class="fas fa-signature me-2"></i>Pengesahan</h5>
