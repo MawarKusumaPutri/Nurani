@@ -78,8 +78,8 @@ class RppController extends Controller
             'rubrik_penilaian' => 'nullable|string',
             'kriteria_ketuntasan' => 'nullable|string',
             // Pengesahan
-            'kepala_sekolah_nama' => 'required|string|max:255',
-            'kepala_sekolah_nip' => 'required|string|max:255',
+            'nama_kepala_sekolah' => 'required|string|max:255',
+            'nip_kepala_sekolah' => 'required|string|max:255',
             'ttd_kepala_sekolah' => 'nullable|image|max:2048',
             'ttd_guru' => 'nullable|image|max:2048',
         ]);
@@ -185,8 +185,8 @@ class RppController extends Controller
             'rubrik_penilaian' => 'nullable|string',
             'kriteria_ketuntasan' => 'nullable|string',
             // Pengesahan
-            'kepala_sekolah_nama' => 'required|string|max:255',
-            'kepala_sekolah_nip' => 'required|string|max:255',
+            'nama_kepala_sekolah' => 'required|string|max:255',
+            'nip_kepala_sekolah' => 'required|string|max:255',
             'ttd_kepala_sekolah' => 'nullable|image|max:2048',
             'ttd_guru' => 'nullable|image|max:2048',
         ]);

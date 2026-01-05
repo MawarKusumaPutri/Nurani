@@ -288,8 +288,8 @@
                                         </div>
                                     @endif
                                     
-                                    <p class="mb-0 fw-bold">{{ $rpp->kepala_sekolah_nama ?? '___________________' }}</p>
-                                    <p class="text-muted small mb-0">NIP: {{ $rpp->kepala_sekolah_nip ?? '___________________' }}</p>
+                                    <p class="mb-0 fw-bold">{{ $rpp->nama_kepala_sekolah ?? '___________________' }}</p>
+                                    <p class="text-muted small mb-0">NIP: {{ $rpp->nip_kepala_sekolah ?? '___________________' }}</p>
                                 </div>
                             </div>
                             

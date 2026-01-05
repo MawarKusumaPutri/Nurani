@@ -309,16 +309,16 @@
                                     <p class="mb-2 text-muted">Kepala Sekolah</p>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="kepala_sekolah_nama" name="kepala_sekolah_nama" 
-                                               value="{{ old('kepala_sekolah_nama', $rpp->kepala_sekolah_nama) }}" 
+                                        <label for="nama_kepala_sekolah" class="form-label">Nama Kepala Sekolah <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nama_kepala_sekolah" name="nama_kepala_sekolah" 
+                                               value="{{ old('nama_kepala_sekolah', $rpp->nama_kepala_sekolah) }}" 
                                                placeholder="Nama Kepala Sekolah" required>
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="kepala_sekolah_nip" name="kepala_sekolah_nip" 
-                                               value="{{ old('kepala_sekolah_nip', $rpp->kepala_sekolah_nip) }}" 
+                                        <label for="nip_kepala_sekolah" class="form-label">NIP Kepala Sekolah <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nip_kepala_sekolah" name="nip_kepala_sekolah" 
+                                               value="{{ old('nip_kepala_sekolah', $rpp->nip_kepala_sekolah) }}" 
                                                placeholder="NIP Kepala Sekolah" required>
                                     </div>
                                     
