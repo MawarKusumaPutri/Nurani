@@ -238,24 +238,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // File upload handling
-        document.getElementById('file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            console.log('File selected:', file);
-            if (file) {
-                console.log('File name:', file.name);
-                console.log('File size:', file.size);
-                console.log('File type:', file.type);
-                
-                document.getElementById('file-name').textContent = file.name;
-                document.getElementById('file-size').textContent = '(' + formatFileSize(file.size) + ')';
-                document.getElementById('file-info').style.display = 'block';
-                
-                // Show success toast
-                alert('File "' + file.name + '" berhasil dipilih! Klik "Simpan Perubahan" untuk mengupload.');
-            } else {
-                console.log('No file selected');
+        // File upload handling - wrapped in DOMContentLoaded to ensure element exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file');
+            
+            if (!fileInput) {
+                console.error('File input element not found!');
+                return;
             }
+            
+            console.log('✓ File input element found, attaching event listener...');
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                console.log('File selected:', file);
+                
+                if (file) {
+                    console.log('File name:', file.name);
+                    console.log('File size:', file.size);
+                    console.log('File type:', file.type);
+                    
+                    document.getElementById('file-name').textContent = file.name;
+                    document.getElementById('file-size').textContent = '(' + formatFileSize(file.size) + ')';
+                    document.getElementById('file-info').style.display = 'block';
+                    
+                    // Show success toast
+                    alert('File "' + file.name + '" berhasil dipilih! Klik "Simpan Perubahan" untuk mengupload.');
+                } else {
+                    console.log('No file selected');
+                }
+            });
+            
+            console.log('✓ Event listener attached successfully');
         });
 
         // Drag and drop handling
