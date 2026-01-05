@@ -53,6 +53,60 @@
             z-index: 1 !important;
         }
         
+        /* Mata Pelajaran Tabs Styling */
+        .btn-group .btn {
+            flex: 1;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 0 !important;
+        }
+        
+        .btn-group .btn:first-child {
+            border-top-left-radius: 8px !important;
+            border-bottom-left-radius: 8px !important;
+        }
+        
+        .btn-group .btn:last-child {
+            border-top-right-radius: 8px !important;
+            border-bottom-right-radius: 8px !important;
+        }
+        
+        .btn-group .btn-primary {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border-color: #2E7D32;
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+        }
+        
+        .btn-group .btn-outline-primary {
+            color: #2E7D32;
+            border-color: #2E7D32;
+        }
+        
+        .btn-group .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border-color: #2E7D32;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-group .btn {
+                border-radius: 8px !important;
+                margin-bottom: 0.5rem;
+            }
+            
+            .btn-group .btn:first-child,
+            .btn-group .btn:last-child {
+                border-radius: 8px !important;
+            }
+        }
+        
         @media (max-width: 991px) {
             /* Di mobile, pastikan YouTube button tidak tertutup */
             .d-flex.justify-content-between.align-items-center.mb-4 {
@@ -656,6 +710,33 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Mata Pelajaran Tabs -->
+                    @if($mataPelajaranList && $mataPelajaranList->count() > 0)
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-book me-2 text-primary"></i>
+                                <h6 class="mb-0 fw-semibold">Mata Pelajaran</h6>
+                            </div>
+                            <div class="btn-group w-100" role="group">
+                                @foreach($mataPelajaranList as $mp)
+                                    <a href="{{ route('guru.materi.index', ['mata_pelajaran' => $mp->mata_pelajaran]) }}" 
+                                       class="btn {{ $selectedMataPelajaran == $mp->mata_pelajaran ? 'btn-primary' : 'btn-outline-primary' }}">
+                                        <i class="fas fa-book-open me-2"></i>
+                                        {{ $mp->mata_pelajaran }}
+                                        @php
+                                            $count = $guru->materi()->where('mata_pelajaran', $mp->mata_pelajaran)->count();
+                                        @endphp
+                                        @if($count > 0)
+                                            <span class="badge bg-light text-dark ms-2">{{ $count }}</span>
+                                        @endif
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- Search and Filter -->
                     <div class="card mb-4">
