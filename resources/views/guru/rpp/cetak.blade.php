@@ -287,8 +287,18 @@
         <div style="margin-top: 50px;">
             <table style="width: 100%;">
                 <tr>
-                    <td style="width: 50%;"></td>
-                    <td style="width: 50%; text-align: center;">
+                    <!-- Kolom Kepala Sekolah -->
+                    <td style="width: 50%; text-align: center; vertical-align: top;">
+                        <p>Mengetahui,</p>
+                        <p style="margin-bottom: 80px;">Kepala Sekolah,</p>
+                        <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 200px;">
+                            .......................................
+                        </p>
+                        <p>NIP/NUPTK: ...........................</p>
+                    </td>
+                    
+                    <!-- Kolom Guru Mata Pelajaran -->
+                    <td style="width: 50%; text-align: center; vertical-align: top;">
                         <p>{{ $rpp->sekolah ?? 'MTs Nurul Aiman' }}, {{ date('d F Y') }}</p>
                         <p style="margin-bottom: 80px;">Guru Mata Pelajaran,</p>
                         <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 200px;">
