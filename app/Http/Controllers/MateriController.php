@@ -222,6 +222,18 @@ class MateriController extends Controller
             $data['file_type'] = $file->getClientMimeType();
             $data['file_size'] = $file->getSize();
         }
+        // Handle file deletion (if user clicked "Hapus File" button)
+        elseif ($request->input('delete_file') == '1') {
+            // Delete old file from storage
+            if ($materi->file_path && Storage::exists($materi->file_path)) {
+                Storage::delete($materi->file_path);
+            }
+            
+            // Remove file info from database
+            $data['file_path'] = null;
+            $data['file_type'] = null;
+            $data['file_size'] = null;
+        }
 
         if ($data['is_published'] && !$materi->is_published) {
             $data['tanggal_publish'] = now();

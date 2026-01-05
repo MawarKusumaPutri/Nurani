@@ -162,7 +162,7 @@
                                 <label class="form-label">File Lampiran</label>
                                 
                                 @if($materi->file_path)
-                                    <div class="existing-file">
+                                    <div class="existing-file" id="existingFileContainer">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-file fa-2x text-primary me-3"></i>
@@ -174,17 +174,25 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <a href="{{ Storage::url($materi->file_path) }}" 
-                                               class="btn btn-sm btn-outline-primary" 
-                                               target="_blank">
-                                                <i class="fas fa-download me-1"></i>Download
-                                            </a>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ Storage::url($materi->file_path) }}" 
+                                                   class="btn btn-sm btn-outline-primary" 
+                                                   target="_blank">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteExistingFile()">
+                                                    <i class="fas fa-trash me-1"></i>Hapus File
+                                                </button>
+                                            </div>
                                         </div>
                                         <p class="text-muted small mt-2 mb-0">
                                             <i class="fas fa-info-circle me-1"></i>
-                                            Upload file baru untuk mengganti file yang ada
+                                            Upload file baru untuk mengganti, atau klik "Hapus File" untuk menghapus file ini
                                         </p>
                                     </div>
+                                    
+                                    <!-- Hidden input to mark file for deletion -->
+                                    <input type="hidden" name="delete_file" id="deleteFileInput" value="0">
                                 @endif
                                 
                                 <div class="file-upload-area" onclick="document.getElementById('file').click()" style="cursor: pointer; position: relative; z-index: 1;">
@@ -297,6 +305,26 @@
             
             // Always return true to allow form submission
             return true;
+        }
+
+        function deleteExistingFile() {
+            if (confirm('Apakah Anda yakin ingin menghapus file ini? File akan dihapus setelah Anda klik "Simpan Perubahan".')) {
+                // Mark file for deletion
+                document.getElementById('deleteFileInput').value = '1';
+                
+                // Hide the existing file container
+                const container = document.getElementById('existingFileContainer');
+                container.style.opacity = '0.5';
+                container.style.pointerEvents = 'none';
+                
+                // Add deleted badge
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-danger ms-2';
+                badge.textContent = 'Akan dihapus';
+                container.querySelector('strong').appendChild(badge);
+                
+                alert('File ditandai untuk dihapus. Klik "Simpan Perubahan" untuk menghapus file secara permanen.');
+            }
         }
 
         function formatFileSize(bytes) {
