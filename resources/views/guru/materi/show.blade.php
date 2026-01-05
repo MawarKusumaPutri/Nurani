@@ -167,13 +167,14 @@
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <h5 class="card-title mb-3">File Lampiran</h5>
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center mb-3">
                                         @php
                                             $fileType = $materi->file_type;
                                             $iconClass = 'fas fa-file';
                                             $iconBg = 'file-document';
+                                            $isPdf = str_contains($fileType, 'pdf');
                                             
-                                            if (str_contains($fileType, 'pdf')) {
+                                            if ($isPdf) {
                                                 $iconClass = 'fas fa-file-pdf';
                                                 $iconBg = 'file-pdf';
                                             } elseif (str_contains($fileType, 'video')) {
@@ -194,13 +195,40 @@
                                                 <p class="text-muted mb-0 small">{{ $materi->file_size_formatted }}</p>
                                             @endif
                                         </div>
-                                        <a href="{{ Storage::url($materi->file_path) }}" 
-                                           class="btn btn-primary" 
-                                           target="_blank" 
-                                           download>
-                                            <i class="fas fa-download me-2"></i>Download
-                                        </a>
+                                        <div class="d-flex gap-2">
+                                            @if($isPdf)
+                                                <button class="btn btn-success" onclick="togglePdfPreview()" id="btnTogglePreview">
+                                                    <i class="fas fa-eye me-2"></i>Lihat
+                                                </button>
+                                            @endif
+                                            <a href="{{ Storage::url($materi->file_path) }}" 
+                                               class="btn btn-primary" 
+                                               target="_blank" 
+                                               download>
+                                                <i class="fas fa-download me-2"></i>Download
+                                            </a>
+                                        </div>
                                     </div>
+                                    
+                                    @if($isPdf)
+                                        {{-- PDF Preview Container --}}
+                                        <div id="pdfPreviewContainer" style="display: none;" class="mt-3">
+                                            <div class="ratio ratio-16x9" style="height: 600px;">
+                                                <iframe id="pdfPreview" 
+                                                        src="{{ Storage::url($materi->file_path) }}#toolbar=1&navpanes=1&scrollbar=1" 
+                                                        frameborder="0"
+                                                        style="border: 1px solid #dee2e6; border-radius: 8px;">
+                                                </iframe>
+                                            </div>
+                                            <div class="alert alert-info mt-3">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <small>
+                                                    <strong>Tips:</strong> Gunakan toolbar PDF untuk zoom, navigasi halaman, dan fitur lainnya. 
+                                                    Jika preview tidak muncul, klik tombol Download untuk membuka di tab baru.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -355,6 +383,31 @@
                         timezoneBadge.className = 'timezone-badge ms-2 badge bg-info';
                     }
                 }
+            }
+        }
+
+        // Function to toggle PDF preview
+        function togglePdfPreview() {
+            const container = document.getElementById('pdfPreviewContainer');
+            const btn = document.getElementById('btnTogglePreview');
+            
+            if (container.style.display === 'none') {
+                // Show preview
+                container.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-eye-slash me-2"></i>Tutup';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+                
+                // Smooth scroll to preview
+                setTimeout(() => {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                // Hide preview
+                container.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-eye me-2"></i>Lihat';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-success');
             }
         }
 
