@@ -140,13 +140,13 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-success text-white">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-user-circle"></i> Foto Profil
+                                    <i class="fas fa-user-circle me-2"></i>Foto Profil
                                 </h5>
                             </div>
-                            <div class="card-body text-center">
+                            <div class="card-body text-center p-4">
                                 @php
                                     // SELALU ambil data fresh dari database untuk memastikan foto terbaru
                                     $freshGuru = \App\Models\Guru::find($guru->id);
@@ -226,49 +226,53 @@
                                         ]);
                                     }
                                 @endphp
-                                @if($hasPhoto && $photoUrl)
-                                    <div class="position-relative d-inline-block mb-3">
-                                        <img src="{{ $photoUrl }}" alt="Foto Profil" 
-                                             id="profile-photo-img-main"
-                                             class="img-thumbnail" 
-                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
-                                             onload="console.log('Photo loaded successfully:', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
-                                             onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
-                                             onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
-                                        <div id="profile-photo-placeholder-main" class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                
+                                <div class="mb-3">
+                                    @if($hasPhoto && $photoUrl)
+                                        <div class="position-relative d-inline-block">
+                                            <img src="{{ $photoUrl }}" alt="Foto Profil" 
+                                                 id="profile-photo-img-main"
+                                                 class="img-thumbnail" 
+                                                 style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
+                                                 onload="console.log('Photo loaded successfully:', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
+                                                 onerror="console.error('Error loading photo:', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
+                                                 onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
+                                            <div id="profile-photo-placeholder-main" class="profile-circle d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                                <i class="fas fa-user-tie text-secondary"></i>
+                                            </div>
+                                        </div>
+                                    @elseif(!empty($freshGuru->foto))
+                                        {{-- Jika ada path di database tapi tidak bisa dimuat, coba tampilkan dengan URL langsung --}}
+                                        @php
+                                            $baseUrl = request()->getSchemeAndHttpHost();
+                                            $directUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
+                                        @endphp
+                                        <div class="position-relative d-inline-block">
+                                            <img src="{{ $directUrl }}" alt="Foto Profil" 
+                                                 id="profile-photo-img-main"
+                                                 class="img-thumbnail" 
+                                                 style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
+                                                 onload="console.log('Photo loaded successfully (direct):', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
+                                                 onerror="console.error('Error loading photo (direct):', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
+                                                 onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
+                                            <div id="profile-photo-placeholder-main" class="profile-circle d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
+                                                <i class="fas fa-user-tie text-secondary"></i>
+                                            </div>
+                                        </div>
+                                        <small class="text-info d-block mt-2">
+                                            <i class="fas fa-info-circle"></i> 
+                                            Path foto: {{ $freshGuru->foto }}
+                                        </small>
+                                    @else
+                                        <div class="profile-circle d-flex align-items-center justify-content-center mx-auto" style="width: 200px; height: 200px; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0;">
                                             <i class="fas fa-user-tie text-secondary"></i>
                                         </div>
-                                    </div>
-                                @elseif(!empty($freshGuru->foto))
-                                    {{-- Jika ada path di database tapi tidak bisa dimuat, coba tampilkan dengan URL langsung --}}
-                                    @php
-                                        $baseUrl = request()->getSchemeAndHttpHost();
-                                        $directUrl = $baseUrl . '/storage/' . $freshGuru->foto . '?v=' . time() . '&r=' . rand(1000, 9999);
-                                    @endphp
-                                    <div class="position-relative d-inline-block mb-3">
-                                        <img src="{{ $directUrl }}" alt="Foto Profil" 
-                                             id="profile-photo-img-main"
-                                             class="img-thumbnail" 
-                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 3px solid #2E7D32; display: block; cursor: pointer;"
-                                             onload="console.log('Photo loaded successfully (direct):', this.src); this.style.display='block'; document.getElementById('profile-photo-placeholder-main').style.display='none';"
-                                             onerror="console.error('Error loading photo (direct):', this.src); this.onerror=null; this.style.display='none'; document.getElementById('profile-photo-placeholder-main').style.display='flex';"
-                                             onclick="if(this.src && this.src !== '') { window.open(this.src, '_blank'); }">
-                                        <div id="profile-photo-placeholder-main" class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0; display: none;">
-                                            <i class="fas fa-user-tie text-secondary"></i>
-                                        </div>
-                                    </div>
-                                    <small class="text-info d-block mt-2">
-                                        <i class="fas fa-info-circle"></i> 
-                                        Path foto: {{ $freshGuru->foto }}
-                                    </small>
-                                @else
-                                    <div class="profile-circle mb-3 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px; margin: 0 auto; font-size: 72px; border: 3px solid #2E7D32; border-radius: 50%; background: #f0f0f0;">
-                                        <i class="fas fa-user-tie text-secondary"></i>
-                                    </div>
-                                    <p class="text-muted">Foto profil belum diatur</p>
-                                @endif
-                                <a href="{{ route('guru.profile.edit') }}" class="btn btn-sm btn-primary mt-2">
-                                    <i class="fas fa-edit"></i> {{ ($freshGuru && !empty($freshGuru->foto)) ? 'Ganti Foto' : 'Upload Foto' }}
+                                        <p class="text-muted mt-3 mb-0">Foto profil belum diatur</p>
+                                    @endif
+                                </div>
+                                
+                                <a href="{{ route('guru.profile.edit') }}" class="btn btn-primary">
+                                    <i class="fas fa-edit me-2"></i>{{ ($freshGuru && !empty($freshGuru->foto)) ? 'Ganti Foto' : 'Upload Foto' }}
                                 </a>
                             </div>
                         </div>
