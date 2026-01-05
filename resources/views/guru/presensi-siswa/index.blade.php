@@ -97,6 +97,51 @@
             padding: 1rem 1.5rem !important;
             background-color: #ffffff !important;
             box-sizing: border-box !important;
+            max-width: 100% !important;
+        }
+        
+        /* Content Wrapper untuk membatasi lebar maksimal */
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        /* Pastikan card dan table mengisi ruang dengan baik */
+        .card {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            table-layout: auto;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .content-wrapper {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .col-md-9.col-lg-10 {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .content-wrapper {
+                padding: 0 0.5rem;
+            }
         }
         
         /* Pastikan konten tidak tersembunyi */
@@ -837,21 +882,22 @@
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4" style="display: block !important; visibility: visible !important; opacity: 1 !important; width: auto !important; flex: 0 0 auto !important; padding-left: 1.5rem !important; padding-right: 1.5rem !important;">
-                <div class="d-flex justify-content-between align-items-center mb-4" style="display: flex !important; visibility: visible !important; opacity: 1 !important;">
-                    <div>
-                        <h2 class="mb-1" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
-                            <i class="fas fa-user-graduate me-2 text-primary"></i>
-                            Presensi Siswa
-                        </h2>
-                        <p class="text-muted mb-0" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Kelola presensi siswa untuk berbagai kelas dan tanggal</p>
+                <div class="content-wrapper">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap" style="display: flex !important; visibility: visible !important; opacity: 1 !important;">
+                        <div class="mb-3 mb-md-0">
+                            <h2 class="mb-1" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+                                <i class="fas fa-user-graduate me-2 text-primary"></i>
+                                Presensi Siswa
+                            </h2>
+                            <p class="text-muted mb-0" style="display: block !important; visibility: visible !important; opacity: 1 !important;">Kelola presensi siswa untuk berbagai kelas dan tanggal</p>
+                        </div>
+                        <div>
+                            <a href="{{ route('guru.presensi-siswa.statistik') }}" class="btn btn-success">
+                                <i class="fas fa-chart-pie me-2"></i>
+                                Lihat Statistik
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <a href="{{ route('guru.presensi-siswa.statistik') }}" class="btn btn-success">
-                            <i class="fas fa-chart-pie me-2"></i>
-                            Lihat Statistik
-                        </a>
-                    </div>
-                </div>
 
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
@@ -1054,9 +1100,10 @@
                     </div>
                 </div>
                 @endif
-            </div>
-        </div>
-    </div>
+            </div> <!-- End content-wrapper -->
+        </div> <!-- End col-md-9 -->
+    </div> <!-- End row -->
+</div> <!-- End container-fluid -->
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1">
