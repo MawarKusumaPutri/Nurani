@@ -88,47 +88,91 @@
         
         /* Main content - di samping sidebar (kanan) */
         .col-md-9.col-lg-10 {
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
             visibility: visible !important;
             opacity: 1 !important;
             position: relative !important;
             z-index: 1 !important;
             min-height: 100vh !important;
-            padding: 1rem 1.5rem !important;
+            padding: 1.5rem !important;
             background-color: #ffffff !important;
             box-sizing: border-box !important;
             max-width: 100% !important;
+            width: 100% !important;
+            flex: 1 !important;
         }
         
         /* Content Wrapper untuk membatasi lebar maksimal */
         .content-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 100%;
             width: 100%;
+            margin: 0;
             padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         /* Pastikan card dan table mengisi ruang dengan baik */
         .card {
             width: 100%;
+            max-width: 100%;
             margin-bottom: 1.5rem;
+            box-sizing: border-box;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .table-responsive {
             width: 100%;
+            max-width: 100%;
             overflow-x: auto;
+            margin: 0;
         }
         
         table {
             width: 100%;
+            max-width: 100%;
             table-layout: auto;
+            margin: 0;
+        }
+        
+        /* Form elements full width */
+        .form-control, .form-select {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Row adjustments */
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+            width: 100%;
+        }
+        
+        .row > * {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
         }
         
         /* Responsive adjustments */
-        @media (max-width: 1400px) {
+        @media (min-width: 1400px) {
+            .content-wrapper {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 1399px) {
             .content-wrapper {
                 max-width: 100%;
-                padding: 0 1rem;
+                padding: 0;
             }
         }
         
@@ -137,10 +181,30 @@
                 margin-left: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
+                padding: 1rem !important;
             }
             
             .content-wrapper {
-                padding: 0 0.5rem;
+                padding: 0;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .row > * {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .col-md-9.col-lg-10 {
+                padding: 0.75rem !important;
+            }
+            
+            .card-body {
+                padding: 0.75rem;
             }
         }
         
