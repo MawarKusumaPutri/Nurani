@@ -103,7 +103,7 @@
                 <!-- Form -->
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('guru.materi.update', $materi->id) }}" method="POST" enctype="multipart/form-data">
+                        <form id="editMateriForm" action="{{ route('guru.materi.update', $materi->id) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                             @csrf
                             @method('PUT')
                             
@@ -233,10 +233,20 @@
         // File upload handling
         document.getElementById('file').addEventListener('change', function(e) {
             const file = e.target.files[0];
+            console.log('File selected:', file);
             if (file) {
+                console.log('File name:', file.name);
+                console.log('File size:', file.size);
+                console.log('File type:', file.type);
+                
                 document.getElementById('file-name').textContent = file.name;
                 document.getElementById('file-size').textContent = '(' + formatFileSize(file.size) + ')';
                 document.getElementById('file-info').style.display = 'block';
+                
+                // Show success toast
+                alert('File "' + file.name + '" berhasil dipilih! Klik "Simpan Perubahan" untuk mengupload.');
+            } else {
+                console.log('No file selected');
             }
         });
 
@@ -266,6 +276,28 @@
                 document.getElementById('file-info').style.display = 'block';
             }
         });
+
+
+        function validateForm() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            
+            console.log('=== FORM SUBMIT ===');
+            console.log('File input element:', fileInput);
+            console.log('File selected:', file);
+            
+            if (file) {
+                console.log('✓ File akan diupload:');
+                console.log('  - Name:', file.name);
+                console.log('  - Size:', file.size, 'bytes');
+                console.log('  - Type:', file.type);
+            } else {
+                console.log('✗ Tidak ada file baru yang dipilih');
+            }
+            
+            // Always return true to allow form submission
+            return true;
+        }
 
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
