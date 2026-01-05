@@ -308,22 +308,15 @@
         }
 
         function deleteExistingFile() {
-            if (confirm('Apakah Anda yakin ingin menghapus file ini? File akan dihapus setelah Anda klik "Simpan Perubahan".')) {
+            if (confirm('Apakah Anda yakin ingin menghapus file ini?')) {
                 // Mark file for deletion
                 document.getElementById('deleteFileInput').value = '1';
                 
-                // Hide the existing file container
+                // Completely hide the existing file container
                 const container = document.getElementById('existingFileContainer');
-                container.style.opacity = '0.5';
-                container.style.pointerEvents = 'none';
+                container.style.display = 'none';
                 
-                // Add deleted badge
-                const badge = document.createElement('span');
-                badge.className = 'badge bg-danger ms-2';
-                badge.textContent = 'Akan dihapus';
-                container.querySelector('strong').appendChild(badge);
-                
-                alert('File ditandai untuk dihapus. Klik "Simpan Perubahan" untuk menghapus file secara permanen.');
+                alert('File akan dihapus. Klik "Simpan Perubahan" untuk menyimpan.');
             }
         }
 
