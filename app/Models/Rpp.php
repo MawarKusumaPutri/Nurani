@@ -46,6 +46,9 @@ class Rpp extends Model
         'bentuk_instrumen',
         'rubrik_penilaian',
         'kriteria_ketuntasan',
+        'nama_kepala_sekolah',
+        'nip_kepala_sekolah',
+        'ttd_kepala_sekolah',
     ];
 
     /**

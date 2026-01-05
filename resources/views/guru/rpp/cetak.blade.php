@@ -292,9 +292,9 @@
                         <p>Mengetahui,</p>
                         <p style="margin-bottom: 80px;">Kepala Sekolah,</p>
                         <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 200px;">
-                            .......................................
+                            {{ $rpp->nama_kepala_sekolah ?? '.......................................' }}
                         </p>
-                        <p>NIP/NUPTK: ...........................</p>
+                        <p>NIP/NUPTK: {{ $rpp->nip_kepala_sekolah ?? '...........................' }}</p>
                     </td>
                     
                     <!-- Kolom Guru Mata Pelajaran -->
