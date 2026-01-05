@@ -309,17 +309,17 @@
                                     <p class="mb-2 text-muted">Kepala Sekolah</p>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah</label>
+                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="kepala_sekolah_nama" name="kepala_sekolah_nama" 
                                                value="{{ old('kepala_sekolah_nama', $rpp->kepala_sekolah_nama) }}" 
-                                               placeholder="Nama Kepala Sekolah">
+                                               placeholder="Nama Kepala Sekolah" required>
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah</label>
+                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="kepala_sekolah_nip" name="kepala_sekolah_nip" 
                                                value="{{ old('kepala_sekolah_nip', $rpp->kepala_sekolah_nip) }}" 
-                                               placeholder="NIP Kepala Sekolah">
+                                               placeholder="NIP Kepala Sekolah" required>
                                     </div>
                                     
                                     <!-- Upload Tanda Tangan Kepala Sekolah -->
