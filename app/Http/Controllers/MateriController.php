@@ -21,11 +21,18 @@ class MateriController extends Controller
 
         // Get mata pelajaran yang dipilih
         $selectedMataPelajaran = $request->get('mata_pelajaran');
-        $mataPelajaranList = $guru->mataPelajaranAktif;
         
-        if (!$selectedMataPelajaran && $mataPelajaranList->count() > 0) {
-            $selectedMataPelajaran = $mataPelajaranList->first()->mata_pelajaran;
+        // Jika tidak ada mata pelajaran yang dipilih, gunakan mata pelajaran guru
+        if (!$selectedMataPelajaran && $guru->mata_pelajaran) {
+            $selectedMataPelajaran = $guru->mata_pelajaran;
         }
+        
+        // Get list mata pelajaran untuk filter (dari materi yang sudah dibuat)
+        $mataPelajaranList = $guru->materi()
+            ->select('mata_pelajaran')
+            ->distinct()
+            ->orderBy('mata_pelajaran')
+            ->get();
 
         $query = $guru->materi();
         
