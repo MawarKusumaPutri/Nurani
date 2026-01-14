@@ -318,7 +318,7 @@ Route::middleware('auth')->group(function () {
             
             // Import/Export routes
             Route::get('/template/download', [App\Http\Controllers\TuController::class, 'jadwalDownloadTemplate'])->name('template');
-            Route::post('/import', [App\Http\Controllers\JadwalImportController::class, 'import'])->name('import');
+            Route::post('/import', [App\Http\Controllers\TuController::class, 'jadwalImport'])->name('import');
             Route::get('/export', [App\Http\Controllers\TuController::class, 'jadwalExport'])->name('export');
         });
         
