@@ -540,6 +540,23 @@
                     </div>
                 </div>
 
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Berhasil!</strong> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+                
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error!</strong> {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
                 <!-- Mata Pelajaran Switcher -->
                 @if($mataPelajaranList->count() > 1)
                     <div class="card mb-4 mata-pelajaran-switcher">

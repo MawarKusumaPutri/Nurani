@@ -1,36 +1,31 @@
 <?php
+// Reset Database Script
+echo "🔄 Resetting database...\n\n";
 
-/**
- * Reset Database dan Migrate
- * Hapus database 'nurani' dan buat ulang, lalu jalankan migrations
- */
+// Database connection
+$host = 'localhost';
+$user = 'root';
+$pass = '';
+$db = 'nurani';
 
 try {
-    $pdo = new PDO('mysql:host=127.0.0.1;port=3306', 'root', '');
+    // Connect without database
+    $pdo = new PDO("mysql:host=$host", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    echo "========================================\n";
-    echo "  RESET DATABASE DAN MIGRATE\n";
-    echo "========================================\n\n";
+    // Drop and create database
+    echo "📦 Dropping old database...\n";
+    $pdo->exec("DROP DATABASE IF EXISTS `$db`");
     
-    echo "[1/3] Menghapus database 'nurani'...\n";
-    $pdo->exec('DROP DATABASE IF EXISTS nurani');
-    echo "SUKSES: Database sudah dihapus!\n\n";
+    echo "📦 Creating new database...\n";
+    $pdo->exec("CREATE DATABASE `$db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     
-    echo "[2/3] Membuat database 'nurani' baru...\n";
-    $pdo->exec('CREATE DATABASE nurani CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
-    echo "SUKSES: Database sudah dibuat!\n\n";
-    
-    echo "[3/3] Menjalankan migrations...\n";
-    echo "Jalankan: php artisan migrate --force\n\n";
-    
-    echo "========================================\n";
-    echo "  DATABASE SUDAH DI-RESET!\n";
-    echo "========================================\n";
+    echo "✅ Database reset successfully!\n\n";
+    echo "🚀 Next steps:\n";
+    echo "   1. Run: php artisan migrate --force\n";
+    echo "   2. Run: php artisan db:seed --class=UserSeeder --force\n";
     
 } catch (PDOException $e) {
-    echo "ERROR: " . $e->getMessage() . "\n";
-    echo "\nPastikan MySQL sudah berjalan di XAMPP!\n";
+    echo "❌ Error: " . $e->getMessage() . "\n";
     exit(1);
 }
-

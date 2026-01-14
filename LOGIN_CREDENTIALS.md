@@ -82,9 +82,10 @@ Mata Pelajaran: SKI, Akidah Akhlak (2 mata pelajaran)
 ### **6. Desi Nurfalah (Bahasa Indonesia)**
 ```
 Email: desinurfalah24@gmail.com
-Password: DesyNurfalah2024!
+Password: desi123456
 Mata Pelajaran: Bahasa Indonesia (1 mata pelajaran)
 ```
+**⚠️ Password sudah di-reset pada 13 Jan 2026**
 
 ### **7. M. Rizmal Maulana (QH, FIQIH)**
 ```

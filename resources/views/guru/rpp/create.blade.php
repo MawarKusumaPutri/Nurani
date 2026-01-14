@@ -309,25 +309,25 @@
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="dirjen_nama_kantor" class="form-label fw-bold">Nama Kantor</label>
-                                    <input type="text" class="form-control" id="dirjen_nama_kantor" name="dirjen_nama_kantor" 
-                                           value="{{ old('dirjen_nama_kantor', 'Kantor Kementerian Agama Kabupaten/Kota') }}" 
+                                    <label for="nama_kantor" class="form-label fw-bold">Nama Kantor</label>
+                                    <input type="text" class="form-control" id="nama_kantor" name="nama_kantor" 
+                                           value="{{ old('nama_kantor', 'Kantor Kementerian Agama Kabupaten/Kota') }}" 
                                            placeholder="Contoh: Kantor Kementerian Agama Kabupaten Sumedang">
                                     <small class="text-muted">Nama kantor Kemenag setempat</small>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
-                                    <label for="dirjen_kota" class="form-label fw-bold">Kota/Kabupaten</label>
-                                    <input type="text" class="form-control" id="dirjen_kota" name="dirjen_kota" 
-                                           value="{{ old('dirjen_kota') }}" 
+                                    <label for="kota_kabupaten" class="form-label fw-bold">Kota/Kabupaten</label>
+                                    <input type="text" class="form-control" id="kota_kabupaten" name="kota_kabupaten" 
+                                           value="{{ old('kota_kabupaten') }}" 
                                            placeholder="Contoh: Sumedang, Bandung, Jakarta">
                                     <small class="text-muted">Kota/Kabupaten lokasi kantor</small>
                                 </div>
                                 
                                 <div class="col-md-12 mb-3">
-                                    <label for="dirjen_alamat" class="form-label fw-bold">Alamat Lengkap</label>
-                                    <textarea class="form-control" id="dirjen_alamat" name="dirjen_alamat" rows="2" 
-                                              placeholder="Contoh: Jl. Raya Sumedang No. 123, Sumedang, Jawa Barat">{{ old('dirjen_alamat') }}</textarea>
+                                    <label for="alamat_lengkap" class="form-label fw-bold">Alamat Lengkap</label>
+                                    <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" rows="2" 
+                                              placeholder="Contoh: Jl. Raya Sumedang No. 123, Sumedang, Jawa Barat">{{ old('alamat_lengkap') }}</textarea>
                                     <small class="text-muted">Alamat lengkap kantor Kemenag setempat</small>
                                 </div>
                             </div>
@@ -343,17 +343,17 @@
                                     <p class="mb-2 text-muted">Kepala Sekolah</p>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nama" class="form-label">Nama Kepala Sekolah</label>
-                                        <input type="text" class="form-control" id="kepala_sekolah_nama" name="kepala_sekolah_nama" 
-                                               value="{{ old('kepala_sekolah_nama') }}" 
-                                               placeholder="Nama Kepala Sekolah">
+                                        <label for="nama_kepala_sekolah" class="form-label">Nama Kepala Sekolah <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nama_kepala_sekolah" name="nama_kepala_sekolah" 
+                                               value="{{ old('nama_kepala_sekolah', 'Maman Suparman') }}" 
+                                               placeholder="Nama Kepala Sekolah" required>
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="kepala_sekolah_nip" class="form-label">NIP Kepala Sekolah</label>
-                                        <input type="text" class="form-control" id="kepala_sekolah_nip" name="kepala_sekolah_nip" 
-                                               value="{{ old('kepala_sekolah_nip') }}" 
-                                               placeholder="NIP Kepala Sekolah">
+                                        <label for="nip_kepala_sekolah" class="form-label">NIP Kepala Sekolah <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nip_kepala_sekolah" name="nip_kepala_sekolah" 
+                                               value="{{ old('nip_kepala_sekolah', '123123123') }}" 
+                                               placeholder="NIP Kepala Sekolah" required>
                                     </div>
                                     
                                     <!-- Upload Tanda Tangan Kepala Sekolah -->
@@ -407,12 +407,23 @@
                             </div>
 
                             <div class="d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
                                     <i class="fas fa-save me-2"></i>Simpan RPP
                                 </button>
                                 <a href="{{ route('guru.dashboard', ['mata_pelajaran' => $mataPelajaran]) }}" class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
+                            </div>
+                            
+                            <!-- Loading Overlay -->
+                            <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+                                <div class="text-center text-white">
+                                    <div class="spinner-border mb-3" role="status" style="width: 3rem; height: 3rem;">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <h4>Menyimpan RPP...</h4>
+                                    <p>Mohon tunggu, jangan tutup halaman ini.</p>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -446,6 +457,21 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+    
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        // Show loading overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.style.display = 'flex';
+        
+        // Disable submit button to prevent double submission
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+        
+        // Form will submit normally
+        console.log('Form sedang disubmit...');
+    });
     </script>
 
 </body>
